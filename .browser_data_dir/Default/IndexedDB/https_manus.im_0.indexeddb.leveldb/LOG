@@ -1,0 +1,10 @@
+2026/02/25-22:01:15.908 3ce Reusing MANIFEST /home/ubuntu/.browser_data_dir/Default/IndexedDB/https_manus.im_0.indexeddb.leveldb/MANIFEST-000001
+2026/02/25-22:01:15.909 3ce Recovering log #4
+2026/02/25-22:01:15.914 3ce Reusing old log /home/ubuntu/.browser_data_dir/Default/IndexedDB/https_manus.im_0.indexeddb.leveldb/000004.log 
+2026/02/25-22:01:20.928 3cf Level-0 table #8: started
+2026/02/25-22:01:20.939 3cf Level-0 table #8: 1540550 bytes OK
+2026/02/25-22:01:20.940 3cf Delete type=0 #4
+2026/02/25-22:01:20.942 3ce Compacting 1@1 + 1@2 files
+2026/02/25-22:01:20.953 3ce Generated table #9@1: 3749 keys, 1145519 bytes
+2026/02/25-22:01:20.953 3ce Compacted 1@1 + 1@2 files => 1145519 bytes
+2026/02/25-22:01:20.954 3ce compacted to: files[ 0 0 1 0 0 0 0 ]
