@@ -1,3 +1,9 @@
 [user]
-	email = manus@manus.im
-	name = Manus AI
+	email = 102909098+vovo301@users.noreply.github.com
+	name = vovo301
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential

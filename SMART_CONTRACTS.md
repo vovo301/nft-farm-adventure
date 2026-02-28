@@ -2,7 +2,7 @@
 
 ## 1. Visão Geral da Arquitetura
 
-A arquitetura de smart contracts segue um padrão modular onde cada contrato tem responsabilidade específica. Todos os contratos são desenvolvidos em Solidity 0.8.20+ e deployados na rede Polygon para escalabilidade.
+A arquitetura de smart contracts segue um padrão modular onde cada contrato tem responsabilidade específica. Todos os contratos são desenvolvidos em Solidity 0.8.20+ e deployados na rede Base Sepolia (testnet) para testes iniciais, com planos para Base Mainnet e Polygon em produção.
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -10,7 +10,7 @@ A arquitetura de smart contracts segue um padrão modular onde cada contrato tem
 ├─────────────────────────────────────────────────────────────┤
 │                                                               │
 │  ┌──────────────────┐  ┌──────────────────┐                 │
-│  │   HarvestToken   │  │    FarmToken     │                 │
+│  │   UtilityToken   │  │    FarmToken     │                 │
 │  │    (ERC-20)      │  │    (ERC-20)      │                 │
 │  │  Utilitário      │  │  Governança      │                 │
 │  └────────┬─────────┘  └────────┬─────────┘                 │
@@ -23,7 +23,7 @@ A arquitetura de smart contracts segue um padrão modular onde cada contrato tem
 │  ┌────────▼─────────────┐  ┌────────▼──────────────┐        │
 │  │   FarmLand (ERC-721) │  │  FarmItems (ERC-1155)│        │
 │  │  Propriedades de     │  │  Cultivos, Ferramentas│       │
-│  │  terra únicas        │  │  Itens comuns         │        │
+│  │  terra únicas        │  │  Itens (Mint-on-Demand)│        │
 │  └────────┬─────────────┘  └────────┬──────────────┘        │
 │           │                         │                        │
 │  ┌────────▼─────────────────────────▼──────┐                │
@@ -41,18 +41,19 @@ A arquitetura de smart contracts segue um padrão modular onde cada contrato tem
 
 ## 2. Contratos Detalhados
 
-### 2.1 HarvestToken (ERC-20)
+### 2.1 UtilityToken (ERC-20)
 
-**Propósito**: Token utilitário do jogo, usado para transações internas.
+**Propósito**: Token utilitário do jogo, usado para transações internas off-chain. Este token é gerenciado principalmente pelo servidor do jogo e só interage com a blockchain para funcionalidades específicas de 
+ponte com o mundo on-chain (ex: staking, conversão para FARM). A maior parte de seu uso é off-chain, no banco de dados do jogo.
 
 **Funções Principais**:
-- `mint(address to, uint256 amount)`: Cunhar novos tokens (apenas GameEconomyManager)
-- `burn(uint256 amount)`: Queimar tokens (deflação)
-- `transfer(address to, uint256 amount)`: Transferência padrão ERC-20
+- `mint(address to, uint256 amount)`: Cunhar novos tokens (apenas GameEconomyManager, para recompensas)
+- `burn(uint256 amount)`: Queimar tokens (deflação, via GameEconomyManager)
+- `transfer(address to, uint256 amount)`: Transferência padrão ERC-20 (para interações on-chain)
 - `approve(address spender, uint256 amount)`: Aprovação para gasto
 
 **Parâmetros**:
-- Supply Inicial: 1.000.000 HARVEST
+- Supply Inicial: Gerenciado off-chain, com um supply on-chain limitado para interações.
 - Decimais: 18
 - Burnable: Sim
 - Pausable: Sim (para emergências)
@@ -61,15 +62,15 @@ A arquitetura de smart contracts segue um padrão modular onde cada contrato tem
 ```solidity
 event TokensMinted(address indexed to, uint256 amount);
 event TokensBurned(address indexed from, uint256 amount);
-event TaxApplied(address indexed from, address indexed to, uint256 amount, uint256 tax);
+event Transfer(address indexed from, address indexed to, uint256 value);
 ```
 
 ### 2.2 FarmToken (ERC-20)
 
-**Propósito**: Token de governança, para votação e staking.
+**Propósito**: Token de governança do jogo, para votação, staking e compra de NFTs on-chain. Este é o token que os jogadores podem sacar para suas carteiras Web3.
 
 **Funções Principais**:
-- `mint(address to, uint256 amount)`: Cunhar novos tokens (apenas GameEconomyManager)
+- `mint(address to, uint256 amount)`: Cunhar novos tokens (apenas GameEconomyManager, para recompensas de staking/governança)
 - `stake(uint256 amount)`: Fazer staking de FARM
 - `unstake(uint256 amount)`: Retirar staking
 - `claimRewards()`: Reclamar recompensas de staking
@@ -77,19 +78,20 @@ event TaxApplied(address indexed from, address indexed to, uint256 amount, uint2
 **Parâmetros**:
 - Supply Inicial: 100.000 FARM
 - Decimais: 18
-- Staking APY: 10-20% (ajustável)
-- Vesting: Sim (liberação gradual)
+- Staking APY: 10-20% (ajustável via governança)
+- Vesting: Sim (liberação gradual para recompensas)
 
 **Eventos**:
 ```solidity
 event Staked(address indexed user, uint256 amount);
 event Unstaked(address indexed user, uint256 amount);
 event RewardsClaimed(address indexed user, uint256 amount);
+event Transfer(address indexed from, address indexed to, uint256 value);
 ```
 
 ### 2.3 FarmLand (ERC-721)
 
-**Propósito**: Representar propriedades de terra únicas onde jogadores cultivam.
+**Propósito**: Representar propriedades de terra únicas onde jogadores cultivam. São NFTs reais.
 
 **Estrutura de Dados**:
 ```solidity
@@ -98,17 +100,17 @@ struct Land {
     address owner;
     uint256 fertilityLevel;      // 1-100
     uint256 size;                // 10x10 = 100 slots
-    uint256 plantedCrops;        // Número de cultivos plantados
-    uint256 lastHarvestedAt;     // Timestamp
+    uint256 plantedCrops;        // Número de cultivos plantados (apenas para referência on-chain)
+    uint256 lastHarvestedAt;     // Timestamp (apenas para referência on-chain)
     string metadata;             // URI para metadata
 }
 ```
 
 **Funções Principais**:
-- `mint(address to, uint256 fertilityLevel)`: Cunhar nova terra
-- `updateFertility(uint256 tokenId, int256 delta)`: Atualizar fertilidade
-- `plantCrop(uint256 tokenId, uint256 cropId, uint256 x, uint256 y)`: Plantar cultivo
-- `harvestCrop(uint256 tokenId, uint256 x, uint256 y)`: Colher cultivo
+- `mint(address to, uint256 fertilityLevel)`: Cunhar nova terra (apenas GameEconomyManager)
+- `updateFertility(uint256 tokenId, int256 delta)`: Atualizar fertilidade (apenas GameEconomyManager)
+- `plantCrop(uint256 tokenId, uint256 cropId, uint256 x, uint256 y)`: Plantar cultivo (interação off-chain, mas pode ter gatilho on-chain para eventos)
+- `harvestCrop(uint256 tokenId, uint256 x, uint256 y)`: Colher cultivo (interação off-chain)
 - `tokenURI(uint256 tokenId)`: Retornar metadata dinâmica
 
 **Parâmetros**:
@@ -120,13 +122,12 @@ struct Land {
 **Eventos**:
 ```solidity
 event LandMinted(address indexed owner, uint256 indexed tokenId);
-event CropPlanted(address indexed owner, uint256 indexed landId, uint256 cropId);
-event CropHarvested(address indexed owner, uint256 indexed landId, uint256 cropId, uint256 yield);
+event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
 ```
 
-### 2.4 FarmItems (ERC-1155)
+### 2.4 FarmItems (ERC-1155) - Mint-on-Demand
 
-**Propósito**: Gerenciar cultivos, ferramentas e itens comuns com múltiplas cópias.
+**Propósito**: Gerenciar cultivos, ferramentas, recursos e itens comuns. Estes itens são gerenciados off-chain no banco de dados e só se tornam NFTs ERC-1155 quando o jogador decide **Sacá-los (Withdraw)** para sua carteira Web3.
 
 **Tipos de Itens**:
 - IDs 1-1000: Cultivos (trigo, milho, etc)
@@ -148,36 +149,37 @@ struct Item {
 ```
 
 **Funções Principais**:
-- `mint(address to, uint256 id, uint256 amount)`: Cunhar itens
-- `burn(uint256 id, uint256 amount)`: Queimar itens
-- `batchMint(address to, uint256[] ids, uint256[] amounts)`: Cunhar múltiplos
+- `mint(address to, uint256 id, uint256 amount)`: Cunhar itens (apenas GameEconomyManager, para saque)
+- `burn(uint256 id, uint256 amount)`: Queimar itens (apenas GameEconomyManager, para reverter saque ou crafting on-chain)
+- `batchMint(address to, uint256[] ids, uint256[] amounts)`: Cunhar múltiplos (apenas GameEconomyManager)
 - `setItemMetadata(uint256 id, string memory metadata)`: Atualizar metadata
 
 **Parâmetros**:
 - Max Item Types: 5000
-- Burnable: Sim (para crafting)
+- Burnable: Sim (para crafting on-chain ou reversão de saque)
 - Transferable: Sim
 
 **Eventos**:
 ```solidity
 event ItemMinted(address indexed to, uint256 indexed itemId, uint256 amount);
 event ItemBurned(address indexed from, uint256 indexed itemId, uint256 amount);
-event ItemCrafted(address indexed crafter, uint256[] inputs, uint256 output);
+event TransferSingle(address indexed operator, address indexed from, address indexed to, uint256 id, uint256 value);
+event TransferBatch(address indexed operator, address indexed from, address indexed to, uint256[] ids, uint256[] values);
 ```
 
 ### 2.5 FarmMarketplace
 
-**Propósito**: Permitir compra, venda e negociação de NFTs e itens.
+**Propósito**: Permitir compra, venda e negociação de NFTs e itens. Este contrato gerencia apenas as transações on-chain de NFTs (FarmLand, FarmItems sacados, Wearables/Colecionáveis).
 
 **Estrutura de Dados**:
 ```solidity
 struct Listing {
     uint256 listingId;
     address seller;
-    address nftContract;         // FarmLand ou FarmItems
+    address nftContract;         // Endereço do contrato NFT (FarmLand ou FarmItems)
     uint256 tokenId;
     uint256 amount;              // Para ERC-1155
-    uint256 price;               // Em HARVEST
+    uint256 price;               // Em FARM
     uint256 listedAt;
     bool active;
 }
@@ -194,15 +196,14 @@ struct Offer {
 ```
 
 **Funções Principais**:
-- `listItem(address nftContract, uint256 tokenId, uint256 price)`: Listar item
+- `listItem(address nftContract, uint256 tokenId, uint256 price)`: Listar item NFT
 - `cancelListing(uint256 listingId)`: Cancelar listagem
-- `buyItem(uint256 listingId)`: Comprar item listado
-- `makeOffer(uint256 listingId, uint256 offerPrice)`: Fazer oferta
-- `acceptOffer(uint256 offerId)`: Aceitar oferta
+- `buyItem(uint256 listingId)`: Comprar item NFT listado
+- `makeOffer(uint256 listingId, uint256 offerPrice)`: Fazer oferta por NFT
+- `acceptOffer(uint256 offerId)`: Aceitar oferta por NFT
 
 **Parâmetros**:
-- Taxa de Venda: 5%
-- Distribuição de Taxa: 3% queimado, 2% para tesouro
+- Taxa de Venda: 5% (em FARM, para tesouro)
 - Tempo Mínimo de Listagem: 1 minuto
 - Tempo Máximo de Oferta: 7 dias
 
@@ -216,18 +217,18 @@ event OfferAccepted(uint256 indexed offerId);
 
 ### 2.6 CraftingSystem
 
-**Propósito**: Permitir jogadores combinar itens para criar novos.
+**Propósito**: Permitir jogadores combinar itens para criar novos. Este contrato gerencia apenas receitas de crafting que envolvem NFTs (FarmItems sacados, Wearables, etc.). O crafting de itens off-chain é gerenciado pelo servidor.
 
 **Estrutura de Dados**:
 ```solidity
 struct Recipe {
     uint256 recipeId;
-    uint256[] inputItems;        // IDs dos itens de entrada
+    uint256[] inputItems;        // IDs dos itens de entrada (ERC-1155)
     uint256[] inputAmounts;      // Quantidades necessárias
-    uint256 outputItem;          // ID do item de saída
+    uint256 outputItem;          // ID do item de saída (ERC-1155)
     uint256 outputAmount;        // Quantidade produzida
     uint256 craftingTime;        // Tempo em segundos
-    uint256 harvestCost;         // Custo em HARVEST
+    uint256 farmCost;            // Custo em FARM
     bool active;
 }
 
@@ -241,15 +242,15 @@ struct CraftingJob {
 ```
 
 **Funções Principais**:
-- `addRecipe(uint256[] inputs, uint256[] amounts, uint256 output, uint256 time, uint256 cost)`: Adicionar receita
-- `startCrafting(uint256 recipeId)`: Iniciar crafting
-- `completeCrafting(uint256 jobId)`: Completar crafting
-- `cancelCrafting(uint256 jobId)`: Cancelar crafting (reembolsa 50%)
+- `addRecipe(uint256[] inputs, uint256[] amounts, uint256 output, uint256 time, uint256 cost)`: Adicionar receita (apenas GameEconomyManager)
+- `startCrafting(uint256 recipeId)`: Iniciar crafting (consome NFTs de entrada)
+- `completeCrafting(uint256 jobId)`: Completar crafting (minta NFT de saída)
+- `cancelCrafting(uint256 jobId)`: Cancelar crafting (reembolsa 50% dos NFTs de entrada)
 
 **Parâmetros**:
 - Max Recipes: 1000
 - Crafting Time Range: 5 minutos a 24 horas
-- Cost Range: 0 a 1000 HARVEST
+- Cost Range: 0 a 1000 FARM
 
 **Eventos**:
 ```solidity
@@ -260,7 +261,7 @@ event CraftingCompleted(uint256 indexed jobId, uint256 outputAmount);
 
 ### 2.7 MissionSystem
 
-**Propósito**: Fornecer missões e objetivos para engajamento contínuo.
+**Propósito**: Fornecer missões e objetivos para engajamento contínuo. Este contrato gerencia recompensas on-chain (FARM, NFTs).
 
 **Estrutura de Dados**:
 ```solidity
@@ -268,8 +269,7 @@ struct Mission {
     uint256 missionId;
     string title;
     string description;
-    uint256 targetValue;         // Ex: 100 unidades de trigo
-    uint256 rewardHarvest;
+    uint256 targetValue;         // Ex: 100 unidades de trigo (verificado off-chain)
     uint256 rewardFarm;
     uint256 rewardNFT;           // 0 se nenhum NFT
     uint256 duration;            // Duração em segundos
@@ -286,254 +286,73 @@ struct MissionProgress {
 ```
 
 **Funções Principais**:
-- `addMission(string memory title, uint256 target, uint256 reward)`: Adicionar missão
-- `updateProgress(address player, uint256 missionId, uint256 delta)`: Atualizar progresso
-- `completeMission(uint256 missionId)`: Completar missão
-- `claimReward(uint256 missionId)`: Reclamar recompensa
+- `addMission(string memory title, uint256 target, uint256 rewardFarm, uint256 rewardNFT)`: Adicionar missão (apenas GameEconomyManager)
+- `completeMission(uint256 missionId)`: Completar missão (gatilho off-chain, recompensa on-chain)
+- `claimReward(uint256 missionId)`: Reclamar recompensa (minta FARM ou NFT)
 
 **Parâmetros**:
 - Missões Diárias: 5 por dia
 - Missões Semanais: 3 por semana
-- Recompensa Média: 10-100 HARVEST
+- Recompensa Média: 10-100 FARM
 
 **Eventos**:
 ```solidity
-event MissionStarted(address indexed player, uint256 indexed missionId);
-event MissionCompleted(address indexed player, uint256 indexed missionId);
-event RewardClaimed(address indexed player, uint256 harvestAmount, uint256 farmAmount);
+event MissionAdded(uint256 indexed missionId);
+event MissionCompleted(uint256 indexed missionId, address indexed player);
+event RewardClaimed(uint256 indexed missionId, address indexed player, uint256 rewardFarm, uint256 rewardNFT);
 ```
 
-### 2.8 FactionSystem
+### 2.8 GameEconomyManager
 
-**Propósito**: Gerenciar facções, ranking e eventos de competição entre facções.
-
-**Estrutura de Dados**:
-```solidity
-struct Faction {
-    uint256 factionId;
-    string name;                // "Cultivadores", "Comerciantes", etc
-    string description;
-    uint256 bonus;               // Tipo de bônus (1-4)
-    uint256 totalContribution;   // Contribuição total de membros
-    uint256 memberCount;         // Número de membros
-    bool active;
-}
-
-struct FactionMember {
-    address player;
-    uint256 factionId;
-    uint256 contribution;        // Pontos de contribuição
-    uint256 joinedAt;
-}
-```
+**Propósito**: Contrato central que gerencia a lógica econômica e as interações entre os outros contratos. Atua como um "admin" para cunhagem, queima e distribuição de tokens/NFTs.
 
 **Funções Principais**:
-- `joinFaction(uint256 factionId)`: Entrar em uma facção
-- `leaveFaction()`: Sair de uma facção
-- `addContribution(address player, uint256 amount)`: Adicionar contribuição
-- `getFactionRanking()`: Obter ranking de facções
-- `distributeFactionRewards()`: Distribuir recompensas para facção vencedora
+- `setUtilityToken(address _utilityToken)`: Definir endereço do UtilityToken
+- `setFarmToken(address _farmToken)`: Definir endereço do FarmToken
+- `setFarmLand(address _farmLand)`: Definir endereço do FarmLand
+- `setFarmItems(address _farmItems)`: Definir endereço do FarmItems
+- `mintUtilityToken(address to, uint256 amount)`: Cunhar UtilityToken
+- `burnUtilityToken(uint256 amount)`: Queimar UtilityToken
+- `mintFarmToken(address to, uint256 amount)`: Cunhar FarmToken
+- `mintFarmLand(address to, uint256 fertilityLevel)`: Cunhar FarmLand NFT
+- `mintFarmItems(address to, uint256 id, uint256 amount)`: Cunhar FarmItems NFT (para saque)
+- `transferFarmItems(address from, address to, uint256 id, uint256 amount)`: Transferir FarmItems (para marketplace on-chain)
+- `applyMarketplaceFee(uint256 amount)`: Aplicar taxa de marketplace (queima e tesouro)
 
 **Parâmetros**:
-- Facções Iniciais: 4
-- Bônus por Facção: +10% a +20% em atributo específico
-- Evento de Ranking: Semanal
-- Recompensa Semanal: 1000 HARVEST para facção vencedora
+- Owner: Endereço do deployer (ou DAO)
+- Pausable: Sim
 
 **Eventos**:
 ```solidity
-event FactionJoined(address indexed player, uint256 indexed factionId);
-event FactionLeft(address indexed player, uint256 indexed factionId);
-event ContributionAdded(address indexed player, uint256 amount);
-event FactionRankingUpdated(uint256[] rankings);
-event FactionRewardsDistributed(uint256 indexed factionId, uint256 amount);
+event UtilityTokenSet(address indexed utilityToken);
+event FarmTokenSet(address indexed farmToken);
+event FarmLandSet(address indexed farmLand);
+event FarmItemsSet(address indexed farmItems);
 ```
 
-### 2.9 GameEconomyManager
+## 3. Considerações de Segurança
 
-**Propósito**: Gerenciar economia geral, taxas, burning e distribuição de recompensas.
+- **Controle de Acesso:** Funções sensíveis (`mint`, `burn`, `addRecipe`) são protegidas com `onlyOwner` ou `onlyGameEconomyManager`.
+- **Reentrancy Guard:** Prevenção de ataques de reentrância em todas as funções que envolvem transferências de tokens.
+- **Pausable:** Capacidade de pausar contratos em caso de vulnerabilidades críticas.
+- **Testes:** Cobertura extensiva de testes unitários e de integração para todos os contratos.
+- **Auditoria:** Recomenda-se auditoria externa de segurança antes do deploy em mainnet.
 
-**Funções Principais**:
-- `setTaxRate(uint256 newRate)`: Ajustar taxa (apenas admin)
-- `setBurningRate(uint256 newRate)`: Ajustar taxa de burning
-- `distributeDailyRewards()`: Distribuir recompensas diárias
-- `adjustInflation()`: Ajustar inflação baseado em métricas
-- `emergencyPause()`: Pausar sistema em emergência
+## 4. Roadmap de Deploy (Fase 16)
 
-**Parâmetros**:
-- Taxa de Transação: 5%
-- Taxa de Burning: 3% (do total de transações)
-- Taxa de Tesouro: 2%
-- Recompensa Diária Total: 1000 HARVEST
+1. **Deploy de UtilityToken:** Contrato ERC-20 para o token de utilidade.
+2. **Deploy de FarmToken:** Contrato ERC-20 para o token de governança.
+3. **Deploy de FarmLand:** Contrato ERC-721 para as terras.
+4. **Deploy de FarmItems:** Contrato ERC-1155 para os itens (mint-on-demand).
+5. **Deploy de GameEconomyManager:** Contrato central que gerencia a economia.
+6. **Deploy de FarmMarketplace:** Contrato para o marketplace on-chain.
+7. **Deploy de CraftingSystem:** Contrato para crafting on-chain.
+8. **Deploy de MissionSystem:** Contrato para missões on-chain.
+9. **Configuração:** Definir os endereços dos contratos uns nos outros via GameEconomyManager.
+10. **Verificação:** Publicar o código fonte no Basescan (ou explorador equivalente).
 
-**Eventos**:
-```solidity
-event TaxRateUpdated(uint256 newRate);
-event DailyRewardsDistributed(uint256 totalAmount);
-event InflationAdjusted(uint256 newInflationRate);
-```
+---
 
-### 2.10 Integração com Facções
-O GameEconomyManager trabalha com FactionSystem para:
-- Rastrear contribuição de cada jogador na facção
-- Distribuir bônus econômicos baseado na facção
-- Calcular ranking semanal
-- Distribuir recompensas coletivas
-
-## 3. Fluxos de Interação
-
-### 3.1 Fluxo de Plantio
-```
-1. Jogador chama FarmLand.plantCrop(landId, cropId, x, y)
-2. Contrato valida:
-   - Jogador é proprietário da terra
-   - Posição (x, y) está vazia
-   - Jogador tem sementes
-3. Queima sementes do jogador (FarmItems.burn)
-4. Registra cultivo com timestamp
-5. Emite evento CropPlanted
-6. Metadata dinâmica muda conforme tempo passa
-```
-
-### 3.2 Fluxo de Colheita
-```
-1. Jogador chama FarmLand.harvestCrop(landId, x, y)
-2. Contrato valida:
-   - Cultivo completou tempo de crescimento
-   - Jogador é proprietário da terra
-3. Calcula rendimento baseado em:
-   - Tipo de cultivo
-   - Nível de fertilidade
-   - Bônus de ferramentas/personagens
-4. Minta FarmItems para jogador
-5. Atualiza fertilidade da terra
-6. Emite evento CropHarvested
-```
-
-### 3.3 Fluxo de Marketplace
-```
-1. Vendedor chama FarmMarketplace.listItem(nftContract, tokenId, price)
-2. Contrato transfere NFT para escrow
-3. Comprador chama FarmMarketplace.buyItem(listingId)
-4. Contrato:
-   - Transfere HARVEST do comprador
-   - Aplica taxa (5%)
-   - Queima 3% (burning)
-   - Envia 2% para tesouro
-   - Envia 95% para vendedor
-   - Transfere NFT para comprador
-5. Emite eventos ItemSold
-```
-
-### 3.4 Fluxo de Crafting
-```
-1. Jogador chama CraftingSystem.startCrafting(recipeId)
-2. Contrato valida:
-   - Jogador tem todos os itens necessários
-   - Jogador tem HARVEST suficiente
-3. Queima itens de entrada (FarmItems.burn)
-4. Transfere HARVEST (CraftingSystem.burn)
-5. Cria CraftingJob com timestamp
-6. Emite evento CraftingStarted
-7. Após completar tempo:
-   - Jogador chama CraftingSystem.completeCrafting(jobId)
-   - Minta item de saída
-   - Adiciona contribuição para facção (se Alquimista)
-   - Emite evento CraftingCompleted
-```
-
-### 3.5 Fluxo de Facções
-```
-1. Novo jogador chama FactionSystem.joinFaction(factionId)
-2. Contrato registra membro
-3. Jogador recebe bônus da facção
-4. Cada ação do jogador adiciona contribuição:
-   - Colheita: +1 ponto (Cultivadores)
-   - Venda: +1 ponto (Comerciantes)
-   - Crafting: +1 ponto (Alquimistas)
-   - Descoberta: +1 ponto (Exploradores)
-5. Semanalmente:
-   - GameEconomyManager calcula ranking
-   - FactionSystem distribui recompensas
-   - Emite evento FactionRankingUpdated
-6. Jogador pode sair e entrar em outra facção
-```
-
-## 4. Segurança e Auditoria
-
-### 4.1 Considerações de Segurança
-- Todos os contratos usam OpenZeppelin (ReentrancyGuard, AccessControl)
-- Funções críticas requerem múltiplas assinaturas (2-of-3 multisig)
-- Pausable em todos os contratos para emergências
-- Rate limiting em funções sensíveis
-- Whitelist de endereços para operações iniciais
-
-### 4.2 Testes
-- Testes unitários para cada função
-- Testes de integração para fluxos completos
-- Testes de segurança (reentrancy, overflow, etc)
-- Testes de gas optimization
-- Simulação de cenários econômicos
-
-### 4.3 Auditoria
-- Auditoria externa antes de mainnet
-- Monitoramento contínuo em produção
-- Relatório de vulnerabilidades
-- Bounty program para descoberta de bugs
-
-## 5. Deployment
-
-### 5.1 Redes Suportadas
-- **Base Mainnet** (produção - Fase 1)
-- **Base Sepolia** (testnet)
-- **Polygon Mainnet** (produção - Fase 4)
-- **Polygon Mumbai** (testnet)
-
-### 5.2 Ordem de Deployment (Base Mainnet)
-1. Deploy HarvestToken (HARVEST ERC-20)
-2. Deploy FarmToken (FARM ERC-20)
-3. Deploy FactionSystem (facções - criar antes de GameEconomyManager)
-4. Deploy GameEconomyManager (gerencia economia + facções)
-5. Deploy FarmLand (terras ERC-721)
-6. Deploy FarmItems (itens ERC-1155)
-7. Deploy FarmMarketplace (marketplace)
-8. Deploy CraftingSystem (crafting)
-9. Deploy MissionSystem (missões)
-10. Configurar permissões e inicializar
-
-**Nota**: Deploy em Base Sepolia antes de mainnet para testes completos
-
-### 5.3 Inicialização
-- Cunhar supply inicial de tokens (1M HARVEST, 100k FARM)
-- Criar 4 facções com bônus e descrições
-- Adicionar receitas de crafting (50+ receitas iniciais)
-- Adicionar missões iniciais (5 missões diárias, 3 semanais)
-- Configurar taxas e parâmetros (5% marketplace, 3% burning, 2% tesouro)
-- Configurar recompensas de facção (1000 HARVEST/semana para vencedora)
-- Ativar sistema e abrir para beta testers
-
-## 6. Monitoramento e Manutenção
-
-### 6.1 Métricas Importantes
-- Total de HARVEST em circulação
-- Taxa de burning vs minting
-- Preço médio de itens no marketplace
-- Número de missões completadas
-- Engajamento diário de jogadores
-- Distribuição de jogadores por facção
-- Ranking de facções (contribuição total)
-
-### 6.2 Ajustes Dinâmicos
-- Se HARVEST inflaciona: aumentar burning
-- Se HARVEST deflaciona: aumentar minting
-- Se marketplace está inativo: reduzir taxas
-- Se muitos abandos: aumentar recompensas
-- Se facção desbalanceada: ajustar bônus
-- Se engajamento cai: aumentar recompensas de facção
-
-### 6.3 Upgrades
-- Usar proxy pattern (UUPS) para upgradabilidade
-- Testar upgrades em Base Sepolia antes
-- Comunicar mudanças à comunidade
-- Permitir opt-out se possível
-- Versionar contratos para rastreabilidade
+**Autor:** Manus AI
+**Última Atualização:** 25 de Fevereiro de 2026

@@ -1,0 +1,19 @@
+import { ethers } from "hardhat";
+
+async function main() {
+  const [deployer] = await ethers.getSigners();
+
+  console.log("Deploying contracts with the account:", deployer.address);
+
+  const GameEconomyManager = await ethers.getContractFactory("GameEconomyManager");
+  const gameEconomyManager = await GameEconomyManager.deploy();
+
+  await gameEconomyManager.waitForDeployment();
+
+  console.log("GameEconomyManager deployed to:", gameEconomyManager.target);
+}
+
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});

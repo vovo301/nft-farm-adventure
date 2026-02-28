@@ -587,3 +587,41 @@ export const gameEvents = mysqlTable(
 
 export type GameEvent = typeof gameEvents.$inferSelect;
 export type InsertGameEvent = typeof gameEvents.$inferInsert;
+
+
+// ============================================================================
+// SAQUES (WITHDRAWALS) - OFF-CHAIN PARA ON-CHAIN
+// ============================================================================
+
+/**
+ * Tabela de Solicitações de Saque
+ * Gerencia a conversão de itens off-chain em NFTs on-chain
+ */
+export const withdrawalRequests = mysqlTable(
+  "withdrawal_requests",
+  {
+    id: varchar("id", { length: 36 }).primaryKey(), // UUID
+    userId: varchar("userId", { length: 64 }).notNull(),
+    itemId: int("itemId").notNull(),
+    quantity: int("quantity").notNull(),
+    quantityAfterFee: int("quantityAfterFee").notNull(),
+    withdrawalFee: int("withdrawalFee").notNull(), // Quantidade deduzida como taxa
+    status: mysqlEnum("status", ["pending", "processing", "completed", "failed"]).default("pending").notNull(),
+    transactionHash: varchar("transactionHash", { length: 66 }), // Hash da transação blockchain
+    nftTokenId: varchar("nftTokenId", { length: 100 }), // ID do NFT criado on-chain
+    errorMessage: text("errorMessage"), // Mensagem de erro se falhar
+
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  },
+  (table) => ({
+    userIdx: index("idx_userId").on(table.userId),
+    statusIdx: index("idx_status").on(table.status),
+    itemIdx: index("idx_itemId").on(table.itemId),
+    createdIdx: index("idx_createdAt").on(table.createdAt),
+    userStatusIdx: index("idx_user_status").on(table.userId, table.status),
+  })
+);
+
+export type WithdrawalRequest = typeof withdrawalRequests.$inferSelect;
+export type InsertWithdrawalRequest = typeof withdrawalRequests.$inferInsert;

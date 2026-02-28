@@ -225,8 +225,12 @@ export async function harvestCrop(
       })
       .where(eq(crops.id, cropId));
 
-    // Adicionar itens ao inventário (será implementado depois)
-    // TODO: Adicionar ao inventário
+    // Adicionar itens ao inventário
+    const addResult = await addItemToInventory(userId, cropType[0].itemTypeId, finalYield);
+    if (!addResult.success) {
+      console.error("[Farming] Failed to add harvested item to inventory:", addResult.error);
+      return { success: false, error: "Failed to add harvested item to inventory" };
+    }
 
     return { success: true, yield: finalYield };
   } catch (error) {

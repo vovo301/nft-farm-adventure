@@ -115,3 +115,13 @@ nft-farm-game-updated.zip
 nft-farm-game.zip
 *.rar
 *.zip
+
+# System and hidden files
+.local/
+.cache/
+terminal_full_output/
+
+# Hardhat artifacts
+artifacts/
+cache/
+typechain-types/

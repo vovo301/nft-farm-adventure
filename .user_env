@@ -1,5 +1,5 @@
 # connectors_GH_TOKEN
-export GH_TOKEN=""
+export GH_TOKEN="ghu_4WzpDpZNMTizh4RSnpOs6C7XLs8zdk4REKR7"
 
 # connectors_GOOGLE_DRIVE_TOKEN
 export GOOGLE_DRIVE_TOKEN=""
