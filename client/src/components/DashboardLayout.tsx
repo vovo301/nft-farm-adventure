@@ -21,22 +21,23 @@ import {
 } from "@/components/ui/sidebar";
 import { getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Users, Hammer, Backpack, Store } from "lucide-react";
+import { LayoutDashboard, LogOut, PanelLeft, Hammer, Store, Sprout, Package, Target, Wallet } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { Button } from "./ui/button";
 
 const menuItems = [
-  { icon: LayoutDashboard, label: "Home", path: "/" },
-  { icon: Backpack, label: "Farming", path: "/farming" },
-  { icon: Backpack, label: "Inventory", path: "/inventory" },
+  { icon: LayoutDashboard, label: "Dashboard", path: "/" },
+  { icon: Sprout, label: "Farming", path: "/farming" },
+  { icon: Package, label: "Inventário", path: "/inventory" },
   { icon: Store, label: "Marketplace", path: "/marketplace" },
   { icon: Hammer, label: "Crafting", path: "/crafting" },
+  { icon: Target, label: "Missões", path: "/missions" },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";
-const DEFAULT_WIDTH = 280;
+const DEFAULT_WIDTH = 240;
 const MIN_WIDTH = 200;
 const MAX_WIDTH = 480;
 
@@ -61,14 +62,15 @@ export default function DashboardLayout({
 
   if (!user) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-amber-50 to-yellow-100">
         <div className="flex flex-col items-center gap-8 p-8 max-w-md w-full">
-          <div className="flex flex-col items-center gap-6">
-            <h1 className="text-2xl font-semibold tracking-tight text-center">
-              Sign in to continue
+          <div className="flex flex-col items-center gap-4">
+            <div className="text-6xl">🌾</div>
+            <h1 className="text-3xl font-bold tracking-tight text-center text-amber-900">
+              Harvest Realm
             </h1>
-            <p className="text-sm text-muted-foreground text-center max-w-sm">
-              Access to this dashboard requires authentication. Continue to launch the login flow.
+            <p className="text-sm text-amber-700 text-center max-w-sm">
+              O jogo NFT de farming na Base Network. Cultive, negocie e construa seu império agrícola.
             </p>
           </div>
           <Button
@@ -76,9 +78,9 @@ export default function DashboardLayout({
               window.location.href = getLoginUrl();
             }}
             size="lg"
-            className="w-full shadow-lg hover:shadow-xl transition-all"
+            className="w-full shadow-lg hover:shadow-xl transition-all bg-amber-600 hover:bg-amber-700"
           >
-            Sign in
+            Entrar no Jogo
           </Button>
         </div>
       </div>
@@ -154,6 +156,12 @@ function DashboardLayoutContent({
     };
   }, [isResizing, setSidebarWidth]);
 
+  // Formatar endereço da carteira
+  const walletAddress = user?.walletAddress;
+  const shortAddress = walletAddress
+    ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`
+    : null;
+
   return (
     <>
       <div className="relative" ref={sidebarRef}>
@@ -173,8 +181,9 @@ function DashboardLayoutContent({
               </button>
               {!isCollapsed ? (
                 <div className="flex items-center gap-2 min-w-0">
-                  <span className="font-semibold tracking-tight truncate">
-                    Navigation
+                  <span className="text-xl">🌾</span>
+                  <span className="font-bold tracking-tight truncate text-amber-900">
+                    Harvest Realm
                   </span>
                 </div>
               ) : null}
@@ -194,7 +203,7 @@ function DashboardLayoutContent({
                       className={`h-10 transition-all font-normal`}
                     >
                       <item.icon
-                        className={`h-4 w-4 ${isActive ? "text-primary" : ""}`}
+                        className={`h-4 w-4 ${isActive ? "text-amber-600" : ""}`}
                       />
                       <span>{item.label}</span>
                     </SidebarMenuButton>
@@ -208,17 +217,17 @@ function DashboardLayoutContent({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="flex items-center gap-3 rounded-lg px-1 py-1 hover:bg-accent/50 transition-colors w-full text-left group-data-[collapsible=icon]:justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-                  <Avatar className="h-9 w-9 border shrink-0">
-                    <AvatarFallback className="text-xs font-medium">
-                      {user?.name?.charAt(0).toUpperCase()}
+                  <Avatar className="h-9 w-9 border shrink-0 bg-amber-100">
+                    <AvatarFallback className="text-xs font-medium text-amber-700">
+                      {shortAddress ? shortAddress.slice(0, 2).toUpperCase() : "?"}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1 min-w-0 group-data-[collapsible=icon]:hidden">
                     <p className="text-sm font-medium truncate leading-none">
-                      {user?.name || "-"}
+                      {user?.name || "Jogador"}
                     </p>
-                    <p className="text-xs text-muted-foreground truncate mt-1.5">
-                      {user?.email || "-"}
+                    <p className="text-xs text-muted-foreground truncate mt-1.5 font-mono">
+                      {shortAddress || user?.email || "-"}
                     </p>
                   </div>
                 </button>
@@ -229,7 +238,7 @@ function DashboardLayoutContent({
                   className="cursor-pointer text-destructive focus:text-destructive"
                 >
                   <LogOut className="mr-2 h-4 w-4" />
-                  <span>Sign out</span>
+                  <span>Sair</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -252,8 +261,8 @@ function DashboardLayoutContent({
               <SidebarTrigger className="h-9 w-9 rounded-lg bg-background" />
               <div className="flex items-center gap-3">
                 <div className="flex flex-col gap-1">
-                  <span className="tracking-tight text-foreground">
-                    {activeMenuItem?.label ?? "Menu"}
+                  <span className="tracking-tight text-foreground font-semibold">
+                    {activeMenuItem?.label ?? "Harvest Realm"}
                   </span>
                 </div>
               </div>

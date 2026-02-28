@@ -6,7 +6,7 @@ import { base, baseSepolia } from 'viem/chains';
  * Suporta Base Mainnet e Base Sepolia (testnet)
  */
 
-const projectId = process.env.VITE_WALLET_CONNECT_PROJECT_ID || 'default-project-id';
+const projectId = (import.meta as any).env?.VITE_WALLET_CONNECT_PROJECT_ID || 'demo-project-id-placeholder';
 
 export const wagmiConfig = getDefaultConfig({
   appName: 'Harvest Realm',
@@ -40,7 +40,7 @@ export const NETWORKS = {
  * Obter rede atual baseado no ambiente
  */
 export function getCurrentNetwork() {
-  const isProduction = process.env.NODE_ENV === 'production';
+  const isProduction = (import.meta as any).env?.MODE === 'production';
   return isProduction ? NETWORKS.BASE_MAINNET : NETWORKS.BASE_SEPOLIA;
 }
 
@@ -48,16 +48,17 @@ export function getCurrentNetwork() {
  * Constantes de Smart Contracts
  * Será preenchido após deployment
  */
+const env = (import.meta as any).env || {};
 export const CONTRACT_ADDRESSES = {
-  HARVEST_TOKEN: process.env.VITE_HARVEST_TOKEN_ADDRESS || '',
-  FARM_TOKEN: process.env.VITE_FARM_TOKEN_ADDRESS || '',
-  FARM_LAND: process.env.VITE_FARM_LAND_ADDRESS || '',
-  FARM_ITEMS: process.env.VITE_FARM_ITEMS_ADDRESS || '',
-  MARKETPLACE: process.env.VITE_MARKETPLACE_ADDRESS || '',
-  CRAFTING: process.env.VITE_CRAFTING_ADDRESS || '',
-  MISSION_SYSTEM: process.env.VITE_MISSION_SYSTEM_ADDRESS || '',
-  FACTION_SYSTEM: process.env.VITE_FACTION_SYSTEM_ADDRESS || '',
-  GAME_ECONOMY: process.env.VITE_GAME_ECONOMY_ADDRESS || '',
+  HARVEST_TOKEN: env.VITE_HARVEST_TOKEN_ADDRESS || '',
+  FARM_TOKEN: env.VITE_FARM_TOKEN_ADDRESS || '',
+  FARM_LAND: env.VITE_FARM_LAND_ADDRESS || '',
+  FARM_ITEMS: env.VITE_FARM_ITEMS_ADDRESS || '',
+  MARKETPLACE: env.VITE_MARKETPLACE_ADDRESS || '',
+  CRAFTING: env.VITE_CRAFTING_ADDRESS || '',
+  MISSION_SYSTEM: env.VITE_MISSION_SYSTEM_ADDRESS || '',
+  FACTION_SYSTEM: env.VITE_FACTION_SYSTEM_ADDRESS || '',
+  GAME_ECONOMY: env.VITE_GAME_ECONOMY_ADDRESS || '',
 } as const;
 
 /**

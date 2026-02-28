@@ -1,8 +1,8 @@
-import { router, publicProcedure } from '@/server/trpc';
-import { z } from 'zod';
-import { db } from '@/server/db';
-import { inventory, users, withdrawalRequests } from '@/drizzle/schema';
-import { eq, and } from 'drizzle-orm';
+import { router, protectedProcedure } from "../_core/trpc";
+import { z } from "zod";
+import { getDb } from "../db";
+import { inventory, withdrawalRequests, itemTypes } from "../../drizzle/schema";
+import { eq, and, desc } from "drizzle-orm";
 
 /**
  * Router para gerenciar saques de itens off-chain para NFTs on-chain
@@ -12,225 +12,182 @@ export const withdrawalRouter = router({
   /**
    * Obter o histórico de saques do jogador
    */
-  getWithdrawalHistory: publicProcedure
-    .input(z.object({ userId: z.string() }))
-    .query(async ({ input }) => {
+  getWithdrawalHistory: protectedProcedure
+    .input(z.object({ limit: z.number().optional(), offset: z.number().optional() }))
+    .query(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) return [];
       const history = await db
         .select()
         .from(withdrawalRequests)
-        .where(eq(withdrawalRequests.userId, input.userId))
-        .orderBy((t) => t.createdAt);
-
+        .where(eq(withdrawalRequests.userId, String(ctx.user.id)))
+        .orderBy(desc(withdrawalRequests.createdAt))
+        .limit(input.limit || 20)
+        .offset(input.offset || 0);
       return history;
     }),
 
   /**
    * Obter itens disponíveis para saque
-   * Retorna todos os itens no inventário do jogador
    */
-  getWithdrawableItems: publicProcedure
-    .input(z.object({ userId: z.string() }))
-    .query(async ({ input }) => {
-      const items = await db
-        .select()
-        .from(inventory)
-        .where(eq(inventory.userId, input.userId));
-
-      return items.map((item) => ({
-        ...item,
-        canWithdraw: item.quantity > 0,
-      }));
-    }),
+  getWithdrawableItems: protectedProcedure.query(async ({ ctx }) => {
+    const db = await getDb();
+    if (!db) return [];
+    const items = await db
+      .select({
+        id: inventory.id,
+        itemTypeId: inventory.itemTypeId,
+        quantity: inventory.quantity,
+        itemName: itemTypes.name,
+        itemCategory: itemTypes.itemCategory,
+        rarity: itemTypes.rarity,
+      })
+      .from(inventory)
+      .leftJoin(itemTypes, eq(inventory.itemTypeId, itemTypes.id))
+      .where(eq(inventory.userId, ctx.user.id));
+    return items.map((item) => ({
+      ...item,
+      canWithdraw: (item.quantity || 0) > 0,
+    }));
+  }),
 
   /**
-   * Criar uma solicitação de saque
-   * Valida se o jogador possui o item e se há saldo suficiente
-   * Cria um registro de solicitação que será processado pelo GameEconomyManager
+   * Solicitar saque de itens para on-chain
    */
-  requestWithdrawal: publicProcedure
+  requestWithdrawal: protectedProcedure
     .input(
       z.object({
-        userId: z.string(),
-        itemId: z.number(),
+        itemTypeId: z.number(),
         quantity: z.number().min(1),
-        withdrawalFeePercentage: z.number().default(0.05), // 5% de taxa
+        walletAddress: z.string(),
       })
     )
-    .mutation(async ({ input }) => {
-      // Validar se o jogador existe
-      const user = await db
-        .select()
-        .from(users)
-        .where(eq(users.id, input.userId))
-        .limit(1);
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) return { success: false, error: "Banco de dados indisponível" };
 
-      if (!user.length) {
-        throw new Error('Jogador não encontrado');
-      }
-
-      // Validar se o jogador possui o item no inventário
-      const inventoryItem = await db
+      const [inventoryItem] = await db
         .select()
         .from(inventory)
         .where(
           and(
-            eq(inventory.userId, input.userId),
-            eq(inventory.itemId, input.itemId)
+            eq(inventory.userId, ctx.user.id),
+            eq(inventory.itemTypeId, input.itemTypeId)
           )
         )
         .limit(1);
 
-      if (!inventoryItem.length || inventoryItem[0].quantity < input.quantity) {
-        throw new Error(
-          'Quantidade insuficiente no inventário para realizar o saque'
-        );
+      if (!inventoryItem || inventoryItem.quantity < input.quantity) {
+        return { success: false, error: "Saldo insuficiente no inventário" };
       }
 
-      // Calcular taxa de saque
-      const withdrawalFee = Math.floor(
-        input.quantity * input.withdrawalFeePercentage
-      );
-      const quantityAfterFee = input.quantity - withdrawalFee;
+      const feeRate = 0.02;
+      const fee = Math.floor(input.quantity * feeRate);
+      const quantityAfterFee = input.quantity - fee;
 
-      if (quantityAfterFee <= 0) {
-        throw new Error(
-          'Quantidade após taxa é zero. Aumente a quantidade para sacar.'
-        );
-      }
+      const { nanoid } = await import("nanoid");
+      await db.insert(withdrawalRequests).values({
+        id: nanoid(),
+        userId: String(ctx.user.id),
+        itemId: input.itemTypeId,
+        quantity: input.quantity,
+        quantityAfterFee,
+        withdrawalFee: fee,
+        status: "pending",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
 
-      // Criar solicitação de saque
-      const withdrawalRequest = await db
-        .insert(withdrawalRequests)
-        .values({
-          userId: input.userId,
-          itemId: input.itemId,
-          quantity: input.quantity,
-          quantityAfterFee,
-          withdrawalFee,
-          status: 'pending', // pending, processing, completed, failed
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        })
-        .returning();
-
-      // Deduzir quantidade do inventário (reservar para saque)
       await db
         .update(inventory)
-        .set({
-          quantity: inventoryItem[0].quantity - input.quantity,
-          updatedAt: new Date(),
-        })
-        .where(
-          and(
-            eq(inventory.userId, input.userId),
-            eq(inventory.itemId, input.itemId)
-          )
-        );
+        .set({ quantity: inventoryItem.quantity - input.quantity })
+        .where(eq(inventory.id, inventoryItem.id));
 
       return {
         success: true,
-        withdrawalId: withdrawalRequest[0].id,
-        message: `Solicitação de saque criada. ${withdrawalFee} unidades serão deduzidas como taxa.`,
-        details: {
-          itemId: input.itemId,
-          requestedQuantity: input.quantity,
-          quantityToReceive: quantityAfterFee,
-          fee: withdrawalFee,
-        },
+        message: `Saque de ${quantityAfterFee} itens solicitado (taxa: ${fee})`,
+        quantityAfterFee,
+        fee,
       };
     }),
 
   /**
-   * Cancelar uma solicitação de saque pendente
-   * Devolve os itens ao inventário do jogador
+   * Cancelar um saque pendente
    */
-  cancelWithdrawal: publicProcedure
+  cancelWithdrawal: protectedProcedure
     .input(z.object({ withdrawalId: z.string() }))
-    .mutation(async ({ input }) => {
-      // Obter a solicitação de saque
-      const withdrawal = await db
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) return { success: false, error: "Banco de dados indisponível" };
+
+      const [withdrawal] = await db
         .select()
         .from(withdrawalRequests)
-        .where(eq(withdrawalRequests.id, input.withdrawalId))
-        .limit(1);
-
-      if (!withdrawal.length) {
-        throw new Error('Solicitação de saque não encontrada');
-      }
-
-      if (withdrawal[0].status !== 'pending') {
-        throw new Error(
-          `Não é possível cancelar uma solicitação com status: ${withdrawal[0].status}`
-        );
-      }
-
-      // Devolver os itens ao inventário
-      const inventoryItem = await db
-        .select()
-        .from(inventory)
         .where(
           and(
-            eq(inventory.userId, withdrawal[0].userId),
-            eq(inventory.itemId, withdrawal[0].itemId)
+            eq(withdrawalRequests.id, input.withdrawalId),
+            eq(withdrawalRequests.userId, String(ctx.user.id)),
+            eq(withdrawalRequests.status, "pending")
           )
         )
         .limit(1);
 
-      if (inventoryItem.length) {
+      if (!withdrawal) {
+        return { success: false, error: "Saque não encontrado ou não pode ser cancelado" };
+      }
+
+      await db
+        .update(withdrawalRequests)
+        .set({ status: "cancelled" as any, updatedAt: new Date() })
+        .where(eq(withdrawalRequests.id, input.withdrawalId));
+
+      const [inventoryItem] = await db
+        .select()
+        .from(inventory)
+        .where(
+          and(
+            eq(inventory.userId, ctx.user.id),
+            eq(inventory.itemTypeId, withdrawal.itemId)
+          )
+        )
+        .limit(1);
+
+      if (inventoryItem) {
         await db
           .update(inventory)
-          .set({
-            quantity: inventoryItem[0].quantity + withdrawal[0].quantity,
-            updatedAt: new Date(),
-          })
-          .where(
-            and(
-              eq(inventory.userId, withdrawal[0].userId),
-              eq(inventory.itemId, withdrawal[0].itemId)
-            )
-          );
+          .set({ quantity: inventoryItem.quantity + withdrawal.quantity })
+          .where(eq(inventory.id, inventoryItem.id));
       } else {
-        // Se o item não existe mais no inventário, criar uma nova entrada
         await db.insert(inventory).values({
-          userId: withdrawal[0].userId,
-          itemId: withdrawal[0].itemId,
-          quantity: withdrawal[0].quantity,
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          userId: ctx.user.id,
+          itemTypeId: withdrawal.itemId,
+          quantity: withdrawal.quantity,
         });
       }
 
-      // Atualizar status da solicitação
-      await db
-        .update(withdrawalRequests)
-        .set({
-          status: 'cancelled',
-          updatedAt: new Date(),
-        })
-        .where(eq(withdrawalRequests.id, input.withdrawalId));
-
-      return {
-        success: true,
-        message: 'Solicitação de saque cancelada. Itens devolvidos ao inventário.',
-      };
+      return { success: true, message: "Saque cancelado e itens devolvidos ao inventário" };
     }),
 
   /**
-   * Obter detalhes de uma solicitação de saque
+   * Obter detalhes de um saque
    */
-  getWithdrawalDetails: publicProcedure
+  getWithdrawalDetails: protectedProcedure
     .input(z.object({ withdrawalId: z.string() }))
-    .query(async ({ input }) => {
-      const withdrawal = await db
+    .query(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) return null;
+
+      const [withdrawal] = await db
         .select()
         .from(withdrawalRequests)
-        .where(eq(withdrawalRequests.id, input.withdrawalId))
+        .where(
+          and(
+            eq(withdrawalRequests.id, input.withdrawalId),
+            eq(withdrawalRequests.userId, String(ctx.user.id))
+          )
+        )
         .limit(1);
 
-      if (!withdrawal.length) {
-        throw new Error('Solicitação de saque não encontrada');
-      }
-
-      return withdrawal[0];
+      return withdrawal || null;
     }),
 });

@@ -9,6 +9,7 @@ import { FarmGrid } from "@/components/FarmGrid";
 import { CropCard } from "@/components/CropCard";
 import { PlantModal } from "@/components/PlantModal";
 import { useAuth } from "@/_core/hooks/useAuth";
+import DashboardLayout from "@/components/DashboardLayout";
 
 /**
  * Página principal de Farming
@@ -77,7 +78,7 @@ export default function Farming() {
   // Se não tem terras
   if (!isLoadingLands && lands.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-amber-50 to-yellow-100 p-6">
+      <DashboardLayout>
         <div className="max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -94,21 +95,21 @@ export default function Farming() {
             </Button>
           </motion.div>
         </div>
-      </div>
+      </DashboardLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-yellow-100 p-6">
+    <DashboardLayout>
       <div className="max-w-7xl mx-auto">
         {/* Cabeçalho */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
+          className="mb-6"
         >
-          <h1 className="text-4xl font-bold text-amber-900 mb-2">Sua Fazenda</h1>
-          <p className="text-amber-700">Cultive, colha e prospere no Harvest Realm</p>
+          <h1 className="text-3xl font-bold text-amber-900 mb-1">🌱 Sua Fazenda</h1>
+          <p className="text-amber-700 text-sm">Cultive, colha e prospere no Harvest Realm</p>
         </motion.div>
 
         {/* Estatísticas */}
@@ -117,25 +118,25 @@ export default function Farming() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.1 }}
-            className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8"
+            className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6"
           >
-            <Card className="p-4 bg-white border-amber-200">
+            <Card className="p-3 bg-white border-amber-200">
               <div className="text-xs text-amber-600 font-medium">Terras</div>
               <div className="text-2xl font-bold text-amber-900">{stats.totalLands}</div>
             </Card>
-            <Card className="p-4 bg-white border-amber-200">
+            <Card className="p-3 bg-white border-amber-200">
               <div className="text-xs text-amber-600 font-medium">Total de Cultivos</div>
               <div className="text-2xl font-bold text-amber-900">{stats.totalCrops}</div>
             </Card>
-            <Card className="p-4 bg-white border-amber-200">
+            <Card className="p-3 bg-white border-amber-200">
               <div className="text-xs text-amber-600 font-medium">Crescendo</div>
               <div className="text-2xl font-bold text-blue-600">{stats.growingCrops}</div>
             </Card>
-            <Card className="p-4 bg-white border-amber-200">
+            <Card className="p-3 bg-white border-amber-200">
               <div className="text-xs text-amber-600 font-medium">Prontos</div>
               <div className="text-2xl font-bold text-yellow-600">{stats.readyCrops}</div>
             </Card>
-            <Card className="p-4 bg-white border-amber-200">
+            <Card className="p-3 bg-white border-amber-200">
               <div className="text-xs text-amber-600 font-medium">Total Colhido</div>
               <div className="text-2xl font-bold text-green-600">{stats.totalYield}</div>
             </Card>
@@ -148,7 +149,7 @@ export default function Farming() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="mb-8"
+            className="mb-6"
           >
             <h2 className="text-lg font-semibold text-amber-900 mb-3">Selecione uma Terra</h2>
             <div className="flex gap-2 overflow-x-auto pb-2">
@@ -179,7 +180,7 @@ export default function Farming() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="grid grid-cols-1 lg:grid-cols-3 gap-8"
+            className="grid grid-cols-1 lg:grid-cols-3 gap-6"
           >
             {/* Grade de Fazenda */}
             <div className="lg:col-span-2">
@@ -263,6 +264,6 @@ export default function Farming() {
           />
         )}
       </div>
-    </div>
+    </DashboardLayout>
   );
 }

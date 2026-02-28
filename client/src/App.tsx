@@ -9,16 +9,18 @@ import Farming from "./pages/Farming";
 import Inventory from "./pages/Inventory";
 import Marketplace from "./pages/Marketplace";
 import Crafting from "./pages/Crafting";
+import Missions from "./pages/Missions";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
-      <Route path={"\\"} component={Home} />
+      <Route path={"/"} component={Home} />
       <Route path={"/farming"} component={Farming} />
       <Route path={"/inventory"} component={Inventory} />
       <Route path={"/marketplace"} component={Marketplace} />
       <Route path={"/crafting"} component={Crafting} />
+      <Route path={"/missions"} component={Missions} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

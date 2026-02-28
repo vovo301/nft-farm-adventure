@@ -10,6 +10,7 @@ import { farmingRouter } from "./routers/farming";
 import { inventoryRouter } from "./routers/inventory";
 import { marketplaceRouter } from "./routers/marketplace";
 import { craftingRouter } from "./routers/crafting";
+import { missionsRouter } from "./routers/missions";
 
 export const appRouter = router({
   // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -99,9 +100,7 @@ export const appRouter = router({
     inventory: inventoryRouter,
     marketplace: marketplaceRouter,
     crafting: craftingRouter,
-    // TODO: Adicionar routers de jogo aqui
-    // missions: router({ ... }),
-    // factions: router({ ... }),
+    missions: missionsRouter,
   }),
 });
 

@@ -7,11 +7,19 @@ export const getLoginUrl = () => {
   const redirectUri = `${window.location.origin}/api/oauth/callback`;
   const state = btoa(redirectUri);
 
-  const url = new URL(`${oauthPortalUrl}/app-auth`);
-  url.searchParams.set("appId", appId);
-  url.searchParams.set("redirectUri", redirectUri);
-  url.searchParams.set("state", state);
-  url.searchParams.set("type", "signIn");
+  // Se as variáveis de ambiente não estiverem configuradas, retorna URL de fallback
+  if (!oauthPortalUrl || !appId) {
+    return `${window.location.origin}/api/oauth/login`;
+  }
 
-  return url.toString();
+  try {
+    const url = new URL(`${oauthPortalUrl}/app-auth`);
+    url.searchParams.set("appId", appId);
+    url.searchParams.set("redirectUri", redirectUri);
+    url.searchParams.set("state", state);
+    url.searchParams.set("type", "signIn");
+    return url.toString();
+  } catch {
+    return `${window.location.origin}/api/oauth/login`;
+  }
 };
