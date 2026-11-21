@@ -35,6 +35,16 @@ premium (gemas) e um token ERC-20 sacável. Cerca de **500 ações de jogador** 
 - Feature flags por rede e por janela de tempo, idênticas no cliente e no servidor.
 - Design system rígido (sem cores/ícones novos sem aprovação) mantém a UI coesa.
 
+## Notas detalhadas por sistema
+
+| Nota | Sistema | Status |
+|---|---|---|
+| [`01-plantio.md`](01-plantio.md) | canteiros, plantar, crescer, colher, estágios, loja de sementes | escrita @ `4e3606f` |
+| [`02-recursos.md`](02-recursos.md) | árvores, rochas/minérios, ferramentas, recarga, fusão de nós | escrita @ `4e3606f` |
+| [`03-cozinha.md`](03-cozinha.md) | prédios de cozinha, fila de receitas, XP e nível do avatar | escrita @ `4e3606f` |
+| [`04-expansao.md`](04-expansao.md) | expansão de terreno, revelação, layout livre, upgrade de ilha | escrita @ `4e3606f` |
+| [`05-pedidos.md`](05-pedidos.md) | pedidos de NPC, tarefas por atividade, bounties | escrita @ `4e3606f` |
+
 ## O que faremos diferente
 - MVP com ~10% disso (veja `docs/ROADMAP.md`); profundidade antes de largura.
 - Timers de sessão curta no início (minutos), longos só depois do nível 5.

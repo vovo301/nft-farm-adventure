@@ -150,3 +150,11 @@ __pycache__/
 .zshrc
 .gitconfig
 .user_env
+
+# Monorepo pnpm (scaffold Fase 0)
+apps/*/dist/
+packages/*/dist/
+apps/*/coverage/
+packages/*/coverage/
+.vite/
+.turbo/

@@ -1,0 +1,16 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`PRNG determinístico > valores fixos (regressão: mudar o algoritmo quebra saves/replays) 1`] = `
+[
+  0.4462626406457275,
+  0.9850571497809142,
+  0.8783144722692668,
+]
+`;
+
+exports[`PRNG determinístico > valores fixos (regressão: mudar o algoritmo quebra saves/replays) 2`] = `
+[
+  0.8860414167866111,
+  0.25092716235667467,
+]
+`;

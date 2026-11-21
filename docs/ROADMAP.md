@@ -4,9 +4,9 @@ Uma mudança visível por vez. O `produtor` atualiza este arquivo a cada entrega
 
 ## Fase 0 — Fundação (semana 1–2)
 - [x] Decisões do usuário: NFT Farm Adventure · Base Sepolia · Phaser 4 · código antigo em `legacy/` (`docs/ARQUITETURA.md`)
-- [ ] `analista-referencia`: notas de plantio, recursos, cozinha, expansão, pedidos
+- [x] `analista-referencia`: notas de plantio, recursos, cozinha, expansão, pedidos (`docs/referencia/01–05`, SFL @ 4e3606f)
 - [ ] `diretor-de-arte`: guia de estilo + paleta + **alvo visual** → aprovação do usuário
-- [ ] `dev-game-logic`: scaffold do monorepo, `game-core` com `GameState` v1 e testes
+- [x] `dev-game-logic`: scaffold do monorepo, `game-core` com `GameState` v1 e testes (67 testes verdes; números ainda placeholder)
 - [ ] `economista-tokenomics`: `economy.csv` v0 (4 culturas, 2 recursos) + simulador
 
 ## Fase 1 — Fazenda jogável off-chain (semana 3–6)

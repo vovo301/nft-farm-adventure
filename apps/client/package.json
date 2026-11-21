@@ -1,0 +1,7 @@
+{
+  "name": "@nft-farm/client",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Cliente web (Vite + React + Tailwind + Phaser 4). Placeholder: entra na Fase 1."
+}

@@ -1,0 +1,7 @@
+{
+  "name": "@nft-farm/server",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Servidor autoritativo (Node + TypeScript + Postgres). Placeholder: entra na Fase 1."
+}
