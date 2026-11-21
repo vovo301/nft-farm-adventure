@@ -40,12 +40,18 @@ Login com carteira (assinatura de mensagem → sessão). A fazenda é um ERC-721
 até o jogador sacar: servidor debita, assina EIP-712, jogador minta. Depósito: contrato trava/queima
 e o indexador credita.
 
+## Decisões do usuário
+
+| Decisão | Escolha | Data |
+|---|---|---|
+| Nome (provisório) | **NFT Farm Adventure** | 2026-11-21 |
+| Código anterior | Arquivado em `legacy/` (só consulta, fora do build); monorepo novo do zero | 2026-11-21 |
+| Rede | **Base Sepolia** (testnet). Mainnet só com autorização + auditoria externa | 2026-11-21 |
+| Versão do Phaser | **Phaser 4** | 2026-11-21 |
+
 ## Decisões em aberto (do usuário)
 
 | Decisão | Opções | Recomendação inicial |
 |---|---|---|
-| Rede | Base, Polygon, outra L2 EVM | Testnet de qualquer uma; decidir antes do alpha |
 | Token fungível | sim / não / depois | **Depois** — lançar só com NFTs e moeda off-chain |
-| Versão do Phaser | 4.x (novo) ou 3.x (igual ao SFL) | 4.x, baseline da skill `phaser-core` |
 | Login de não-cripto | só carteira / carteira embutida (social login) | Carteira embutida para crescer |
-| Nome e marca | — | — |

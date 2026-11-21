@@ -1,4 +1,4 @@
-# [NOME DO JOGO] — jogo de fazenda Web3
+# NFT Farm Adventure — jogo de fazenda Web3
 
 Jogo de fazenda social em navegador (desktop e celular), com gameplay off-chain e posse de itens
 on-chain (NFTs). Inspirado nas **funcionalidades** do Sunflower Land; código, dados e arte são

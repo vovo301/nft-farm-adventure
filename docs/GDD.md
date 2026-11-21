@@ -1,4 +1,4 @@
-# [NOME DO JOGO] — GDD de uma página
+# NFT Farm Adventure — GDD de uma página
 
 > Rascunho inicial. O `game-designer` mantém este arquivo com a skill `game-docs`.
 

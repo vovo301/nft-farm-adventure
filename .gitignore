@@ -134,3 +134,19 @@ art/review/**/*.tmp
 packages/contracts/out/
 packages/contracts/cache/
 __pycache__/
+
+# Arquivos de ambiente/pessoais (nunca versionar)
+.local/
+.browser_data_dir/
+.config/
+.secrets/
+.history/
+.nvm/
+.pki/
+.bash_history
+.bash_logout
+.bashrc
+.profile
+.zshrc
+.gitconfig
+.user_env
