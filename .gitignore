@@ -125,3 +125,12 @@ terminal_full_output/
 artifacts/
 cache/
 typechain-types/
+
+# Equipe de agentes (equipe-jogo-nft)
+node_modules/
+.env.*
+reference/
+art/review/**/*.tmp
+packages/contracts/out/
+packages/contracts/cache/
+__pycache__/

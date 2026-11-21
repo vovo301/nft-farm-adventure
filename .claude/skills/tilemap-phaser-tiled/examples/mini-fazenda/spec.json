@@ -1,0 +1,3 @@
+{"tile_size":16,"tileset":{"name":"farm","image":"farm-tiles.png","columns":4,"tilecount":4,"imagewidth":64,"imageheight":16,"collides":[2,3]},
+"legend":{".":null,"g":0,"d":1,"w":2,"k":3},"layers":[{"name":"Ground","file":"ground.txt"},{"name":"Decor","file":"decor.txt"}],
+"objects":[{"name":"spawn","type":"spawn","x":5,"y":3}]}
