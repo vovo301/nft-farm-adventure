@@ -1,0 +1,18 @@
+# tile_soil_tilled — terra arada, 16x16 opaco. Dois camalhões de 8 px por tile (topo iluminado, sombra
+# embaixo, sulco escuro); torrões soltos quebram a repetição. Contínuo nas 4 bordas.
+cdddddddcddddddc
+dddeedddddddeddd
+dccccddcccccdccc
+ccccccccccdccccc
+ccdccccccccccccc
+bbbbbcbbbbbbbbcb
+abbbbbaabbbbbbba
+aaaaaaaaaaaaaaaa
+ddddcdddddddcddd
+dddddddedddddeed
+cccdcccccdcccccc
+cccccccccccccdcc
+ccccccdccccccccc
+bcbbbbbbbbcbbbbb
+bbabbbbbbbbaabbb
+aaaaaaaaaaaaaaaa

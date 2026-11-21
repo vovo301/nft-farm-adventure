@@ -1,5 +1,353 @@
 {
   "schema_version": 1,
   "art_direction_brief": "art/style-guide/README.md",
-  "assets": []
+  "assets": [
+    {
+      "id": "avatar_base_idle_s",
+      "batch": "2026-11-21-alvo-visual-01",
+      "role": "avatar base do jogador, parado, de frente (sul) — manequim dos wearables",
+      "path": "art/export/characters/avatar_base_idle_s.png",
+      "source_path": "art/source/characters/avatar_base_idle_s.txt",
+      "status": "in_review",
+      "technical": {
+        "dimensions": "16x24",
+        "alpha": true,
+        "anchor": "bottom-center",
+        "frames": 1,
+        "filtering": "nearest",
+        "max_colors": 20,
+        "palette": "art/style-guide/palette.json"
+      },
+      "visual_locks": [
+        "palette",
+        "silhouette",
+        "proportions",
+        "facing",
+        "light-direction",
+        "outline"
+      ],
+      "source": {
+        "kind": "scripted",
+        "url_or_tool": ".claude/skills/pixel-art-scripted/scripts/pixel_from_grid.py via art/source/tools/build_alvo_visual.py",
+        "creator": "agente diretor-de-arte (Claude)",
+        "created_at": "2026-11-21",
+        "license": "original do projeto (todos os direitos do projeto)",
+        "attribution": "",
+        "prompt_or_source_record": "grade de caracteres art/source/characters/avatar_base_idle_s.txt; sem gerador de imagem, sem referência externa; nada derivado de Sunflower Land/Sunnyside"
+      },
+      "verification": {
+        "native_scale_reviewed": true,
+        "in_engine_reviewed": false,
+        "technical_checks_passed": true,
+        "approved_by": ""
+      },
+      "review": "art/review/2026-11-21-alvo-visual-01/prancha.png"
+    },
+    {
+      "id": "tile_grass",
+      "batch": "2026-11-21-alvo-visual-01",
+      "role": "tile de chão: grama",
+      "path": "art/export/tiles/tile_grass.png",
+      "source_path": "art/source/tiles/tile_grass.txt",
+      "status": "in_review",
+      "technical": {
+        "dimensions": "16x16",
+        "alpha": false,
+        "anchor": "none",
+        "frames": 1,
+        "filtering": "nearest",
+        "max_colors": 8,
+        "palette": "art/style-guide/palette.json"
+      },
+      "visual_locks": [
+        "palette",
+        "silhouette",
+        "proportions",
+        "facing",
+        "light-direction",
+        "outline"
+      ],
+      "source": {
+        "kind": "scripted",
+        "url_or_tool": ".claude/skills/pixel-art-scripted/scripts/pixel_from_grid.py via art/source/tools/build_alvo_visual.py",
+        "creator": "agente diretor-de-arte (Claude)",
+        "created_at": "2026-11-21",
+        "license": "original do projeto (todos os direitos do projeto)",
+        "attribution": "",
+        "prompt_or_source_record": "grade de caracteres art/source/tiles/tile_grass.txt; sem gerador de imagem, sem referência externa; nada derivado de Sunflower Land/Sunnyside"
+      },
+      "verification": {
+        "native_scale_reviewed": true,
+        "in_engine_reviewed": false,
+        "technical_checks_passed": true,
+        "approved_by": ""
+      },
+      "review": "art/review/2026-11-21-alvo-visual-01/prancha.png"
+    },
+    {
+      "id": "tile_soil_tilled",
+      "batch": "2026-11-21-alvo-visual-01",
+      "role": "tile de chão: terra arada",
+      "path": "art/export/tiles/tile_soil_tilled.png",
+      "source_path": "art/source/tiles/tile_soil_tilled.txt",
+      "status": "in_review",
+      "technical": {
+        "dimensions": "16x16",
+        "alpha": false,
+        "anchor": "none",
+        "frames": 1,
+        "filtering": "nearest",
+        "max_colors": 8,
+        "palette": "art/style-guide/palette.json"
+      },
+      "visual_locks": [
+        "palette",
+        "silhouette",
+        "proportions",
+        "facing",
+        "light-direction",
+        "outline"
+      ],
+      "source": {
+        "kind": "scripted",
+        "url_or_tool": ".claude/skills/pixel-art-scripted/scripts/pixel_from_grid.py via art/source/tools/build_alvo_visual.py",
+        "creator": "agente diretor-de-arte (Claude)",
+        "created_at": "2026-11-21",
+        "license": "original do projeto (todos os direitos do projeto)",
+        "attribution": "",
+        "prompt_or_source_record": "grade de caracteres art/source/tiles/tile_soil_tilled.txt; sem gerador de imagem, sem referência externa; nada derivado de Sunflower Land/Sunnyside"
+      },
+      "verification": {
+        "native_scale_reviewed": true,
+        "in_engine_reviewed": false,
+        "technical_checks_passed": true,
+        "approved_by": ""
+      },
+      "review": "art/review/2026-11-21-alvo-visual-01/prancha.png"
+    },
+    {
+      "id": "tile_water",
+      "batch": "2026-11-21-alvo-visual-01",
+      "role": "tile de chão: água (colide)",
+      "path": "art/export/tiles/tile_water.png",
+      "source_path": "art/source/tiles/tile_water.txt",
+      "status": "in_review",
+      "technical": {
+        "dimensions": "16x16",
+        "alpha": false,
+        "anchor": "none",
+        "frames": 1,
+        "filtering": "nearest",
+        "max_colors": 8,
+        "palette": "art/style-guide/palette.json"
+      },
+      "visual_locks": [
+        "palette",
+        "silhouette",
+        "proportions",
+        "facing",
+        "light-direction",
+        "outline"
+      ],
+      "source": {
+        "kind": "scripted",
+        "url_or_tool": ".claude/skills/pixel-art-scripted/scripts/pixel_from_grid.py via art/source/tools/build_alvo_visual.py",
+        "creator": "agente diretor-de-arte (Claude)",
+        "created_at": "2026-11-21",
+        "license": "original do projeto (todos os direitos do projeto)",
+        "attribution": "",
+        "prompt_or_source_record": "grade de caracteres art/source/tiles/tile_water.txt; sem gerador de imagem, sem referência externa; nada derivado de Sunflower Land/Sunnyside"
+      },
+      "verification": {
+        "native_scale_reviewed": true,
+        "in_engine_reviewed": false,
+        "technical_checks_passed": true,
+        "approved_by": ""
+      },
+      "review": "art/review/2026-11-21-alvo-visual-01/prancha.png"
+    },
+    {
+      "id": "tile_water_edge_n",
+      "batch": "2026-11-21-alvo-visual-01",
+      "role": "tile de transição grama ao norte / água ao sul (colide) — extra do alvo",
+      "path": "art/export/tiles/tile_water_edge_n.png",
+      "source_path": "art/source/tiles/tile_water_edge_n.txt",
+      "status": "in_review",
+      "technical": {
+        "dimensions": "16x16",
+        "alpha": false,
+        "anchor": "none",
+        "frames": 1,
+        "filtering": "nearest",
+        "max_colors": 12,
+        "palette": "art/style-guide/palette.json"
+      },
+      "visual_locks": [
+        "palette",
+        "silhouette",
+        "proportions",
+        "facing",
+        "light-direction",
+        "outline"
+      ],
+      "source": {
+        "kind": "scripted",
+        "url_or_tool": ".claude/skills/pixel-art-scripted/scripts/pixel_from_grid.py via art/source/tools/build_alvo_visual.py",
+        "creator": "agente diretor-de-arte (Claude)",
+        "created_at": "2026-11-21",
+        "license": "original do projeto (todos os direitos do projeto)",
+        "attribution": "",
+        "prompt_or_source_record": "grade de caracteres art/source/tiles/tile_water_edge_n.txt; sem gerador de imagem, sem referência externa; nada derivado de Sunflower Land/Sunnyside"
+      },
+      "verification": {
+        "native_scale_reviewed": true,
+        "in_engine_reviewed": false,
+        "technical_checks_passed": true,
+        "approved_by": ""
+      },
+      "review": "art/review/2026-11-21-alvo-visual-01/prancha.png"
+    },
+    {
+      "id": "icon_seed_bag",
+      "batch": "2026-11-21-alvo-visual-01",
+      "role": "ícone de inventário: saco de sementes",
+      "path": "art/export/icons/icon_seed_bag.png",
+      "source_path": "art/source/icons/icon_seed_bag.txt",
+      "status": "in_review",
+      "technical": {
+        "dimensions": "16x16",
+        "alpha": true,
+        "anchor": "center",
+        "frames": 1,
+        "filtering": "nearest",
+        "max_colors": 12,
+        "palette": "art/style-guide/palette.json"
+      },
+      "visual_locks": [
+        "palette",
+        "silhouette",
+        "proportions",
+        "facing",
+        "light-direction",
+        "outline"
+      ],
+      "source": {
+        "kind": "scripted",
+        "url_or_tool": ".claude/skills/pixel-art-scripted/scripts/pixel_from_grid.py via art/source/tools/build_alvo_visual.py",
+        "creator": "agente diretor-de-arte (Claude)",
+        "created_at": "2026-11-21",
+        "license": "original do projeto (todos os direitos do projeto)",
+        "attribution": "",
+        "prompt_or_source_record": "grade de caracteres art/source/icons/icon_seed_bag.txt; sem gerador de imagem, sem referência externa; nada derivado de Sunflower Land/Sunnyside"
+      },
+      "verification": {
+        "native_scale_reviewed": true,
+        "in_engine_reviewed": false,
+        "technical_checks_passed": true,
+        "approved_by": ""
+      },
+      "review": "art/review/2026-11-21-alvo-visual-01/prancha.png"
+    },
+    {
+      "id": "icon_tomato",
+      "batch": "2026-11-21-alvo-visual-01",
+      "role": "ícone de inventário: tomate colhido",
+      "path": "art/export/icons/icon_tomato.png",
+      "source_path": "art/source/icons/icon_tomato.txt",
+      "status": "in_review",
+      "technical": {
+        "dimensions": "16x16",
+        "alpha": true,
+        "anchor": "center",
+        "frames": 1,
+        "filtering": "nearest",
+        "max_colors": 12,
+        "palette": "art/style-guide/palette.json"
+      },
+      "visual_locks": [
+        "palette",
+        "silhouette",
+        "proportions",
+        "facing",
+        "light-direction",
+        "outline"
+      ],
+      "source": {
+        "kind": "scripted",
+        "url_or_tool": ".claude/skills/pixel-art-scripted/scripts/pixel_from_grid.py via art/source/tools/build_alvo_visual.py",
+        "creator": "agente diretor-de-arte (Claude)",
+        "created_at": "2026-11-21",
+        "license": "original do projeto (todos os direitos do projeto)",
+        "attribution": "",
+        "prompt_or_source_record": "grade de caracteres art/source/icons/icon_tomato.txt; sem gerador de imagem, sem referência externa; nada derivado de Sunflower Land/Sunnyside"
+      },
+      "verification": {
+        "native_scale_reviewed": true,
+        "in_engine_reviewed": false,
+        "technical_checks_passed": true,
+        "approved_by": ""
+      },
+      "review": "art/review/2026-11-21-alvo-visual-01/prancha.png"
+    },
+    {
+      "id": "icon_coin",
+      "batch": "2026-11-21-alvo-visual-01",
+      "role": "ícone de moeda",
+      "path": "art/export/icons/icon_coin.png",
+      "source_path": "art/source/icons/icon_coin.txt",
+      "status": "in_review",
+      "technical": {
+        "dimensions": "16x16",
+        "alpha": true,
+        "anchor": "center",
+        "frames": 1,
+        "filtering": "nearest",
+        "max_colors": 12,
+        "palette": "art/style-guide/palette.json"
+      },
+      "visual_locks": [
+        "palette",
+        "silhouette",
+        "proportions",
+        "facing",
+        "light-direction",
+        "outline"
+      ],
+      "source": {
+        "kind": "scripted",
+        "url_or_tool": ".claude/skills/pixel-art-scripted/scripts/pixel_from_grid.py via art/source/tools/build_alvo_visual.py",
+        "creator": "agente diretor-de-arte (Claude)",
+        "created_at": "2026-11-21",
+        "license": "original do projeto (todos os direitos do projeto)",
+        "attribution": "",
+        "prompt_or_source_record": "grade de caracteres art/source/icons/icon_coin.txt; sem gerador de imagem, sem referência externa; nada derivado de Sunflower Land/Sunnyside"
+      },
+      "verification": {
+        "native_scale_reviewed": true,
+        "in_engine_reviewed": false,
+        "technical_checks_passed": true,
+        "approved_by": ""
+      },
+      "review": "art/review/2026-11-21-alvo-visual-01/prancha.png"
+    }
+  ],
+  "support_files": [
+    {
+      "path": "art/export/tiles/tileset_alvo.png",
+      "role": "tileset do alvo (strip 4x1: grass, soil_tilled, water, water_edge_n)",
+      "status": "in_review",
+      "derived_from": [
+        "tile_grass",
+        "tile_soil_tilled",
+        "tile_water",
+        "tile_water_edge_n"
+      ]
+    },
+    {
+      "path": "art/export/maps/alvo-visual.json",
+      "role": "mapa Tiled 20x12 da cena de preview (não é mapa de jogo)",
+      "status": "in_review",
+      "source_path": "art/source/maps/alvo-visual/spec.json"
+    }
+  ]
 }

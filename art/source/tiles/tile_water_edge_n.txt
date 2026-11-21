@@ -1,0 +1,18 @@
+# tile_water_edge_n — borda grama->água (grama ao norte, água ao sul). 16x16 opaco, contínuo L/O.
+# Linhas 0-4 continuam a grama; lábio de grama escura, barranco de terra, espuma; resto é água.
+3333333333333333
+3333333333333333
+3343433333333333
+3324233333334343
+3333333333332423
+2333322333332233
+2222222222222222
+b2222bb22222bb22
+bbbbbbbbbbbbbbbb
+aaaaaaaaaaaaaaaa
+ZZwwZZZZwwwZZZZw
+xzZZxxzzZZZxxzzZ
+xxxxxxxxxxxxxxxx
+xxxxxxxxxwwxxxxx
+zxxxxxxxxxxxxxzz
+yyxxxxxxxxxxxyyy

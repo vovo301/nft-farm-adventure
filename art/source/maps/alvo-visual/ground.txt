@@ -1,0 +1,13 @@
+# alvo-visual — 20x12 tiles (320x192 px a 1x). g grama, s terra arada, e borda grama/água, w água.
+gggggggggggggggggggg
+gggggggggggggggggggg
+gggggggggggggggggggg
+gggggggggggggggggggg
+gggssssssggggggggggg
+gggssssssggggggggggg
+gggssssssggggggggggg
+gggggggggggggggggggg
+gggggggggggggggggggg
+eeeeeeeeeeeeeeeeeeee
+wwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwww

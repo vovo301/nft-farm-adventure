@@ -1,0 +1,10 @@
+{
+  "tile_size": 16,
+  "tileset": {"name": "alvo", "image": "../tiles/tileset_alvo.png", "columns": 4, "tilecount": 4,
+              "imagewidth": 64, "imageheight": 16, "margin": 0, "spacing": 0, "collides": [2, 3]},
+  "legend": {".": null, "g": 0, "s": 1, "w": 2, "e": 3},
+  "layers": [{"name": "Ground", "file": "ground.txt"}],
+  "objects": [{"name": "spawn", "type": "spawn", "x": 11, "y": 5},
+              {"name": "drop1", "type": "preview_item", "x": 9, "y": 5},
+              {"name": "drop2", "type": "preview_item", "x": 10, "y": 6}]
+}

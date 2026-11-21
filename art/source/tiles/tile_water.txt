@@ -1,0 +1,17 @@
+# tile_water — água rasa/lago, 16x16 opaco, contínuo nas 4 bordas. Ondulações curtas (crista z sobre y).
+xxxxxxxxxxxxxxxx
+xxxxzzxxxxxxxxxx
+xxxyyyyxxxxxxxxx
+xxxxxxxxxxxxxxxx
+xwwxxxxxxxxzzxxx
+xxxxxxxxxxyyyyxx
+xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxww
+xxxxxxxxxxxxxxxx
+wxxxxxxxxxxxxxxx
+xxxxxxzzxxxxxxxx
+xxxxxyyyyxxxxxxx
+xxxxxxxxxwwxxxxx
+xxxxxxxxxxxxxxxx
+zxxxxxxxxxxxxxzz
+yyxxxxxxxxxxxyyy
