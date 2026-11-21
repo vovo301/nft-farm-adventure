@@ -27,3 +27,7 @@ Reprovado internamente e refeito antes de enviar:
 
 ## Respostas do usuário
 _(pendente)_
+
+## Resposta do usuário (2026-11-21)
+
+Lote **reprovado**: "vamos trabalhar melhor na criação das artes". O usuário vai enviar exemplos de referência; a próxima rodada parte deles.

@@ -6,7 +6,7 @@ Uma entrada por decisão: data, o que mudou, por quê, simulação usada.
 
 ## 2026-11-21 — Economia v0: 4 culturas, 2 recursos, regras iniciais
 
-**Status:** proposta v0 — aguardando aprovação do usuário.
+**Status:** proposta v0 — **reprovada pelo usuário em 2026-11-21** ("os números estão muito grandes"). Refazer em escala menor. Decisão sobre saldos da testnet na Fase 2: adiada pelo usuário.
 **Fonte:** `economy/economy.csv` (sha256 `meta.source` em `packages/game-core/src/data/economy.generated.ts`).
 **Simulação:** `pnpm econ:sim` → `economy/sim/out/{daily.csv,summary.json,sim-90d.png}`.
 **Escopo de moeda:** só moeda soft off-chain ("moedas"). Sem gemas, sem token, sem saque. O token

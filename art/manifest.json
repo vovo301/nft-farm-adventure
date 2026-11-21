@@ -8,7 +8,7 @@
       "role": "avatar base do jogador, parado, de frente (sul) — manequim dos wearables",
       "path": "art/export/characters/avatar_base_idle_s.png",
       "source_path": "art/source/characters/avatar_base_idle_s.txt",
-      "status": "in_review",
+      "status": "rejected",
       "technical": {
         "dimensions": "16x24",
         "alpha": true,
@@ -49,7 +49,7 @@
       "role": "tile de chão: grama",
       "path": "art/export/tiles/tile_grass.png",
       "source_path": "art/source/tiles/tile_grass.txt",
-      "status": "in_review",
+      "status": "rejected",
       "technical": {
         "dimensions": "16x16",
         "alpha": false,
@@ -90,7 +90,7 @@
       "role": "tile de chão: terra arada",
       "path": "art/export/tiles/tile_soil_tilled.png",
       "source_path": "art/source/tiles/tile_soil_tilled.txt",
-      "status": "in_review",
+      "status": "rejected",
       "technical": {
         "dimensions": "16x16",
         "alpha": false,
@@ -131,7 +131,7 @@
       "role": "tile de chão: água (colide)",
       "path": "art/export/tiles/tile_water.png",
       "source_path": "art/source/tiles/tile_water.txt",
-      "status": "in_review",
+      "status": "rejected",
       "technical": {
         "dimensions": "16x16",
         "alpha": false,
@@ -172,7 +172,7 @@
       "role": "tile de transição grama ao norte / água ao sul (colide) — extra do alvo",
       "path": "art/export/tiles/tile_water_edge_n.png",
       "source_path": "art/source/tiles/tile_water_edge_n.txt",
-      "status": "in_review",
+      "status": "rejected",
       "technical": {
         "dimensions": "16x16",
         "alpha": false,
@@ -213,7 +213,7 @@
       "role": "ícone de inventário: saco de sementes",
       "path": "art/export/icons/icon_seed_bag.png",
       "source_path": "art/source/icons/icon_seed_bag.txt",
-      "status": "in_review",
+      "status": "rejected",
       "technical": {
         "dimensions": "16x16",
         "alpha": true,
@@ -254,7 +254,7 @@
       "role": "ícone de inventário: tomate colhido",
       "path": "art/export/icons/icon_tomato.png",
       "source_path": "art/source/icons/icon_tomato.txt",
-      "status": "in_review",
+      "status": "rejected",
       "technical": {
         "dimensions": "16x16",
         "alpha": true,
@@ -295,7 +295,7 @@
       "role": "ícone de moeda",
       "path": "art/export/icons/icon_coin.png",
       "source_path": "art/source/icons/icon_coin.txt",
-      "status": "in_review",
+      "status": "rejected",
       "technical": {
         "dimensions": "16x16",
         "alpha": true,
@@ -335,7 +335,7 @@
     {
       "path": "art/export/tiles/tileset_alvo.png",
       "role": "tileset do alvo (strip 4x1: grass, soil_tilled, water, water_edge_n)",
-      "status": "in_review",
+      "status": "rejected",
       "derived_from": [
         "tile_grass",
         "tile_soil_tilled",
@@ -346,7 +346,7 @@
     {
       "path": "art/export/maps/alvo-visual.json",
       "role": "mapa Tiled 20x12 da cena de preview (não é mapa de jogo)",
-      "status": "in_review",
+      "status": "rejected",
       "source_path": "art/source/maps/alvo-visual/spec.json"
     }
   ]

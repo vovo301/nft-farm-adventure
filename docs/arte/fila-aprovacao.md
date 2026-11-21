@@ -3,7 +3,7 @@
 O `produtor` adiciona cada lote aqui e mostra a prancha ao usuário. O usuário responde só
 "aprovado" ou "reprovado: <motivo>". Formato em `.claude/skills/art-approval-pipeline/SKILL.md`.
 
-## Lote 2026-11-21-alvo-visual-01  — status: in_review
+## Lote 2026-11-21-alvo-visual-01  — status: rejected
 Alvo visual do projeto (Fase 0). Nada é produzido em escala antes de ele estar `approved`.
 Prancha: art/review/2026-11-21-alvo-visual-01/prancha.png
 Cena: art/review/2026-11-21-alvo-visual-01/mapa-preview.png · Notas: art/review/2026-11-21-alvo-visual-01/notas.md
@@ -21,4 +21,4 @@ Guia de estilo proposto: art/style-guide/README.md · Paleta: art/style-guide/pa
 | 8 | icon_coin | 16×16 | ícone: moeda com broto cunhado |
 
 Pergunta ao usuário: aprova a direção (paleta + guia + estes 8 assets)? Se não, quais reprovar e por quê.
-Resposta do usuário: _(pendente)_
+Resposta do usuário (2026-11-21): **reprovado** — "vamos trabalhar melhor na criação das artes"; o usuário vai enviar exemplos de referência. Próxima rodada parte dos exemplos, não desta versão.
