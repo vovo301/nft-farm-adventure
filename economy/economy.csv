@@ -1,0 +1,11 @@
+row_type,id,seed_price,sell_price,grow_seconds,harvest_qty,node_count,recharge_seconds,yield_qty,value,note
+rule,starting_coins,,,,,,,,20,"Dá para comprar 1 semente de honeyleek no 1º minuto ou 20 de mintleaf; o resto vem do tutorial"
+rule,starting_plot_count,,,,,,,,6,"Grid 3x2 cabe numa tela de celular; expansão de terreno só na Fase 2"
+rule,max_quantity_per_action,,,,,,,,1000,"Teto anti-abuso por ação de compra/venda; não limita jogo normal"
+start_item,mintleaf_seed,,,,,,,,6,"Enche os 6 canteiros no tutorial sem gastar moeda"
+crop,mintleaf,1,1.5,120,1,,,,,"Tutorial/feedback dentro da sessão (2 min): lucro 0.5 = 15/h; barata de propósito, não é a mais eficiente"
+crop,redroot,4,10,1200,1,,,,,"Pausa curta (20 min): lucro 6 = 18/h — teto de lucro por hora da tabela (é o que um bot 24/7 planta)"
+crop,honeyleek,12,20,7200,2,,,,,"Entre sessões do jogador ativo (2 h): lucro 28 = 14/h"
+crop,stripemelon,40,40,28800,3,,,,,"Noite/jogador casual (8 h): lucro 80 = 10/h; maior lucro por sessão"
+resource,driftwood,,4,,,3,14400,1,,"3 nós, recarga 4 h, 1 un./coleta; preço de venda é piso — o valor real virá de ferramentas/expansões (Fase 2)"
+resource,flint,,10,,,2,28800,1,,"2 nós, recarga 8 h, 1 un./coleta; mais raro que driftwood"

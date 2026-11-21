@@ -1,0 +1,93 @@
+{
+  "generatedFrom": "economy/economy.csv@sha256:b099455405dc",
+  "engine": "packages/game-core applyActions (coleta de recursos replicada fora do motor)",
+  "days": 90,
+  "profiles": {
+    "casual": {
+      "label": "Casual (2x/dia)",
+      "coinsDay7": 6162,
+      "coinsDay30": 26364,
+      "coinsDay90": 82308,
+      "coinsPerDayLast30": 880.6,
+      "sources": {
+        "cropSales": 117498,
+        "resourceSales": 5152
+      },
+      "sinks": {
+        "seedPurchases": 40362
+      },
+      "sinkRatio": 0.329,
+      "harvests": 2889,
+      "itemsProduced": 5605,
+      "inventoryUnitsDay90": 0,
+      "sessions": 161,
+      "actions": 7074
+    },
+    "active": {
+      "label": "Ativo (8x/dia)",
+      "coinsDay7": 10103,
+      "coinsDay30": 44182,
+      "coinsDay90": 137143,
+      "coinsPerDayLast30": 1554.6,
+      "sources": {
+        "cropSales": 198363,
+        "resourceSales": 7896
+      },
+      "sinks": {
+        "seedPurchases": 69136
+      },
+      "sinkRatio": 0.335,
+      "harvests": 16770,
+      "itemsProduced": 22031,
+      "inventoryUnitsDay90": 0,
+      "sessions": 699,
+      "actions": 39676
+    },
+    "bot": {
+      "label": "Bot 24/7",
+      "coinsDay7": 19028,
+      "coinsDay30": 81680,
+      "coinsDay90": 245120,
+      "coinsPerDayLast30": 2724,
+      "sources": {
+        "cropSales": 388740,
+        "resourceSales": 11880
+      },
+      "sinks": {
+        "seedPurchases": 155520
+      },
+      "sinkRatio": 0.388,
+      "harvests": 38874,
+      "itemsProduced": 41034,
+      "inventoryUnitsDay90": 6,
+      "sessions": 0,
+      "actions": 91523
+    }
+  },
+  "ratios": {
+    "day7": {
+      "botOverCasual": 3.09,
+      "botOverActive": 1.88,
+      "activeOverCasual": 1.64
+    },
+    "day30": {
+      "botOverCasual": 3.1,
+      "botOverActive": 1.85,
+      "activeOverCasual": 1.68
+    },
+    "day90": {
+      "botOverCasual": 2.98,
+      "botOverActive": 1.79,
+      "activeOverCasual": 1.67
+    },
+    "steadyStatePerDay": {
+      "botOverCasual": 3.09,
+      "botOverActive": 1.75,
+      "activeOverCasual": 1.77
+    }
+  },
+  "alarm": {
+    "rule": "bot > 3x ativo (skill web3-game-economy)",
+    "triggered": false
+  }
+}

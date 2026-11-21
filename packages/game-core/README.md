@@ -7,7 +7,7 @@ Padrões: `.claude/skills/server-authoritative-game-logic/SKILL.md`.
 - `src/events/` — um reducer puro por evento + `applyAction`/`applyActions`.
 - `src/migrations.ts` — `migrate(save)` de ausente/v0 → versão atual.
 - `src/data/` — tipos (`types.ts`) e números (`economy.generated.ts`, gerado pelo economista;
-  hoje é PLACEHOLDER). Reducers só leem números daí.
+  gerado de `economy/economy.csv` por `pnpm econ:gen`). Reducers só leem números daí.
 - `src/lib/rng.ts` — PRNG com seed (sfc32 + cyrb128). `src/lib/money.ts` — decimal.js.
 
 ## Comandos

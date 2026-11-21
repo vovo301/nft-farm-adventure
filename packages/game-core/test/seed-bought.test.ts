@@ -37,7 +37,7 @@ describe("seed.bought", () => {
   });
 
   it("lança NOT_BUYABLE para item que não é semente ou não tem preço", () => {
-    expect(() => buy(createInitialState(), "resource_a", 1)).toThrow(
+    expect(() => buy(createInitialState(), "driftwood", 1)).toThrow(
       expect.objectContaining({ code: "NOT_BUYABLE" }),
     );
     expect(() => buy(createInitialState(), firstCrop().harvestItemId, 1)).toThrow(

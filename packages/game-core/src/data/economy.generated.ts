@@ -1,44 +1,40 @@
 /**
  * ============================================================================================
- *  PLACEHOLDER — será substituído pelo gerador do economista; números não oficiais.
+ *  GERADO — não edite à mão.
  * ============================================================================================
  *
- * Este arquivo será GERADO a partir de `economy/economy.csv` (veja CLAUDE.md, regra 3).
- * Não edite à mão quando o gerador existir. Os números abaixo servem apenas para o scaffold e
- * os testes da Fase 0; nenhum deles está registrado em `docs/economia/decisoes.md`.
+ * Fonte: economy/economy.csv@sha256:b099455405dc
+ * Gerador: economy/gen/generate.mjs · regenerar: `pnpm econ:gen` · conferir: `pnpm econ:check`
+ * Justificativa de cada número: docs/economia/decisoes.md (proposta v0 — aguardando aprovação).
  *
- * Contrato: exportar `economy` do tipo `EconomyData` (veja `./types.ts`).
+ * Contrato: `EconomyData` em ./types.ts.
  */
 import type { EconomyData } from "./types";
 
 export const economy: EconomyData = {
-  meta: {
-    version: "placeholder-0",
-    placeholder: true,
-    source: "hand-written placeholder (packages/game-core, Fase 0)",
-  },
+  meta: { version: "v0", placeholder: false, source: "economy/economy.csv@sha256:b099455405dc" },
   rules: {
-    startingCoins: "10",
+    startingCoins: "20",
     startingPlotCount: 6,
-    startingInventory: { crop_a_seed: 3 },
+    startingInventory: { mintleaf_seed: 6 },
     maxQuantityPerAction: 1000,
   },
   items: {
-    crop_a_seed: { id: "crop_a_seed", kind: "seed", buyPrice: "1", sellPrice: null },
-    crop_b_seed: { id: "crop_b_seed", kind: "seed", buyPrice: "2.5", sellPrice: null },
-    crop_c_seed: { id: "crop_c_seed", kind: "seed", buyPrice: "6", sellPrice: null },
-    crop_d_seed: { id: "crop_d_seed", kind: "seed", buyPrice: "15", sellPrice: null },
-    crop_a: { id: "crop_a", kind: "crop", buyPrice: null, sellPrice: "1.5" },
-    crop_b: { id: "crop_b", kind: "crop", buyPrice: null, sellPrice: "4" },
-    crop_c: { id: "crop_c", kind: "crop", buyPrice: null, sellPrice: "10" },
-    crop_d: { id: "crop_d", kind: "crop", buyPrice: null, sellPrice: "26" },
-    resource_a: { id: "resource_a", kind: "resource", buyPrice: null, sellPrice: "0.5" },
-    resource_b: { id: "resource_b", kind: "resource", buyPrice: null, sellPrice: "1.2" },
+    mintleaf_seed: { id: "mintleaf_seed", kind: "seed", buyPrice: "1", sellPrice: null },
+    redroot_seed: { id: "redroot_seed", kind: "seed", buyPrice: "4", sellPrice: null },
+    honeyleek_seed: { id: "honeyleek_seed", kind: "seed", buyPrice: "12", sellPrice: null },
+    stripemelon_seed: { id: "stripemelon_seed", kind: "seed", buyPrice: "40", sellPrice: null },
+    mintleaf: { id: "mintleaf", kind: "crop", buyPrice: null, sellPrice: "1.5" },
+    redroot: { id: "redroot", kind: "crop", buyPrice: null, sellPrice: "10" },
+    honeyleek: { id: "honeyleek", kind: "crop", buyPrice: null, sellPrice: "20" },
+    stripemelon: { id: "stripemelon", kind: "crop", buyPrice: null, sellPrice: "40" },
+    driftwood: { id: "driftwood", kind: "resource", buyPrice: null, sellPrice: "4" },
+    flint: { id: "flint", kind: "resource", buyPrice: null, sellPrice: "10" },
   },
   crops: {
-    crop_a: { id: "crop_a", seedItemId: "crop_a_seed", harvestItemId: "crop_a", growSeconds: 60, harvestQty: 1 },
-    crop_b: { id: "crop_b", seedItemId: "crop_b_seed", harvestItemId: "crop_b", growSeconds: 300, harvestQty: 1 },
-    crop_c: { id: "crop_c", seedItemId: "crop_c_seed", harvestItemId: "crop_c", growSeconds: 1800, harvestQty: 1 },
-    crop_d: { id: "crop_d", seedItemId: "crop_d_seed", harvestItemId: "crop_d", growSeconds: 7200, harvestQty: 1 },
+    mintleaf: { id: "mintleaf", seedItemId: "mintleaf_seed", harvestItemId: "mintleaf", growSeconds: 120, harvestQty: 1 },
+    redroot: { id: "redroot", seedItemId: "redroot_seed", harvestItemId: "redroot", growSeconds: 1200, harvestQty: 1 },
+    honeyleek: { id: "honeyleek", seedItemId: "honeyleek_seed", harvestItemId: "honeyleek", growSeconds: 7200, harvestQty: 2 },
+    stripemelon: { id: "stripemelon", seedItemId: "stripemelon_seed", harvestItemId: "stripemelon", growSeconds: 28800, harvestQty: 3 },
   },
 };

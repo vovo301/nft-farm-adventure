@@ -5,8 +5,8 @@ import { clone } from "./helpers";
 /** Save "v0" fixo: formato sem schemaVersion (pré-scaffold), moedas como número. */
 const SAVE_V0 = {
   coins: 42.5,
-  inventory: { crop_a: 3, crop_b_seed: 1, bogus: -2 },
-  plots: [{ status: "planted", cropId: "crop_a", plantedAt: 1_700_000_000_000 }, { status: "empty" }, { foo: 1 }],
+  inventory: { mintleaf: 3, redroot_seed: 1, bogus: -2 },
+  plots: [{ status: "planted", cropId: "mintleaf", plantedAt: 1_700_000_000_000 }, { status: "empty" }, { foo: 1 }],
 };
 
 describe("migrate", () => {
@@ -19,8 +19,8 @@ describe("migrate", () => {
     const migrated = migrate(clone(SAVE_V0));
     expect(migrated.schemaVersion).toBe(1);
     expect(migrated.coins).toBe("42.5");
-    expect(migrated.inventory).toEqual({ crop_a: 3, crop_b_seed: 1 });
-    expect(migrated.plots[0]).toEqual({ status: "planted", cropId: "crop_a", plantedAt: 1_700_000_000_000 });
+    expect(migrated.inventory).toEqual({ mintleaf: 3, redroot_seed: 1 });
+    expect(migrated.plots[0]).toEqual({ status: "planted", cropId: "mintleaf", plantedAt: 1_700_000_000_000 });
     expect(migrated.plots[1]).toEqual({ status: "empty" });
     expect(migrated.plots[2]).toEqual({ status: "empty" });
     expect(migrated.plots.length).toBe(createInitialState().plots.length);

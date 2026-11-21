@@ -9,6 +9,9 @@
   "scripts": {
     "test": "pnpm -r test",
     "typecheck": "pnpm -r typecheck",
-    "lint": "pnpm -r lint"
+    "lint": "pnpm -r lint",
+    "econ:gen": "node economy/gen/generate.mjs",
+    "econ:check": "node economy/gen/generate.mjs --check",
+    "econ:sim": "node --disable-warning=ExperimentalWarning --import ./economy/sim/register-ts.mjs economy/sim/simulate.mjs && python3 economy/sim/plot.py"
   }
 }

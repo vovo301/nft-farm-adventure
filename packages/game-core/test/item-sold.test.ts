@@ -24,14 +24,14 @@ describe("item.sold", () => {
   });
 
   it("vende recursos", () => {
-    const next = sell(withCoins(withInventory(createInitialState(), { resource_b: 1 }), "0"), "resource_b", 1);
-    expect(next.coins).toBe(economy.items["resource_b"]?.sellPrice);
+    const next = sell(withCoins(withInventory(createInitialState(), { flint: 1 }), "0"), "flint", 1);
+    expect(next.coins).toBe(economy.items["flint"]?.sellPrice);
   });
 
   it("soma decimais sem erro de float (0.1 + 0.2 estilo)", () => {
-    let state = withCoins(withInventory(createInitialState(), { resource_a: 10 }), "0.1");
-    for (let i = 0; i < 10; i++) state = sell(state, "resource_a", 1);
-    const expected = new Decimal("0.1").plus(new Decimal(economy.items["resource_a"]?.sellPrice ?? "NaN").times(10));
+    let state = withCoins(withInventory(createInitialState(), { driftwood: 10 }), "0.1");
+    for (let i = 0; i < 10; i++) state = sell(state, "driftwood", 1);
+    const expected = new Decimal("0.1").plus(new Decimal(economy.items["driftwood"]?.sellPrice ?? "NaN").times(10));
     expect(state.coins).toBe(expected.toString());
   });
 
