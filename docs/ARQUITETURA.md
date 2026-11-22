@@ -48,10 +48,14 @@ e o indexador credita.
 | Código anterior | Arquivado em `legacy/` (só consulta, fora do build); monorepo novo do zero | 2026-11-21 |
 | Rede | **Base Sepolia** (testnet). Mainnet só com autorização + auditoria externa | 2026-11-21 |
 | Versão do Phaser | **Phaser 4** | 2026-11-21 |
+| Moedas | **Duas moedas.** (1) **Gold Coin**: off-chain, moeda de troca do jogo (sementes, expansões, construções, upgrades de construções); preços definidos pela economia. (2) **Token de governança** (ERC-20): negociado entre jogadores no marketplace, comprável em exchange e depositável no jogo; preço livre por oferta e demanda | 2026-11-22 |
+| Preços das culturas (em Gold) | Mais barata: compra 0,01 Gold, lucro 100%. Mais cara: compra 10 Gold, lucro ~30%. Intermediárias definidas pelo economista dentro desse intervalo, com economia sustentável | 2026-11-22 |
+| Direção de arte | **Isométrica, cartoon colorida** (estilo "isometric cartoon farm"), não pixel art. Exemplos de referência enviados pelo usuário em 2026-11-22 (só direção de estilo, sem copiar assets de terceiros) | 2026-11-22 |
 
 ## Decisões em aberto (do usuário)
 
 | Decisão | Opções | Recomendação inicial |
 |---|---|---|
-| Token fungível | sim / não / depois | **Depois** — lançar só com NFTs e moeda off-chain |
+| Relação token ↔ Gold | token compra Gold? Gold vira token? só marketplace? | A definir antes da Fase 3 |
+| Saldos da testnet na Fase 2 | zerar / recalibrar | Adiada pelo usuário |
 | Login de não-cripto | só carteira / carteira embutida (social login) | Carteira embutida para crescer |

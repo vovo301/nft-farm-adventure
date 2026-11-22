@@ -2,7 +2,7 @@
 
 > Rascunho inicial. O `game-designer` mantém este arquivo com a skill `game-docs`.
 
-**Pitch:** fazenda social em pixel art no navegador. Você planta, coleta, cozinha e expande sua
+**Pitch:** fazenda social isométrica em estilo cartoon no navegador. Você planta, coleta, cozinha e expande sua
 ilha; seus itens raros são seus de verdade (NFT) e podem ser trocados com outros jogadores.
 
 **Público:** jogadores casuais de celular e entusiastas Web3; sessões de 3–10 min, várias vezes ao dia.
