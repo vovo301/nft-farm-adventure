@@ -6,7 +6,7 @@ Dono: `economista-tokenomics`. Toda mudança de número passa por aqui **e** por
 ```
 economy/
 ├─ economy.csv            fonte única: regras, culturas (com desbloqueio), recursos e seus nós
-├─ expansions.csv         fonte única: ilhas (custo de mudança), 30 blocos (custo, tempo, nível, o que adicionam)
+├─ expansions.csv         fonte única: ilhas (custo de mudança), 65 blocos (custo, tempo, nível, o que adicionam)
 ├─ gen/
 │  ├─ economy-csv.mjs     parser + validação + conversão para EconomyData
 │  └─ generate.mjs        escreve economy.generated.ts e world.generated.ts em packages/game-core/src/data/ (ou --check)
@@ -19,9 +19,14 @@ economy/
    ├─ plot.py             gráfico PNG (Pillow)
    └─ out/                daily.csv, summary.json, sim-90d.png (gerados)
 
-Arquivos auxiliares de mapeamento da referência: não há script; `expansions.csv` guarda na coluna
-`ref_blocks` de onde cada bloco veio e `note` explica cada adaptação (decisoes.md, proposta v2).
 ```
+
+Blocos (v2.1): estrutura 1:1 da tabela do usuário (`docs/referencia/equilibrio-tabela-usuario.csv`):
+terreno inicial + 6/12/21/25 blocos. `ref_blocks` = bloco da tabela (`homestead_NN` = b(NN+2),
+`breezewood_NN`/`ochremesa_NN` = b(NN+4), `emberpeak_NN` = b(NN+5)); `note` explica cada adaptação.
+Desbloqueio de culturas v2 → v2.1 (último bloco da ref do grupo antigo; mesma ordem): homestead
+inalterado; breezewood 01/02/03 iguais, 05→07, 07→10; ochremesa 01→03, 02→06, 04→12, 06→18;
+emberpeak 01→05, 02→10, 03→15, 05→25.
 
 ## Comandos (na raiz)
 

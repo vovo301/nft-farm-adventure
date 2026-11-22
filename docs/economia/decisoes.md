@@ -672,3 +672,34 @@ usos pelo preço de 10). Simular antes de implementar: a cadeia consome materiai
 Sem mudança em relação à v1: Gold off-chain, sem saque, expansão nunca custa token. Se o token
 passar a comprar Gold ou materiais, os custos 1:1 da referência viram preço em dinheiro de progresso
 (pay-to-win) e reabrem as perguntas token↔Gold da v1. Venda ao público não é decisão do economista.
+
+## 2026-11-22 — v2.1 — valores de expansão da tabela do usuário
+
+**Fonte:** tabela bloco a bloco enviada pelo usuário (`docs/referencia/img/expansoes-usuario-*.{webp,png}`),
+transcrita com rótulos genéricos em `docs/referencia/equilibrio-tabela-usuario.csv` (decisão do usuário
+em `docs/ARQUITETURA.md`: a tabela é a fonte; moeda soft = Gold 1:1). Substitui a agregação 10/8/7/5 da v2 (§4).
+
+- **Blocos:** 1:1 com a tabela — homestead 7 (terreno inicial grátis + b4–b9), breezewood 12 (b5–b16),
+  ochremesa 21 (b5–b25), emberpeak 25 (b6–b30) = 65 blocos. Nível mínimo e tempo por bloco = tabela.
+- **Papéis → recursos:** iguais à v2 §3 (gema → frutas 1:1, dividida por bloco com os pesos da v2 §3
+  entre as frutas já reveladas, múltiplos de 5). Nós por bloco = layout da tabela; nó especial, flor e
+  colmeia seguem fora (`note`). Firefig: 1 árvore em emberpeak_01, _06 e _16.
+- **Desbloqueio de culturas:** mesmo ponto da progressão (último bloco da ref do grupo antigo); mapa em
+  `economy/README.md`.
+
+| Ilha | Obra | Gold | Materiais (madeira · pedra · m. comum · m. raro · m. I2 · rec. I3 · m. I4) | Gema → frutas | Total do usuário |
+|---|---|---|---|---|---|
+| homestead | 16 h 31 min 10 s | 60,25 | 108 · 46 · 9 · 1 | — | bate |
+| breezewood | 4 d 16 h 36 min | 0 | 680 · 115 · 30 · 32 · 26 | 225 | bate (usuário não lista moeda) |
+| ochremesa | 24 d 0 h 36 min | 81 600 | 6 775 · 2 415 · 440 · 350 · 564 · 3 570 | 1 020 | bate |
+| emberpeak | 33 d 15 h 35 min 10 s | 409 820 | 19 550 · 7 200 · 1 115 · 810 · 1 274 · 4 600 · 236 | 3 690 | bate |
+
+Diferenças para o código da ref (v2): ilha 1 b5 0,25 Gold (era 60), b6 60, b7–b9 sem Gold, b7 30 min e
+custos b6–b9 diferentes; ilha 2 sem Gold; ilha 3–4 Gold = código × 5/6 e sem Gold nos blocos iniciais.
+
+**Células inferidas** (imagem borrada; valor do código da ref, × 5/6 na moeda, que fecha o total do
+usuário): ilha 4 b9 Gold 960 (lê ~560), b11 gema 90 (lê 50/90), b19 Gold 12 800 (lê ~12 000), b21
+madeira 900 (lê ~500). Ilha 3 b21–b25 legíveis mas borrados, conferidos com o código.
+
+**Pendências:** simulação de 90 dias não refeita (pedido enxuto do usuário); a v2 §8 (ilhas 3–4 caras
+para a nossa renda) continua valendo, agora com obras de no máximo 3 d por bloco.

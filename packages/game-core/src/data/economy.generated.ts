@@ -3,7 +3,7 @@
  *  GERADO — não edite à mão.
  * ============================================================================================
  *
- * Fonte: economy/economy.csv@sha256:ac04886e3fee
+ * Fonte: economy/economy.csv@sha256:678bc36e4b8c
  * Gerador: economy/gen/generate.mjs · regenerar: `pnpm econ:gen` · conferir: `pnpm econ:check`
  * Justificativa de cada número: docs/economia/decisoes.md (proposta v2 — aguardando aprovação).
  *
@@ -12,7 +12,7 @@
 import type { EconomyData } from "./types";
 
 export const economy: EconomyData = {
-  meta: { version: "v2", placeholder: false, source: "economy/economy.csv@sha256:ac04886e3fee" },
+  meta: { version: "v2", placeholder: false, source: "economy/economy.csv@sha256:678bc36e4b8c" },
   rules: {
     startingCoins: "2",
     startingPlotCount: 6,

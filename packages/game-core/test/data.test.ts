@@ -99,9 +99,9 @@ describe("world data (ilhas, blocos, nós) — só dados", () => {
     return b;
   });
 
-  it("30 blocos em 4 ilhas (10/8/7/5), em ordem, com o terreno inicial grátis", () => {
-    expect(blocks).toHaveLength(30);
-    expect(Object.values(world.islands).map((i) => i.blockIds.length)).toEqual([10, 8, 7, 5]);
+  it("65 blocos em 4 ilhas (7/12/21/25: terreno inicial + 6/12/21/25 da tabela do usuário), em ordem, com o terreno inicial grátis", () => {
+    expect(blocks).toHaveLength(65);
+    expect(Object.values(world.islands).map((i) => i.blockIds.length)).toEqual([7, 12, 21, 25]);
     blocks.forEach((b, i) => {
       expect(b.order).toBe(i + 1);
     });
