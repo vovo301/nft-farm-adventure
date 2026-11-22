@@ -3,8 +3,8 @@ import Decimal from "decimal.js";
 import { economy } from "../src";
 
 describe("economy data (contrato do gerador)", () => {
-  it("tem 4 culturas e 2 recursos", () => {
-    expect(Object.keys(economy.crops)).toHaveLength(4);
+  it("tem 6 culturas e 2 recursos (economia v1)", () => {
+    expect(Object.keys(economy.crops)).toHaveLength(6);
     expect(Object.values(economy.items).filter((i) => i.kind === "resource")).toHaveLength(2);
   });
 
@@ -29,6 +29,25 @@ describe("economy data (contrato do gerador)", () => {
         expect(typeof price).toBe("string");
         expect(new Decimal(price).isNegative()).toBe(false);
       }
+    }
+  });
+
+  it("Gold tem precisão de 0,01: todo preço e o saldo inicial são múltiplos de 0,01", () => {
+    const cents = (v: string) => new Decimal(v).times(100);
+    expect(cents(economy.rules.startingCoins).isInteger()).toBe(true);
+    for (const item of Object.values(economy.items)) {
+      for (const price of [item.buyPrice, item.sellPrice]) {
+        if (price !== null) expect(cents(price).isInteger(), `${item.id}: ${price}`).toBe(true);
+      }
+    }
+  });
+
+  it("toda cultura dá lucro de pelo menos 0,01 Gold por colheita", () => {
+    for (const crop of Object.values(economy.crops)) {
+      const seed = new Decimal(economy.items[crop.seedItemId]?.buyPrice ?? "NaN");
+      const gross = new Decimal(economy.items[crop.harvestItemId]?.sellPrice ?? "NaN").times(crop.harvestQty);
+      expect(seed.gte("0.01"), crop.id).toBe(true);
+      expect(gross.minus(seed).gte("0.01"), crop.id).toBe(true);
     }
   });
 

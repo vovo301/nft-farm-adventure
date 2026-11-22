@@ -10,7 +10,7 @@ import { pathToFileURL } from "node:url";
 import { loadEconomyCsv, REPO_ROOT, toEconomyData } from "./economy-csv.mjs";
 
 export const OUT_PATH = join(REPO_ROOT, "packages/game-core/src/data/economy.generated.ts");
-export const ECONOMY_VERSION = "v0";
+export const ECONOMY_VERSION = "v1";
 
 const lit = (v) => JSON.stringify(v);
 const inline = (obj) =>
@@ -28,7 +28,7 @@ export function renderModule(data) {
     " *",
     ` * Fonte: ${data.meta.source}`,
     " * Gerador: economy/gen/generate.mjs · regenerar: `pnpm econ:gen` · conferir: `pnpm econ:check`",
-    " * Justificativa de cada número: docs/economia/decisoes.md (proposta v0 — aguardando aprovação).",
+    " * Justificativa de cada número: docs/economia/decisoes.md (proposta v1 em Gold — aguardando aprovação).",
     " *",
     " * Contrato: `EconomyData` em ./types.ts.",
     " */",

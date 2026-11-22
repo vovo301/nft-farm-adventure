@@ -1,0 +1,17 @@
+{
+  "_doc": "PROPOSTA v1 — NÃO OFICIAL. Sinks de Gold (expansão, construção, upgrade) ainda não existem no motor nem em economy.csv. O simulador os aplica POR FORA do game-core (edita saldo e canteiros direto no estado) no cenário 'com sinks', só para medir o efeito na inflação. Justificativa e status em docs/economia/decisoes.md (2026-11-22, proposta v1).",
+  "reserveSeedGoldPerPlot": 10,
+  "expansion": {
+    "_doc": "custo(n) = round2(base * growth^(n-1)), n = 1..maxCount. Cada expansão adiciona plotsPerExpansion canteiros vazios (fora do motor).",
+    "base": 150,
+    "growth": 2,
+    "maxCount": 4,
+    "plotsPerExpansion": 2
+  },
+  "building": {
+    "_doc": "1ª construção = base; upgrade para o nível L (L = 2..maxLevel) = round2(base * growth^(L-1)). Efeito da construção (receitas/boost) NÃO é modelado: aqui é sink puro.",
+    "base": 60,
+    "growth": 1.8,
+    "maxLevel": 8
+  }
+}

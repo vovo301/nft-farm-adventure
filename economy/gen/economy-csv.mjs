@@ -34,14 +34,21 @@ const REQUIRED = {
 };
 
 const RULES = {
-  starting_coins: "decimal",
+  starting_gold: "gold",
   starting_plot_count: "posint",
   max_quantity_per_action: "posint",
 };
 
 const ID_RE = /^[a-z][a-z0-9]*(_[a-z0-9]+)*$/;
-const DECIMAL_RE = /^(0|[1-9]\d*)(\.\d+)?$/;
 const POSINT_RE = /^[1-9]\d*$/;
+/** Precisão do Gold: 0,01. Todo preço/saldo precisa ser múltiplo de 0,01 (no máximo 2 casas). */
+const GOLD_RE = /^(0|[1-9]\d*)(\.\d{1,2})?$/;
+
+/** Converte um decimal canônico de até 2 casas em centavos de Gold (inteiro, sem float). */
+export function toCents(value) {
+  const [int, frac = ""] = value.split(".");
+  return Number(int) * 100 + Number(frac.padEnd(2, "0"));
+}
 
 /** Parser CSV mínimo (RFC 4180): vírgula, aspas duplas, "" como escape, LF ou CRLF. */
 export function parseCsv(text) {
@@ -117,8 +124,8 @@ export function loadEconomyCsv(path = CSV_PATH) {
       if (required.includes(col) && !filled) err(line, `${r.row_type} exige a coluna ${col}`);
       if (!required.includes(col) && filled) err(line, `${r.row_type} não usa a coluna ${col} (deixe vazia)`);
     }
-    const dec = (col) => {
-      if (!DECIMAL_RE.test(r[col])) err(line, `${col}="${r[col]}" deve ser decimal canônico >= 0 (ex.: 3, 0.5)`);
+    const gold = (col) => {
+      if (!GOLD_RE.test(r[col])) err(line, `${col}="${r[col]}" deve ser Gold com no máximo 2 casas (múltiplo de 0.01)`);
       return r[col];
     };
     const int = (col) => {
@@ -138,7 +145,7 @@ export function loadEconomyCsv(path = CSV_PATH) {
           return;
         }
         if (r.id in model.rules) err(line, `regra "${r.id}" duplicada`);
-        model.rules[r.id] = kind === "decimal" ? dec("value") : String(int("value"));
+        model.rules[r.id] = kind === "gold" ? gold("value") : String(int("value"));
         break;
       }
       case "start_item":
@@ -149,15 +156,20 @@ export function loadEconomyCsv(path = CSV_PATH) {
         claim(`${r.id}_seed`);
         const crop = {
           id: r.id,
-          seedPrice: dec("seed_price"),
-          sellPrice: dec("sell_price"),
+          seedPrice: gold("seed_price"),
+          sellPrice: gold("sell_price"),
           growSeconds: int("grow_seconds"),
           harvestQty: int("harvest_qty"),
           note: r.note,
         };
-        const gross = Number(crop.sellPrice) * crop.harvestQty;
-        if (!(gross > Number(crop.seedPrice))) {
-          err(line, `cultura "${r.id}" dá prejuízo: venda×qtd (${String(gross)}) <= semente (${crop.seedPrice})`);
+        if (GOLD_RE.test(crop.seedPrice) && GOLD_RE.test(crop.sellPrice) && Number.isInteger(crop.harvestQty)) {
+          // Aritmética em centavos inteiros: lucro por colheita >= 0.01 Gold (nunca arredonda para 0).
+          const grossCents = toCents(crop.sellPrice) * crop.harvestQty;
+          const seedCents = toCents(crop.seedPrice);
+          if (seedCents < 1) err(line, `cultura "${r.id}": semente precisa custar >= 0.01 Gold`);
+          if (grossCents - seedCents < 1) {
+            err(line, `cultura "${r.id}" não dá lucro de pelo menos 0.01: venda×qtd (${String(grossCents)}c) - semente (${String(seedCents)}c) < 1c`);
+          }
         }
         model.crops.push(crop);
         break;
@@ -166,7 +178,7 @@ export function loadEconomyCsv(path = CSV_PATH) {
         claim(r.id);
         model.resources.push({
           id: r.id,
-          sellPrice: dec("sell_price"),
+          sellPrice: gold("sell_price"),
           nodeCount: int("node_count"),
           rechargeSeconds: int("recharge_seconds"),
           yieldQty: int("yield_qty"),
@@ -195,7 +207,7 @@ export function loadEconomyCsv(path = CSV_PATH) {
 }
 
 /** Converte o modelo no objeto `EconomyData` (contrato em packages/game-core/src/data/types.ts). */
-export function toEconomyData(model, version = "v0") {
+export function toEconomyData(model, version = "v1") {
   const items = {};
   for (const c of model.crops) {
     items[`${c.id}_seed`] = { id: `${c.id}_seed`, kind: "seed", buyPrice: c.seedPrice, sellPrice: null };
@@ -217,7 +229,9 @@ export function toEconomyData(model, version = "v0") {
   return {
     meta: { version, placeholder: false, source: `economy/economy.csv@sha256:${model.hash}` },
     rules: {
-      startingCoins: model.rules.starting_coins,
+      // Contrato ainda chama o saldo de `startingCoins`/`coins`; a moeda é o Gold (renomear o
+      // contrato é tarefa do game-core, com migração de save).
+      startingCoins: model.rules.starting_gold,
       startingPlotCount: Number(model.rules.starting_plot_count),
       startingInventory: Object.fromEntries(model.startItems.map((s) => [s.id, s.qty])),
       maxQuantityPerAction: Number(model.rules.max_quantity_per_action),

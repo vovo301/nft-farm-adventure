@@ -1,93 +1,334 @@
 {
-  "generatedFrom": "economy/economy.csv@sha256:b099455405dc",
-  "engine": "packages/game-core applyActions (coleta de recursos replicada fora do motor)",
+  "generatedFrom": "economy/economy.csv@sha256:3ef568e83fb3",
+  "currency": "Gold (off-chain, precisão 0.01)",
+  "engine": "packages/game-core applyActions (coleta de recursos e sinks propostos aplicados fora do motor)",
   "days": 90,
-  "profiles": {
-    "casual": {
-      "label": "Casual (2x/dia)",
-      "coinsDay7": 6162,
-      "coinsDay30": 26364,
-      "coinsDay90": 82308,
-      "coinsPerDayLast30": 880.6,
-      "sources": {
-        "cropSales": 117498,
-        "resourceSales": 5152
-      },
-      "sinks": {
-        "seedPurchases": 40362
-      },
-      "sinkRatio": 0.329,
-      "harvests": 2889,
-      "itemsProduced": 5605,
-      "inventoryUnitsDay90": 0,
-      "sessions": 161,
-      "actions": 7074
+  "crops": [
+    {
+      "id": "mintleaf",
+      "seedGold": 0.01,
+      "harvestGold": 0.02,
+      "profitGold": 0.01,
+      "marginPct": 100,
+      "growMinutes": 2,
+      "profitPerHourPerPlot": 0.3
     },
-    "active": {
-      "label": "Ativo (8x/dia)",
-      "coinsDay7": 10103,
-      "coinsDay30": 44182,
-      "coinsDay90": 137143,
-      "coinsPerDayLast30": 1554.6,
-      "sources": {
-        "cropSales": 198363,
-        "resourceSales": 7896
-      },
-      "sinks": {
-        "seedPurchases": 69136
-      },
-      "sinkRatio": 0.335,
-      "harvests": 16770,
-      "itemsProduced": 22031,
-      "inventoryUnitsDay90": 0,
-      "sessions": 699,
-      "actions": 39676
+    {
+      "id": "pebblepea",
+      "seedGold": 0.14,
+      "harvestGold": 0.25,
+      "profitGold": 0.11,
+      "marginPct": 78.6,
+      "growMinutes": 15,
+      "profitPerHourPerPlot": 0.44
     },
-    "bot": {
-      "label": "Bot 24/7",
-      "coinsDay7": 19028,
-      "coinsDay30": 81680,
-      "coinsDay90": 245120,
-      "coinsPerDayLast30": 2724,
-      "sources": {
-        "cropSales": 388740,
-        "resourceSales": 11880
-      },
-      "sinks": {
-        "seedPurchases": 155520
-      },
-      "sinkRatio": 0.388,
-      "harvests": 38874,
-      "itemsProduced": 41034,
-      "inventoryUnitsDay90": 6,
-      "sessions": 0,
-      "actions": 91523
+    {
+      "id": "redroot",
+      "seedGold": 1.1,
+      "harvestGold": 1.8,
+      "profitGold": 0.7,
+      "marginPct": 63.6,
+      "growMinutes": 105,
+      "profitPerHourPerPlot": 0.4
+    },
+    {
+      "id": "honeyleek",
+      "seedGold": 2.9,
+      "harvestGold": 4.35,
+      "profitGold": 1.45,
+      "marginPct": 50,
+      "growMinutes": 240,
+      "profitPerHourPerPlot": 0.3625
+    },
+    {
+      "id": "stripemelon",
+      "seedGold": 6.3,
+      "harvestGold": 8.7,
+      "profitGold": 2.4,
+      "marginPct": 38.1,
+      "growMinutes": 450,
+      "profitPerHourPerPlot": 0.32
+    },
+    {
+      "id": "glowgourd",
+      "seedGold": 10,
+      "harvestGold": 13,
+      "profitGold": 3,
+      "marginPct": 30,
+      "growMinutes": 600,
+      "profitPerHourPerPlot": 0.3
     }
-  },
-  "ratios": {
-    "day7": {
-      "botOverCasual": 3.09,
-      "botOverActive": 1.88,
-      "activeOverCasual": 1.64
+  ],
+  "scenarios": {
+    "base": {
+      "doc": "Só o motor atual: sementes são o único sink.",
+      "profiles": {
+        "casual": {
+          "label": "Casual (2x/dia)",
+          "goldDay7": 113.69,
+          "goldDay30": 869.12,
+          "goldDay90": 2961.08,
+          "goldPerDayLast30": 32.93,
+          "netEarnedPerDayLast30": 32.93,
+          "sources": {
+            "cropSales": 12146.17,
+            "resourceSales": 201.25
+          },
+          "sinks": {
+            "seedPurchases": 9388.34,
+            "proposedSinksOutsideEngine": 0
+          },
+          "sinkRatio": 0.76,
+          "plotsDay90": 6,
+          "expansionsDay90": 0,
+          "buildingLevelDay90": 0,
+          "harvests": 2890,
+          "harvestsByCrop": {
+            "mintleaf": 1936,
+            "pebblepea": 16,
+            "redroot": 5,
+            "honeyleek": 3,
+            "stripemelon": 2,
+            "glowgourd": 928
+          },
+          "itemsProduced": 7422,
+          "sessions": 161,
+          "actions": 7104
+        },
+        "active": {
+          "label": "Ativo (8x/dia)",
+          "goldDay7": 282.66,
+          "goldDay30": 1363.31,
+          "goldDay90": 4323.02,
+          "goldPerDayLast30": 49.54,
+          "netEarnedPerDayLast30": 49.54,
+          "sources": {
+            "cropSales": 11710.98,
+            "resourceSales": 305.1
+          },
+          "sinks": {
+            "seedPurchases": 7695.06,
+            "proposedSinksOutsideEngine": 0
+          },
+          "sinkRatio": 0.64,
+          "plotsDay90": 6,
+          "expansionsDay90": 0,
+          "buildingLevelDay90": 0,
+          "harvests": 16770,
+          "harvestsByCrop": {
+            "mintleaf": 12584,
+            "pebblepea": 32,
+            "redroot": 3525,
+            "honeyleek": 96,
+            "stripemelon": 521,
+            "glowgourd": 12
+          },
+          "itemsProduced": 23011,
+          "sessions": 699,
+          "actions": 39682
+        },
+        "bot": {
+          "label": "Bot 24/7",
+          "goldDay7": 479.72,
+          "goldDay30": 2054.3,
+          "goldDay90": 6161.9,
+          "goldPerDayLast30": 68.46,
+          "netEarnedPerDayLast30": 68.46,
+          "sources": {
+            "cropSales": 12958.5,
+            "resourceSales": 459
+          },
+          "sinks": {
+            "seedPurchases": 7257.6,
+            "proposedSinksOutsideEngine": 0
+          },
+          "sinkRatio": 0.541,
+          "plotsDay90": 6,
+          "expansionsDay90": 0,
+          "buildingLevelDay90": 0,
+          "harvests": 51834,
+          "harvestsByCrop": {
+            "mintleaf": 0,
+            "pebblepea": 51834,
+            "redroot": 0,
+            "honeyleek": 0,
+            "stripemelon": 0,
+            "glowgourd": 0
+          },
+          "itemsProduced": 53994,
+          "sessions": 0,
+          "actions": 121763
+        }
+      },
+      "ratios": {
+        "day7": {
+          "botOverCasual": 4.22,
+          "botOverActive": 1.7,
+          "activeOverCasual": 2.49
+        },
+        "day30": {
+          "botOverCasual": 2.36,
+          "botOverActive": 1.51,
+          "activeOverCasual": 1.57
+        },
+        "day90": {
+          "botOverCasual": 2.08,
+          "botOverActive": 1.43,
+          "activeOverCasual": 1.46
+        },
+        "steadyStateNetPerDay": {
+          "botOverCasual": 2.08,
+          "botOverActive": 1.38,
+          "activeOverCasual": 1.5
+        }
+      }
     },
-    "day30": {
-      "botOverCasual": 3.1,
-      "botOverActive": 1.85,
-      "activeOverCasual": 1.68
-    },
-    "day90": {
-      "botOverCasual": 2.98,
-      "botOverActive": 1.79,
-      "activeOverCasual": 1.67
-    },
-    "steadyStatePerDay": {
-      "botOverCasual": 3.09,
-      "botOverActive": 1.75,
-      "activeOverCasual": 1.77
+    "sinks": {
+      "doc": "PROPOSTA, FORA DO MOTOR: + expansões/construção/upgrades de economy/sim/sinks-proposal.json.",
+      "proposal": {
+        "_doc": "PROPOSTA v1 — NÃO OFICIAL. Sinks de Gold (expansão, construção, upgrade) ainda não existem no motor nem em economy.csv. O simulador os aplica POR FORA do game-core (edita saldo e canteiros direto no estado) no cenário 'com sinks', só para medir o efeito na inflação. Justificativa e status em docs/economia/decisoes.md (2026-11-22, proposta v1).",
+        "reserveSeedGoldPerPlot": 10,
+        "expansion": {
+          "_doc": "custo(n) = round2(base * growth^(n-1)), n = 1..maxCount. Cada expansão adiciona plotsPerExpansion canteiros vazios (fora do motor).",
+          "base": 150,
+          "growth": 2,
+          "maxCount": 4,
+          "plotsPerExpansion": 2
+        },
+        "building": {
+          "_doc": "1ª construção = base; upgrade para o nível L (L = 2..maxLevel) = round2(base * growth^(L-1)). Efeito da construção (receitas/boost) NÃO é modelado: aqui é sink puro.",
+          "base": 60,
+          "growth": 1.8,
+          "maxLevel": 8
+        }
+      },
+      "profiles": {
+        "casual": {
+          "label": "Casual (2x/dia)",
+          "goldDay7": 53.69,
+          "goldDay30": 222.16,
+          "goldDay90": 196.84,
+          "goldPerDayLast30": -13.92,
+          "netEarnedPerDayLast30": 63.87,
+          "sources": {
+            "cropSales": 20961.53,
+            "resourceSales": 201.25
+          },
+          "sinks": {
+            "seedPurchases": 16242.02,
+            "proposedSinksOutsideEngine": 4725.92
+          },
+          "sinkRatio": 0.991,
+          "plotsDay90": 14,
+          "expansionsDay90": 4,
+          "buildingLevelDay90": 6,
+          "harvests": 4934,
+          "harvestsByCrop": {
+            "mintleaf": 3304,
+            "pebblepea": 16,
+            "redroot": 5,
+            "honeyleek": 3,
+            "stripemelon": 2,
+            "glowgourd": 1604
+          },
+          "itemsProduced": 12170,
+          "sessions": 161,
+          "actions": 11200
+        },
+        "active": {
+          "label": "Ativo (8x/dia)",
+          "goldDay7": 114.66,
+          "goldDay30": 63.75,
+          "goldDay90": 1204.35,
+          "goldPerDayLast30": 1.97,
+          "netEarnedPerDayLast30": 109.99,
+          "sources": {
+            "cropSales": 22358.32,
+            "resourceSales": 305.1
+          },
+          "sinks": {
+            "seedPurchases": 14694.42,
+            "proposedSinksOutsideEngine": 6766.65
+          },
+          "sinkRatio": 0.947,
+          "plotsDay90": 14,
+          "expansionsDay90": 4,
+          "buildingLevelDay90": 7,
+          "harvests": 31952,
+          "harvestsByCrop": {
+            "mintleaf": 23976,
+            "pebblepea": 48,
+            "redroot": 6721,
+            "honeyleek": 190,
+            "stripemelon": 995,
+            "glowgourd": 22
+          },
+          "itemsProduced": 42565,
+          "sessions": 699,
+          "actions": 70054
+        },
+        "bot": {
+          "label": "Bot 24/7",
+          "goldDay7": 186.96,
+          "goldDay30": 767.44,
+          "goldDay90": 1622.53,
+          "goldPerDayLast30": 30.5,
+          "netEarnedPerDayLast30": 152.94,
+          "sources": {
+            "cropSales": 26371.5,
+            "resourceSales": 459
+          },
+          "sinks": {
+            "seedPurchases": 14770,
+            "proposedSinksOutsideEngine": 10439.97
+          },
+          "sinkRatio": 0.94,
+          "plotsDay90": 14,
+          "expansionsDay90": 4,
+          "buildingLevelDay90": 8,
+          "harvests": 105486,
+          "harvestsByCrop": {
+            "mintleaf": 0,
+            "pebblepea": 105486,
+            "redroot": 0,
+            "honeyleek": 0,
+            "stripemelon": 0,
+            "glowgourd": 0
+          },
+          "itemsProduced": 107646,
+          "sessions": 0,
+          "actions": 229075
+        }
+      },
+      "ratios": {
+        "day7": {
+          "botOverCasual": 3.48,
+          "botOverActive": 1.63,
+          "activeOverCasual": 2.14
+        },
+        "day30": {
+          "botOverCasual": 3.45,
+          "botOverActive": 12.04,
+          "activeOverCasual": 0.29
+        },
+        "day90": {
+          "botOverCasual": 8.24,
+          "botOverActive": 1.35,
+          "activeOverCasual": 6.12
+        },
+        "steadyStateNetPerDay": {
+          "botOverCasual": 2.39,
+          "botOverActive": 1.39,
+          "activeOverCasual": 1.72
+        }
+      }
     }
   },
   "alarm": {
-    "rule": "bot > 3x ativo (skill web3-game-economy)",
+    "rules": [
+      "bot > 3x ativo (skill web3-game-economy)",
+      "bot > 3x casual (pedido do usuário, 2026-11-22)"
+    ],
     "triggered": false
   }
 }
