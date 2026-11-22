@@ -16,7 +16,7 @@
         "frames": 1,
         "filtering": "nearest",
         "max_colors": 20,
-        "palette": "art/style-guide/palette.json"
+        "palette": "art/style-guide/archive/pixel-v0/palette-pixel-v0.json"
       },
       "visual_locks": [
         "palette",
@@ -57,7 +57,7 @@
         "frames": 1,
         "filtering": "nearest",
         "max_colors": 8,
-        "palette": "art/style-guide/palette.json"
+        "palette": "art/style-guide/archive/pixel-v0/palette-pixel-v0.json"
       },
       "visual_locks": [
         "palette",
@@ -98,7 +98,7 @@
         "frames": 1,
         "filtering": "nearest",
         "max_colors": 8,
-        "palette": "art/style-guide/palette.json"
+        "palette": "art/style-guide/archive/pixel-v0/palette-pixel-v0.json"
       },
       "visual_locks": [
         "palette",
@@ -139,7 +139,7 @@
         "frames": 1,
         "filtering": "nearest",
         "max_colors": 8,
-        "palette": "art/style-guide/palette.json"
+        "palette": "art/style-guide/archive/pixel-v0/palette-pixel-v0.json"
       },
       "visual_locks": [
         "palette",
@@ -180,7 +180,7 @@
         "frames": 1,
         "filtering": "nearest",
         "max_colors": 12,
-        "palette": "art/style-guide/palette.json"
+        "palette": "art/style-guide/archive/pixel-v0/palette-pixel-v0.json"
       },
       "visual_locks": [
         "palette",
@@ -221,7 +221,7 @@
         "frames": 1,
         "filtering": "nearest",
         "max_colors": 12,
-        "palette": "art/style-guide/palette.json"
+        "palette": "art/style-guide/archive/pixel-v0/palette-pixel-v0.json"
       },
       "visual_locks": [
         "palette",
@@ -262,7 +262,7 @@
         "frames": 1,
         "filtering": "nearest",
         "max_colors": 12,
-        "palette": "art/style-guide/palette.json"
+        "palette": "art/style-guide/archive/pixel-v0/palette-pixel-v0.json"
       },
       "visual_locks": [
         "palette",
@@ -303,7 +303,7 @@
         "frames": 1,
         "filtering": "nearest",
         "max_colors": 12,
-        "palette": "art/style-guide/palette.json"
+        "palette": "art/style-guide/archive/pixel-v0/palette-pixel-v0.json"
       },
       "visual_locks": [
         "palette",
@@ -329,6 +329,435 @@
         "approved_by": ""
       },
       "review": "art/review/2026-11-21-alvo-visual-01/prancha.png"
+    },
+    {
+      "id": "ground_grass_a",
+      "batch": "2026-11-22-base-isometrica",
+      "role": "tile de chão: grama (variante a) — teste técnico",
+      "path": "art/export/iso-base/ground_grass_a@1x.png",
+      "files": [
+        "art/export/iso-base/ground_grass_a@1x.png",
+        "art/export/iso-base/ground_grass_a@2x.png",
+        "art/export/iso-base/ground_grass_a.json"
+      ],
+      "source_path": "art/source/iso-base/ground_grass_a.svg",
+      "status": "draft",
+      "technical": {
+        "dimensions": "136x68",
+        "dimensions_2x": "272x136",
+        "alpha": true,
+        "anchor": "centro do losango da pegada",
+        "anchor_px_1x": [
+          68,
+          34
+        ],
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "footprint_tiles": [
+          1,
+          1
+        ],
+        "frames": 1,
+        "filtering": "linear",
+        "max_colors": null,
+        "palette": "art/style-guide/palette.json",
+        "shadow": "n/a"
+      },
+      "visual_locks": [
+        "palette",
+        "projection-2:1",
+        "anchor",
+        "light-direction",
+        "outline"
+      ],
+      "source": {
+        "kind": "scripted",
+        "url_or_tool": "art/source/tools/build_base_isometrica.py + art/source/tools/iso_vector.py (cairosvg)",
+        "creator": "agente diretor-de-arte (Claude)",
+        "created_at": "2026-11-22",
+        "license": "original do projeto (todos os direitos do projeto)",
+        "attribution": "",
+        "prompt_or_source_record": "SVG gerado por código; sem gerador de imagem por IA; sem referência externa; nada derivado de Sunflower Land/Sunnyside nem de kits de terceiros"
+      },
+      "verification": {
+        "native_scale_reviewed": true,
+        "in_engine_reviewed": false,
+        "technical_checks_passed": true,
+        "approved_by": ""
+      },
+      "review": "art/review/2026-11-22-base-isometrica/prancha.png",
+      "notes": "teste técnico — não vai para aprovação; ver art/review/2026-11-22-base-isometrica/notas.md"
+    },
+    {
+      "id": "ground_grass_b",
+      "batch": "2026-11-22-base-isometrica",
+      "role": "tile de chão: grama (variante b) — teste técnico",
+      "path": "art/export/iso-base/ground_grass_b@1x.png",
+      "files": [
+        "art/export/iso-base/ground_grass_b@1x.png",
+        "art/export/iso-base/ground_grass_b@2x.png",
+        "art/export/iso-base/ground_grass_b.json"
+      ],
+      "source_path": "art/source/iso-base/ground_grass_b.svg",
+      "status": "draft",
+      "technical": {
+        "dimensions": "136x68",
+        "dimensions_2x": "272x136",
+        "alpha": true,
+        "anchor": "centro do losango da pegada",
+        "anchor_px_1x": [
+          68,
+          34
+        ],
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "footprint_tiles": [
+          1,
+          1
+        ],
+        "frames": 1,
+        "filtering": "linear",
+        "max_colors": null,
+        "palette": "art/style-guide/palette.json",
+        "shadow": "n/a"
+      },
+      "visual_locks": [
+        "palette",
+        "projection-2:1",
+        "anchor",
+        "light-direction",
+        "outline"
+      ],
+      "source": {
+        "kind": "scripted",
+        "url_or_tool": "art/source/tools/build_base_isometrica.py + art/source/tools/iso_vector.py (cairosvg)",
+        "creator": "agente diretor-de-arte (Claude)",
+        "created_at": "2026-11-22",
+        "license": "original do projeto (todos os direitos do projeto)",
+        "attribution": "",
+        "prompt_or_source_record": "SVG gerado por código; sem gerador de imagem por IA; sem referência externa; nada derivado de Sunflower Land/Sunnyside nem de kits de terceiros"
+      },
+      "verification": {
+        "native_scale_reviewed": true,
+        "in_engine_reviewed": false,
+        "technical_checks_passed": true,
+        "approved_by": ""
+      },
+      "review": "art/review/2026-11-22-base-isometrica/prancha.png",
+      "notes": "teste técnico — não vai para aprovação; ver art/review/2026-11-22-base-isometrica/notas.md"
+    },
+    {
+      "id": "ground_path_dirt",
+      "batch": "2026-11-22-base-isometrica",
+      "role": "tile de chão: caminho de terra — teste técnico",
+      "path": "art/export/iso-base/ground_path_dirt@1x.png",
+      "files": [
+        "art/export/iso-base/ground_path_dirt@1x.png",
+        "art/export/iso-base/ground_path_dirt@2x.png",
+        "art/export/iso-base/ground_path_dirt.json"
+      ],
+      "source_path": "art/source/iso-base/ground_path_dirt.svg",
+      "status": "draft",
+      "technical": {
+        "dimensions": "136x68",
+        "dimensions_2x": "272x136",
+        "alpha": true,
+        "anchor": "centro do losango da pegada",
+        "anchor_px_1x": [
+          68,
+          34
+        ],
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "footprint_tiles": [
+          1,
+          1
+        ],
+        "frames": 1,
+        "filtering": "linear",
+        "max_colors": null,
+        "palette": "art/style-guide/palette.json",
+        "shadow": "n/a"
+      },
+      "visual_locks": [
+        "palette",
+        "projection-2:1",
+        "anchor",
+        "light-direction",
+        "outline"
+      ],
+      "source": {
+        "kind": "scripted",
+        "url_or_tool": "art/source/tools/build_base_isometrica.py + art/source/tools/iso_vector.py (cairosvg)",
+        "creator": "agente diretor-de-arte (Claude)",
+        "created_at": "2026-11-22",
+        "license": "original do projeto (todos os direitos do projeto)",
+        "attribution": "",
+        "prompt_or_source_record": "SVG gerado por código; sem gerador de imagem por IA; sem referência externa; nada derivado de Sunflower Land/Sunnyside nem de kits de terceiros"
+      },
+      "verification": {
+        "native_scale_reviewed": true,
+        "in_engine_reviewed": false,
+        "technical_checks_passed": true,
+        "approved_by": ""
+      },
+      "review": "art/review/2026-11-22-base-isometrica/prancha.png",
+      "notes": "teste técnico — não vai para aprovação; ver art/review/2026-11-22-base-isometrica/notas.md"
+    },
+    {
+      "id": "ground_soil_tilled",
+      "batch": "2026-11-22-base-isometrica",
+      "role": "tile de chão: canteiro arado — teste técnico",
+      "path": "art/export/iso-base/ground_soil_tilled@1x.png",
+      "files": [
+        "art/export/iso-base/ground_soil_tilled@1x.png",
+        "art/export/iso-base/ground_soil_tilled@2x.png",
+        "art/export/iso-base/ground_soil_tilled.json"
+      ],
+      "source_path": "art/source/iso-base/ground_soil_tilled.svg",
+      "status": "draft",
+      "technical": {
+        "dimensions": "136x68",
+        "dimensions_2x": "272x136",
+        "alpha": true,
+        "anchor": "centro do losango da pegada",
+        "anchor_px_1x": [
+          68,
+          34
+        ],
+        "origin": [
+          0.5,
+          0.5
+        ],
+        "footprint_tiles": [
+          1,
+          1
+        ],
+        "frames": 1,
+        "filtering": "linear",
+        "max_colors": null,
+        "palette": "art/style-guide/palette.json",
+        "shadow": "n/a"
+      },
+      "visual_locks": [
+        "palette",
+        "projection-2:1",
+        "anchor",
+        "light-direction",
+        "outline"
+      ],
+      "source": {
+        "kind": "scripted",
+        "url_or_tool": "art/source/tools/build_base_isometrica.py + art/source/tools/iso_vector.py (cairosvg)",
+        "creator": "agente diretor-de-arte (Claude)",
+        "created_at": "2026-11-22",
+        "license": "original do projeto (todos os direitos do projeto)",
+        "attribution": "",
+        "prompt_or_source_record": "SVG gerado por código; sem gerador de imagem por IA; sem referência externa; nada derivado de Sunflower Land/Sunnyside nem de kits de terceiros"
+      },
+      "verification": {
+        "native_scale_reviewed": true,
+        "in_engine_reviewed": false,
+        "technical_checks_passed": true,
+        "approved_by": ""
+      },
+      "review": "art/review/2026-11-22-base-isometrica/prancha.png",
+      "notes": "teste técnico — não vai para aprovação; ver art/review/2026-11-22-base-isometrica/notas.md"
+    },
+    {
+      "id": "tree_round_a",
+      "batch": "2026-11-22-base-isometrica",
+      "role": "recurso: árvore de copa redonda — teste técnico de volume/contorno/sombra",
+      "path": "art/export/iso-base/tree_round_a@1x.png",
+      "files": [
+        "art/export/iso-base/tree_round_a@1x.png",
+        "art/export/iso-base/tree_round_a@2x.png",
+        "art/export/iso-base/tree_round_a.json",
+        "art/export/iso-base/tree_round_a_shadow@1x.png",
+        "art/export/iso-base/tree_round_a_shadow@2x.png",
+        "art/export/iso-base/tree_round_a_shadow.json"
+      ],
+      "source_path": "art/source/iso-base/tree_round_a.svg",
+      "status": "draft",
+      "technical": {
+        "dimensions": "160x224",
+        "dimensions_2x": "320x448",
+        "alpha": true,
+        "anchor": "centro do losango da pegada",
+        "anchor_px_1x": [
+          80,
+          180
+        ],
+        "origin": [
+          0.5,
+          0.803571
+        ],
+        "footprint_tiles": [
+          1,
+          1
+        ],
+        "frames": 1,
+        "filtering": "linear",
+        "max_colors": null,
+        "palette": "art/style-guide/palette.json",
+        "shadow": "separada (_shadow)"
+      },
+      "visual_locks": [
+        "palette",
+        "projection-2:1",
+        "anchor",
+        "light-direction",
+        "outline"
+      ],
+      "source": {
+        "kind": "scripted",
+        "url_or_tool": "art/source/tools/build_base_isometrica.py + art/source/tools/iso_vector.py (cairosvg)",
+        "creator": "agente diretor-de-arte (Claude)",
+        "created_at": "2026-11-22",
+        "license": "original do projeto (todos os direitos do projeto)",
+        "attribution": "",
+        "prompt_or_source_record": "SVG gerado por código; sem gerador de imagem por IA; sem referência externa; nada derivado de Sunflower Land/Sunnyside nem de kits de terceiros"
+      },
+      "verification": {
+        "native_scale_reviewed": true,
+        "in_engine_reviewed": false,
+        "technical_checks_passed": true,
+        "approved_by": ""
+      },
+      "review": "art/review/2026-11-22-base-isometrica/prancha.png",
+      "notes": "teste técnico — não vai para aprovação; ver art/review/2026-11-22-base-isometrica/notas.md"
+    },
+    {
+      "id": "prop_hay_bale",
+      "batch": "2026-11-22-base-isometrica",
+      "role": "objeto: fardo de feno (bloco isométrico) — teste técnico de 3 faces",
+      "path": "art/export/iso-base/prop_hay_bale@1x.png",
+      "files": [
+        "art/export/iso-base/prop_hay_bale@1x.png",
+        "art/export/iso-base/prop_hay_bale@2x.png",
+        "art/export/iso-base/prop_hay_bale.json",
+        "art/export/iso-base/prop_hay_bale_shadow@1x.png",
+        "art/export/iso-base/prop_hay_bale_shadow@2x.png",
+        "art/export/iso-base/prop_hay_bale_shadow.json"
+      ],
+      "source_path": "art/source/iso-base/prop_hay_bale.svg",
+      "status": "draft",
+      "technical": {
+        "dimensions": "160x112",
+        "dimensions_2x": "320x224",
+        "alpha": true,
+        "anchor": "centro do losango da pegada",
+        "anchor_px_1x": [
+          80,
+          68
+        ],
+        "origin": [
+          0.5,
+          0.607143
+        ],
+        "footprint_tiles": [
+          1,
+          1
+        ],
+        "frames": 1,
+        "filtering": "linear",
+        "max_colors": null,
+        "palette": "art/style-guide/palette.json",
+        "shadow": "separada (_shadow)"
+      },
+      "visual_locks": [
+        "palette",
+        "projection-2:1",
+        "anchor",
+        "light-direction",
+        "outline"
+      ],
+      "source": {
+        "kind": "scripted",
+        "url_or_tool": "art/source/tools/build_base_isometrica.py + art/source/tools/iso_vector.py (cairosvg)",
+        "creator": "agente diretor-de-arte (Claude)",
+        "created_at": "2026-11-22",
+        "license": "original do projeto (todos os direitos do projeto)",
+        "attribution": "",
+        "prompt_or_source_record": "SVG gerado por código; sem gerador de imagem por IA; sem referência externa; nada derivado de Sunflower Land/Sunnyside nem de kits de terceiros"
+      },
+      "verification": {
+        "native_scale_reviewed": true,
+        "in_engine_reviewed": false,
+        "technical_checks_passed": true,
+        "approved_by": ""
+      },
+      "review": "art/review/2026-11-22-base-isometrica/prancha.png",
+      "notes": "teste técnico — não vai para aprovação; ver art/review/2026-11-22-base-isometrica/notas.md"
+    },
+    {
+      "id": "ref_scale_figure",
+      "batch": "2026-11-22-base-isometrica",
+      "role": "gabarito de escala cinza (placeholder, nunca vai ao jogo)",
+      "path": "art/export/iso-base/ref_scale_figure@1x.png",
+      "files": [
+        "art/export/iso-base/ref_scale_figure@1x.png",
+        "art/export/iso-base/ref_scale_figure@2x.png",
+        "art/export/iso-base/ref_scale_figure.json",
+        "art/export/iso-base/ref_scale_figure_shadow@1x.png",
+        "art/export/iso-base/ref_scale_figure_shadow@2x.png",
+        "art/export/iso-base/ref_scale_figure_shadow.json"
+      ],
+      "source_path": "art/source/iso-base/ref_scale_figure.svg",
+      "status": "draft",
+      "technical": {
+        "dimensions": "64x112",
+        "dimensions_2x": "128x224",
+        "alpha": true,
+        "anchor": "centro do losango da pegada",
+        "anchor_px_1x": [
+          32,
+          100
+        ],
+        "origin": [
+          0.5,
+          0.892857
+        ],
+        "footprint_tiles": [
+          0.3,
+          0.3
+        ],
+        "frames": 1,
+        "filtering": "linear",
+        "max_colors": null,
+        "palette": "art/style-guide/palette.json",
+        "shadow": "separada (_shadow)"
+      },
+      "visual_locks": [
+        "palette",
+        "projection-2:1",
+        "anchor",
+        "light-direction",
+        "outline"
+      ],
+      "source": {
+        "kind": "scripted",
+        "url_or_tool": "art/source/tools/build_base_isometrica.py + art/source/tools/iso_vector.py (cairosvg)",
+        "creator": "agente diretor-de-arte (Claude)",
+        "created_at": "2026-11-22",
+        "license": "original do projeto (todos os direitos do projeto)",
+        "attribution": "",
+        "prompt_or_source_record": "SVG gerado por código; sem gerador de imagem por IA; sem referência externa; nada derivado de Sunflower Land/Sunnyside nem de kits de terceiros"
+      },
+      "verification": {
+        "native_scale_reviewed": true,
+        "in_engine_reviewed": false,
+        "technical_checks_passed": true,
+        "approved_by": ""
+      },
+      "review": "art/review/2026-11-22-base-isometrica/prancha.png",
+      "notes": "teste técnico — não vai para aprovação; ver art/review/2026-11-22-base-isometrica/notas.md"
     }
   ],
   "support_files": [
@@ -348,6 +777,19 @@
       "role": "mapa Tiled 20x12 da cena de preview (não é mapa de jogo)",
       "status": "rejected",
       "source_path": "art/source/maps/alvo-visual/spec.json"
+    },
+    {
+      "path": "art/review/2026-11-22-base-isometrica/",
+      "role": "prancha de teste técnico (prancha.png, @2x, debug, técnica, qa.json, notas.md)",
+      "status": "draft",
+      "batch": "2026-11-22-base-isometrica"
+    },
+    {
+      "path": "art/style-guide/archive/pixel-v0/",
+      "role": "guia e paleta da direção pixel art v1 (substituída em 2026-11-22; histórico)",
+      "status": "rejected",
+      "batch": "2026-11-21-alvo-visual-01"
     }
-  ]
+  ],
+  "style_version": "2 (isométrico cartoon, vetor por script) — 2026-11-22"
 }

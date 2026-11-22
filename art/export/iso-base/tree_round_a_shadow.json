@@ -1,0 +1,23 @@
+{
+ "name": "tree_round_a_shadow",
+ "size_1x": [
+  160,
+  224
+ ],
+ "anchor_px_1x": [
+  80,
+  180
+ ],
+ "origin": [
+  0.5,
+  0.803571
+ ],
+ "footprint_tiles": [
+  1,
+  1
+ ],
+ "scales": [
+  1,
+  2
+ ]
+}

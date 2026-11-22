@@ -1,0 +1,112 @@
+{
+ "batch": "2026-11-22-base-isometrica",
+ "seam_tests": [
+  {
+   "zoom": 0.5,
+   "pixels_checked": 35533,
+   "non_opaque_pixels": 0,
+   "pass": true
+  },
+  {
+   "zoom": 1,
+   "pixels_checked": 141753,
+   "non_opaque_pixels": 0,
+   "pass": true
+  },
+  {
+   "zoom": 1.5,
+   "pixels_checked": 318661,
+   "non_opaque_pixels": 0,
+   "pass": true
+  },
+  {
+   "zoom": 2,
+   "pixels_checked": 566257,
+   "non_opaque_pixels": 0,
+   "pass": true
+  }
+ ],
+ "asset_report": [
+  {
+   "file": "art/export/iso-base/ground_grass_a@1x.png",
+   "exit": 0
+  },
+  {
+   "file": "art/export/iso-base/ground_grass_a@2x.png",
+   "exit": 0
+  },
+  {
+   "file": "art/export/iso-base/ground_grass_b@1x.png",
+   "exit": 0
+  },
+  {
+   "file": "art/export/iso-base/ground_grass_b@2x.png",
+   "exit": 0
+  },
+  {
+   "file": "art/export/iso-base/ground_path_dirt@1x.png",
+   "exit": 0
+  },
+  {
+   "file": "art/export/iso-base/ground_path_dirt@2x.png",
+   "exit": 0
+  },
+  {
+   "file": "art/export/iso-base/ground_soil_tilled@1x.png",
+   "exit": 0
+  },
+  {
+   "file": "art/export/iso-base/ground_soil_tilled@2x.png",
+   "exit": 0
+  },
+  {
+   "file": "art/export/iso-base/tree_round_a@1x.png",
+   "exit": 0
+  },
+  {
+   "file": "art/export/iso-base/tree_round_a@2x.png",
+   "exit": 0
+  },
+  {
+   "file": "art/export/iso-base/tree_round_a_shadow@1x.png",
+   "exit": 0
+  },
+  {
+   "file": "art/export/iso-base/tree_round_a_shadow@2x.png",
+   "exit": 0
+  },
+  {
+   "file": "art/export/iso-base/prop_hay_bale@1x.png",
+   "exit": 0
+  },
+  {
+   "file": "art/export/iso-base/prop_hay_bale@2x.png",
+   "exit": 0
+  },
+  {
+   "file": "art/export/iso-base/prop_hay_bale_shadow@1x.png",
+   "exit": 0
+  },
+  {
+   "file": "art/export/iso-base/prop_hay_bale_shadow@2x.png",
+   "exit": 0
+  },
+  {
+   "file": "art/export/iso-base/ref_scale_figure@1x.png",
+   "exit": 0
+  },
+  {
+   "file": "art/export/iso-base/ref_scale_figure@2x.png",
+   "exit": 0
+  },
+  {
+   "file": "art/export/iso-base/ref_scale_figure_shadow@1x.png",
+   "exit": 0
+  },
+  {
+   "file": "art/export/iso-base/ref_scale_figure_shadow@2x.png",
+   "exit": 0
+  }
+ ],
+ "pass": true
+}

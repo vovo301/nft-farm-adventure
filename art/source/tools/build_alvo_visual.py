@@ -5,7 +5,7 @@ Rode da raiz do repositório:
     python3 art/source/tools/build_alvo_visual.py
 
 Passos:
- 1. art/style-guide/palette.json (rampas)  ->  art/style-guide/palette-keys.json (chave->hex, p/ scripts)
+ 1. art/style-guide/archive/pixel-v0/palette-pixel-v0.json (rampas)  ->  palette-keys-pixel-v0.json (chave->hex, p/ scripts)
  2. grades .txt de art/source/{characters,tiles,icons}  ->  PNG 1x em art/export/...
  3. tileset do alvo (strip 4x1)  ->  art/export/tiles/tileset_alvo.png
  4. mapa ASCII (art/source/maps/alvo-visual)  ->  Tiled JSON em art/export/maps/alvo-visual.json
@@ -53,9 +53,9 @@ def run(*args):
 
 
 def load_palette():
-    pal = json.loads((ART / "style-guide" / "palette.json").read_text(encoding="utf-8"))
+    pal = json.loads((ART / "style-guide" / "archive" / "pixel-v0" / "palette-pixel-v0.json").read_text(encoding="utf-8"))
     flat = {c["key"]: c["hex"] for ramp in pal["ramps"].values() for c in ramp}
-    (ART / "style-guide" / "palette-keys.json").write_text(json.dumps(flat, indent=1) + "\n", encoding="utf-8")
+    (ART / "style-guide" / "archive" / "pixel-v0" / "palette-keys-pixel-v0.json").write_text(json.dumps(flat, indent=1) + "\n", encoding="utf-8")
     return pal, flat
 
 
@@ -73,7 +73,7 @@ def build_assets():
     for aid, fam, _ in ASSETS:
         src = ART / "source" / fam / f"{aid}.txt"
         dst = ART / "export" / fam / f"{aid}.png"
-        run(PIX, src, "--palette", ART / "style-guide" / "palette-keys.json", "--out", dst)
+        run(PIX, src, "--palette", ART / "style-guide" / "archive" / "pixel-v0" / "palette-keys-pixel-v0.json", "--out", dst)
         out[aid] = Image.open(dst).convert("RGBA")
     ts = Image.new("RGBA", (16 * len(TILE_ORDER), 16))
     for i, t in enumerate(TILE_ORDER):
