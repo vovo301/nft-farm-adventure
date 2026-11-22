@@ -52,6 +52,8 @@ e o indexador credita.
 | Preços das culturas (em Gold) | Mais barata: compra 0,01 Gold, lucro 100%. Mais cara: compra 10 Gold, lucro ~30%. Intermediárias definidas pelo economista dentro desse intervalo, com economia sustentável | 2026-11-22 |
 | Direção de arte | **Isométrica, cartoon colorida** (estilo "isometric cartoon farm"), não pixel art. Exemplos de referência enviados pelo usuário em 2026-11-22 (só direção de estilo, sem copiar assets de terceiros) | 2026-11-22 |
 | Método de produção de arte | **Vetor por script** (SVG gerado por código → PNG), inclusive o conceito/alvo visual. **Sem geradores de imagem por IA** e sem gasto de créditos | 2026-11-22 |
+| Culturas | **23 culturas**: 5 básicas (1 a 30 min), 9 médias (1 h a 12 h), 9 avançadas (16 h a 48 h). Valores das 6 culturas da proposta v1 aprovados como "dentro do esperado" | 2026-11-22 |
+| Mundo e expansões | Terreno cresce por **expansões** (blocos revelados em sequência, cada um com mais canteiros, árvores, pedras e minérios; recursos coletados pagam as próximas). Mundo com **4 ilhas/biomas** em sequência, com conteúdo novo (árvores frutíferas, novos minérios). Estrutura e curva inspiradas na referência enviada pelo usuário; nomes, temas e números próprios (regra 1) | 2026-11-22 |
 
 ## Decisões em aberto (do usuário)
 
