@@ -110,3 +110,7 @@ Máscara do autotile: `xp` = vizinho em +x, `yp` = +y, `xn` = −x, `yn` = −y.
 
 Aprova esta direção (acabamento, cores, proporções e leitura a 0,5)? Se não, diga quais peças
 reprovar e por quê.
+
+## Resposta do usuário (2026-11-22)
+
+**Reprovado**: "está muito infantil, tudo muito arredondado, árvores com copas arredondadas, personagem com aspecto infantil".

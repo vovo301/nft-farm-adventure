@@ -23,7 +23,7 @@ Guia de estilo proposto: art/style-guide/README.md · Paleta: art/style-guide/pa
 Pergunta ao usuário: aprova a direção (paleta + guia + estes 8 assets)? Se não, quais reprovar e por quê.
 Resposta do usuário (2026-11-21): **reprovado** — "vamos trabalhar melhor na criação das artes"; o usuário vai enviar exemplos de referência. Próxima rodada parte dos exemplos, não desta versão.
 
-## Lote 2026-11-22-alvo-visual-iso-01  — status: in_review
+## Lote 2026-11-22-alvo-visual-iso-01  — status: rejected
 Alvo visual da direção v2 (isométrico cartoon, vetor por script, sem IA). Nada é produzido em escala antes de ele estar `approved`.
 Prancha: art/review/2026-11-22-alvo-visual-iso-01/prancha.png
 Cena: art/review/2026-11-22-alvo-visual-iso-01/cena.png (@2x: cena@2x.png · celular: cena-zoom05.png, cena-celular.png) · Notas: art/review/2026-11-22-alvo-visual-iso-01/notas.md
@@ -48,4 +48,4 @@ Guia: art/style-guide/README.md (v2.1) · Paleta: art/style-guide/palette.json (
 | 15 | ui_indicator_ready | 48×60 | indicador "pronto para colher" |
 
 Pergunta ao usuário: aprova a direção (acabamento, cores, proporções, leitura a 0,5)? Se não, quais reprovar e por quê.
-Resposta do usuário: _(pendente)_
+Resposta do usuário (2026-11-22): **reprovado** — "está muito infantil, tudo muito arredondado, árvores com copas arredondadas, personagem com aspecto infantil". Próxima rodada: prancha comparativa de estilos menos infantis antes de produzir em escala.
