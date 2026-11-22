@@ -10,5 +10,6 @@ assets e como referência de estilo.
 | culturas-a.webp | 5 culturas × 4 estágios (semente, broto, crescendo, madura): trigo/arroz, ervilha, uva, macieira, cogumelo |
 | culturas-b.webp | 6 culturas × 4 estágios: berinjela, pimenta, pimentão, morango, melancia, girassol |
 | culturas-c.webp | 6 culturas × 4 estágios: beterraba, repolho, alface, cebola, alho, pepino |
+| culturas-d.webp | 6 culturas × 4 estágios: cenoura, abóbora, tomate, milho, trigo, batata |
 
 Fundo escuro opaco (precisa de recorte para transparência). Proveniência no manifesto: `user_owned`.
