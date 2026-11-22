@@ -51,6 +51,7 @@ e o indexador credita.
 | Moedas | **Duas moedas.** (1) **Gold Coin**: off-chain, moeda de troca do jogo (sementes, expansões, construções, upgrades de construções); preços definidos pela economia. (2) **Token de governança** (ERC-20): negociado entre jogadores no marketplace, comprável em exchange e depositável no jogo; preço livre por oferta e demanda | 2026-11-22 |
 | Preços das culturas (em Gold) | Mais barata: compra 0,01 Gold, lucro 100%. Mais cara: compra 10 Gold, lucro ~30%. Intermediárias definidas pelo economista dentro desse intervalo, com economia sustentável | 2026-11-22 |
 | Direção de arte | **Isométrica, cartoon colorida** (estilo "isometric cartoon farm"), não pixel art. Exemplos de referência enviados pelo usuário em 2026-11-22 (só direção de estilo, sem copiar assets de terceiros) | 2026-11-22 |
+| Método de produção de arte | **Vetor por script** (SVG gerado por código → PNG), inclusive o conceito/alvo visual. **Sem geradores de imagem por IA** e sem gasto de créditos | 2026-11-22 |
 
 ## Decisões em aberto (do usuário)
 
