@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-"""Gráfico PNG do simulador (só Pillow, sem matplotlib).
+"""Gráfico PNG do simulador v2 (só Pillow, sem matplotlib).
 
-Lê economy/sim/out/daily.csv + summary.json e escreve economy/sim/out/sim-90d.png com três painéis:
-  1. Gold em caixa por perfil — cenário base (sólido) e com sinks PROPOSTOS fora do motor (tracejado);
-  2. ganho líquido de Gold por dia (vendas − sementes, média móvel de 7 dias), cenário base;
-  3. curva das culturas: lucro por hora por canteiro e lucro por colheita.
+Lê economy/sim/out/daily.csv + summary.json e escreve economy/sim/out/sim-90d.png com quatro painéis:
+  1. blocos revelados por perfil nos 90 dias (expansões aplicadas fora do motor);
+  2. projeção de 3 anos (mesma política): blocos revelados × dia, com o tempo acumulado de obra da
+     referência (tracejado cinza) para comparar o ritmo;
+  3. ganho líquido de Gold por dia (vendas − sementes, média móvel de 7 dias);
+  4. curva das 23 culturas: lucro por hora por canteiro e lucro por colheita.
 
 Uso: python3 economy/sim/plot.py   (ou `pnpm econ:sim`, que roda o simulador antes)
 """
@@ -19,7 +21,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 OUT = Path(__file__).resolve().parent / "out"
 S = 2  # supersampling
-W, H = 1200, 1500
+W, H = 1200, 2050
 
 SURFACE = "#fcfcfb"
 TEXT = "#0b0b0b"
@@ -113,6 +115,7 @@ def crop_panel(draw, box, crops):
     draw.text((x0, y0 - 28 * S), "Barra = lucro/h/canteiro (Gold). Texto = semente → colheita, margem, tempo, lucro por colheita",
               fill=TEXT2, font=font(13))
     vmax = 0.5
+    f13 = font(11)
     row_h = (y1 - y0) / len(crops)
     label_w = 120 * S
     bar_x0 = x0 + label_w
@@ -124,16 +127,16 @@ def crop_panel(draw, box, crops):
     top = max(c["profitPerHourPerPlot"] for c in crops)
     for i, c in enumerate(crops):
         cy = y0 + row_h * (i + 0.5)
-        draw.text((x0, cy), c["id"], fill=TEXT, font=font(13), anchor="lm")
+        draw.text((x0, cy), c["id"], fill=TEXT, font=f13, anchor="lm")
         v = c["profitPerHourPerPlot"]
         color = "#eb6834" if v == top else "#2a78d6"
         draw.rectangle([sx(0), cy - row_h * 0.3, sx(v), cy + row_h * 0.3], fill=color)
-        draw.text((sx(v) + 8 * S, cy), gold(v), fill=TEXT, font=font(13), anchor="lm")
+        draw.text((sx(v) + 8 * S, cy), f"{v:.3f}".replace(".", ","), fill=TEXT, font=f13, anchor="lm")
         mins = c["growMinutes"]
         t = f"{mins:g} min" if mins < 60 else (f"{mins / 60:g} h".replace(".", ","))
-        info = (f"{gold(c['seedGold'])} → {gold(c['harvestGold'])} Gold · margem {round(c['marginPct']):d}% · {t} · "
-                f"lucro {gold(c['profitGold'])}/colheita")
-        draw.text((bar_x1 + 70 * S, cy), info, fill=TEXT2, font=font(13), anchor="lm")
+        info = (f"{gold(c['seedGold'])} → {gold(c['harvestGold'])} · {round(c['marginPct']):d}% · {t} · "
+                f"lucro {gold(c['profitGold'])} · {c['unlockBlock']}")
+        draw.text((bar_x1 + 60 * S, cy), info, fill=TEXT2, font=f13, anchor="lm")
 
 
 def gold(v: float) -> str:
@@ -148,39 +151,80 @@ def rolling(values, n=7):
     return out
 
 
+def step_panel(draw, box, series, days, title, subtitle, ref_points=None, island_marks=(10, 18, 25, 30), xticks=None):
+    """Blocos revelados (0–30) × dia, linhas em degrau; ref_points = [(dia, blocos)] tracejado cinza."""
+    x0, y0, x1, y1 = (v * S for v in box)
+    draw.text((x0, y0 - 52 * S), title, fill=TEXT, font=font(17))
+    draw.text((x0, y0 - 28 * S), subtitle, fill=TEXT2, font=font(13))
+    sx = lambda d: x0 + (d / days) * (x1 - x0)  # noqa: E731
+    sy = lambda v: y1 - (v / 30) * (y1 - y0)  # noqa: E731
+    names = {10: "Ilha 1 completa", 18: "Ilha 2", 25: "Ilha 3", 30: "Ilha 4"}
+    for v in (0,) + tuple(island_marks):
+        draw.line([(x0, sy(v)), (x1, sy(v))], fill=GRID if v else TEXT2, width=1 * S)
+        draw.text((x0 - 10 * S, sy(v)), str(v), fill=TEXT2, font=font(12), anchor="rm")
+        if v:
+            draw.text((x1 + 6 * S, sy(v)), names[v], fill=TEXT2, font=font(11), anchor="lm")
+    for d in xticks or (0, 15, 30, 45, 60, 75, 90):
+        draw.line([(sx(d), y1), (sx(d), y1 + 4 * S)], fill=TEXT2, width=1 * S)
+        draw.text((sx(d), y1 + 8 * S), f"dia {d}" if d in (0, days) else str(d), fill=TEXT2, font=font(12), anchor="ma")
+    if ref_points:
+        dashed(draw, [(sx(d), sy(b)) for d, b in ref_points], TEXT2, 2 * S, dash=6 * S, gap=4 * S)
+    for k, (pid, pts) in enumerate(series.items()):
+        line = [(sx(0), sy(1))]
+        for d, b in pts:
+            line += [(sx(d), line[-1][1]), (sx(d), sy(b))]
+        line.append((sx(days), line[-1][1]))
+        draw.line(line, fill=COLORS[pid], width=2 * S)
+        draw.text((x1 - (4 + 110 * k) * S, line[-1][1] - 6 * S), f"{LABELS[pid].split(' (')[0]}: {pts[-1][1] if pts else 1}", fill=COLORS[pid], font=font(12), anchor="rb")
+
+
 def main() -> None:
     rows = list(csv.DictReader((OUT / "daily.csv").open(encoding="utf8")))
     summary = json.loads((OUT / "summary.json").read_text(encoding="utf8"))
     profiles = list(dict.fromkeys(r["profile"] for r in rows))
+    days = summary["days"]
 
-    def series(scenario, fn):
-        return {p: [fn(r) for r in rows if r["profile"] == p and r["scenario"] == scenario] for p in profiles}
+    def series(fn):
+        return {p: [fn(r) for r in rows if r["profile"] == p] for p in profiles}
 
-    gold_base = series("base", lambda r: float(r["gold"]))
-    gold_sinks = series("sinks", lambda r: float(r["gold"]))
-    net_cum = series("base", lambda r: float(r["earned_crops"]) + float(r["earned_resources"]) - float(r["spent_seeds"]))
+    net_cum = series(lambda r: float(r["earned_crops"]) + float(r["earned_resources"]) - float(r["spent_seeds"]))
     net_day = {p: rolling(v) for p, v in net_cum.items()}
-    days = len(gold_base[profiles[0]])
+
+    def block_steps(blocks):
+        pts = sorted((d, i + 1) for i, d in enumerate(blocks) if d is not None and d > 0)
+        return pts
+    s90 = {p: block_steps([b["revealedDay"] for b in summary["profiles"][p]["blocks"]]) for p in profiles}
+    proj = summary["projection"]
+    sproj = {p: block_steps(list(proj["profiles"][p]["blocks"].values())) for p in profiles}
+    ref = summary["reference"]["code"]
+    acc, ref_pts = 0.0, [(0, 1)]
+    for isl, n in (("homestead", 10), ("breezewood", 18), ("ochremesa", 25), ("emberpeak", 30)):
+        acc += ref[isl]["buildSeconds"] / 86400
+        ref_pts.append((acc, n))
 
     img = Image.new("RGB", (W * S, H * S), SURFACE)
     draw = ImageDraw.Draw(img)
-    draw.text((40 * S, 24 * S), "Economia v1 (Gold) — simulação de 90 dias (motor real game-core)", fill=TEXT, font=font(21))
+    draw.text((40 * S, 24 * S), "Economia v2 (Gold) — 23 culturas + 30 blocos de expansão — simulação de 90 dias", fill=TEXT, font=font(21))
     lx = 40 * S
     for p in profiles:
         draw.line([(lx, 72 * S), (lx + 22 * S, 72 * S)], fill=COLORS[p], width=3 * S)
         draw.text((lx + 30 * S, 72 * S), LABELS[p], fill=TEXT, font=font(13), anchor="lm")
         lx += 190 * S
     dashed(draw, [(lx, 72 * S), (lx + 22 * S, 72 * S)], TEXT2, 2 * S, dash=6 * S, gap=4 * S)
-    draw.text((lx + 30 * S, 72 * S), "tracejado = com sinks propostos (fora do motor)", fill=TEXT, font=font(13), anchor="lm")
+    draw.text((lx + 30 * S, 72 * S), "referência: tempo acumulado de obra (código)", fill=TEXT, font=font(13), anchor="lm")
 
-    panel(draw, (110, 170, 1040, 520), gold_base, "Gold em caixa",
-          "Sólido: base (só sementes como sink). Tracejado: + 1ª construção 60, 1ª expansão 150 e escadas (fora do motor)",
-          days, dashed_series=gold_sinks)
-    panel(draw, (110, 640, 1040, 900), net_day, "Ganho líquido de Gold por dia (base)",
-          "Vendas − sementes, média móvel de 7 dias (rótulo = últimos 7 dias); regime = média dos dias 61–90 em summary.json", days)
-    crop_panel(draw, (40, 1030, 1160, 1400), summary["crops"])
-    draw.text((40 * S, 1460 * S),
-              "Fonte: economy/economy.csv + economy/sim/sinks-proposal.json → economy/sim/simulate.mjs. Proposta v1, aguardando aprovação.",
+    step_panel(draw, (110, 170, 1040, 470), s90, days, "Blocos revelados (90 dias)",
+               "Custos em Gold = moeda soft da referência 1:1. Expansões, nós e desbloqueio aplicados FORA do motor; nível do avatar ignorado",
+               ref_points=[p for p in ref_pts if p[0] <= days] + [(days, 25 + (days - ref_pts[3][0]) / (ref_pts[4][0] - ref_pts[3][0]) * 5)] if days < ref_pts[4][0] else ref_pts)
+    pd = proj["days"]
+    step_panel(draw, (110, 590, 1040, 890), sproj, pd, f"Projeção: em que dia cada perfil alcança cada bloco ({pd} dias, mesma política)",
+               "Tracejado cinza = obra da referência sem esperar material/Gold (16 h, 4,7 d, 24 d, 33,6 d por ilha)", ref_points=ref_pts,
+               xticks=(0, 90, 180, 365, 545, 730, 910, pd))
+    panel(draw, (110, 1010, 1040, 1260), net_day, "Ganho líquido de Gold por dia",
+          "Vendas − sementes, média móvel de 7 dias (rótulo = últimos 7 dias); antes de gastar em expansões", days)
+    crop_panel(draw, (40, 1380, 1160, 1960), summary["crops"])
+    draw.text((40 * S, 2010 * S),
+              "Fonte: economy/economy.csv + economy/expansions.csv → economy/sim/simulate.mjs. Proposta v2, aguardando aprovação.",
               fill=TEXT2, font=font(12))
     img = img.resize((W, H), Image.LANCZOS)
     img.save(OUT / "sim-90d.png", optimize=True)

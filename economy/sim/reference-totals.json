@@ -1,0 +1,16 @@
+{
+  "_doc": "Totais por ilha da REFERÊNCIA, com rótulos de papel já mapeados para nossos recursos. 'code' = docs/referencia/equilibrio-expansoes.md (analista, extraído do código @4e3606f; usado como padrão). 'fan' = docs/referencia/equilibrio-totais-ilhas.md (ferramenta de fã enviada pelo usuário como 'custo exato'). 'premium' = moeda premium da referência (nós trocamos por frutas 1:1 — pergunta ao usuário). Ilha 1 da ref = 6 blocos, ilha 2 = 12, ilha 3 = 21, ilha 4 = 25.",
+  "code": {
+    "homestead":  { "refBlocks": 6,  "gold": 720,    "driftwood": 108,   "flint": 44,   "rustite": 8,    "glintstone": 1,   "dewquartz": 0,    "sandglint": 0,    "cinderite": 0,   "premium": 0,    "buildSeconds": 57970,   "finalPlots": 31, "finalNodes": { "tree": 9,  "flint_rock": 7,  "rustite_node": 4,  "glintstone_node": 2 } },
+    "breezewood": { "refBlocks": 12, "gold": 5000,   "driftwood": 680,   "flint": 115,  "rustite": 30,   "glintstone": 32,  "dewquartz": 26,   "sandglint": 0,    "cinderite": 0,   "premium": 225,  "buildSeconds": 405360,  "finalPlots": 45, "finalNodes": { "tree": 18, "flint_rock": 15, "rustite_node": 9,  "glintstone_node": 6, "dewquartz_node": 2, "fruit": 11, "finite_gem_node": 2, "flower_bed": 3, "beehive": 3 } },
+    "ochremesa":  { "refBlocks": 21, "gold": 100420, "driftwood": 6775,  "flint": 2415, "rustite": 440,  "glintstone": 350, "dewquartz": 564,  "sandglint": 3570, "cinderite": 0,   "premium": 1020, "buildSeconds": 2075760, "finalPlots": 65, "finalNodes": { "tree": 23, "flint_rock": 20, "rustite_node": 12, "glintstone_node": 7, "dewquartz_node": 4, "sandglint_node": 3, "fruit": 15, "finite_gem_node": 6, "flower_bed": 3, "beehive": 3 } },
+    "emberpeak":  { "refBlocks": 25, "gold": 492284, "driftwood": 19550, "flint": 7200, "rustite": 1115, "glintstone": 810, "dewquartz": 1274, "sandglint": 4600, "cinderite": 236, "premium": 3690, "buildSeconds": 2907310, "finalPlots": 65, "finalNodes": { "tree": 23, "flint_rock": 20, "rustite_node": 13, "glintstone_node": 8, "dewquartz_node": 5, "sandglint_node": 4, "cinderite_node": 3, "fruit": 15, "finite_gem_node": 13, "flower_bed": 3, "beehive": 3 } }
+  },
+  "fan": {
+    "homestead":  { "gold": 60.25,  "driftwood": 108,   "flint": 46,   "rustite": 9,    "glintstone": 1,   "buildSeconds": 59460 },
+    "breezewood": { "gold": null,   "driftwood": 680,   "flint": 115,  "rustite": 30,   "glintstone": 32,  "dewquartz": 26,  "premium": 225,  "buildSeconds": 405360 },
+    "ochremesa":  { "gold": 81600,  "driftwood": 6775,  "flint": 2415, "rustite": 440,  "glintstone": 350, "dewquartz": 564, "sandglint": 3570, "premium": 1020, "buildSeconds": 2075760 },
+    "emberpeak":  { "gold": 409820, "driftwood": 19550, "flint": 7200, "rustite": 1115, "glintstone": 810, "dewquartz": 1274, "sandglint": 4600, "cinderite": 236, "premium": 3690, "buildSeconds": 2907300 }
+  },
+  "crossing": { "breezewood": { "glintstone": 10 }, "ochremesa": { "dewquartz": 20 }, "emberpeak": { "sandglint": 200 } }
+}

@@ -401,3 +401,274 @@ termos sinks recorrentes simulados e um parecer jurídico.
 - Perfil "regular 3–4×/dia" no simulador para validar a `honeyleek`.
 - Saldos da testnet: a v1 muda a escala (~1/27 da v0). Zerar saldos ao aplicar a v1 continua sendo a
   recomendação; decisão do usuário (adiada).
+
+---
+
+## 2026-11-22 — proposta v2 — aguardando aprovação
+
+**Status:** proposta v2 — **aguardando aprovação do usuário**. Nada aqui é oficial até o "aprovado".
+**Gatilho:** decisões do usuário de 2026-11-22 (`docs/ARQUITETURA.md`): 23 culturas em 3 tiers; mundo
+de 4 ilhas com 30 blocos de expansão; **modelo de equilíbrio da referência como base numérica**
+(exceção à regra 1 do `CLAUDE.md`; nomes e recursos nossos); e, durante a tarefa, a instrução:
+*"pode manter os valores de moedas de ouro como da referência, isso não é para mudar"*.
+**Fontes:** `economy/economy.csv` (regras, culturas, recursos/nós) + `economy/expansions.csv` (ilhas,
+blocos, custo de mudança) → `packages/game-core/src/data/economy.generated.ts` (contrato atual) +
+`world.generated.ts` (novo, só dados). Referência: `docs/referencia/equilibrio-expansoes.md`
+(analista, código) e `equilibrio-totais-ilhas.md` (ferramenta de fã); totais em
+`economy/sim/reference-totals.json`. `reference/` não foi aberto.
+**Simulação:** `pnpm econ:sim` → `economy/sim/out/{daily.csv,summary.json,sim-90d.png}`.
+
+### 1. Escala da moeda: fator de conversão = 1 (moeda soft da referência = Gold, 1:1)
+
+| Item | Valor |
+|---|---|
+| Fator moeda soft → Gold | **1,00** (decisão do usuário; o custo em Gold de cada bloco é o número da referência) |
+| Fonte padrão | valores do **código** (tabela do analista). Os do fã ficam registrados abaixo como divergência |
+| Preço das culturas | mantido na faixa do usuário (semente 0,01 a 10 Gold) |
+
+Antes dessa instrução eu calculei um fator pela razão de renda (≈ **0,02 Gold por moeda soft**,
+supondo que a referência precifica a Ilha 4 para ser paga durante o tempo de obra dela). Com fator 1
+os custos ficam ~50× maiores que isso para a nossa renda; o efeito está na seção 7 e é a principal
+pergunta desta proposta.
+
+### 2. Divergências fã × código (padrão: código)
+
+| Ilha | Item | Código (usado) | Fã ("custo exato" do usuário) |
+|---|---|---|---|
+| 1 | Gold total | **720** | 60,25 |
+| 1 | pedra (`flint`) | 44 | 46 |
+| 1 | minério comum (`rustite`) | 8 | 9 |
+| 1 | tempo do 5º bloco / total | 5 min / 16 h 6 min | 30 min / 16 h 31 min |
+| 2 | Gold total | 5 000 | (não lista) |
+| 3 | Gold total | **100 420** | 81 600 |
+| 4 | Gold total | **492 284** | 409 820 |
+| 2–4 | materiais, moeda premium, tempos, nós finais, custos de mudança | iguais | iguais |
+
+Causa provável (analista): versões diferentes do jogo; o código re-precificou a Ilha 1 e a moeda soft
+das ilhas 3–4. **Pergunta 1** ao usuário.
+
+### 3. Mapeamento papel → recurso nosso
+
+| Papel na referência | Recurso nosso | Nó nosso | Observação |
+|---|---|---|---|
+| madeira | `driftwood` | `tree` | |
+| pedra | `flint` | `flint_rock` | |
+| minério 1 (comum) | `rustite` | `rustite_node` | |
+| minério 2 (raro) | `glintstone` | `glintstone_node` | custo da travessia 1→2 |
+| minério I2 | `dewquartz` | `dewquartz_node` | custo da travessia 2→3 |
+| recurso I3 (reserva) | `sandglint` | `sandglint_node` | custo da travessia 3→4 |
+| minério I4 (nó "forno") | `cinderite` | `cinderite_node` | a alimentação do nó com colheitas **não** foi adotada |
+| frutíferas | `bellpear`, `mistplum` (ilha 2), `honeydate` (3), `firefig` (4) | `*_tree`/`honeydate_palm` | contagem igual à ref (11 → 15) + 3 `firefig_tree` na ilha 4 (fruta da ilha 4 pedida pelo designer) |
+| **moeda premium ("gema" no arquivo do fã)** | **frutas, 1:1** | — | proposta; **pergunta 2** |
+| nó especial finito ("nó de gema") | — (fora) | — | produz um item que não entra em custo de expansão; ref tem 2/6/13 |
+| canteiro de flores, colmeia | — (fora) | — | sistemas que não temos (3 de cada na ref) |
+| token | nunca | — | a ref também zera token em expansão |
+
+Premium → frutas: ilha 2 divide entre `bellpear`/`mistplum`; ilha 3: 40 % `honeydate`, 30 % cada
+fruta da ilha 2; ilha 4: 30 % `firefig`, 30 % `honeydate`, 20 % cada fruta da ilha 2 (múltiplos de 5).
+Por quê: troca "pagar com dinheiro" por "colher no tempo", sem moeda premium, e dá uso às frutas.
+
+### 4. Blocos: agregação da curva da referência em 10/8/7/5
+
+A ref tem 6/12/21/25 blocos jogáveis por ilha; nós temos 10/8/7/5 (29 pagos). Regra: **cada bloco
+nosso soma um grupo contíguo de blocos da ref** (coluna `ref_blocks` em `expansions.csv`), então os
+**totais por ilha batem exatamente com o código** (Gold, materiais, tempo, nós finais).
+
+- Ilha 1 (10 > 6): o terreno inicial grátis (6 canteiros, 3 árvores, 2 pedras = jogo atual) + 9 blocos
+  que dividem os 6 da ref (b8 em 3 partes, b9 em 2). Tempos 5 s · 5 s · 1 min · 5 min · 15 min ·
+  45 min · 1 h · 4 h · 10 h = **16 h 6 min 10 s** (igual ao código).
+- Ilha 2: grupos [5] [6] [7] [8,9] [10,11] [12,13] [14] [15,16]; ilha 3: grupos de 3; ilha 4: grupos de 5.
+- Nível mínimo = o do último bloco da ref no grupo (1→11, 11→43, 41→75, 78→120). **Sem XP no jogo**:
+  dado exportado, ignorado no simulador.
+- Idade mínima de conta [ASSUMPTION]: `breezewood_01` 1 dia, `ochremesa_01` 5 dias, `emberpeak_01`
+  30 dias (≈ tempo acumulado de obra da ref até ali); demais 0.
+- Custo de mudança de ilha = o da ref (10 `glintstone`, 20 `dewquartz`, 200 `sandglint`), cobrado
+  junto com o 1º bloco da ilha (linha `island` do CSV). O designer tinha "travessia sem custo"
+  [ASSUMPTION]; segui a referência.
+- **Consequência da agregação:** obras longas nas ilhas 3–4 (até 7 d 12 h na ilha 3 e 13 d 12 h na
+  ilha 4; a ref nunca passa de 3 d por bloco). **Pergunta 3.**
+- Alcançabilidade (todo material tem nó revelado num bloco anterior): 3 ajustes, anotados em `note`:
+  honeydate de `ochremesa_01` → bellpear; firefig de `emberpeak_01` → honeydate; o 1 `cinderite` de
+  `emberpeak_01` → `emberpeak_02`. Nós da ilha 1 seguem a forma da ref (rustite em `homestead_04`,
+  glintstone em `homestead_05` e `_08` — o designer pôs glintstone em `_08`/`_10`; adiantei para dar
+  tempo de juntar os 10 da travessia).
+
+**Contagens [ASSUMPTION] do designer ajustadas para a referência:** canteiros finais 31/45/65/65 (o
+designer somava 20/35/48/59); árvores 9/18/23/23; pedras 7/15/20/20; rustite 4/9/12/13; glintstone
+2/6/7/8; dewquartz 0/2/4/5; sandglint 0/0/3/4; cinderite 3; frutíferas 0/11/15/18. A ilha 4 não ganha
+canteiros (como na ref): ganha nós, frutas e as 4 culturas finais.
+
+Totais por ilha (nossos dados = código da ref, por construção):
+
+| Ilha | Blocos (nosso/ref) | Gold | Materiais | Frutas (no lugar de premium) | Mudança | Obra | Canteiros/nós no fim |
+|---|---|---|---|---|---|---|---|
+| homestead | 10 / 6 | 720 | 108 driftwood, 44 flint, 8 rustite, 1 glintstone | — | — | 16 h 6 min | 31 / 22 |
+| breezewood | 8 / 12 | 5 000 | 680 · 115 · 30 · 32 + 26 dewquartz | 225 | 10 glintstone | 4 d 16 h 36 min | 45 / 61 |
+| ochremesa | 7 / 21 | 100 420 | 6 775 · 2 415 · 440 · 350 · 564 + 3 570 sandglint | 1 020 | 20 dewquartz | 24 d 0 h 36 min | 65 / 84 |
+| emberpeak | 5 / 25 | 492 284 | 19 550 · 7 200 · 1 115 · 810 · 1 274 · 4 600 + 236 cinderite | 3 690 | 200 sandglint | 33 d 15 h 35 min | 65 / 94 |
+
+### 5. Culturas (23)
+
+Regras mantidas da v1: margem cai de 100 % (0,01) a 30 % (10); **quanto mais longa, maior o lucro por
+colheita e menor o lucro por hora** (exceto `mintleaf`, de propósito abaixo do teto); teto de
+lucro/h = `pebblepea` 0,44 (cultura do bot). Os 5 valores aprovados da v1 (`mintleaf`, `pebblepea`,
+`redroot`, `honeyleek`, `stripemelon`) **não mudaram**. Testado em `data.test.ts` a partir dos dados.
+
+| # | Cultura | Tier | Semente | Colheita (qtd × venda) | Lucro | Margem | Tempo | Lucro/h/canteiro | Desbloqueio |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | mintleaf | basic | 0,01 | 0,02 (1×0,02) | 0,01 | 100 % | 2 min | 0,300 | homestead_01 |
+| 2 | dewcress | basic | 0,04 | 0,07 (1×0,07) | 0,03 | 75 % | 5 min | 0,360 | homestead_01 |
+| 3 | pebblepea | basic | 0,14 | 0,25 (1×0,25) | 0,11 | 79 % | 15 min | **0,440** | homestead_01 |
+| 4 | curlwort | basic | 0,24 | 0,42 (2×0,21) | 0,18 | 75 % | 25 min | 0,432 | homestead_02 |
+| 5 | puffbean | basic | 0,30 | 0,51 (3×0,17) | 0,21 | 70 % | 30 min | 0,420 | homestead_03 |
+| 6 | sweetstalk | medium | 0,61 | 1,02 (2×0,51) | 0,41 | 67 % | 1 h | 0,410 | homestead_02 |
+| 7 | redroot | medium | 1,10 | 1,80 (2×0,90) | 0,70 | 64 % | 1 h 45 | 0,400 | homestead_03 |
+| 8 | bluepod | medium | 1,60 | 2,56 (4×0,64) | 0,96 | 60 % | 2 h 30 | 0,384 | breezewood_01 |
+| 9 | frillhead | medium | 2,10 | 3,24 (3×1,08) | 1,14 | 54 % | 3 h | 0,380 | breezewood_02 |
+| 10 | honeyleek | medium | 2,90 | 4,35 (3×1,45) | 1,45 | 50 % | 4 h | 0,363 | homestead_04 |
+| 11 | sunbulb | medium | 4,60 | 6,60 (4×1,65) | 2,00 | 43 % | 6 h | 0,333 | breezewood_03 |
+| 12 | stripemelon | medium | 6,30 | 8,70 (3×2,90) | 2,40 | 38 % | 7 h 30 | 0,320 | homestead_05 |
+| 13 | glowgourd | medium | **6,60** (v1: 10) | 9,10 (5×1,82) | 2,50 | 38 % | 10 h | 0,250 | homestead_06 |
+| 14 | sandspud | medium | 6,90 | 9,45 (3×3,15) | 2,55 | 37 % | 12 h | 0,213 | ochremesa_01 |
+| 15 | silkpod | advanced | 7,20 | 9,80 (4×2,45) | 2,60 | 36 % | 16 h | 0,163 | breezewood_05 |
+| 16 | crownbloom | advanced | 7,50 | 10,16 (4×2,54) | 2,66 | 35 % | 20 h | 0,133 | breezewood_07 |
+| 17 | duneroot | advanced | 7,80 | 10,52 (4×2,63) | 2,72 | 35 % | 24 h | 0,113 | ochremesa_02 |
+| 18 | miragemelon | advanced | 8,20 | 11,00 (5×2,20) | 2,80 | 34 % | 28 h | 0,100 | ochremesa_04 |
+| 19 | starthistle | advanced | 8,60 | 11,44 (4×2,86) | 2,84 | 33 % | 32 h | 0,089 | ochremesa_06 |
+| 20 | cinderpod | advanced | 9,00 | 11,88 (4×2,97) | 2,88 | 32 % | 36 h | 0,080 | emberpeak_01 |
+| 21 | ashbloom | advanced | 9,30 | 12,20 (5×2,44) | 2,90 | 31 % | 40 h | 0,073 | emberpeak_02 |
+| 22 | magmabulb | advanced | 9,60 | 12,55 (5×2,51) | 2,95 | 31 % | 44 h | 0,067 | emberpeak_03 |
+| 23 | embercrown | advanced | 10,00 | 13,00 (5×2,60) | 3,00 | 30 % | 48 h | 0,063 | emberpeak_05 |
+
+- **Nenhuma cultura de 1 min:** com lucro mínimo de 0,01 Gold, uma cultura de 1 min daria 0,60/h e
+  viraria a cultura do bot (teto +36 %). O tier basic usa 2 a 30 min. **Pergunta 5.**
+- **`glowgourd`** continua medium (10 h) com semente 6,60 (era 10), como recomendou o designer:
+  **pendente de confirmação** (pergunta 4). O casual perde ~17 % por canteiro em relação à v1.
+- **Compressão no topo:** como a semente mais cara (10 Gold, 30 %) dá no máximo 3,00 por colheita e
+  a `stripemelon` aprovada dá 2,40, as 11 culturas de 10 h a 48 h ficam entre 2,50 e 3,00 de lucro por
+  colheita. Quem joga 1×/dia ganha só ~13 % a mais com `duneroot` (24 h) do que replantando
+  `stripemelon`. É consequência direta do teto de 10 Gold/30 % com os valores aprovados.
+- O desbloqueio por bloco (`unlockBlock`) é **só dado** (`world.cropUnlockBlock`); 4 culturas antes
+  livres (`redroot`, `honeyleek`, `stripemelon`, `glowgourd`) passam a depender de bloco. Motor sem
+  desbloqueio: pendência do dev.
+
+### 6. Recursos e nós
+
+Regra de adaptação: **mesmo máximo diário por nó da referência**, com recarga esticada para caber no
+ritmo do casual (12 h ± 45 min) e rendimento por coleta maior. Preço de venda = piso, ≈ 1,80 Gold/dia
+por nó no ritmo máximo (driftwood e flint mantêm os valores da v1).
+
+| Recurso | Nó | Ref (recarga × rendimento) | Nosso | Máx./dia/nó | Venda (Gold) |
+|---|---|---|---|---|---|
+| driftwood | tree | 2 h × 1 | 8 h × 4 | 12 | 0,15 |
+| flint | flint_rock | 4 h × 1 | 8 h × 2 | 6 | 0,40 |
+| rustite | rustite_node | 8 h × 1 | 8 h × 1 | 3 | 0,60 |
+| glintstone | glintstone_node | 24 h × 1 | 20 h × 1 | 1,2 | 1,50 |
+| dewquartz | dewquartz_node | 24 h × 1 (+2 a cada 5ª seguida) | 20 h × 1 (sem sequência) | 1,2 | 1,50 |
+| sandglint | sandglint_node | 20 h × 10 (+20 a cada 3ª) | 20 h × 16 | 19,2 | 0,10 |
+| cinderite | cinderite_node | 72 h × 1 (alimentado com colheitas) | 72 h × 1 | 0,33 | 5,40 |
+| bellpear, mistplum, honeydate, firefig | frutíferas | sem tabela | 10 h × 3 [ASSUMPTION] | 7,2 | 0,25 |
+
+Rendimento pode ter bônus de sequência / alimentação depois; não adotados para manter o motor simples.
+
+### 7. Simulação (90 dias + projeção de 1095 dias, mesma política)
+
+Perfis iguais à v1 (casual 2×/dia, ativo 8×/dia, bot a cada 60 s). Expansões, nós e desbloqueio
+aplicados **fora do motor** (marcados `[FORA]`); nível do avatar ignorado. Gráfico:
+`economy/sim/out/sim-90d.png`.
+
+| Perfil | Ganho líquido/dia (vendas − sementes): dias 1–7 · 24–30 · **61–90** | Gasto em expansões (90 d) | Blocos no dia 90 | Gargalo no dia 90 |
+|---|---|---|---|---|
+| casual | 4,63 · 133 · **224** | 8 604 | 20 (`ochremesa_03` em espera) | Gold + dewquartz |
+| ativo | 76,86 · 324 · **427** | 13 980 | 21 | dewquartz |
+| bot | 284 · 466 · **623** | 25 500 | 22 | dewquartz |
+
+Razões no regime (Gold/dia): **bot ÷ casual 2,78** (meta ≤ 3), **bot ÷ ativo 1,46** (alarme > 3),
+ativo ÷ casual 1,90. Blocos no dia 90: bot ÷ casual 1,10. Sem alarme.
+
+Dia em que cada perfil **completa** cada ilha (projeção) × referência:
+
+| Ilha | Casual | Ativo | Bot | Referência (só tempo de obra, acumulado) |
+|---|---|---|---|---|
+| 1 (homestead) | dia 25 | dia 8 | dia 3,8 | 0,7 d (16 h 6 min) |
+| 2 (breezewood) | dia 56 | dia 34 | dia 26 | 5,4 d |
+| 3 (ochremesa) | dia 372 | dia 243 | dia 193 | 29,4 d |
+| 4 (emberpeak) | não completa em 3 anos (bloco 29 no dia 968) | dia 1 047 | dia 758 | 63 d |
+
+O dia de cada um dos 30 blocos por perfil está em `summary.json → projection` (e em
+`profiles.*.blocks` com o gargalo de cada bloco nos 90 dias).
+
+### 8. Problema: com Gold 1:1 as ilhas 3 e 4 ficam inviáveis para a nossa renda
+
+- Na **Ilha 1** o casual leva **25 dias** (ref: 16 h). O Gold é o gargalo de todos os blocos: o casual
+  ganha ~5 Gold/dia na 1ª semana (6 canteiros) e a ilha pede 720.
+- Na **Ilha 3** (100 420 Gold) o ativo, a ~430 Gold/dia, leva ~8 meses; na **Ilha 4** (492 284) o
+  ativo leva ~3 anos e o casual não chega.
+- Materiais exclusivos também travam: `dewquartz` (564 na ilha 3 com 2–4 nós a 1,2/dia) é o gargalo
+  do ativo e do bot desde o fim da ilha 2. Na referência esses volumes (e `sandglint`, `cinderite`)
+  só fecham com mercado entre jogadores e bônus de rendimento, que não temos.
+- Para a Ilha 1 caber em ~2–3 dias e a Ilha 3 em ~2 meses, a renda em Gold precisaria ser **~8 a 10×**
+  maior. Com sementes de 0,01 a 10 Gold e margem 100 %→30 %, um canteiro rende no máximo ~3 Gold por
+  colheita; 65 canteiros não chegam lá.
+
+Opções para o usuário (não apliquei nenhuma; custos mantidos):
+
+| Opção | Efeito esperado | Custo/risco |
+|---|---|---|
+| A. Aceitar jogo longo (Ilha 3 em ~1 ano para o casual) | nada a mudar | retenção: meses sem revelar bloco |
+| B. Fator de conversão nos custos de bloco (ex.: 0,02–0,1) | ilhas no ritmo da ref | contraria a instrução "não mudar" |
+| C. Subir volume/margem das culturas (ex.: `harvest_qty` maior nas medium/advanced; margem do topo acima de 30 %) | renda ×2–3, não ×8 | muda a faixa aprovada de margens; bot cresce junto (teto de lucro/h) |
+| D. Nova fonte de Gold: pedidos de NPC/entregas (a ref paga o 1º bloco com a 1ª entrega) | pode cobrir a diferença sem mexer em culturas | sistema novo (game-designer); precisa de teto anti-bot |
+| E. Renda de recursos maior (vender excedente acima do piso) | pequena: recurso vira concorrente da expansão | pouco efeito |
+| F. Reduzir materiais exclusivos (dewquartz, sandglint, cinderite, frutas) ao que 1 jogador produz | destrava ativo/bot | não resolve o Gold |
+
+Recomendação técnica: **D + C moderado** para as ilhas 1–2 e decidir B ou A para as ilhas 3–4.
+
+### 9. Ferramentas (só proposta, não implementado nem simulado)
+
+Ref: ferramenta consumível, 1 por coleta. Com Gold 1:1: machado 20, picareta 1 = 20 + 3 driftwood,
+picareta 2 = 20 + 3 driftwood + 5 flint, picareta 3 = 80 + 3 driftwood + 5 rustite, picareta 4 =
+100 + 3 driftwood + 3 glintstone (dewquartz), broca = 100 + 20 driftwood + 9 rustite + 10 honeydate
+(no lugar do produto animal) (sandglint); cinderite e frutíferas sem ferramenta. **Inviável 1:1:** o
+casual coleta ~24 árvores/dia no simulador → 480 Gold/dia só de machado, mais que a renda (224).
+Proposta: preço por coleta ≈ 10–20 % do valor de venda do que a coleta rende (ex.: machado 0,10;
+picareta 1 0,10 + 1 driftwood; picareta 2 0,20 + 1 driftwood + 1 flint; picareta 3 0,30 + 1 rustite;
+picareta 4 0,30 + 1 glintstone; broca 0,20 + 2 driftwood + 1 rustite), ou ferramenta durável (20
+usos pelo preço de 10). Simular antes de implementar: a cadeia consome materiais que os blocos pedem.
+
+### 10. Outras regras propostas (dados, não implementadas)
+
+- Pular obra: só com Gold, custo = 50 % do Gold do bloco × fração restante (mín. 0,50); proibido para
+  obras > 24 h. Não simulado.
+- Uma obra por vez; revelar reabastece **todos** os nós (simulado).
+
+### Pendências para o dev (game-core)
+
+- Reducers de expansão (`expansion.started`/`revealed`), coleta de nó e desbloqueio de cultura na loja
+  lendo `world` (`packages/game-core/src/data/world.generated.ts`); `GameState` com blocos revelados,
+  obra em andamento e nós (migração de save: fazenda atual = `homestead_01`).
+- Exportar `world` no índice raiz `packages/game-core/src/index.ts` (fora do escopo do economista;
+  hoje só em `src/data`).
+- Sistema de XP (os `minLevel` vêm da ref e vão até 120; precisam ser recalibrados com a curva de XP).
+- Renomear `coins`/`startingCoins` para `gold` (herdado da v1).
+
+### Perguntas ao usuário
+
+1. **Fã × código:** a tabela do fã (Ilha 1 = 60,25 de moeda; Ilha 3 = 81 600; Ilha 4 = 409 820) ou o
+   código (720 / 100 420 / 492 284)? Usei o código.
+2. **Moeda premium ("gema"):** (a) trocar por frutas 1:1 (proposto); (b) remover esse custo; (c) trocar
+   por um minério raro (`glintstone`/exclusivo). Não há moeda premium por enquanto.
+3. **Obras longas:** manter os totais da ref (obras de até 13,5 dias nas ilhas 3–4) ou limitar a 3 dias
+   por bloco (ilha 3 cai para ~14 d e ilha 4 para ~12 d de obra), ou redistribuir os 30 blocos?
+4. **`glowgourd`:** medium (10 h) com semente 6,60 (recomendado) ou advanced?
+5. Uma cultura de **1 min** vale o custo (teto de lucro/h do bot +36 %)?
+6. **Viabilidade (seção 8):** qual opção (A–F)?
+7. Nós especiais finitos, flores e colmeias da ref: ficam fora (proposto) ou entram depois como conteúdo?
+8. Custo de mudança de ilha (10 glintstone / 20 dewquartz / 200 sandglint) e idade mínima de conta
+   (1 / 5 / 30 dias) nas travessias: aprovados?
+
+### Sinalização ao `produtor` (regulatório)
+
+Sem mudança em relação à v1: Gold off-chain, sem saque, expansão nunca custa token. Se o token
+passar a comprar Gold ou materiais, os custos 1:1 da referência viram preço em dinheiro de progresso
+(pay-to-win) e reabrem as perguntas token↔Gold da v1. Venda ao público não é decisão do economista.

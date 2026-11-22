@@ -18,9 +18,10 @@ export const COLUMNS = [
   "sell_price",
   "grow_seconds",
   "harvest_qty",
-  "node_count",
+  "node_id",
   "recharge_seconds",
   "yield_qty",
+  "unlock_block",
   "value",
   "note",
 ];
@@ -29,8 +30,8 @@ export const COLUMNS = [
 const REQUIRED = {
   rule: ["value"],
   start_item: ["value"],
-  crop: ["seed_price", "sell_price", "grow_seconds", "harvest_qty"],
-  resource: ["sell_price", "node_count", "recharge_seconds", "yield_qty"],
+  crop: ["seed_price", "sell_price", "grow_seconds", "harvest_qty", "unlock_block"],
+  resource: ["sell_price", "node_id", "recharge_seconds", "yield_qty"],
 };
 
 const RULES = {
@@ -88,8 +89,8 @@ export function parseCsv(text) {
 /**
  * Lê, valida e devolve o modelo da economia. Lança um Error com TODOS os problemas encontrados.
  * @returns {{ hash: string, rules: Record<string,string>, startItems: {id:string,qty:number}[],
- *   crops: {id:string,seedPrice:string,sellPrice:string,growSeconds:number,harvestQty:number,note:string}[],
- *   resources: {id:string,sellPrice:string,nodeCount:number,rechargeSeconds:number,yieldQty:number,note:string}[] }}
+ *   crops: {id:string,seedPrice:string,sellPrice:string,growSeconds:number,harvestQty:number,unlockBlock:string,note:string}[],
+ *   resources: {id:string,sellPrice:string,nodeId:string,rechargeSeconds:number,yieldQty:number,note:string}[] }}
  */
 export function loadEconomyCsv(path = CSV_PATH) {
   const text = readFileSync(path, "utf8").replace(/\r\n?/g, "\n");
@@ -160,6 +161,7 @@ export function loadEconomyCsv(path = CSV_PATH) {
           sellPrice: gold("sell_price"),
           growSeconds: int("grow_seconds"),
           harvestQty: int("harvest_qty"),
+          unlockBlock: r.unlock_block,
           note: r.note,
         };
         if (GOLD_RE.test(crop.seedPrice) && GOLD_RE.test(crop.sellPrice) && Number.isInteger(crop.harvestQty)) {
@@ -176,10 +178,11 @@ export function loadEconomyCsv(path = CSV_PATH) {
       }
       case "resource":
         claim(r.id);
+        if (!ID_RE.test(r.node_id)) err(line, `node_id "${r.node_id}" deve ser snake_case ascii minúsculo`);
         model.resources.push({
           id: r.id,
           sellPrice: gold("sell_price"),
-          nodeCount: int("node_count"),
+          nodeId: r.node_id,
           rechargeSeconds: int("recharge_seconds"),
           yieldQty: int("yield_qty"),
           note: r.note,
@@ -200,6 +203,9 @@ export function loadEconomyCsv(path = CSV_PATH) {
   if (model.crops.length === 0) errors.push("economy.csv: nenhuma cultura (row_type=crop)");
   const growTimes = model.crops.map((c) => c.growSeconds);
   if (new Set(growTimes).size !== growTimes.length) errors.push("economy.csv: duas culturas com o mesmo grow_seconds");
+  const nodeIds = model.resources.map((r) => r.nodeId);
+  if (new Set(nodeIds).size !== nodeIds.length) errors.push("economy.csv: dois recursos com o mesmo node_id");
+  for (const n of nodeIds) if (seenIds.has(n)) errors.push(`economy.csv: node_id "${n}" colide com um id de item`);
 
   if (errors.length > 0) throw new Error(`economy.csv inválido:\n  - ${errors.join("\n  - ")}`);
   model.startItems = model.startItems.map(({ id, qty }) => ({ id, qty }));
@@ -207,7 +213,7 @@ export function loadEconomyCsv(path = CSV_PATH) {
 }
 
 /** Converte o modelo no objeto `EconomyData` (contrato em packages/game-core/src/data/types.ts). */
-export function toEconomyData(model, version = "v1") {
+export function toEconomyData(model, version = "v2") {
   const items = {};
   for (const c of model.crops) {
     items[`${c.id}_seed`] = { id: `${c.id}_seed`, kind: "seed", buyPrice: c.seedPrice, sellPrice: null };
@@ -238,5 +244,169 @@ export function toEconomyData(model, version = "v1") {
     },
     items,
     crops,
+  };
+}
+
+// ---------------------------------------------------------------------------------------------
+// economy/expansions.csv — ilhas, blocos de expansão e custo de mudança de ilha.
+// ---------------------------------------------------------------------------------------------
+export const EXPANSIONS_PATH = join(ECONOMY_DIR, "expansions.csv");
+/** Recursos e nós na ordem das colunas cost_* / add_* (mesmos ids de economy.csv). */
+export const COST_ITEMS = ["driftwood", "flint", "rustite", "glintstone", "dewquartz", "sandglint", "cinderite", "bellpear", "mistplum", "honeydate", "firefig"];
+export const ADD_NODES = ["plot", "tree", "flint_rock", "rustite_node", "glintstone_node", "dewquartz_node", "sandglint_node", "cinderite_node", "bellpear_tree", "mistplum_tree", "honeydate_palm", "firefig_tree"];
+export const EXP_COLUMNS = [
+  "row_type", "id", "island", "build_seconds", "min_level", "min_account_days", "cost_gold",
+  ...COST_ITEMS.map((i) => `cost_${i}`), ...ADD_NODES.map((n) => `add_${n}`), "ref_blocks", "note",
+];
+const UINT_RE = /^(0|[1-9]\d*)$/;
+
+/**
+ * Lê e valida expansions.csv contra o modelo de economy.csv (recursos, nós, culturas).
+ * Ordem das linhas = ordem de desbloqueio. Lança Error com TODOS os problemas.
+ */
+export function loadExpansionsCsv(model, path = EXPANSIONS_PATH) {
+  const text = readFileSync(path, "utf8").replace(/\r\n?/g, "\n");
+  const hash = createHash("sha256").update(text).digest("hex").slice(0, 12);
+  const rows = parseCsv(text);
+  const errors = [];
+  const err = (line, msg) => errors.push(`expansions.csv:${String(line)}: ${msg}`);
+  if ((rows[0] ?? []).join(",") !== EXP_COLUMNS.join(",")) {
+    throw new Error(`expansions.csv: cabeçalho deve ser exatamente:\n${EXP_COLUMNS.join(",")}`);
+  }
+  const resourceIds = new Set(model.resources.map((r) => r.id));
+  const nodeOf = Object.fromEntries(model.resources.map((r) => [r.id, r.nodeId]));
+  for (const i of COST_ITEMS) if (!resourceIds.has(i)) errors.push(`expansions.csv: coluna cost_${i} sem recurso em economy.csv`);
+  for (const r of model.resources) if (!ADD_NODES.includes(r.nodeId)) errors.push(`expansions.csv: falta coluna add_${r.nodeId}`);
+
+  const islands = [];
+  const blocks = [];
+  const islandSeen = new Map();
+  rows.slice(1).forEach((cells, idx) => {
+    const line = idx + 2;
+    if (cells.length !== EXP_COLUMNS.length) {
+      err(line, `esperava ${String(EXP_COLUMNS.length)} colunas, achou ${String(cells.length)}`);
+      return;
+    }
+    const r = Object.fromEntries(EXP_COLUMNS.map((c, i) => [c, cells[i].trim()]));
+    const qty = (col) => {
+      if (r[col] === "") return 0;
+      if (!POSINT_RE.test(r[col])) err(line, `${col}="${r[col]}" deve ser inteiro > 0 (ou vazio)`);
+      return Number(r[col]);
+    };
+    const items = {};
+    for (const i of COST_ITEMS) {
+      const q = qty(`cost_${i}`);
+      if (q > 0) items[i] = q;
+    }
+    if (!ID_RE.test(r.id)) err(line, `id "${r.id}" deve ser snake_case ascii minúsculo`);
+    if (r.row_type === "island") {
+      if (r.id !== r.island) err(line, "linha island: id e island devem ser iguais");
+      for (const c of ["build_seconds", "min_level", "min_account_days", "cost_gold", ...ADD_NODES.map((n) => `add_${n}`)]) {
+        if (r[c] !== "") err(line, `island não usa a coluna ${c}`);
+      }
+      if (islandSeen.has(r.id)) err(line, `ilha "${r.id}" duplicada`);
+      islandSeen.set(r.id, islands.length);
+      islands.push({ id: r.id, order: islands.length + 1, crossingCost: items, line });
+    } else if (r.row_type === "block") {
+      if (!islandSeen.has(r.island)) err(line, `ilha "${r.island}" não declarada antes do bloco`);
+      const n = blocks.filter((b) => b.islandId === r.island).length + 1;
+      const expectedId = `${r.island}_${String(n).padStart(2, "0")}`;
+      if (r.id !== expectedId) err(line, `bloco deveria se chamar "${expectedId}" (sequência da ilha)`);
+      const uint = (col) => {
+        if (!UINT_RE.test(r[col])) err(line, `${col}="${r[col]}" deve ser inteiro >= 0`);
+        return Number(r[col]);
+      };
+      if (!GOLD_RE.test(r.cost_gold)) err(line, `cost_gold="${r.cost_gold}" deve ser Gold com no máximo 2 casas`);
+      const nodes = {};
+      for (const nd of ADD_NODES.slice(1)) {
+        const q = qty(`add_${nd}`);
+        if (q > 0) nodes[nd] = q;
+      }
+      blocks.push({
+        id: r.id,
+        islandId: r.island,
+        order: blocks.length + 1,
+        buildSeconds: uint("build_seconds"),
+        minLevel: qty("min_level"),
+        minAccountDays: uint("min_account_days"),
+        gold: r.cost_gold,
+        items,
+        plots: qty("add_plot"),
+        nodes,
+        refBlocks: r.ref_blocks,
+        line,
+      });
+    } else err(line, `row_type desconhecido "${r.row_type}" (use: island, block)`);
+  });
+
+  // Ilhas em sequência contígua; primeira ilha começa com bloco grátis e instantâneo.
+  let lastIsland = -1;
+  for (const b of blocks) {
+    const idx = islandSeen.get(b.islandId) ?? -1;
+    if (idx < lastIsland) err(b.line, "blocos de uma ilha devem vir juntos e na ordem das ilhas");
+    lastIsland = idx;
+  }
+  const first = blocks[0];
+  if (!first) errors.push("expansions.csv: nenhum bloco");
+  else {
+    if (first.gold !== "0" || Object.keys(first.items).length || first.buildSeconds !== 0) err(first.line, "o primeiro bloco é o terreno inicial: grátis e com build_seconds 0");
+    if (first.plots !== Number(model.rules.starting_plot_count)) err(first.line, `add_plot do terreno inicial (${String(first.plots)}) ≠ starting_plot_count (${model.rules.starting_plot_count})`);
+  }
+  for (const isl of islands) if (!blocks.some((b) => b.islandId === isl.id)) err(isl.line, `ilha "${isl.id}" sem blocos`);
+  if (islands[0] && Object.keys(islands[0].crossingCost).length) err(islands[0].line, "a ilha inicial não tem custo de mudança");
+
+  // Alcançabilidade: todo material cobrado (bloco ou travessia) já tem nó revelado num bloco ANTERIOR.
+  const revealedNodes = new Set();
+  const islandStarted = new Set();
+  for (const b of blocks) {
+    const needs = { ...b.items };
+    if (!islandStarted.has(b.islandId)) {
+      islandStarted.add(b.islandId);
+      const isl = islands[islandSeen.get(b.islandId) ?? -1];
+      for (const [i, q] of Object.entries(isl?.crossingCost ?? {})) needs[i] = (needs[i] ?? 0) + q;
+    }
+    for (const i of Object.keys(needs)) {
+      if (!revealedNodes.has(nodeOf[i])) err(b.line, `${b.id} cobra "${i}" mas o nó "${nodeOf[i]}" ainda não foi revelado por um bloco anterior`);
+    }
+    for (const nd of Object.keys(b.nodes)) revealedNodes.add(nd);
+  }
+  for (const r of model.resources) if (!revealedNodes.has(r.nodeId)) errors.push(`expansions.csv: nenhum bloco traz o nó "${r.nodeId}" (${r.id} inalcançável)`);
+  const blockIds = new Set(blocks.map((b) => b.id));
+  for (const c of model.crops) {
+    if (!blockIds.has(c.unlockBlock)) errors.push(`economy.csv: cultura "${c.id}" com unlock_block "${c.unlockBlock}" inexistente`);
+  }
+  if (errors.length > 0) throw new Error(`expansions.csv inválido:\n  - ${errors.join("\n  - ")}`);
+  return { hash, islands: islands.map(({ line: _l, ...i }) => i), blocks: blocks.map(({ line: _l, ...b }) => b) };
+}
+
+/** Converte em `WorldData` (contrato em packages/game-core/src/data/types.ts). Só dados, sem regra. */
+export function toWorldData(model, exp, version = "v2") {
+  const islands = {};
+  for (const i of exp.islands) {
+    islands[i.id] = { id: i.id, order: i.order, blockIds: exp.blocks.filter((b) => b.islandId === i.id).map((b) => b.id), crossingCost: i.crossingCost };
+  }
+  const blocks = {};
+  for (const b of exp.blocks) {
+    blocks[b.id] = {
+      id: b.id,
+      islandId: b.islandId,
+      order: b.order,
+      buildSeconds: b.buildSeconds,
+      minLevel: b.minLevel,
+      minAccountDays: b.minAccountDays,
+      cost: { gold: b.gold, items: b.items },
+      adds: { plots: b.plots, nodes: b.nodes },
+      unlocksCrops: model.crops.filter((c) => c.unlockBlock === b.id).map((c) => c.id),
+    };
+  }
+  const nodes = {};
+  for (const r of model.resources) nodes[r.nodeId] = { id: r.nodeId, itemId: r.id, rechargeSeconds: r.rechargeSeconds, yieldQty: r.yieldQty };
+  return {
+    meta: { version, placeholder: false, source: `economy/economy.csv@sha256:${model.hash} + economy/expansions.csv@sha256:${exp.hash}` },
+    islands,
+    blockOrder: exp.blocks.map((b) => b.id),
+    blocks,
+    nodes,
+    cropUnlockBlock: Object.fromEntries(model.crops.map((c) => [c.id, c.unlockBlock])),
   };
 }

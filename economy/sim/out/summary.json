@@ -1,7 +1,7 @@
 {
-  "generatedFrom": "economy/economy.csv@sha256:3ef568e83fb3",
-  "currency": "Gold (off-chain, precisão 0.01)",
-  "engine": "packages/game-core applyActions (coleta de recursos e sinks propostos aplicados fora do motor)",
+  "generatedFrom": "economy/economy.csv@sha256:ac04886e3fee | economy/economy.csv@sha256:ac04886e3fee + economy/expansions.csv@sha256:d11a34f1fd8b",
+  "currency": "Gold (off-chain, precisão 0.01); custos de bloco em Gold = moeda soft da referência 1:1 (decisão do usuário 2026-11-22)",
+  "engine": "packages/game-core applyActions para sementes/plantio/colheita/venda; nós, expansões e desbloqueio FORA do motor; nível do avatar IGNORADO",
   "days": 90,
   "crops": [
     {
@@ -11,7 +11,18 @@
       "profitGold": 0.01,
       "marginPct": 100,
       "growMinutes": 2,
-      "profitPerHourPerPlot": 0.3
+      "profitPerHourPerPlot": 0.3,
+      "unlockBlock": "homestead_01"
+    },
+    {
+      "id": "dewcress",
+      "seedGold": 0.04,
+      "harvestGold": 0.07,
+      "profitGold": 0.03,
+      "marginPct": 75,
+      "growMinutes": 5,
+      "profitPerHourPerPlot": 0.36,
+      "unlockBlock": "homestead_01"
     },
     {
       "id": "pebblepea",
@@ -20,7 +31,38 @@
       "profitGold": 0.11,
       "marginPct": 78.6,
       "growMinutes": 15,
-      "profitPerHourPerPlot": 0.44
+      "profitPerHourPerPlot": 0.44,
+      "unlockBlock": "homestead_01"
+    },
+    {
+      "id": "curlwort",
+      "seedGold": 0.24,
+      "harvestGold": 0.42,
+      "profitGold": 0.18,
+      "marginPct": 75,
+      "growMinutes": 25,
+      "profitPerHourPerPlot": 0.432,
+      "unlockBlock": "homestead_02"
+    },
+    {
+      "id": "puffbean",
+      "seedGold": 0.3,
+      "harvestGold": 0.51,
+      "profitGold": 0.21,
+      "marginPct": 70,
+      "growMinutes": 30,
+      "profitPerHourPerPlot": 0.42,
+      "unlockBlock": "homestead_03"
+    },
+    {
+      "id": "sweetstalk",
+      "seedGold": 0.61,
+      "harvestGold": 1.02,
+      "profitGold": 0.41,
+      "marginPct": 67.2,
+      "growMinutes": 60,
+      "profitPerHourPerPlot": 0.41,
+      "unlockBlock": "homestead_02"
     },
     {
       "id": "redroot",
@@ -29,7 +71,28 @@
       "profitGold": 0.7,
       "marginPct": 63.6,
       "growMinutes": 105,
-      "profitPerHourPerPlot": 0.4
+      "profitPerHourPerPlot": 0.4,
+      "unlockBlock": "homestead_03"
+    },
+    {
+      "id": "bluepod",
+      "seedGold": 1.6,
+      "harvestGold": 2.56,
+      "profitGold": 0.96,
+      "marginPct": 60,
+      "growMinutes": 150,
+      "profitPerHourPerPlot": 0.384,
+      "unlockBlock": "breezewood_01"
+    },
+    {
+      "id": "frillhead",
+      "seedGold": 2.1,
+      "harvestGold": 3.24,
+      "profitGold": 1.14,
+      "marginPct": 54.3,
+      "growMinutes": 180,
+      "profitPerHourPerPlot": 0.38,
+      "unlockBlock": "breezewood_02"
     },
     {
       "id": "honeyleek",
@@ -38,7 +101,18 @@
       "profitGold": 1.45,
       "marginPct": 50,
       "growMinutes": 240,
-      "profitPerHourPerPlot": 0.3625
+      "profitPerHourPerPlot": 0.3625,
+      "unlockBlock": "homestead_04"
+    },
+    {
+      "id": "sunbulb",
+      "seedGold": 4.6,
+      "harvestGold": 6.6,
+      "profitGold": 2,
+      "marginPct": 43.5,
+      "growMinutes": 360,
+      "profitPerHourPerPlot": 0.3333,
+      "unlockBlock": "breezewood_03"
     },
     {
       "id": "stripemelon",
@@ -47,280 +121,1465 @@
       "profitGold": 2.4,
       "marginPct": 38.1,
       "growMinutes": 450,
-      "profitPerHourPerPlot": 0.32
+      "profitPerHourPerPlot": 0.32,
+      "unlockBlock": "homestead_05"
     },
     {
       "id": "glowgourd",
+      "seedGold": 6.6,
+      "harvestGold": 9.1,
+      "profitGold": 2.5,
+      "marginPct": 37.9,
+      "growMinutes": 600,
+      "profitPerHourPerPlot": 0.25,
+      "unlockBlock": "homestead_06"
+    },
+    {
+      "id": "sandspud",
+      "seedGold": 6.9,
+      "harvestGold": 9.45,
+      "profitGold": 2.55,
+      "marginPct": 37,
+      "growMinutes": 720,
+      "profitPerHourPerPlot": 0.2125,
+      "unlockBlock": "ochremesa_01"
+    },
+    {
+      "id": "silkpod",
+      "seedGold": 7.2,
+      "harvestGold": 9.8,
+      "profitGold": 2.6,
+      "marginPct": 36.1,
+      "growMinutes": 960,
+      "profitPerHourPerPlot": 0.1625,
+      "unlockBlock": "breezewood_05"
+    },
+    {
+      "id": "crownbloom",
+      "seedGold": 7.5,
+      "harvestGold": 10.16,
+      "profitGold": 2.66,
+      "marginPct": 35.5,
+      "growMinutes": 1200,
+      "profitPerHourPerPlot": 0.133,
+      "unlockBlock": "breezewood_07"
+    },
+    {
+      "id": "duneroot",
+      "seedGold": 7.8,
+      "harvestGold": 10.52,
+      "profitGold": 2.72,
+      "marginPct": 34.9,
+      "growMinutes": 1440,
+      "profitPerHourPerPlot": 0.1133,
+      "unlockBlock": "ochremesa_02"
+    },
+    {
+      "id": "miragemelon",
+      "seedGold": 8.2,
+      "harvestGold": 11,
+      "profitGold": 2.8,
+      "marginPct": 34.1,
+      "growMinutes": 1680,
+      "profitPerHourPerPlot": 0.1,
+      "unlockBlock": "ochremesa_04"
+    },
+    {
+      "id": "starthistle",
+      "seedGold": 8.6,
+      "harvestGold": 11.44,
+      "profitGold": 2.84,
+      "marginPct": 33,
+      "growMinutes": 1920,
+      "profitPerHourPerPlot": 0.0887,
+      "unlockBlock": "ochremesa_06"
+    },
+    {
+      "id": "cinderpod",
+      "seedGold": 9,
+      "harvestGold": 11.88,
+      "profitGold": 2.88,
+      "marginPct": 32,
+      "growMinutes": 2160,
+      "profitPerHourPerPlot": 0.08,
+      "unlockBlock": "emberpeak_01"
+    },
+    {
+      "id": "ashbloom",
+      "seedGold": 9.3,
+      "harvestGold": 12.2,
+      "profitGold": 2.9,
+      "marginPct": 31.2,
+      "growMinutes": 2400,
+      "profitPerHourPerPlot": 0.0725,
+      "unlockBlock": "emberpeak_02"
+    },
+    {
+      "id": "magmabulb",
+      "seedGold": 9.6,
+      "harvestGold": 12.55,
+      "profitGold": 2.95,
+      "marginPct": 30.7,
+      "growMinutes": 2640,
+      "profitPerHourPerPlot": 0.067,
+      "unlockBlock": "emberpeak_03"
+    },
+    {
+      "id": "embercrown",
       "seedGold": 10,
       "harvestGold": 13,
       "profitGold": 3,
       "marginPct": 30,
-      "growMinutes": 600,
-      "profitPerHourPerPlot": 0.3
+      "growMinutes": 2880,
+      "profitPerHourPerPlot": 0.0625,
+      "unlockBlock": "emberpeak_05"
     }
   ],
-  "scenarios": {
-    "base": {
-      "doc": "Só o motor atual: sementes são o único sink.",
-      "profiles": {
-        "casual": {
-          "label": "Casual (2x/dia)",
-          "goldDay7": 113.69,
-          "goldDay30": 869.12,
-          "goldDay90": 2961.08,
-          "goldPerDayLast30": 32.93,
-          "netEarnedPerDayLast30": 32.93,
-          "sources": {
-            "cropSales": 12146.17,
-            "resourceSales": 201.25
-          },
-          "sinks": {
-            "seedPurchases": 9388.34,
-            "proposedSinksOutsideEngine": 0
-          },
-          "sinkRatio": 0.76,
-          "plotsDay90": 6,
-          "expansionsDay90": 0,
-          "buildingLevelDay90": 0,
-          "harvests": 2890,
-          "harvestsByCrop": {
-            "mintleaf": 1936,
-            "pebblepea": 16,
-            "redroot": 5,
-            "honeyleek": 3,
-            "stripemelon": 2,
-            "glowgourd": 928
-          },
-          "itemsProduced": 7422,
-          "sessions": 161,
-          "actions": 7104
-        },
-        "active": {
-          "label": "Ativo (8x/dia)",
-          "goldDay7": 282.66,
-          "goldDay30": 1363.31,
-          "goldDay90": 4323.02,
-          "goldPerDayLast30": 49.54,
-          "netEarnedPerDayLast30": 49.54,
-          "sources": {
-            "cropSales": 11710.98,
-            "resourceSales": 305.1
-          },
-          "sinks": {
-            "seedPurchases": 7695.06,
-            "proposedSinksOutsideEngine": 0
-          },
-          "sinkRatio": 0.64,
-          "plotsDay90": 6,
-          "expansionsDay90": 0,
-          "buildingLevelDay90": 0,
-          "harvests": 16770,
-          "harvestsByCrop": {
-            "mintleaf": 12584,
-            "pebblepea": 32,
-            "redroot": 3525,
-            "honeyleek": 96,
-            "stripemelon": 521,
-            "glowgourd": 12
-          },
-          "itemsProduced": 23011,
-          "sessions": 699,
-          "actions": 39682
-        },
-        "bot": {
-          "label": "Bot 24/7",
-          "goldDay7": 479.72,
-          "goldDay30": 2054.3,
-          "goldDay90": 6161.9,
-          "goldPerDayLast30": 68.46,
-          "netEarnedPerDayLast30": 68.46,
-          "sources": {
-            "cropSales": 12958.5,
-            "resourceSales": 459
-          },
-          "sinks": {
-            "seedPurchases": 7257.6,
-            "proposedSinksOutsideEngine": 0
-          },
-          "sinkRatio": 0.541,
-          "plotsDay90": 6,
-          "expansionsDay90": 0,
-          "buildingLevelDay90": 0,
-          "harvests": 51834,
-          "harvestsByCrop": {
-            "mintleaf": 0,
-            "pebblepea": 51834,
-            "redroot": 0,
-            "honeyleek": 0,
-            "stripemelon": 0,
-            "glowgourd": 0
-          },
-          "itemsProduced": 53994,
-          "sessions": 0,
-          "actions": 121763
+  "islandsData": [
+    {
+      "id": "homestead",
+      "blocks": 10,
+      "gold": 720,
+      "items": {
+        "driftwood": 108,
+        "flint": 44,
+        "rustite": 8,
+        "glintstone": 1
+      },
+      "crossingCost": {},
+      "buildSeconds": 57970,
+      "finalPlots": 31,
+      "finalNodes": {
+        "tree": 9,
+        "flint_rock": 7,
+        "rustite_node": 4,
+        "glintstone_node": 2
+      }
+    },
+    {
+      "id": "breezewood",
+      "blocks": 8,
+      "gold": 5000,
+      "items": {
+        "driftwood": 680,
+        "flint": 115,
+        "glintstone": 32,
+        "rustite": 30,
+        "bellpear": 120,
+        "dewquartz": 26,
+        "mistplum": 105
+      },
+      "crossingCost": {
+        "glintstone": 10
+      },
+      "buildSeconds": 405360,
+      "finalPlots": 45,
+      "finalNodes": {
+        "tree": 18,
+        "flint_rock": 15,
+        "rustite_node": 9,
+        "glintstone_node": 6,
+        "bellpear_tree": 6,
+        "mistplum_tree": 5,
+        "dewquartz_node": 2
+      }
+    },
+    {
+      "id": "ochremesa",
+      "blocks": 7,
+      "gold": 100420,
+      "items": {
+        "driftwood": 6775,
+        "flint": 2415,
+        "rustite": 440,
+        "glintstone": 350,
+        "bellpear": 315,
+        "mistplum": 310,
+        "dewquartz": 564,
+        "sandglint": 3570,
+        "honeydate": 395
+      },
+      "crossingCost": {
+        "dewquartz": 20
+      },
+      "buildSeconds": 2075760,
+      "finalPlots": 65,
+      "finalNodes": {
+        "tree": 23,
+        "flint_rock": 20,
+        "rustite_node": 12,
+        "glintstone_node": 7,
+        "bellpear_tree": 6,
+        "mistplum_tree": 5,
+        "dewquartz_node": 4,
+        "sandglint_node": 3,
+        "honeydate_palm": 4
+      }
+    },
+    {
+      "id": "emberpeak",
+      "blocks": 5,
+      "gold": 492284,
+      "items": {
+        "driftwood": 19550,
+        "flint": 7200,
+        "rustite": 1115,
+        "glintstone": 810,
+        "dewquartz": 1274,
+        "sandglint": 4600,
+        "bellpear": 740,
+        "mistplum": 740,
+        "honeydate": 1160,
+        "cinderite": 236,
+        "firefig": 1050
+      },
+      "crossingCost": {
+        "sandglint": 200
+      },
+      "buildSeconds": 2907310,
+      "finalPlots": 65,
+      "finalNodes": {
+        "tree": 23,
+        "flint_rock": 20,
+        "rustite_node": 13,
+        "glintstone_node": 8,
+        "bellpear_tree": 6,
+        "mistplum_tree": 5,
+        "dewquartz_node": 5,
+        "sandglint_node": 4,
+        "honeydate_palm": 4,
+        "cinderite_node": 3,
+        "firefig_tree": 3
+      }
+    }
+  ],
+  "reference": {
+    "_doc": "Totais por ilha da REFERÊNCIA, com rótulos de papel já mapeados para nossos recursos. 'code' = docs/referencia/equilibrio-expansoes.md (analista, extraído do código @4e3606f; usado como padrão). 'fan' = docs/referencia/equilibrio-totais-ilhas.md (ferramenta de fã enviada pelo usuário como 'custo exato'). 'premium' = moeda premium da referência (nós trocamos por frutas 1:1 — pergunta ao usuário). Ilha 1 da ref = 6 blocos, ilha 2 = 12, ilha 3 = 21, ilha 4 = 25.",
+    "code": {
+      "homestead": {
+        "refBlocks": 6,
+        "gold": 720,
+        "driftwood": 108,
+        "flint": 44,
+        "rustite": 8,
+        "glintstone": 1,
+        "dewquartz": 0,
+        "sandglint": 0,
+        "cinderite": 0,
+        "premium": 0,
+        "buildSeconds": 57970,
+        "finalPlots": 31,
+        "finalNodes": {
+          "tree": 9,
+          "flint_rock": 7,
+          "rustite_node": 4,
+          "glintstone_node": 2
         }
       },
-      "ratios": {
-        "day7": {
-          "botOverCasual": 4.22,
-          "botOverActive": 1.7,
-          "activeOverCasual": 2.49
-        },
-        "day30": {
-          "botOverCasual": 2.36,
-          "botOverActive": 1.51,
-          "activeOverCasual": 1.57
-        },
-        "day90": {
-          "botOverCasual": 2.08,
-          "botOverActive": 1.43,
-          "activeOverCasual": 1.46
-        },
-        "steadyStateNetPerDay": {
-          "botOverCasual": 2.08,
-          "botOverActive": 1.38,
-          "activeOverCasual": 1.5
+      "breezewood": {
+        "refBlocks": 12,
+        "gold": 5000,
+        "driftwood": 680,
+        "flint": 115,
+        "rustite": 30,
+        "glintstone": 32,
+        "dewquartz": 26,
+        "sandglint": 0,
+        "cinderite": 0,
+        "premium": 225,
+        "buildSeconds": 405360,
+        "finalPlots": 45,
+        "finalNodes": {
+          "tree": 18,
+          "flint_rock": 15,
+          "rustite_node": 9,
+          "glintstone_node": 6,
+          "dewquartz_node": 2,
+          "fruit": 11,
+          "finite_gem_node": 2,
+          "flower_bed": 3,
+          "beehive": 3
+        }
+      },
+      "ochremesa": {
+        "refBlocks": 21,
+        "gold": 100420,
+        "driftwood": 6775,
+        "flint": 2415,
+        "rustite": 440,
+        "glintstone": 350,
+        "dewquartz": 564,
+        "sandglint": 3570,
+        "cinderite": 0,
+        "premium": 1020,
+        "buildSeconds": 2075760,
+        "finalPlots": 65,
+        "finalNodes": {
+          "tree": 23,
+          "flint_rock": 20,
+          "rustite_node": 12,
+          "glintstone_node": 7,
+          "dewquartz_node": 4,
+          "sandglint_node": 3,
+          "fruit": 15,
+          "finite_gem_node": 6,
+          "flower_bed": 3,
+          "beehive": 3
+        }
+      },
+      "emberpeak": {
+        "refBlocks": 25,
+        "gold": 492284,
+        "driftwood": 19550,
+        "flint": 7200,
+        "rustite": 1115,
+        "glintstone": 810,
+        "dewquartz": 1274,
+        "sandglint": 4600,
+        "cinderite": 236,
+        "premium": 3690,
+        "buildSeconds": 2907310,
+        "finalPlots": 65,
+        "finalNodes": {
+          "tree": 23,
+          "flint_rock": 20,
+          "rustite_node": 13,
+          "glintstone_node": 8,
+          "dewquartz_node": 5,
+          "sandglint_node": 4,
+          "cinderite_node": 3,
+          "fruit": 15,
+          "finite_gem_node": 13,
+          "flower_bed": 3,
+          "beehive": 3
         }
       }
     },
-    "sinks": {
-      "doc": "PROPOSTA, FORA DO MOTOR: + expansões/construção/upgrades de economy/sim/sinks-proposal.json.",
-      "proposal": {
-        "_doc": "PROPOSTA v1 — NÃO OFICIAL. Sinks de Gold (expansão, construção, upgrade) ainda não existem no motor nem em economy.csv. O simulador os aplica POR FORA do game-core (edita saldo e canteiros direto no estado) no cenário 'com sinks', só para medir o efeito na inflação. Justificativa e status em docs/economia/decisoes.md (2026-11-22, proposta v1).",
-        "reserveSeedGoldPerPlot": 10,
-        "expansion": {
-          "_doc": "custo(n) = round2(base * growth^(n-1)), n = 1..maxCount. Cada expansão adiciona plotsPerExpansion canteiros vazios (fora do motor).",
-          "base": 150,
-          "growth": 2,
-          "maxCount": 4,
-          "plotsPerExpansion": 2
+    "fan": {
+      "homestead": {
+        "gold": 60.25,
+        "driftwood": 108,
+        "flint": 46,
+        "rustite": 9,
+        "glintstone": 1,
+        "buildSeconds": 59460
+      },
+      "breezewood": {
+        "gold": null,
+        "driftwood": 680,
+        "flint": 115,
+        "rustite": 30,
+        "glintstone": 32,
+        "dewquartz": 26,
+        "premium": 225,
+        "buildSeconds": 405360
+      },
+      "ochremesa": {
+        "gold": 81600,
+        "driftwood": 6775,
+        "flint": 2415,
+        "rustite": 440,
+        "glintstone": 350,
+        "dewquartz": 564,
+        "sandglint": 3570,
+        "premium": 1020,
+        "buildSeconds": 2075760
+      },
+      "emberpeak": {
+        "gold": 409820,
+        "driftwood": 19550,
+        "flint": 7200,
+        "rustite": 1115,
+        "glintstone": 810,
+        "dewquartz": 1274,
+        "sandglint": 4600,
+        "cinderite": 236,
+        "premium": 3690,
+        "buildSeconds": 2907300
+      }
+    },
+    "crossing": {
+      "breezewood": {
+        "glintstone": 10
+      },
+      "ochremesa": {
+        "dewquartz": 20
+      },
+      "emberpeak": {
+        "sandglint": 200
+      }
+    }
+  },
+  "profiles": {
+    "casual": {
+      "label": "Casual (2x/dia)",
+      "goldDay7": 34.38,
+      "goldDay30": 165.34,
+      "goldDay90": 5258.26,
+      "netPerDay": {
+        "days1to7": 4.63,
+        "days24to30": 133.32,
+        "regime61to90": 224.14
+      },
+      "sources": {
+        "cropSales": 50143.76,
+        "resourceSales": 205
+      },
+      "sinks": {
+        "seeds": 36488.5,
+        "expansionsOutsideEngine": 8604
+      },
+      "blocksRevealedDay90": 20,
+      "nextBlock": "ochremesa_03",
+      "nextBlockMissing": [
+        "gold",
+        "dewquartz"
+      ],
+      "plotsDay90": 51,
+      "nodesDay90": 69,
+      "islands": {
+        "homestead": {
+          "completedDay": 25.33,
+          "startedDay": 0.31
         },
-        "building": {
-          "_doc": "1ª construção = base; upgrade para o nível L (L = 2..maxLevel) = round2(base * growth^(L-1)). Efeito da construção (receitas/boost) NÃO é modelado: aqui é sink puro.",
-          "base": 60,
-          "growth": 1.8,
-          "maxLevel": 8
+        "breezewood": {
+          "completedDay": 55.85,
+          "startedDay": 25.33
+        },
+        "ochremesa": {
+          "completedDay": null,
+          "startedDay": 64.82
+        },
+        "emberpeak": {
+          "completedDay": null,
+          "startedDay": null
         }
       },
-      "profiles": {
-        "casual": {
-          "label": "Casual (2x/dia)",
-          "goldDay7": 53.69,
-          "goldDay30": 222.16,
-          "goldDay90": 196.84,
-          "goldPerDayLast30": -13.92,
-          "netEarnedPerDayLast30": 63.87,
-          "sources": {
-            "cropSales": 20961.53,
-            "resourceSales": 201.25
-          },
-          "sinks": {
-            "seedPurchases": 16242.02,
-            "proposedSinksOutsideEngine": 4725.92
-          },
-          "sinkRatio": 0.991,
-          "plotsDay90": 14,
-          "expansionsDay90": 4,
-          "buildingLevelDay90": 6,
-          "harvests": 4934,
-          "harvestsByCrop": {
-            "mintleaf": 3304,
-            "pebblepea": 16,
-            "redroot": 5,
-            "honeyleek": 3,
-            "stripemelon": 2,
-            "glowgourd": 1604
-          },
-          "itemsProduced": 12170,
-          "sessions": 161,
-          "actions": 11200
+      "blocks": [
+        {
+          "id": "homestead_01",
+          "startedDay": null,
+          "revealedDay": 0,
+          "waitedFor": []
         },
-        "active": {
-          "label": "Ativo (8x/dia)",
-          "goldDay7": 114.66,
-          "goldDay30": 63.75,
-          "goldDay90": 1204.35,
-          "goldPerDayLast30": 1.97,
-          "netEarnedPerDayLast30": 109.99,
-          "sources": {
-            "cropSales": 22358.32,
-            "resourceSales": 305.1
-          },
-          "sinks": {
-            "seedPurchases": 14694.42,
-            "proposedSinksOutsideEngine": 6766.65
-          },
-          "sinkRatio": 0.947,
-          "plotsDay90": 14,
-          "expansionsDay90": 4,
-          "buildingLevelDay90": 7,
-          "harvests": 31952,
-          "harvestsByCrop": {
-            "mintleaf": 23976,
-            "pebblepea": 48,
-            "redroot": 6721,
-            "honeyleek": 190,
-            "stripemelon": 995,
-            "glowgourd": 22
-          },
-          "itemsProduced": 42565,
-          "sessions": 699,
-          "actions": 70054
+        {
+          "id": "homestead_02",
+          "startedDay": 0.31,
+          "revealedDay": 0.86,
+          "waitedFor": []
         },
-        "bot": {
-          "label": "Bot 24/7",
-          "goldDay7": 186.96,
-          "goldDay30": 767.44,
-          "goldDay90": 1622.53,
-          "goldPerDayLast30": 30.5,
-          "netEarnedPerDayLast30": 152.94,
-          "sources": {
-            "cropSales": 26371.5,
-            "resourceSales": 459
-          },
-          "sinks": {
-            "seedPurchases": 14770,
-            "proposedSinksOutsideEngine": 10439.97
-          },
-          "sinkRatio": 0.94,
-          "plotsDay90": 14,
-          "expansionsDay90": 4,
-          "buildingLevelDay90": 8,
-          "harvests": 105486,
-          "harvestsByCrop": {
-            "mintleaf": 0,
-            "pebblepea": 105486,
-            "redroot": 0,
-            "honeyleek": 0,
-            "stripemelon": 0,
-            "glowgourd": 0
-          },
-          "itemsProduced": 107646,
-          "sessions": 0,
-          "actions": 229075
+        {
+          "id": "homestead_03",
+          "startedDay": 10.84,
+          "revealedDay": 11.35,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "homestead_04",
+          "startedDay": 14.85,
+          "revealedDay": 15.35,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "homestead_05",
+          "startedDay": 18.36,
+          "revealedDay": 18.82,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "homestead_06",
+          "startedDay": 20.32,
+          "revealedDay": 20.81,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "homestead_07",
+          "startedDay": 21.34,
+          "revealedDay": 21.86,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "homestead_08",
+          "startedDay": 21.86,
+          "revealedDay": 22.32,
+          "waitedFor": []
+        },
+        {
+          "id": "homestead_09",
+          "startedDay": 22.84,
+          "revealedDay": 23.86,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "homestead_10",
+          "startedDay": 24.82,
+          "revealedDay": 25.33,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "breezewood_01",
+          "startedDay": 25.33,
+          "revealedDay": 25.83,
+          "waitedFor": []
+        },
+        {
+          "id": "breezewood_02",
+          "startedDay": 26.84,
+          "revealedDay": 27.82,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "breezewood_03",
+          "startedDay": 28.83,
+          "revealedDay": 29.34,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "breezewood_04",
+          "startedDay": 34.86,
+          "revealedDay": 35.36,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "breezewood_05",
+          "startedDay": 40.37,
+          "revealedDay": 41.31,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "breezewood_06",
+          "startedDay": 45.82,
+          "revealedDay": 46.82,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "breezewood_07",
+          "startedDay": 48.32,
+          "revealedDay": 49.36,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "breezewood_08",
+          "startedDay": 53.32,
+          "revealedDay": 55.85,
+          "waitedFor": [
+            "gold",
+            "dewquartz"
+          ]
+        },
+        {
+          "id": "ochremesa_01",
+          "startedDay": 64.82,
+          "revealedDay": 65.32,
+          "waitedFor": [
+            "dewquartz"
+          ]
+        },
+        {
+          "id": "ochremesa_02",
+          "startedDay": 73.82,
+          "revealedDay": 74.81,
+          "waitedFor": [
+            "honeydate"
+          ]
+        },
+        {
+          "id": "ochremesa_03",
+          "startedDay": null,
+          "revealedDay": null,
+          "waitedFor": []
+        },
+        {
+          "id": "ochremesa_04",
+          "startedDay": null,
+          "revealedDay": null,
+          "waitedFor": []
+        },
+        {
+          "id": "ochremesa_05",
+          "startedDay": null,
+          "revealedDay": null,
+          "waitedFor": []
+        },
+        {
+          "id": "ochremesa_06",
+          "startedDay": null,
+          "revealedDay": null,
+          "waitedFor": []
+        },
+        {
+          "id": "ochremesa_07",
+          "startedDay": null,
+          "revealedDay": null,
+          "waitedFor": []
+        },
+        {
+          "id": "emberpeak_01",
+          "startedDay": null,
+          "revealedDay": null,
+          "waitedFor": []
+        },
+        {
+          "id": "emberpeak_02",
+          "startedDay": null,
+          "revealedDay": null,
+          "waitedFor": []
+        },
+        {
+          "id": "emberpeak_03",
+          "startedDay": null,
+          "revealedDay": null,
+          "waitedFor": []
+        },
+        {
+          "id": "emberpeak_04",
+          "startedDay": null,
+          "revealedDay": null,
+          "waitedFor": []
+        },
+        {
+          "id": "emberpeak_05",
+          "startedDay": null,
+          "revealedDay": null,
+          "waitedFor": []
+        }
+      ],
+      "harvestsByCrop": {
+        "mintleaf": 11543,
+        "dewcress": 8,
+        "pebblepea": 7,
+        "curlwort": 4,
+        "puffbean": 2,
+        "sweetstalk": 157,
+        "redroot": 103,
+        "bluepod": 0,
+        "frillhead": 0,
+        "honeyleek": 107,
+        "sunbulb": 0,
+        "stripemelon": 71,
+        "glowgourd": 4169,
+        "sandspud": 594,
+        "silkpod": 39,
+        "crownbloom": 289,
+        "duneroot": 153,
+        "miragemelon": 0,
+        "starthistle": 0,
+        "cinderpod": 0,
+        "ashbloom": 0,
+        "magmabulb": 0,
+        "embercrown": 0
+      },
+      "collectionsByNode": {
+        "tree": 2158,
+        "flint_rock": 1818,
+        "rustite_node": 1010,
+        "glintstone_node": 345,
+        "dewquartz_node": 119,
+        "sandglint_node": 24,
+        "cinderite_node": 0,
+        "bellpear_tree": 611,
+        "mistplum_tree": 439,
+        "honeydate_palm": 41,
+        "firefig_tree": 0
+      },
+      "inventoryDay90": {
+        "driftwood": 7244,
+        "flint": 3362,
+        "rustite": 927,
+        "glintstone": 272,
+        "dewquartz": 52,
+        "sandglint": 364,
+        "honeydate": 78,
+        "mistplum": 1015,
+        "bellpear": 1015
+      },
+      "sessions": 163,
+      "actions": 35611
+    },
+    "active": {
+      "label": "Ativo (8x/dia)",
+      "goldDay7": 0,
+      "goldDay30": 2048.83,
+      "goldDay90": 16474.89,
+      "netPerDay": {
+        "days1to7": 76.86,
+        "days24to30": 324.21,
+        "regime61to90": 426.95
+      },
+      "sources": {
+        "cropSales": 86543.81,
+        "resourceSales": 695.2
+      },
+      "sinks": {
+        "seeds": 56786.12,
+        "expansionsOutsideEngine": 13980
+      },
+      "blocksRevealedDay90": 21,
+      "nextBlock": "ochremesa_04",
+      "nextBlockMissing": [
+        "dewquartz"
+      ],
+      "plotsDay90": 54,
+      "nodesDay90": 71,
+      "islands": {
+        "homestead": {
+          "completedDay": 8.3,
+          "startedDay": 0.29
+        },
+        "breezewood": {
+          "completedDay": 34.3,
+          "startedDay": 8.48
+        },
+        "ochremesa": {
+          "completedDay": null,
+          "startedDay": 43.3
+        },
+        "emberpeak": {
+          "completedDay": null,
+          "startedDay": null
         }
       },
-      "ratios": {
-        "day7": {
-          "botOverCasual": 3.48,
-          "botOverActive": 1.63,
-          "activeOverCasual": 2.14
+      "blocks": [
+        {
+          "id": "homestead_01",
+          "startedDay": null,
+          "revealedDay": 0,
+          "waitedFor": []
         },
-        "day30": {
-          "botOverCasual": 3.45,
-          "botOverActive": 12.04,
-          "activeOverCasual": 0.29
+        {
+          "id": "homestead_02",
+          "startedDay": 0.29,
+          "revealedDay": 0.38,
+          "waitedFor": []
         },
-        "day90": {
-          "botOverCasual": 8.24,
-          "botOverActive": 1.35,
-          "activeOverCasual": 6.12
+        {
+          "id": "homestead_03",
+          "startedDay": 2.66,
+          "revealedDay": 2.77,
+          "waitedFor": [
+            "gold"
+          ]
         },
-        "steadyStateNetPerDay": {
-          "botOverCasual": 2.39,
-          "botOverActive": 1.39,
-          "activeOverCasual": 1.72
+        {
+          "id": "homestead_04",
+          "startedDay": 3.68,
+          "revealedDay": 3.76,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "homestead_05",
+          "startedDay": 4.68,
+          "revealedDay": 4.75,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "homestead_06",
+          "startedDay": 5.29,
+          "revealedDay": 5.39,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "homestead_07",
+          "startedDay": 5.59,
+          "revealedDay": 5.66,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "homestead_08",
+          "startedDay": 6.29,
+          "revealedDay": 6.39,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "homestead_09",
+          "startedDay": 6.76,
+          "revealedDay": 6.94,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "homestead_10",
+          "startedDay": 7.87,
+          "revealedDay": 8.3,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "breezewood_01",
+          "startedDay": 8.48,
+          "revealedDay": 8.56,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "breezewood_02",
+          "startedDay": 9.39,
+          "revealedDay": 9.48,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "breezewood_03",
+          "startedDay": 10.58,
+          "revealedDay": 10.67,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "breezewood_04",
+          "startedDay": 14.38,
+          "revealedDay": 14.57,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "breezewood_05",
+          "startedDay": 18.29,
+          "revealedDay": 18.95,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "breezewood_06",
+          "startedDay": 21.4,
+          "revealedDay": 22.49,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "breezewood_07",
+          "startedDay": 23.29,
+          "revealedDay": 24.39,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "breezewood_08",
+          "startedDay": 32.29,
+          "revealedDay": 34.3,
+          "waitedFor": [
+            "dewquartz"
+          ]
+        },
+        {
+          "id": "ochremesa_01",
+          "startedDay": 43.3,
+          "revealedDay": 43.38,
+          "waitedFor": [
+            "dewquartz"
+          ]
+        },
+        {
+          "id": "ochremesa_02",
+          "startedDay": 50.3,
+          "revealedDay": 50.95,
+          "waitedFor": [
+            "honeydate"
+          ]
+        },
+        {
+          "id": "ochremesa_03",
+          "startedDay": 66.29,
+          "revealedDay": 68.29,
+          "waitedFor": [
+            "dewquartz"
+          ]
+        },
+        {
+          "id": "ochremesa_04",
+          "startedDay": null,
+          "revealedDay": null,
+          "waitedFor": []
+        },
+        {
+          "id": "ochremesa_05",
+          "startedDay": null,
+          "revealedDay": null,
+          "waitedFor": []
+        },
+        {
+          "id": "ochremesa_06",
+          "startedDay": null,
+          "revealedDay": null,
+          "waitedFor": []
+        },
+        {
+          "id": "ochremesa_07",
+          "startedDay": null,
+          "revealedDay": null,
+          "waitedFor": []
+        },
+        {
+          "id": "emberpeak_01",
+          "startedDay": null,
+          "revealedDay": null,
+          "waitedFor": []
+        },
+        {
+          "id": "emberpeak_02",
+          "startedDay": null,
+          "revealedDay": null,
+          "waitedFor": []
+        },
+        {
+          "id": "emberpeak_03",
+          "startedDay": null,
+          "revealedDay": null,
+          "waitedFor": []
+        },
+        {
+          "id": "emberpeak_04",
+          "startedDay": null,
+          "revealedDay": null,
+          "waitedFor": []
+        },
+        {
+          "id": "emberpeak_05",
+          "startedDay": null,
+          "revealedDay": null,
+          "waitedFor": []
         }
+      ],
+      "harvestsByCrop": {
+        "mintleaf": 13,
+        "dewcress": 31157,
+        "pebblepea": 7,
+        "curlwort": 2,
+        "puffbean": 4,
+        "sweetstalk": 681,
+        "redroot": 24582,
+        "bluepod": 1272,
+        "frillhead": 1,
+        "honeyleek": 625,
+        "sunbulb": 1,
+        "stripemelon": 3601,
+        "glowgourd": 231,
+        "sandspud": 0,
+        "silkpod": 0,
+        "crownbloom": 0,
+        "duneroot": 0,
+        "miragemelon": 0,
+        "starthistle": 0,
+        "cinderpod": 0,
+        "ashbloom": 0,
+        "magmabulb": 0,
+        "embercrown": 0
+      },
+      "collectionsByNode": {
+        "tree": 3161,
+        "flint_rock": 2711,
+        "rustite_node": 1625,
+        "glintstone_node": 494,
+        "dewquartz_node": 194,
+        "sandglint_node": 49,
+        "cinderite_node": 0,
+        "bellpear_tree": 950,
+        "mistplum_tree": 728,
+        "honeydate_palm": 140,
+        "firefig_tree": 0
+      },
+      "inventoryDay90": {
+        "driftwood": 10806,
+        "flint": 4923,
+        "glintstone": 396,
+        "dewquartz": 73,
+        "sandglint": 664,
+        "honeydate": 320,
+        "rustite": 1480,
+        "mistplum": 975,
+        "bellpear": 975
+      },
+      "sessions": 698,
+      "actions": 127423
+    },
+    "bot": {
+      "label": "Bot 24/7",
+      "goldDay7": 672.47,
+      "goldDay30": 6398.11,
+      "goldDay90": 21707.56,
+      "netPerDay": {
+        "days1to7": 284.35,
+        "days24to30": 466.05,
+        "regime61to90": 622.86
+      },
+      "sources": {
+        "cropSales": 103582.79,
+        "resourceSales": 1637.05
+      },
+      "sinks": {
+        "seeds": 58014.28,
+        "expansionsOutsideEngine": 25500
+      },
+      "blocksRevealedDay90": 22,
+      "nextBlock": "ochremesa_05",
+      "nextBlockMissing": [
+        "dewquartz"
+      ],
+      "plotsDay90": 57,
+      "nodesDay90": 74,
+      "islands": {
+        "homestead": {
+          "completedDay": 3.79,
+          "startedDay": 0
+        },
+        "breezewood": {
+          "completedDay": 26.01,
+          "startedDay": 4.63
+        },
+        "ochremesa": {
+          "completedDay": null,
+          "startedDay": 32.68
+        },
+        "emberpeak": {
+          "completedDay": null,
+          "startedDay": null
+        }
+      },
+      "blocks": [
+        {
+          "id": "homestead_01",
+          "startedDay": null,
+          "revealedDay": 0,
+          "waitedFor": []
+        },
+        {
+          "id": "homestead_02",
+          "startedDay": 0,
+          "revealedDay": 0,
+          "waitedFor": []
+        },
+        {
+          "id": "homestead_03",
+          "startedDay": 0.63,
+          "revealedDay": 0.63,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "homestead_04",
+          "startedDay": 1.07,
+          "revealedDay": 1.07,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "homestead_05",
+          "startedDay": 1.64,
+          "revealedDay": 1.64,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "homestead_06",
+          "startedDay": 1.86,
+          "revealedDay": 1.88,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "homestead_07",
+          "startedDay": 2.14,
+          "revealedDay": 2.17,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "homestead_08",
+          "startedDay": 2.42,
+          "revealedDay": 2.46,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "homestead_09",
+          "startedDay": 2.81,
+          "revealedDay": 2.98,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "homestead_10",
+          "startedDay": 3.38,
+          "revealedDay": 3.79,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "breezewood_01",
+          "startedDay": 4.63,
+          "revealedDay": 4.63,
+          "waitedFor": [
+            "glintstone"
+          ]
+        },
+        {
+          "id": "breezewood_02",
+          "startedDay": 4.63,
+          "revealedDay": 4.63,
+          "waitedFor": []
+        },
+        {
+          "id": "breezewood_03",
+          "startedDay": 5.18,
+          "revealedDay": 5.2,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "breezewood_04",
+          "startedDay": 7.61,
+          "revealedDay": 7.78,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "breezewood_05",
+          "startedDay": 10.18,
+          "revealedDay": 10.68,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "breezewood_06",
+          "startedDay": 12.64,
+          "revealedDay": 13.64,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "breezewood_07",
+          "startedDay": 13.84,
+          "revealedDay": 14.84,
+          "waitedFor": [
+            "gold"
+          ]
+        },
+        {
+          "id": "breezewood_08",
+          "startedDay": 24.01,
+          "revealedDay": 26.01,
+          "waitedFor": [
+            "dewquartz"
+          ]
+        },
+        {
+          "id": "ochremesa_01",
+          "startedDay": 32.68,
+          "revealedDay": 32.7,
+          "waitedFor": [
+            "dewquartz"
+          ]
+        },
+        {
+          "id": "ochremesa_02",
+          "startedDay": 38.54,
+          "revealedDay": 39.04,
+          "waitedFor": [
+            "honeydate"
+          ]
+        },
+        {
+          "id": "ochremesa_03",
+          "startedDay": 52.37,
+          "revealedDay": 54.37,
+          "waitedFor": [
+            "dewquartz"
+          ]
+        },
+        {
+          "id": "ochremesa_04",
+          "startedDay": 74.37,
+          "revealedDay": 77.87,
+          "waitedFor": [
+            "dewquartz"
+          ]
+        },
+        {
+          "id": "ochremesa_05",
+          "startedDay": null,
+          "revealedDay": null,
+          "waitedFor": []
+        },
+        {
+          "id": "ochremesa_06",
+          "startedDay": null,
+          "revealedDay": null,
+          "waitedFor": []
+        },
+        {
+          "id": "ochremesa_07",
+          "startedDay": null,
+          "revealedDay": null,
+          "waitedFor": []
+        },
+        {
+          "id": "emberpeak_01",
+          "startedDay": null,
+          "revealedDay": null,
+          "waitedFor": []
+        },
+        {
+          "id": "emberpeak_02",
+          "startedDay": null,
+          "revealedDay": null,
+          "waitedFor": []
+        },
+        {
+          "id": "emberpeak_03",
+          "startedDay": null,
+          "revealedDay": null,
+          "waitedFor": []
+        },
+        {
+          "id": "emberpeak_04",
+          "startedDay": null,
+          "revealedDay": null,
+          "waitedFor": []
+        },
+        {
+          "id": "emberpeak_05",
+          "startedDay": null,
+          "revealedDay": null,
+          "waitedFor": []
+        }
+      ],
+      "harvestsByCrop": {
+        "mintleaf": 6,
+        "dewcress": 6,
+        "pebblepea": 414329,
+        "curlwort": 0,
+        "puffbean": 0,
+        "sweetstalk": 0,
+        "redroot": 0,
+        "bluepod": 0,
+        "frillhead": 0,
+        "honeyleek": 0,
+        "sunbulb": 0,
+        "stripemelon": 0,
+        "glowgourd": 0,
+        "sandspud": 0,
+        "silkpod": 0,
+        "crownbloom": 0,
+        "duneroot": 0,
+        "miragemelon": 0,
+        "starthistle": 0,
+        "cinderpod": 0,
+        "ashbloom": 0,
+        "magmabulb": 0,
+        "embercrown": 0
+      },
+      "collectionsByNode": {
+        "tree": 4913,
+        "flint_rock": 4230,
+        "rustite_node": 2581,
+        "glintstone_node": 625,
+        "dewquartz_node": 259,
+        "sandglint_node": 86,
+        "cinderite_node": 0,
+        "bellpear_tree": 1217,
+        "mistplum_tree": 952,
+        "honeydate_palm": 227,
+        "firefig_tree": 0
+      },
+      "inventoryDay90": {
+        "driftwood": 17064,
+        "flint": 7686,
+        "glintstone": 492,
+        "sandglint": 1031,
+        "honeydate": 521,
+        "dewquartz": 57,
+        "rustite": 1430,
+        "mistplum": 930,
+        "bellpear": 930
+      },
+      "sessions": 0,
+      "actions": 943095
+    }
+  },
+  "ratios": {
+    "regimeNetPerDay": {
+      "botOverCasual": 2.78,
+      "botOverActive": 1.46,
+      "activeOverCasual": 1.9
+    },
+    "blocksDay90": {
+      "botOverCasual": 1.1,
+      "botOverActive": 1.05
+    }
+  },
+  "projection": {
+    "days": 1095,
+    "doc": "Mesma simulação estendida; para quando o perfil completa os 30 blocos. null = não alcança no horizonte.",
+    "profiles": {
+      "casual": {
+        "blocks": {
+          "homestead_01": 0,
+          "homestead_02": 0.9,
+          "homestead_03": 11.3,
+          "homestead_04": 15.4,
+          "homestead_05": 18.8,
+          "homestead_06": 20.8,
+          "homestead_07": 21.9,
+          "homestead_08": 22.3,
+          "homestead_09": 23.9,
+          "homestead_10": 25.3,
+          "breezewood_01": 25.8,
+          "breezewood_02": 27.8,
+          "breezewood_03": 29.3,
+          "breezewood_04": 35.4,
+          "breezewood_05": 41.3,
+          "breezewood_06": 46.8,
+          "breezewood_07": 49.4,
+          "breezewood_08": 55.8,
+          "ochremesa_01": 65.3,
+          "ochremesa_02": 74.8,
+          "ochremesa_03": 93.3,
+          "ochremesa_04": 138.8,
+          "ochremesa_05": 200.8,
+          "ochremesa_06": 278.8,
+          "ochremesa_07": 372.3,
+          "emberpeak_01": 376.8,
+          "emberpeak_02": 439.3,
+          "emberpeak_03": 599.8,
+          "emberpeak_04": 967.8,
+          "emberpeak_05": null
+        },
+        "netPerDayLast30": 418.91,
+        "lastDay": 1095,
+        "nextBlockMissing": [
+          "gold"
+        ]
+      },
+      "active": {
+        "blocks": {
+          "homestead_01": 0,
+          "homestead_02": 0.4,
+          "homestead_03": 2.8,
+          "homestead_04": 3.8,
+          "homestead_05": 4.8,
+          "homestead_06": 5.4,
+          "homestead_07": 5.7,
+          "homestead_08": 6.4,
+          "homestead_09": 6.9,
+          "homestead_10": 8.3,
+          "breezewood_01": 8.6,
+          "breezewood_02": 9.5,
+          "breezewood_03": 10.7,
+          "breezewood_04": 14.6,
+          "breezewood_05": 18.9,
+          "breezewood_06": 22.5,
+          "breezewood_07": 24.4,
+          "breezewood_08": 34.3,
+          "ochremesa_01": 43.4,
+          "ochremesa_02": 50.9,
+          "ochremesa_03": 68.3,
+          "ochremesa_04": 95.9,
+          "ochremesa_05": 131.9,
+          "ochremesa_06": 181.3,
+          "ochremesa_07": 243.3,
+          "emberpeak_01": 244.5,
+          "emberpeak_02": 286.8,
+          "emberpeak_03": 394.4,
+          "emberpeak_04": 640.9,
+          "emberpeak_05": 1047.3
+        },
+        "netPerDayLast30": 0,
+        "lastDay": 1095,
+        "nextBlockMissing": null
+      },
+      "bot": {
+        "blocks": {
+          "homestead_01": 0,
+          "homestead_02": 0,
+          "homestead_03": 0.6,
+          "homestead_04": 1.1,
+          "homestead_05": 1.6,
+          "homestead_06": 1.9,
+          "homestead_07": 2.2,
+          "homestead_08": 2.5,
+          "homestead_09": 3,
+          "homestead_10": 3.8,
+          "breezewood_01": 4.6,
+          "breezewood_02": 4.6,
+          "breezewood_03": 5.2,
+          "breezewood_04": 7.8,
+          "breezewood_05": 10.7,
+          "breezewood_06": 13.6,
+          "breezewood_07": 14.8,
+          "breezewood_08": 26,
+          "ochremesa_01": 32.7,
+          "ochremesa_02": 39,
+          "ochremesa_03": 54.4,
+          "ochremesa_04": 77.9,
+          "ochremesa_05": 108.2,
+          "ochremesa_06": 146.7,
+          "ochremesa_07": 193.4,
+          "emberpeak_01": 196,
+          "emberpeak_02": 226.9,
+          "emberpeak_03": 285.9,
+          "emberpeak_04": 464.4,
+          "emberpeak_05": 758.2
+        },
+        "netPerDayLast30": 0,
+        "lastDay": 1095,
+        "nextBlockMissing": null
       }
     }
   },

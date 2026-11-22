@@ -64,3 +64,66 @@ export interface EconomyData {
   readonly items: Readonly<Record<string, ItemDef>>;
   readonly crops: Readonly<Record<string, CropDef>>;
 }
+
+// =============================================================================================
+// Mundo: ilhas, blocos de expansão, nós de recurso e desbloqueio de culturas.
+// Gerado em `world.generated.ts` a partir de economy/economy.csv + economy/expansions.csv.
+// SÓ DADOS: ainda não há reducer que leia estes tipos (expansão, coleta e desbloqueio são
+// pendências do game-core). Quantidades de material são inteiros > 0; Gold é DecimalString.
+// =============================================================================================
+
+/** Nó de recurso posicionável (árvore, pedra, minério, frutífera). */
+export interface ResourceNodeDef {
+  readonly id: string;
+  /** Item (kind "resource") recebido a cada coleta. */
+  readonly itemId: string;
+  /** Recarga após a coleta, inteiro em segundos (> 0). */
+  readonly rechargeSeconds: number;
+  /** Unidades recebidas por coleta (inteiro > 0). */
+  readonly yieldQty: number;
+}
+
+/** Custo de um bloco: Gold + materiais (item id → quantidade). Nunca token. */
+export interface ExpansionCost {
+  readonly gold: DecimalString;
+  readonly items: Readonly<Record<string, number>>;
+}
+
+export interface IslandDef {
+  readonly id: string;
+  /** 1 = ilha inicial. */
+  readonly order: number;
+  /** Blocos da ilha, na ordem de revelação. */
+  readonly blockIds: readonly string[];
+  /** Custo de mudança para ENTRAR nesta ilha (pago junto com o 1º bloco dela); `{}` na ilha inicial. */
+  readonly crossingCost: Readonly<Record<string, number>>;
+}
+
+export interface ExpansionBlockDef {
+  readonly id: string;
+  readonly islandId: string;
+  /** Posição global na sequência (1 = terreno inicial). */
+  readonly order: number;
+  /** Duração da obra, inteiro em segundos (0 no terreno inicial). */
+  readonly buildSeconds: number;
+  /** Nível mínimo do avatar (ainda sem sistema de XP; base da referência). */
+  readonly minLevel: number;
+  /** Idade mínima da conta em dias (anti-multiconta). */
+  readonly minAccountDays: number;
+  readonly cost: ExpansionCost;
+  /** O que a revelação acrescenta: canteiros e nós (node id → quantidade). */
+  readonly adds: { readonly plots: number; readonly nodes: Readonly<Record<string, number>> };
+  /** Culturas cuja semente entra na loja ao revelar este bloco. */
+  readonly unlocksCrops: readonly string[];
+}
+
+export interface WorldData {
+  readonly meta: EconomyMeta;
+  readonly islands: Readonly<Record<string, IslandDef>>;
+  /** Todos os blocos na ordem de revelação. */
+  readonly blockOrder: readonly string[];
+  readonly blocks: Readonly<Record<string, ExpansionBlockDef>>;
+  readonly nodes: Readonly<Record<string, ResourceNodeDef>>;
+  /** cultura → bloco que a desbloqueia (`unlockBlock`). */
+  readonly cropUnlockBlock: Readonly<Record<string, string>>;
+}

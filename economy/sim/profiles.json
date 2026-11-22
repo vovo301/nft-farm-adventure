@@ -1,14 +1,18 @@
 {
   "_doc": "Perfis do simulador. Horários em HH:MM no relógio do simulador (dia começa 00:00). Justificativa em docs/economia/decisoes.md.",
   "days": 90,
+  "projectionDays": 1095,
   "startEpochMs": 1800000000000,
-  "rngSeed": "econ-sim-v0",
+  "rngSeed": "econ-sim-v2",
   "profiles": [
     {
       "id": "casual",
       "label": "Casual (2x/dia)",
       "kind": "human",
-      "sessions": ["08:00", "20:00"],
+      "sessions": [
+        "08:00",
+        "20:00"
+      ],
       "sessionMinutes": 4,
       "jitterMinutes": 45,
       "skipChance": 0.1
@@ -17,7 +21,16 @@
       "id": "active",
       "label": "Ativo (8x/dia)",
       "kind": "human",
-      "sessions": ["07:00", "09:15", "11:30", "13:45", "16:00", "18:15", "20:30", "22:45"],
+      "sessions": [
+        "07:00",
+        "09:15",
+        "11:30",
+        "13:45",
+        "16:00",
+        "18:15",
+        "20:30",
+        "22:45"
+      ],
       "sessionMinutes": 6,
       "jitterMinutes": 15,
       "skipChance": 0.03
