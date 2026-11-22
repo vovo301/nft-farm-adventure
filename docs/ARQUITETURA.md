@@ -55,6 +55,8 @@ e o indexador credita.
 | Culturas | **23 culturas**: 5 básicas (1 a 30 min), 9 médias (1 h a 12 h), 9 avançadas (16 h a 48 h). Valores das 6 culturas da proposta v1 aprovados como "dentro do esperado" | 2026-11-22 |
 | Mundo e expansões | Terreno cresce por **expansões** (blocos revelados em sequência, cada um com mais canteiros, árvores, pedras e minérios; recursos coletados pagam as próximas). Mundo com **4 ilhas/biomas** em sequência, com conteúdo novo (árvores frutíferas, novos minérios). Estrutura e curva inspiradas na referência enviada pelo usuário; nomes, temas e números próprios (regra 1) | 2026-11-22 |
 | Base de equilíbrio | O **modelo de equilíbrio da referência** (curva de expansões: custos, tempos e o que cada bloco adiciona) é a base numérica, adaptada; **recursos, nomes e temas são nossos**. Exceção à regra 1 registrada no `CLAUDE.md` | 2026-11-22 |
+| Estilo de arte | **C · Pintado semirrealista** (prancha 2026-11-22-estilos-comparativo): proporções reais, texturas sugeridas, paleta terrosa, sombras longas | 2026-11-22 |
+| Valores das expansões | **Tabela bloco a bloco enviada pelo usuário** (`docs/referencia/img/`) é a fonte; Gold = moeda da referência 1:1, sem conversão | 2026-11-22 |
 
 ## Decisões em aberto (do usuário)
 

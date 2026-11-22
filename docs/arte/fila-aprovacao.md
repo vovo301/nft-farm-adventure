@@ -58,4 +58,4 @@ Mesmas 6 peças (árvore folhosa, pinheiro, galpão, fazendeiro adulto, canteiro
 minério) + trecho 3×3 em três direções: **A** estilizado maduro · **B** low-poly facetado ·
 **C** pintado semirrealista. Recomendação do diretor: A, com paleta terrosa e sombra de C.
 
-Resposta do usuário: _(pendente — escolher A, B, C ou mistura)_
+Resposta do usuário (2026-11-22): **escolheu C** ("o modelo C ainda é o melhor").
