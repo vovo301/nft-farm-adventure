@@ -49,3 +49,13 @@ Guia: art/style-guide/README.md (v2.1) · Paleta: art/style-guide/palette.json (
 
 Pergunta ao usuário: aprova a direção (acabamento, cores, proporções, leitura a 0,5)? Se não, quais reprovar e por quê.
 Resposta do usuário (2026-11-22): **reprovado** — "está muito infantil, tudo muito arredondado, árvores com copas arredondadas, personagem com aspecto infantil". Próxima rodada: prancha comparativa de estilos menos infantis antes de produzir em escala.
+
+## Lote 2026-11-22-estilos-comparativo  — status: escolha de direção (draft)
+
+Prancha: art/review/2026-11-22-estilos-comparativo/prancha.png (@2x: prancha@2x.png) · Notas: notas.md
+
+Mesmas 6 peças (árvore folhosa, pinheiro, galpão, fazendeiro adulto, canteiro com trigo, pedra com
+minério) + trecho 3×3 em três direções: **A** estilizado maduro · **B** low-poly facetado ·
+**C** pintado semirrealista. Recomendação do diretor: A, com paleta terrosa e sombra de C.
+
+Resposta do usuário: _(pendente — escolher A, B, C ou mistura)_

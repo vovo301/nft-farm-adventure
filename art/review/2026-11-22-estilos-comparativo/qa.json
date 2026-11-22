@@ -1,0 +1,26 @@
+{
+ "pieces": {
+  "a/tree": 19484,
+  "a/pine": 8614,
+  "a/barn": 12769,
+  "a/farmer": 13689,
+  "a/crop": 32224,
+  "a/rock": 4702,
+  "b/tree": 16992,
+  "b/pine": 8880,
+  "b/barn": 3198,
+  "b/farmer": 12922,
+  "b/crop": 17422,
+  "b/rock": 4188,
+  "c/tree": 60631,
+  "c/pine": 49949,
+  "c/barn": 49107,
+  "c/farmer": 8421,
+  "c/crop": 87737,
+  "c/rock": 7124
+ },
+ "a_off_palette_hex": [],
+ "asset_report_prancha.png": 0,
+ "asset_report_prancha@2x.png": 0,
+ "ok": true
+}

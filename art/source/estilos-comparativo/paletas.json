@@ -1,0 +1,423 @@
+{
+ "batch": "2026-11-22-estilos-comparativo",
+ "status": "draft",
+ "note": "paletas de comparação; a escolhida vira art/style-guide/palette.json (v3) depois da aprovação",
+ "a": {
+  "grass": {
+   "tones_light_base_shadow_deep": [
+    "#b3c77a",
+    "#94ad5c",
+    "#768f48",
+    "#5a7238"
+   ],
+   "outline": "#34432a"
+  },
+  "path": {
+   "tones_light_base_shadow_deep": [
+    "#dccaa2",
+    "#c4ad83",
+    "#a38d68",
+    "#7f6c51"
+   ],
+   "outline": "#4e4232"
+  },
+  "leaf": {
+   "tones_light_base_shadow_deep": [
+    "#a8c464",
+    "#7fa04a",
+    "#5a7d3c",
+    "#3d5a30"
+   ],
+   "outline": "#22331f"
+  },
+  "pine": {
+   "tones_light_base_shadow_deep": [
+    "#7ea37a",
+    "#58805e",
+    "#3e634a",
+    "#2a4838"
+   ],
+   "outline": "#18291f"
+  },
+  "bark": {
+   "tones_light_base_shadow_deep": [
+    "#a58566",
+    "#82664d",
+    "#614a39",
+    "#45352b"
+   ],
+   "outline": "#291f1a"
+  },
+  "wall": {
+   "tones_light_base_shadow_deep": [
+    "#b86452",
+    "#984b3e",
+    "#763a33",
+    "#582c29"
+   ],
+   "outline": "#2d1817"
+  },
+  "roof": {
+   "tones_light_base_shadow_deep": [
+    "#959ba3",
+    "#737a84",
+    "#575d67",
+    "#40454e"
+   ],
+   "outline": "#23262c"
+  },
+  "trim": {
+   "tones_light_base_shadow_deep": [
+    "#ece3cc",
+    "#cfc4aa",
+    "#aaa088",
+    "#857c69"
+   ],
+   "outline": "#3d3830"
+  },
+  "stone": {
+   "tones_light_base_shadow_deep": [
+    "#bdbab0",
+    "#99968c",
+    "#76746c",
+    "#56554f"
+   ],
+   "outline": "#2d2c29"
+  },
+  "ore": {
+   "tones_light_base_shadow_deep": [
+    "#f0cf72",
+    "#d4a849",
+    "#a87c33",
+    "#7a5826"
+   ],
+   "outline": "#3e2c14"
+  },
+  "soil": {
+   "tones_light_base_shadow_deep": [
+    "#8d6e53",
+    "#715643",
+    "#574234",
+    "#3f3027"
+   ],
+   "outline": "#261c17"
+  },
+  "wood": {
+   "tones_light_base_shadow_deep": [
+    "#b48c62",
+    "#94704c",
+    "#73563b",
+    "#56402d"
+   ],
+   "outline": "#2e2219"
+  },
+  "wheat": {
+   "tones_light_base_shadow_deep": [
+    "#ecd690",
+    "#d4b762",
+    "#ad8f45",
+    "#806a33"
+   ],
+   "outline": "#4a3b1c"
+  },
+  "skin": {
+   "tones_light_base_shadow_deep": [
+    "#e3b896",
+    "#c9997a",
+    "#a5785f",
+    "#82594a"
+   ],
+   "outline": "#3b2620"
+  },
+  "shirt": {
+   "tones_light_base_shadow_deep": [
+    "#c98a6a",
+    "#a86c52",
+    "#844f40",
+    "#633a31"
+   ],
+   "outline": "#2a1c18"
+  },
+  "vest": {
+   "tones_light_base_shadow_deep": [
+    "#7d7556",
+    "#635c44",
+    "#4a4535",
+    "#353228"
+   ],
+   "outline": "#201e18"
+  },
+  "pants": {
+   "tones_light_base_shadow_deep": [
+    "#7d8ca6",
+    "#5e6d88",
+    "#47546b",
+    "#343e50"
+   ],
+   "outline": "#1c2230"
+  },
+  "boots": {
+   "tones_light_base_shadow_deep": [
+    "#7a5a43",
+    "#5c4333",
+    "#443226",
+    "#30231b"
+   ],
+   "outline": "#1e1612"
+  },
+  "hat": {
+   "tones_light_base_shadow_deep": [
+    "#ddc283",
+    "#c3a565",
+    "#9d824c",
+    "#776139"
+   ],
+   "outline": "#3a2e1a"
+  },
+  "hair": {
+   "tones_light_base_shadow_deep": [
+    "#6b5040",
+    "#523d31",
+    "#3d2d25",
+    "#2b201a"
+   ],
+   "outline": "#1e1612"
+  },
+  "dirt": {
+   "tones_light_base_shadow_deep": [
+    "#9a7a5c",
+    "#7e6249",
+    "#634c39",
+    "#4a382b"
+   ],
+   "outline": "#2a2019"
+  }
+ },
+ "a_extra": {
+  "shadow": "#283040",
+  "ink": "#2a221e"
+ },
+ "b": {
+  "base_colors": {
+   "grass": [
+    "#7f9a52",
+    "#84a055",
+    "#7a954e"
+   ],
+   "path": [
+    "#b9a07a",
+    "#bea47e",
+    "#b49b76"
+   ],
+   "leaf": [
+    "#628c42",
+    "#6f9848",
+    "#577f3c"
+   ],
+   "pine": [
+    "#3f6b4c",
+    "#477654",
+    "#38614a"
+   ],
+   "bark": [
+    "#6e543f"
+   ],
+   "wall": [
+    "#a24f3e"
+   ],
+   "roof": [
+    "#5f6670"
+   ],
+   "trim": [
+    "#d9cfb8"
+   ],
+   "door": [
+    "#6e4434"
+   ],
+   "stone": [
+    "#94918a",
+    "#8a877f"
+   ],
+   "ore": [
+    "#d0a446"
+   ],
+   "soil": [
+    "#6a4f3c"
+   ],
+   "wood": [
+    "#9a7452"
+   ],
+   "wheat": [
+    "#ecd078",
+    "#e4c46c"
+   ],
+   "stem": [
+    "#cdb060"
+   ],
+   "skin": [
+    "#c99878"
+   ],
+   "shirt": [
+    "#7d8a5e"
+   ],
+   "pants": [
+    "#4d5a74"
+   ],
+   "boots": [
+    "#4f3d30"
+   ],
+   "hat": [
+    "#c2a466"
+   ],
+   "band": [
+    "#5a4232"
+   ],
+   "beard": [
+    "#4f3b2e"
+   ],
+   "dirt": [
+    "#7a5c45"
+   ]
+  },
+  "shade": "lp_color(base, k) com k = max(0, n·L); L = (-0.55, 0.30, 0.78)",
+  "shadow": "#2a3340"
+ },
+ "c": {
+  "ramps_deep_to_highlight": {
+   "grass": [
+    "#3f5228",
+    "#56693a",
+    "#6c7f48",
+    "#86965c",
+    "#a5ae76"
+   ],
+   "path": [
+    "#6e5c46",
+    "#8d7a60",
+    "#a7957a",
+    "#bfae92",
+    "#d4c6ab"
+   ],
+   "leaf": [
+    "#24331c",
+    "#3a4f2d",
+    "#55703d",
+    "#76904f",
+    "#a3b26c"
+   ],
+   "pine": [
+    "#1c2c23",
+    "#2b4233",
+    "#3e5a44",
+    "#587459",
+    "#7d9677"
+   ],
+   "bark": [
+    "#3a2e25",
+    "#54443a",
+    "#6e5c4e",
+    "#8b7865",
+    "#a89580"
+   ],
+   "plank": [
+    "#4e3a2c",
+    "#6a5040",
+    "#86684f",
+    "#a08262",
+    "#b89d7c"
+   ],
+   "tile": [
+    "#5a3428",
+    "#7a4634",
+    "#995a42",
+    "#b47456",
+    "#c99173"
+   ],
+   "stone": [
+    "#4a4843",
+    "#66635b",
+    "#838076",
+    "#a19d92",
+    "#bdb9ae"
+   ],
+   "ore": [
+    "#6a3b1f",
+    "#8e5429",
+    "#b07038",
+    "#c99550",
+    "#e0bd78"
+   ],
+   "soil": [
+    "#2e231c",
+    "#45362b",
+    "#5c4a3a",
+    "#74604c",
+    "#8c7862"
+   ],
+   "wheat": [
+    "#7a6232",
+    "#9e8343",
+    "#bfa45a",
+    "#d6be78",
+    "#e8d7a0"
+   ],
+   "skin": [
+    "#7a5240",
+    "#9c6c54",
+    "#b8876a",
+    "#cfa283",
+    "#e0bc9d"
+   ],
+   "linen": [
+    "#7d7360",
+    "#a09580",
+    "#bcb29c",
+    "#d2c9b4",
+    "#e4dccb"
+   ],
+   "vest": [
+    "#2e241d",
+    "#43352b",
+    "#594739",
+    "#6f5a49",
+    "#857060"
+   ],
+   "trousers": [
+    "#2d323c",
+    "#3e4552",
+    "#525b6a",
+    "#6a7484",
+    "#848d9b"
+   ],
+   "boots": [
+    "#2a1f19",
+    "#3e2e24",
+    "#544032",
+    "#6a5242",
+    "#806652"
+   ],
+   "hat": [
+    "#5e4a2e",
+    "#7f6640",
+    "#a08455",
+    "#bba06c",
+    "#d1b886"
+   ],
+   "hair": [
+    "#2a201a",
+    "#3b2e25",
+    "#4e3d31",
+    "#5f4b3c",
+    "#715a48"
+   ],
+   "dirt": [
+    "#2e241c",
+    "#43362a",
+    "#5a4838",
+    "#6f5b48",
+    "#85705b"
+   ]
+  },
+  "shadow": "#2a2e2a"
+ }
+}
