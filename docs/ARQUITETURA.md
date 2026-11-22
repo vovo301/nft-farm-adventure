@@ -57,6 +57,7 @@ e o indexador credita.
 | Base de equilíbrio | O **modelo de equilíbrio da referência** (curva de expansões: custos, tempos e o que cada bloco adiciona) é a base numérica, adaptada; **recursos, nomes e temas são nossos**. Exceção à regra 1 registrada no `CLAUDE.md` | 2026-11-22 |
 | Estilo de arte | **C · Pintado semirrealista** (prancha 2026-11-22-estilos-comparativo): proporções reais, texturas sugeridas, paleta terrosa, sombras longas | 2026-11-22 |
 | Valores das expansões | **Tabela bloco a bloco enviada pelo usuário** (`docs/referencia/img/`) é a fonte; Gold = moeda da referência 1:1, sem conversão | 2026-11-22 |
+| Diamantes (moeda premium) | **Terceira moeda: Diamantes.** Usos: leilões; acelerar construções e cozinheiros; comprar **passe VIP** (libera o nível de confiança do jogador para saques e vendas no marketplace); expansões (substitui a "gema" da referência 1:1); reabastecer estoque de ferramentas e sementes. Valores da tabela de expansões confirmados (ilha 4: bloco 9 = 960 Gold, bloco 11 = 90 Diamantes, bloco 19 = 12 800 Gold, bloco 21 = 900 madeira). Como se obtém Diamantes: a definir | 2026-11-22 |
 
 ## Decisões em aberto (do usuário)
 
