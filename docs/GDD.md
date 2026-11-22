@@ -26,7 +26,7 @@ pedidos de NPC, tarefas diárias · longo: expansões, habilidades, temporadas, 
 | Recursos + ferramentas | planejada | — |
 | Cozinha + XP do avatar | planejada | — |
 | Pedidos de NPC + tarefas diárias | planejada | — |
-| Expansão de terreno + decoração | planejada | — |
+| Ilhas e expansões (4 ilhas, 30 blocos, 23 culturas) + layout livre | especificada | `features/ilhas-e-expansoes.md` (ids: `features/ilhas-e-expansoes-ids.md`) |
 | Login com carteira + NFT da fazenda (testnet) | planejada | — |
 | Saque de itens (testnet) | planejada | — |
 | Marketplace, temporadas, facções | futura | — |
