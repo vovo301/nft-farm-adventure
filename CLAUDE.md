@@ -14,8 +14,13 @@ agentes em `.claude/agents/`. As skills de cada um estão em `.claude/skills/` (
 
 1. **Sala limpa.** O Sunflower Land é `UNLICENSED` (todos os direitos reservados) e usa o pack de
    arte pago Sunnyside. Só o `analista-referencia` lê `reference/sunflower-land/`; o resto da
-   equipe usa as notas em `docs/referencia/`. Nunca copie código, constantes, números, nomes de
-   itens, textos ou arte de lá.
+   equipe usa as notas em `docs/referencia/`. Nunca copie código, nomes de itens/recursos/ilhas,
+   textos ou arte de lá.
+   **Exceção decidida pelo usuário (2026-11-22):** o modelo de equilíbrio da referência (curva
+   de expansões: custos, tempos e o que cada bloco adiciona) pode servir de **base numérica**,
+   adaptado aos nossos recursos e nomes. O `analista-referencia` extrai essas tabelas para
+   `docs/referencia/equilibrio-*.md`; o `economista-tokenomics` adapta e registra em
+   `docs/economia/decisoes.md`. Recursos, nomes e temas continuam 100% nossos.
 2. **Servidor é a autoridade.** Toda regra de jogo é um reducer puro em `packages/game-core`,
    executado igual no cliente (otimista) e no servidor (decide). Sem `Date.now()` ou
    `Math.random()` em reducer.

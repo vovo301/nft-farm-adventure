@@ -54,6 +54,7 @@ e o indexador credita.
 | Método de produção de arte | **Vetor por script** (SVG gerado por código → PNG), inclusive o conceito/alvo visual. **Sem geradores de imagem por IA** e sem gasto de créditos | 2026-11-22 |
 | Culturas | **23 culturas**: 5 básicas (1 a 30 min), 9 médias (1 h a 12 h), 9 avançadas (16 h a 48 h). Valores das 6 culturas da proposta v1 aprovados como "dentro do esperado" | 2026-11-22 |
 | Mundo e expansões | Terreno cresce por **expansões** (blocos revelados em sequência, cada um com mais canteiros, árvores, pedras e minérios; recursos coletados pagam as próximas). Mundo com **4 ilhas/biomas** em sequência, com conteúdo novo (árvores frutíferas, novos minérios). Estrutura e curva inspiradas na referência enviada pelo usuário; nomes, temas e números próprios (regra 1) | 2026-11-22 |
+| Base de equilíbrio | O **modelo de equilíbrio da referência** (curva de expansões: custos, tempos e o que cada bloco adiciona) é a base numérica, adaptada; **recursos, nomes e temas são nossos**. Exceção à regra 1 registrada no `CLAUDE.md` | 2026-11-22 |
 
 ## Decisões em aberto (do usuário)
 
