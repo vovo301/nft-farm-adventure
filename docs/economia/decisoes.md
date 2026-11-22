@@ -821,3 +821,15 @@ fonte gratuita (cenário a), pagar vira obrigatório para passar do bloco 9 — 
 
 **Pendências:** saldo de Diamantes no `GameState` e reducers (game-core); custo "P2P" da referência
 para comparar preço não está nas notas de `docs/referencia/` (pedir ao `analista-referencia`, se útil).
+
+## 2026-11-22 — Curva de XP (tabela do usuário)
+
+- Fonte: tabela de 200 níveis enviada pelo usuário → `economy/xp-levels.csv` (dado oficial).
+- Verificação: total[n] + XP do nível[n] = total[n+1] em todos os níveis (ok).
+- Pontos de atenção (são como o usuário enviou, não erros de soma):
+  - níveis 60 e 61 pedem o mesmo XP (158 500);
+  - no nível 150 o XP por nível **cai** de 2 290 000 para 1 328 700 e volta a crescer ~3%/nível até o 200.
+- Coluna `day2_xp_reward`: recompensa de XP do "2º dia" como na tabela; significado de uso a
+  confirmar com o usuário.
+- Pendente: fontes de XP (culturas, cozinha, tarefas) e calibração do `min_level` das expansões
+  contra esta curva; gerador ainda não exporta a tabela para o game-core.
