@@ -30,7 +30,7 @@ Os níveis são cumulativos (cada nível mantém o que os anteriores liberam).
 | Chegar à Mesa Ocre (ilha 3) | 50 |
 | Chegar ao Pico Brasa (ilha 4) | 50 |
 | Conectar e verificar conta do Discord | 50 |
-| Completar prova de humanidade | 100 |
+| Completar prova de humanidade (verificação facial) | 100 |
 | Chegar ao nível 100 | 150 |
 | Ter um mascote | 300 |
 | Passe VIP ativo | 600 |
@@ -47,15 +47,18 @@ verificações externas, nunca enviados pelo cliente.
   servidor, limites por dia).
 - Verificações externas (Discord, prova de humanidade) ficam vinculadas a **uma** conta; reutilizar
   o mesmo Discord/prova em outra conta não pontua (anti-multiconta).
-- Perda de reputação: se um requisito deixar de valer (ex.: VIP expirou), os pontos dele saem e o
-  nível é recalculado. [PERGUNTA ao usuário]
+- Perda de reputação: se um requisito deixar de valer (ex.: **VIP expirou**), os pontos dele saem e
+  o nível é recalculado (decisão do usuário, 2026-11-22).
 
-## Perguntas abertas
+## Decisões do usuário (2026-11-22)
 
-1. Os pontos do VIP (600) caem quando o passe expira?
-2. Qual provedor de prova de humanidade? (afeta custo e privacidade/LGPD)
-3. Nome do mascote do jogo (no lugar do termo da referência).
-4. Mais tarefas futuras (ex.: idade da conta, temporadas completadas) para reduzir o peso do VIP?
+1. **Os pontos do VIP saem quando o passe expira.**
+2. **Prova de humanidade = verificação facial.** Dado biométrico é dado pessoal sensível (LGPD,
+   art. 11): exige consentimento específico e destacado. Preferir provedor que faça a prova de vida
+   e devolva só "aprovado + identificador único anti-duplicidade", sem guardarmos a imagem do rosto.
+3. **Mascotes serão animais**, ainda não definidos.
+4. **Tarefas atuais são suficientes:** o nível do fazendeiro é difícil de obter sem investir tempo,
+   ou NFTs e Gold para acelerar — o que torna multiconta e bots inviáveis economicamente.
 
 ## Riscos
 
