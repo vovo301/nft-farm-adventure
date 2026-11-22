@@ -1,0 +1,23 @@
+{
+ "name": "tree_apple_a",
+ "size_1x": [
+  160,
+  232
+ ],
+ "anchor_px_1x": [
+  80,
+  188
+ ],
+ "origin": [
+  0.5,
+  0.810345
+ ],
+ "footprint_tiles": [
+  1,
+  1
+ ],
+ "scales": [
+  1,
+  2
+ ]
+}

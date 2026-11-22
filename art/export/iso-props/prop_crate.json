@@ -1,0 +1,23 @@
+{
+ "name": "prop_crate",
+ "size_1x": [
+  160,
+  104
+ ],
+ "anchor_px_1x": [
+  80,
+  60
+ ],
+ "origin": [
+  0.5,
+  0.576923
+ ],
+ "footprint_tiles": [
+  0.45,
+  0.45
+ ],
+ "scales": [
+  1,
+  2
+ ]
+}

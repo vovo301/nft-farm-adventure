@@ -1,6 +1,6 @@
 # Guia de estilo: NFT Farm Adventure (isométrico cartoon)
 
-> Dono: `diretor-de-arte`. **Versão 2 (2026-11-22).** Substitui a v1 em pixel art top-down
+> Dono: `diretor-de-arte`. **Versão 2.1 (2026-11-22).** Substitui a v1 em pixel art top-down
 > (reprovada no lote `2026-11-21-alvo-visual-01`), arquivada em
 > `art/style-guide/archive/pixel-v0/` só como histórico.
 > Estado: **proposta técnica.** As regras de grade, export e âncora já valem. Forma, cor e
@@ -52,6 +52,9 @@ que o usuário mostrou como direção geral. Não copiamos composição, formas,
 | Personagem/NPC | 64–96×(altura+12) | ponto | (W/2, H−12) = entre os pés | `avatar_`, `npc_`, `animal_` |
 | Construção n×m | (n+m)·64 + 32 × (altura + (n+m)·16 + 12) | n×m | centro do losango da pegada | `bld_` |
 | Ícone de UI/inventário | 64×64 (exibido 32–64 CSS px) | — | centro | `icon_` |
+| Canteiro elevado (objeto) | 160×96 | 1×1 | (80, 52) | `plot_` |
+| Decalque de chão (lago, manchas, flores soltas) | livre, múltiplo de 4 | n×m | centro da pegada | `ground_` (n×m), `decor_` |
+| Indicador sobre objeto | 48×60 | — | (24, 56) = ponta do rabicho | `ui_` |
 
 Regras gerais:
 
@@ -72,6 +75,21 @@ Regras gerais:
 - Pastas: fonte gerada `art/source/<familia>/<nome>.svg` (não editar, ela sai do script), script
   `art/source/tools/build_<lote>.py`, export `art/export/<familia>/`, revisão
   `art/review/<lote>/`.
+
+### 3.1 Regras adicionadas na v2.1 (alvo visual iso-01)
+
+- **Autotile de chão por máscara de 4 vizinhos:** sufixo `_<máscara>` com `xp`, `yp`, `xn`,
+  `yn` (ex.: `ground_path_dirt_xpyn`), ou `none` sem vizinhos. Variantes do mesmo encaixe
+  ganham `_b`, `_c` e são escolhidas por hash da posição.
+- **Ilha:** a água fica 40 px abaixo da grama. `ground_edge_grass_<máscara>` (136×116) tem
+  barranco em +x e +y e um filete de luz em −x e −y. O pé do barranco e os estratos são
+  periódicos em 1 tile.
+- **Culturas sobre canteiro:** o sprite da cultura tem a mesma âncora do `plot_raised_bed`. A
+  base das plantas fica em `z_base_px` = 12, registrado no manifesto.
+- **Peças de cerca/trilho contínuo:** cor chapada (sem degradê por bounding box), cortadas na
+  linha da borda do tile, para emendar sem costura.
+- **Nunca** use arco "‿" isolado como marca de folha: a 1× ele lê como rostinho. Use escamas de
+  2–3 lóbulos ligados.
 
 ## 4. Escala relativa (a 1×, tile = 128×64)
 
@@ -135,7 +153,7 @@ revisão inclui um boneco de escala ou o avatar.
 - A folhagem é mais escura e azulada que a grama, para a árvore se destacar do chão.
 - **Valores:** o chão é médio e calmo; o que se clica (culturas maduras, objetos, personagens)
   tem o maior contraste.
-- Paleta: `palette.json` (105 cores em 21 rampas). No SVG-fonte só entram cores da paleta. As cores
+- Paleta: `palette.json` v2.1 (121 cores em 24 rampas; +`barranco`, +`fruta_vermelha`, +`flor_rosa`). No SVG-fonte só entram cores da paleta. As cores
   intermediárias que surgem do antialias ou do degradê no PNG são esperadas. Não existe limite
   de cores no PNG.
 - **Exclusões:** texto ou letras dentro da arte (texto é i18n), logos, preto e branco puros,
@@ -179,8 +197,8 @@ e 2 (zero pixels não opacos), além da prancha com debug de âncora e pegada.
 
 ## 11. Estado
 
-- Base técnica: lote `2026-11-22-base-isometrica` (draft), em
-  `art/review/2026-11-22-base-isometrica/`. Não é o alvo visual.
-- Próximo passo: **alvo visual vetorial** (avatar, chão com transições, canteiros com
-  culturas, árvores, celeiro, cerca), que vai para aprovação do usuário. Nada é produzido em
-  escala antes dele.
+- Base técnica: lote `2026-11-22-base-isometrica` (draft).
+- **Alvo visual:** lote `2026-11-22-alvo-visual-iso-01` (**in_review**), em
+  `art/review/2026-11-22-alvo-visual-iso-01/`. Build: `art/source/tools/build_alvo_visual_iso_01.py`.
+  Quando for `approved`, forma, cor e acabamento deste guia viram oficiais. Nada é produzido em
+  escala antes disso.

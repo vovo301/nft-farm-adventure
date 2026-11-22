@@ -1,0 +1,23 @@
+{
+ "name": "avatar_base_idle_se",
+ "size_1x": [
+  80,
+  112
+ ],
+ "anchor_px_1x": [
+  40,
+  100
+ ],
+ "origin": [
+  0.5,
+  0.892857
+ ],
+ "footprint_tiles": [
+  0.3,
+  0.3
+ ],
+ "scales": [
+  1,
+  2
+ ]
+}

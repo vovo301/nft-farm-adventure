@@ -1,6 +1,6 @@
 {
  "name": "nfa-iso-cartoon",
- "version": 2,
+ "version": "2.1",
  "date": "2026-11-22",
  "supersedes": "art/style-guide/archive/pixel-v0/palette-pixel-v0.json",
  "description": "Paleta da direção isométrica cartoon saturada. Rampas por material, do contorno (escuro colorido) ao brilho. Hue shift: sombras puxam para azul/roxo, luzes para amarelo. Degradês só entre tons VIZINHOS da mesma rampa. Nenhuma cor fora daqui no SVG-fonte (as cores intermediárias do antialias/degradê são esperadas no PNG).",
@@ -537,7 +537,89 @@
      "hex": "#24364f"
     }
    ]
+  },
+  "barranco": {
+   "use": "barranco/encosta da ilha, margem de lago (terra alaranjada, distinta do canteiro)",
+   "tones": [
+    {
+     "tone": "outline",
+     "hex": "#5e2f1f"
+    },
+    {
+     "tone": "deep",
+     "hex": "#7f4226"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#a35a32"
+    },
+    {
+     "tone": "base",
+     "hex": "#c97c48"
+    },
+    {
+     "tone": "light",
+     "hex": "#e3a265"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#f3c891"
+    }
+   ]
+  },
+  "fruta_vermelha": {
+   "use": "tomate, maçã, frutinhas (vermelho mais frio e saturado que o telhado, para não se confundir com o celeiro)",
+   "tones": [
+    {
+     "tone": "outline",
+     "hex": "#6e1022"
+    },
+    {
+     "tone": "deep",
+     "hex": "#9e1830"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#c8243a"
+    },
+    {
+     "tone": "base",
+     "hex": "#ec3d4c"
+    },
+    {
+     "tone": "light",
+     "hex": "#ff7a7a"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#ffc2b8"
+    }
+   ]
+  },
+  "flor_rosa": {
+   "use": "flores, detalhes delicados",
+   "tones": [
+    {
+     "tone": "outline",
+     "hex": "#8a2f5e"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#d9579a"
+    },
+    {
+     "tone": "base",
+     "hex": "#f57fb8"
+    },
+    {
+     "tone": "light",
+     "hex": "#ffb3d6"
+    }
+   ]
   }
  },
- "colors_total": 105
+ "colors_total": 121,
+ "changelog": [
+  "2.1 (2026-11-22): +barranco, +fruta_vermelha, +flor_rosa para o alvo visual iso-01"
+ ]
 }

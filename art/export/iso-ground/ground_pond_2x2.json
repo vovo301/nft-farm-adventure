@@ -1,0 +1,23 @@
+{
+ "name": "ground_pond_2x2",
+ "size_1x": [
+  288,
+  168
+ ],
+ "anchor_px_1x": [
+  144,
+  96
+ ],
+ "origin": [
+  0.5,
+  0.571429
+ ],
+ "footprint_tiles": [
+  2,
+  2
+ ],
+ "scales": [
+  1,
+  2
+ ]
+}

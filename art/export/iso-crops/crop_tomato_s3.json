@@ -1,0 +1,23 @@
+{
+ "name": "crop_tomato_s3",
+ "size_1x": [
+  128,
+  112
+ ],
+ "anchor_px_1x": [
+  64,
+  72
+ ],
+ "origin": [
+  0.5,
+  0.642857
+ ],
+ "footprint_tiles": [
+  1,
+  1
+ ],
+ "scales": [
+  1,
+  2
+ ]
+}

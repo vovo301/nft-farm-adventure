@@ -1,0 +1,23 @@
+{
+ "name": "prop_bush_a",
+ "size_1x": [
+  160,
+  96
+ ],
+ "anchor_px_1x": [
+  80,
+  52
+ ],
+ "origin": [
+  0.5,
+  0.541667
+ ],
+ "footprint_tiles": [
+  0.6,
+  0.6
+ ],
+ "scales": [
+  1,
+  2
+ ]
+}

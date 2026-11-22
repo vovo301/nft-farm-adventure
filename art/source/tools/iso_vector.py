@@ -304,6 +304,88 @@ def scatter(seed: int, n: int, lim: float = 0.38):
     return [(rng.uniform(-lim, lim), rng.uniform(-lim, lim), rng.random()) for _ in range(n)]
 
 
+# --------------------------------------------------------------------------- primitivas v2.1
+# (adicionadas para o lote 2026-11-22-alvo-visual-iso-01; não mudam as anteriores)
+
+def poly_d(points, close: bool = True) -> str:
+    """Path 'd' de uma polilinha/polígono em px de tela."""
+    s = "M" + " L".join(f"{x:.2f},{y:.2f}" for x, y in points)
+    return s + (" Z" if close else "")
+
+
+def rounded_d(points, radii, mapf=None) -> str:
+    """Polígono fechado com cantos arredondados (convexos ou côncavos).
+
+    points: vértices em qualquer espaço 2D (ex.: (u, v) em tiles); radii: raio por vértice
+    no mesmo espaço (0 = canto vivo). O arredondamento é feito ANTES de `mapf` (ex.: lambda
+    p: iso(*p)); como a projeção é afim, a curva quadrática continua exata na tela.
+    """
+    mapf = mapf or (lambda p: p)
+    n = len(points)
+    segs = []
+    for k in range(n):
+        p, a, b = points[k], points[k - 1], points[(k + 1) % n]
+        r = radii[k]
+        if r <= 0:
+            segs.append(("L", mapf(p)))
+            continue
+        la = math.dist(p, a); lb = math.dist(p, b)
+        r = min(r, la / 2, lb / 2)
+        p1 = (p[0] + (a[0] - p[0]) * r / la, p[1] + (a[1] - p[1]) * r / la)
+        p2 = (p[0] + (b[0] - p[0]) * r / lb, p[1] + (b[1] - p[1]) * r / lb)
+        segs.append(("L", mapf(p1)))
+        segs.append(("Q", mapf(p), mapf(p2)))
+    out = []
+    for k, s in enumerate(segs):
+        if s[0] == "L":
+            out.append(("M" if k == 0 else "L") + f"{s[1][0]:.2f},{s[1][1]:.2f}")
+        else:
+            out.append(f"Q{s[1][0]:.2f},{s[1][1]:.2f} {s[2][0]:.2f},{s[2][1]:.2f}")
+    return " ".join(out) + " Z"
+
+
+def hull(points):
+    """Envoltória convexa (cadeia monótona). Pontos em px de tela."""
+    p = sorted(set((round(x, 3), round(y, 3)) for x, y in points))
+    if len(p) < 3:
+        return p
+
+    def cross(o, a, b):
+        return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+    lo, hi = [], []
+    for q in p:
+        while len(lo) >= 2 and cross(lo[-2], lo[-1], q) <= 0:
+            lo.pop()
+        lo.append(q)
+    for q in reversed(p):
+        while len(hi) >= 2 and cross(hi[-2], hi[-1], q) <= 0:
+            hi.pop()
+        hi.append(q)
+    return lo[:-1] + hi[:-1]
+
+
+def ellipse_pts(center, a, b, n: int = 48, t0: float = 0.0, t1: float = 2 * math.pi):
+    """Pontos de uma elipse paramétrica c + a·cos t + b·sin t (a, b vetores de tela)."""
+    cx, cy = center
+    return [(cx + a[0] * math.cos(t) + b[0] * math.sin(t), cy + a[1] * math.cos(t) + b[1] * math.sin(t))
+            for t in (t0 + (t1 - t0) * k / (n - 1 if t1 - t0 < 2 * math.pi else n) for k in range(n))]
+
+
+WORLD_TILE = 72.0   # px "de mundo" de uma aresta de tile (para círculos em planos verticais)
+
+
+def vdisc_axes(face: str, r: float):
+    """Vetores (a, b) de um círculo de raio r (px) num plano vertical.
+
+    face 'y': plano x–z (disco virado para +y, face esquerda/clara);
+    face 'x': plano y–z (disco virado para +x, face direita/sombra).
+    """
+    k = r / WORLD_TILE
+    if face == "y":
+        return (HW * k, HH * k), (0.0, -r)
+    return (-HW * k, HH * k), (0.0, -r)
+
+
 # --------------------------------------------------------------------------- CLI
 def _cli():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
