@@ -12,7 +12,7 @@ import { loadEconomyCsv, loadExpansionsCsv, REPO_ROOT, toEconomyData, toWorldDat
 
 export const OUT_PATH = join(REPO_ROOT, "packages/game-core/src/data/economy.generated.ts");
 export const WORLD_PATH = join(REPO_ROOT, "packages/game-core/src/data/world.generated.ts");
-export const ECONOMY_VERSION = "v2";
+export const ECONOMY_VERSION = "v2.2";
 
 const lit = (v) => JSON.stringify(v);
 const inline = (obj) =>
@@ -30,7 +30,7 @@ export function renderModule(data) {
     " *",
     ` * Fonte: ${data.meta.source}`,
     " * Gerador: economy/gen/generate.mjs · regenerar: `pnpm econ:gen` · conferir: `pnpm econ:check`",
-    " * Justificativa de cada número: docs/economia/decisoes.md (proposta v2 — aguardando aprovação).",
+    " * Justificativa de cada número: docs/economia/decisoes.md (v2.2 — Diamantes; v2/v2.1 para culturas e blocos).",
     " *",
     " * Contrato: `EconomyData` em ./types.ts.",
     " */",
@@ -67,7 +67,7 @@ export function renderWorldModule(world) {
     " *",
     ` * Fonte: ${world.meta.source}`,
     " * Gerador: economy/gen/generate.mjs · regenerar: `pnpm econ:gen` · conferir: `pnpm econ:check`",
-    " * Justificativa: docs/economia/decisoes.md (proposta v2 — aguardando aprovação).",
+    " * Justificativa: docs/economia/decisoes.md (v2.2 — Diamantes; v2/v2.1 para culturas e blocos).",
     " *",
     " * Contrato: `WorldData` em ./types.ts. SÓ DADOS: o motor ainda não tem expansão, nós de recurso",
     " * nem desbloqueio de cultura (pendência do game-core).",

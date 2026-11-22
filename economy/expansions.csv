@@ -1,70 +1,70 @@
-row_type,id,island,build_seconds,min_level,min_account_days,cost_gold,cost_driftwood,cost_flint,cost_rustite,cost_glintstone,cost_dewquartz,cost_sandglint,cost_cinderite,cost_bellpear,cost_mistplum,cost_honeydate,cost_firefig,add_plot,add_tree,add_flint_rock,add_rustite_node,add_glintstone_node,add_dewquartz_node,add_sandglint_node,add_cinderite_node,add_bellpear_tree,add_mistplum_tree,add_honeydate_palm,add_firefig_tree,ref_blocks,note
-island,homestead,homestead,,,,,,,,,,,,,,,,,,,,,,,,,,,,,ilha inicial; sem custo
-island,breezewood,breezewood,,,,,,,,10,,,,,,,,,,,,,,,,,,,,I1->I2,custo de mudança da referência (10 x minério raro)
-island,ochremesa,ochremesa,,,,,,,,,20,,,,,,,,,,,,,,,,,,,I2->I3,custo de mudança da referência (20 x minério I2)
-island,emberpeak,emberpeak,,,,,,,,,,200,,,,,,,,,,,,,,,,,,I3->I4,custo de mudança da referência (200 x recurso I3)
-block,homestead_01,homestead,0,1,0,0,,,,,,,,,,,,6,3,2,,,,,,,,,,chegada,terreno inicial grátis (6 canteiros do jogo atual; ref chega com 3 árvores e 2 pedras)
-block,homestead_02,homestead,5,1,0,0,3,,,,,,,,,,,3,2,1,1,,,,,,,,,b4,tabela do usuário ilha 1 b4; ref +9 canteiros = 6 do terreno inicial + 3
-block,homestead_03,homestead,5,1,0,0.25,5,,,,,,,,,,,8,1,1,1,1,,,,,,,,b5,"tabela do usuário ilha 1 b5; 0,25 Gold = valor da tabela do usuário"
-block,homestead_04,homestead,60,2,0,60,,1,,,,,,,,,,8,1,1,,,,,,,,,,b6,tabela do usuário ilha 1 b6
-block,homestead_05,homestead,1800,5,0,0,,5,1,,,,,,,,,2,1,1,1,,,,,,,,,b7,tabela do usuário ilha 1 b7
-block,homestead_06,homestead,14400,8,0,0,,,3,1,,,,,,,,2,1,1,,1,,,,,,,,b8,tabela do usuário ilha 1 b8
-block,homestead_07,homestead,43200,11,0,0,100,40,5,,,,,,,,,2,,,1,,,,,,,,,b9,tabela do usuário ilha 1 b9
-block,breezewood_01,breezewood,60,11,1,0,20,,,,,,,,,,,2,2,2,1,1,,,,3,,,,b5,tabela do usuário ilha 2 b5; +2 bellpear_tree = frutíferas que a ref dá na chegada da ilha 2
-block,breezewood_02,breezewood,300,13,0,0,10,5,,2,,,,,,,,,1,1,,,,,,,1,,,b6,tabela do usuário ilha 2 b6; sem equivalente (fora): Colm+1 Flor+1
-block,breezewood_03,breezewood,1800,16,0,0,30,20,5,,,,,10,5,,,2,1,1,,,1,,,,,,,b7,tabela do usuário ilha 2 b7; gema 15 -> frutas 1:1
-block,breezewood_04,breezewood,7200,20,0,0,20,,,,1,,,10,5,,,2,,1,1,1,,,,1,,,,b8,tabela do usuário ilha 2 b8; gema 15 -> frutas 1:1
-block,breezewood_05,breezewood,7200,23,0,0,50,,,5,,,,10,5,,,,1,,,,,,,,1,,,b9,tabela do usuário ilha 2 b9; gema 15 -> frutas 1:1; sem equivalente (fora): Esp+1
-block,breezewood_06,breezewood,14400,25,0,0,,10,,,3,,,10,5,,,,,,1,1,,,,1,,,,b10,tabela do usuário ilha 2 b10; gema 15 -> frutas 1:1; sem equivalente (fora): Colm+1 Flor+1
-block,breezewood_07,breezewood,28800,27,0,0,100,25,,5,1,,,10,5,,,2,1,1,,,,,,,1,,,b11,tabela do usuário ilha 2 b11; gema 15 -> frutas 1:1
-block,breezewood_08,breezewood,43200,29,0,0,50,,5,,3,,,15,15,,,2,,,,,,,,,,,,b12,tabela do usuário ilha 2 b12; gema 30 -> frutas 1:1
-block,breezewood_09,breezewood,43200,32,0,0,50,25,10,10,,,,15,15,,,,1,1,1,,,,,,1,,,b13,tabela do usuário ilha 2 b13; gema 30 -> frutas 1:1; sem equivalente (fora): Esp+1
-block,breezewood_10,breezewood,86400,36,0,0,100,10,,,5,,,15,15,,,2,,,,,,,,1,,,,b14,tabela do usuário ilha 2 b14; gema 30 -> frutas 1:1
-block,breezewood_11,breezewood,86400,40,0,0,150,10,10,5,5,,,15,15,,,1,1,1,1,,1,,,,1,,,b15,tabela do usuário ilha 2 b15; gema 30 -> frutas 1:1
-block,breezewood_12,breezewood,86400,43,0,0,100,10,,5,8,,,15,15,,,1,1,,,1,,,,,,,,b16,tabela do usuário ilha 2 b16; gema 30 -> frutas 1:1; sem equivalente (fora): Colm+1 Flor+1
-block,ochremesa_01,ochremesa,60,40,5,0,50,10,5,5,,,,,,,,1,,1,1,,,1,,,,,,b5,tabela do usuário ilha 3 b5
-block,ochremesa_02,ochremesa,300,40,0,0,100,20,10,5,,,,,,,,,,,,,,,,,,1,,b6,tabela do usuário ilha 3 b6; sem equivalente (fora): Esp+1
-block,ochremesa_03,ochremesa,1800,41,0,0,150,20,10,5,,,,,,15,,2,,,,,1,,,,,,,b7,tabela do usuário ilha 3 b7; gema 15 -> frutas 1:1
-block,ochremesa_04,ochremesa,7200,42,0,0,150,10,5,5,3,5,,5,5,20,,2,,,,,,,,,,,,b8,tabela do usuário ilha 3 b8; gema 30 -> frutas 1:1; sem equivalente (fora): Esp+1
-block,ochremesa_05,ochremesa,7200,43,0,0,50,5,5,5,6,5,,5,5,20,,,1,1,,,,,,,,,,b9,tabela do usuário ilha 3 b9; gema 30 -> frutas 1:1
-block,ochremesa_06,ochremesa,28800,44,0,320,100,50,10,5,12,10,,10,10,25,,1,,,1,,,,,,,,,b10,tabela do usuário ilha 3 b10; gema 45 -> frutas 1:1
-block,ochremesa_07,ochremesa,43200,45,0,640,150,75,10,5,15,30,,10,10,25,,1,,,,,,,,,,1,,b11,tabela do usuário ilha 3 b11; gema 45 -> frutas 1:1
-block,ochremesa_08,ochremesa,43200,47,0,1280,100,100,5,10,18,30,,10,10,25,,2,,,,,,,,,,,,b12,tabela do usuário ilha 3 b12; gema 45 -> frutas 1:1
-block,ochremesa_09,ochremesa,86400,50,0,2560,200,50,15,10,21,40,,10,10,25,,,1,,,,,,,,,,,b13,tabela do usuário ilha 3 b13; gema 45 -> frutas 1:1
-block,ochremesa_10,ochremesa,86400,53,0,3200,200,100,15,10,24,50,,10,10,25,,1,,1,,,,,,,,,,b14,tabela do usuário ilha 3 b14; gema 45 -> frutas 1:1
-block,ochremesa_11,ochremesa,86400,56,0,3200,300,50,20,10,27,75,,10,10,25,,1,,,,,,1,,,,,,b15,tabela do usuário ilha 3 b15; gema 45 -> frutas 1:1
-block,ochremesa_12,ochremesa,129600,58,0,3200,250,125,15,15,30,100,,15,15,30,,1,1,,,,,,,,,,,b16,tabela do usuário ilha 3 b16; gema 60 -> frutas 1:1
-block,ochremesa_13,ochremesa,129600,60,0,4800,350,75,20,10,33,125,,15,15,30,,2,,,,,,,,,,,,b17,tabela do usuário ilha 3 b17; gema 60 -> frutas 1:1
-block,ochremesa_14,ochremesa,129600,63,0,4800,400,125,25,15,36,150,,20,20,35,,1,,,,1,,,,,,,,b18,tabela do usuário ilha 3 b18; gema 75 -> frutas 1:1
-block,ochremesa_15,ochremesa,129600,65,0,6400,450,150,30,20,39,200,,15,15,30,,1,,,,,,,,,,1,,b19,tabela do usuário ilha 3 b19; gema 60 -> frutas 1:1
-block,ochremesa_16,ochremesa,172800,68,0,6400,525,200,35,30,42,250,,15,15,30,,,1,1,,,,1,,,,,,b20,tabela do usuário ilha 3 b20; gema 60 -> frutas 1:1
-block,ochremesa_17,ochremesa,172800,70,0,8000,550,150,30,25,45,350,,15,15,30,,1,,,1,,,,,,,,,b21,tabela do usuário ilha 3 b21; gema 60 -> frutas 1:1; sem equivalente (fora): Esp+1
-block,ochremesa_18,ochremesa,172800,72,0,8000,600,200,35,30,48,450,,20,20,35,,,1,,,,,,,,,1,,b22,tabela do usuário ilha 3 b22; gema 75 -> frutas 1:1
-block,ochremesa_19,ochremesa,216000,73,0,8000,650,250,40,35,51,500,,20,20,35,,1,,,,,1,,,,,,,b23,tabela do usuário ilha 3 b23; gema 75 -> frutas 1:1
-block,ochremesa_20,ochremesa,216000,74,0,9600,700,300,50,45,54,550,,20,20,35,,1,,,,,,,,,,,,b24,tabela do usuário ilha 3 b24; gema 75 -> frutas 1:1; sem equivalente (fora): Esp+1
-block,ochremesa_21,ochremesa,216000,75,0,11200,750,350,50,50,60,650,,20,20,35,,1,,1,,,,,,,,,,b25,tabela do usuário ilha 3 b25; gema 75 -> frutas 1:1
-block,emberpeak_01,emberpeak,10,70,30,0,100,50,30,10,,,,,,,,,,,,,,,,,,,1,b6,"tabela do usuário ilha 4 b6; +1 firefig_tree (fruta da ilha 4, sem equivalente na ref)"
-block,emberpeak_02,emberpeak,300,72,0,320,200,75,25,15,4,30,,5,5,5,15,,,,,,,,1,,,,,b7,tabela do usuário ilha 4 b7; gema 30 -> frutas 1:1
-block,emberpeak_03,emberpeak,1800,74,0,640,300,100,40,20,8,60,,5,5,5,15,,,,,,,,,,,,,b8,tabela do usuário ilha 4 b8; gema 30 -> frutas 1:1; sem equivalente (fora): Esp+1
-block,emberpeak_04,emberpeak,3600,76,0,960,400,150,35,25,12,90,,10,10,15,25,,,,,,,,,,,,,b9,tabela do usuário ilha 4 b9; gema 60 -> frutas 1:1
-block,emberpeak_05,emberpeak,7200,78,0,1600,450,200,30,20,16,120,1,10,10,15,25,,,,,1,,,,,,,,b10,tabela do usuário ilha 4 b10; gema 60 -> frutas 1:1
-block,emberpeak_06,emberpeak,14400,80,0,2500,500,175,30,30,20,100,,15,15,25,35,,,,,,,,,,,,1,b11,"tabela do usuário ilha 4 b11; +1 firefig_tree (fruta da ilha 4, sem equivalente na ref); gema 90 -> frutas 1:1"
-block,emberpeak_07,emberpeak,28800,82,0,3200,650,225,25,25,24,100,2,30,30,45,45,,,,,,,,,,,,,b12,tabela do usuário ilha 4 b12; gema 150 -> frutas 1:1; sem equivalente (fora): Esp+1
-block,emberpeak_08,emberpeak,43200,84,0,4000,550,200,40,30,28,100,,30,30,45,45,,,,,,,,,,,,,b13,tabela do usuário ilha 4 b13; gema 150 -> frutas 1:1
-block,emberpeak_09,emberpeak,43200,86,0,4800,700,250,35,35,32,100,1,30,30,45,45,,,,,,,,,,,,,b14,tabela do usuário ilha 4 b14; gema 150 -> frutas 1:1
-block,emberpeak_10,emberpeak,86400,88,0,5600,650,200,30,40,36,200,2,30,30,45,45,,,,,,,,1,,,,,b15,tabela do usuário ilha 4 b15; gema 150 -> frutas 1:1
-block,emberpeak_11,emberpeak,86400,90,0,6400,750,250,40,30,40,200,4,30,30,45,45,,,,,,,1,,,,,,b16,tabela do usuário ilha 4 b16; gema 150 -> frutas 1:1
-block,emberpeak_12,emberpeak,86400,92,0,8000,700,200,35,35,44,200,4,30,30,45,45,,,,,,,,,,,,,b17,tabela do usuário ilha 4 b17; gema 150 -> frutas 1:1; sem equivalente (fora): Esp+1
-block,emberpeak_13,emberpeak,129600,94,0,10000,800,300,45,45,48,200,6,35,35,50,60,,,,,,,,,,,,,b18,tabela do usuário ilha 4 b18; gema 180 -> frutas 1:1
-block,emberpeak_14,emberpeak,129600,96,0,12800,750,250,40,40,52,200,6,35,35,50,60,,,,,,,,,,,,,b19,tabela do usuário ilha 4 b19; gema 180 -> frutas 1:1; sem equivalente (fora): Esp+1
-block,emberpeak_15,emberpeak,172800,98,0,15000,850,300,45,30,56,200,8,35,35,50,60,,,,,,,,,,,,,b20,tabela do usuário ilha 4 b20; gema 180 -> frutas 1:1
-block,emberpeak_16,emberpeak,172800,100,0,18000,900,325,50,35,60,200,8,35,35,50,60,,,,,,,,,,,,1,b21,"tabela do usuário ilha 4 b21; +1 firefig_tree (fruta da ilha 4, sem equivalente na ref); gema 180 -> frutas 1:1; sem equivalente (fora): Esp+1"
-block,emberpeak_17,emberpeak,172800,102,0,21000,800,300,45,30,64,200,10,35,35,50,60,,,,,,,,,,,,,b22,tabela do usuário ilha 4 b22; gema 180 -> frutas 1:1
-block,emberpeak_18,emberpeak,172800,104,0,25000,950,350,50,35,68,200,10,35,35,50,60,,,,1,,,,,,,,,b23,tabela do usuário ilha 4 b23; gema 180 -> frutas 1:1
-block,emberpeak_19,emberpeak,172800,106,0,28000,1000,400,55,40,72,300,12,35,35,50,60,,,,,,,,1,,,,,b24,tabela do usuário ilha 4 b24; gema 180 -> frutas 1:1
-block,emberpeak_20,emberpeak,216000,108,0,32000,1100,450,60,35,80,300,12,35,35,50,60,,,,,,1,,,,,,,b25,tabela do usuário ilha 4 b25; gema 180 -> frutas 1:1
-block,emberpeak_21,emberpeak,216000,110,0,35000,1200,350,65,30,85,300,18,35,35,50,60,,,,,,,,,,,,,b26,tabela do usuário ilha 4 b26; gema 180 -> frutas 1:1
-block,emberpeak_22,emberpeak,216000,112,0,38000,1250,450,70,40,95,300,24,45,45,65,70,,,,,,,,,,,,,b27,tabela do usuário ilha 4 b27; gema 225 -> frutas 1:1
-block,emberpeak_23,emberpeak,216000,114,0,42000,1150,500,60,45,100,300,30,45,45,65,70,,,,,,,,,,,,,b28,tabela do usuário ilha 4 b28; gema 225 -> frutas 1:1; sem equivalente (fora): Esp+1
-block,emberpeak_24,emberpeak,259200,116,0,45000,1350,550,65,40,105,300,36,45,45,65,70,,,,,,,,,,,,,b29,tabela do usuário ilha 4 b29; gema 225 -> frutas 1:1
-block,emberpeak_25,emberpeak,259200,120,0,50000,1500,600,70,50,125,300,42,45,45,65,70,,,,,,,,,,,,,b30,tabela do usuário ilha 4 b30; gema 225 -> frutas 1:1; sem equivalente (fora): Esp+1
+row_type,id,island,build_seconds,min_level,min_account_days,cost_gold,cost_diamonds,cost_driftwood,cost_flint,cost_rustite,cost_glintstone,cost_dewquartz,cost_sandglint,cost_cinderite,add_plot,add_tree,add_flint_rock,add_rustite_node,add_glintstone_node,add_dewquartz_node,add_sandglint_node,add_cinderite_node,add_bellpear_tree,add_mistplum_tree,add_honeydate_palm,add_firefig_tree,ref_blocks,note
+island,homestead,homestead,,,,,,,,,,,,,,,,,,,,,,,,,,ilha inicial; sem custo
+island,breezewood,breezewood,,,,,,,,,10,,,,,,,,,,,,,,,,I1->I2,custo de mudança da referência (10 x minério raro)
+island,ochremesa,ochremesa,,,,,,,,,,20,,,,,,,,,,,,,,,I2->I3,custo de mudança da referência (20 x minério I2)
+island,emberpeak,emberpeak,,,,,,,,,,,200,,,,,,,,,,,,,,I3->I4,custo de mudança da referência (200 x recurso I3)
+block,homestead_01,homestead,0,1,0,0,,,,,,,,,6,3,2,,,,,,,,,,chegada,terreno inicial grátis (6 canteiros do jogo atual; ref chega com 3 árvores e 2 pedras)
+block,homestead_02,homestead,5,1,0,0,,3,,,,,,,3,2,1,1,,,,,,,,,b4,tabela do usuário ilha 1 b4; ref +9 canteiros = 6 do terreno inicial + 3
+block,homestead_03,homestead,5,1,0,0.25,,5,,,,,,,8,1,1,1,1,,,,,,,,b5,"tabela do usuário ilha 1 b5; 0,25 Gold = valor da tabela do usuário"
+block,homestead_04,homestead,60,2,0,60,,,1,,,,,,8,1,1,,,,,,,,,,b6,tabela do usuário ilha 1 b6
+block,homestead_05,homestead,1800,5,0,0,,,5,1,,,,,2,1,1,1,,,,,,,,,b7,tabela do usuário ilha 1 b7
+block,homestead_06,homestead,14400,8,0,0,,,,3,1,,,,2,1,1,,1,,,,,,,,b8,tabela do usuário ilha 1 b8
+block,homestead_07,homestead,43200,11,0,0,,100,40,5,,,,,2,,,1,,,,,,,,,b9,tabela do usuário ilha 1 b9
+block,breezewood_01,breezewood,60,11,1,0,,20,,,,,,,2,2,2,1,1,,,,3,,,,b5,tabela do usuário ilha 2 b5; +2 bellpear_tree = frutíferas que a ref dá na chegada da ilha 2
+block,breezewood_02,breezewood,300,13,0,0,,10,5,,2,,,,,1,1,,,,,,,1,,,b6,tabela do usuário ilha 2 b6; sem equivalente (fora): Colm+1 Flor+1
+block,breezewood_03,breezewood,1800,16,0,0,15,30,20,5,,,,,2,1,1,,,1,,,,,,,b7,tabela do usuário ilha 2 b7; gema 15 -> diamond 1:1
+block,breezewood_04,breezewood,7200,20,0,0,15,20,,,,1,,,2,,1,1,1,,,,1,,,,b8,tabela do usuário ilha 2 b8; gema 15 -> diamond 1:1
+block,breezewood_05,breezewood,7200,23,0,0,15,50,,,5,,,,,1,,,,,,,,1,,,b9,tabela do usuário ilha 2 b9; gema 15 -> diamond 1:1; sem equivalente (fora): Esp+1
+block,breezewood_06,breezewood,14400,25,0,0,15,,10,,,3,,,,,,1,1,,,,1,,,,b10,tabela do usuário ilha 2 b10; gema 15 -> diamond 1:1; sem equivalente (fora): Colm+1 Flor+1
+block,breezewood_07,breezewood,28800,27,0,0,15,100,25,,5,1,,,2,1,1,,,,,,,1,,,b11,tabela do usuário ilha 2 b11; gema 15 -> diamond 1:1
+block,breezewood_08,breezewood,43200,29,0,0,30,50,,5,,3,,,2,,,,,,,,,,,,b12,tabela do usuário ilha 2 b12; gema 30 -> diamond 1:1
+block,breezewood_09,breezewood,43200,32,0,0,30,50,25,10,10,,,,,1,1,1,,,,,,1,,,b13,tabela do usuário ilha 2 b13; gema 30 -> diamond 1:1; sem equivalente (fora): Esp+1
+block,breezewood_10,breezewood,86400,36,0,0,30,100,10,,,5,,,2,,,,,,,,1,,,,b14,tabela do usuário ilha 2 b14; gema 30 -> diamond 1:1
+block,breezewood_11,breezewood,86400,40,0,0,30,150,10,10,5,5,,,1,1,1,1,,1,,,,1,,,b15,tabela do usuário ilha 2 b15; gema 30 -> diamond 1:1
+block,breezewood_12,breezewood,86400,43,0,0,30,100,10,,5,8,,,1,1,,,1,,,,,,,,b16,tabela do usuário ilha 2 b16; gema 30 -> diamond 1:1; sem equivalente (fora): Colm+1 Flor+1
+block,ochremesa_01,ochremesa,60,40,5,0,,50,10,5,5,,,,1,,1,1,,,1,,,,,,b5,tabela do usuário ilha 3 b5
+block,ochremesa_02,ochremesa,300,40,0,0,,100,20,10,5,,,,,,,,,,,,,,1,,b6,tabela do usuário ilha 3 b6; sem equivalente (fora): Esp+1
+block,ochremesa_03,ochremesa,1800,41,0,0,15,150,20,10,5,,,,2,,,,,1,,,,,,,b7,tabela do usuário ilha 3 b7; gema 15 -> diamond 1:1
+block,ochremesa_04,ochremesa,7200,42,0,0,30,150,10,5,5,3,5,,2,,,,,,,,,,,,b8,tabela do usuário ilha 3 b8; gema 30 -> diamond 1:1; sem equivalente (fora): Esp+1
+block,ochremesa_05,ochremesa,7200,43,0,0,30,50,5,5,5,6,5,,,1,1,,,,,,,,,,b9,tabela do usuário ilha 3 b9; gema 30 -> diamond 1:1
+block,ochremesa_06,ochremesa,28800,44,0,320,45,100,50,10,5,12,10,,1,,,1,,,,,,,,,b10,tabela do usuário ilha 3 b10; gema 45 -> diamond 1:1
+block,ochremesa_07,ochremesa,43200,45,0,640,45,150,75,10,5,15,30,,1,,,,,,,,,,1,,b11,tabela do usuário ilha 3 b11; gema 45 -> diamond 1:1
+block,ochremesa_08,ochremesa,43200,47,0,1280,45,100,100,5,10,18,30,,2,,,,,,,,,,,,b12,tabela do usuário ilha 3 b12; gema 45 -> diamond 1:1
+block,ochremesa_09,ochremesa,86400,50,0,2560,45,200,50,15,10,21,40,,,1,,,,,,,,,,,b13,tabela do usuário ilha 3 b13; gema 45 -> diamond 1:1
+block,ochremesa_10,ochremesa,86400,53,0,3200,45,200,100,15,10,24,50,,1,,1,,,,,,,,,,b14,tabela do usuário ilha 3 b14; gema 45 -> diamond 1:1
+block,ochremesa_11,ochremesa,86400,56,0,3200,45,300,50,20,10,27,75,,1,,,,,,1,,,,,,b15,tabela do usuário ilha 3 b15; gema 45 -> diamond 1:1
+block,ochremesa_12,ochremesa,129600,58,0,3200,60,250,125,15,15,30,100,,1,1,,,,,,,,,,,b16,tabela do usuário ilha 3 b16; gema 60 -> diamond 1:1
+block,ochremesa_13,ochremesa,129600,60,0,4800,60,350,75,20,10,33,125,,2,,,,,,,,,,,,b17,tabela do usuário ilha 3 b17; gema 60 -> diamond 1:1
+block,ochremesa_14,ochremesa,129600,63,0,4800,75,400,125,25,15,36,150,,1,,,,1,,,,,,,,b18,tabela do usuário ilha 3 b18; gema 75 -> diamond 1:1
+block,ochremesa_15,ochremesa,129600,65,0,6400,60,450,150,30,20,39,200,,1,,,,,,,,,,1,,b19,tabela do usuário ilha 3 b19; gema 60 -> diamond 1:1
+block,ochremesa_16,ochremesa,172800,68,0,6400,60,525,200,35,30,42,250,,,1,1,,,,1,,,,,,b20,tabela do usuário ilha 3 b20; gema 60 -> diamond 1:1
+block,ochremesa_17,ochremesa,172800,70,0,8000,60,550,150,30,25,45,350,,1,,,1,,,,,,,,,b21,tabela do usuário ilha 3 b21; gema 60 -> diamond 1:1; sem equivalente (fora): Esp+1
+block,ochremesa_18,ochremesa,172800,72,0,8000,75,600,200,35,30,48,450,,,1,,,,,,,,,1,,b22,tabela do usuário ilha 3 b22; gema 75 -> diamond 1:1
+block,ochremesa_19,ochremesa,216000,73,0,8000,75,650,250,40,35,51,500,,1,,,,,1,,,,,,,b23,tabela do usuário ilha 3 b23; gema 75 -> diamond 1:1
+block,ochremesa_20,ochremesa,216000,74,0,9600,75,700,300,50,45,54,550,,1,,,,,,,,,,,,b24,tabela do usuário ilha 3 b24; gema 75 -> diamond 1:1; sem equivalente (fora): Esp+1
+block,ochremesa_21,ochremesa,216000,75,0,11200,75,750,350,50,50,60,650,,1,,1,,,,,,,,,,b25,tabela do usuário ilha 3 b25; gema 75 -> diamond 1:1
+block,emberpeak_01,emberpeak,10,70,30,0,,100,50,30,10,,,,,,,,,,,,,,,1,b6,"tabela do usuário ilha 4 b6; +1 firefig_tree (fruta da ilha 4, sem equivalente na ref)"
+block,emberpeak_02,emberpeak,300,72,0,320,30,200,75,25,15,4,30,,,,,,,,,1,,,,,b7,tabela do usuário ilha 4 b7; gema 30 -> diamond 1:1
+block,emberpeak_03,emberpeak,1800,74,0,640,30,300,100,40,20,8,60,,,,,,,,,,,,,,b8,tabela do usuário ilha 4 b8; gema 30 -> diamond 1:1; sem equivalente (fora): Esp+1
+block,emberpeak_04,emberpeak,3600,76,0,960,60,400,150,35,25,12,90,,,,,,,,,,,,,,b9,tabela do usuário ilha 4 b9; gema 60 -> diamond 1:1
+block,emberpeak_05,emberpeak,7200,78,0,1600,60,450,200,30,20,16,120,1,,,,,1,,,,,,,,b10,tabela do usuário ilha 4 b10; gema 60 -> diamond 1:1
+block,emberpeak_06,emberpeak,14400,80,0,2500,90,500,175,30,30,20,100,,,,,,,,,,,,,1,b11,"tabela do usuário ilha 4 b11; +1 firefig_tree (fruta da ilha 4, sem equivalente na ref); gema 90 -> diamond 1:1"
+block,emberpeak_07,emberpeak,28800,82,0,3200,150,650,225,25,25,24,100,2,,,,,,,,,,,,,b12,tabela do usuário ilha 4 b12; gema 150 -> diamond 1:1; sem equivalente (fora): Esp+1
+block,emberpeak_08,emberpeak,43200,84,0,4000,150,550,200,40,30,28,100,,,,,,,,,,,,,,b13,tabela do usuário ilha 4 b13; gema 150 -> diamond 1:1
+block,emberpeak_09,emberpeak,43200,86,0,4800,150,700,250,35,35,32,100,1,,,,,,,,,,,,,b14,tabela do usuário ilha 4 b14; gema 150 -> diamond 1:1
+block,emberpeak_10,emberpeak,86400,88,0,5600,150,650,200,30,40,36,200,2,,,,,,,,1,,,,,b15,tabela do usuário ilha 4 b15; gema 150 -> diamond 1:1
+block,emberpeak_11,emberpeak,86400,90,0,6400,150,750,250,40,30,40,200,4,,,,,,,1,,,,,,b16,tabela do usuário ilha 4 b16; gema 150 -> diamond 1:1
+block,emberpeak_12,emberpeak,86400,92,0,8000,150,700,200,35,35,44,200,4,,,,,,,,,,,,,b17,tabela do usuário ilha 4 b17; gema 150 -> diamond 1:1; sem equivalente (fora): Esp+1
+block,emberpeak_13,emberpeak,129600,94,0,10000,180,800,300,45,45,48,200,6,,,,,,,,,,,,,b18,tabela do usuário ilha 4 b18; gema 180 -> diamond 1:1
+block,emberpeak_14,emberpeak,129600,96,0,12800,180,750,250,40,40,52,200,6,,,,,,,,,,,,,b19,tabela do usuário ilha 4 b19; gema 180 -> diamond 1:1; sem equivalente (fora): Esp+1
+block,emberpeak_15,emberpeak,172800,98,0,15000,180,850,300,45,30,56,200,8,,,,,,,,,,,,,b20,tabela do usuário ilha 4 b20; gema 180 -> diamond 1:1
+block,emberpeak_16,emberpeak,172800,100,0,18000,180,900,325,50,35,60,200,8,,,,,,,,,,,,1,b21,"tabela do usuário ilha 4 b21; +1 firefig_tree (fruta da ilha 4, sem equivalente na ref); gema 180 -> diamond 1:1; sem equivalente (fora): Esp+1"
+block,emberpeak_17,emberpeak,172800,102,0,21000,180,800,300,45,30,64,200,10,,,,,,,,,,,,,b22,tabela do usuário ilha 4 b22; gema 180 -> diamond 1:1
+block,emberpeak_18,emberpeak,172800,104,0,25000,180,950,350,50,35,68,200,10,,,,1,,,,,,,,,b23,tabela do usuário ilha 4 b23; gema 180 -> diamond 1:1
+block,emberpeak_19,emberpeak,172800,106,0,28000,180,1000,400,55,40,72,300,12,,,,,,,,1,,,,,b24,tabela do usuário ilha 4 b24; gema 180 -> diamond 1:1
+block,emberpeak_20,emberpeak,216000,108,0,32000,180,1100,450,60,35,80,300,12,,,,,,1,,,,,,,b25,tabela do usuário ilha 4 b25; gema 180 -> diamond 1:1
+block,emberpeak_21,emberpeak,216000,110,0,35000,180,1200,350,65,30,85,300,18,,,,,,,,,,,,,b26,tabela do usuário ilha 4 b26; gema 180 -> diamond 1:1
+block,emberpeak_22,emberpeak,216000,112,0,38000,225,1250,450,70,40,95,300,24,,,,,,,,,,,,,b27,tabela do usuário ilha 4 b27; gema 225 -> diamond 1:1
+block,emberpeak_23,emberpeak,216000,114,0,42000,225,1150,500,60,45,100,300,30,,,,,,,,,,,,,b28,tabela do usuário ilha 4 b28; gema 225 -> diamond 1:1; sem equivalente (fora): Esp+1
+block,emberpeak_24,emberpeak,259200,116,0,45000,225,1350,550,65,40,105,300,36,,,,,,,,,,,,,b29,tabela do usuário ilha 4 b29; gema 225 -> diamond 1:1
+block,emberpeak_25,emberpeak,259200,120,0,50000,225,1500,600,70,50,125,300,42,,,,,,,,,,,,,b30,tabela do usuário ilha 4 b30; gema 225 -> diamond 1:1; sem equivalente (fora): Esp+1

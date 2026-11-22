@@ -5,14 +5,14 @@
  *
  * Fonte: economy/economy.csv@sha256:678bc36e4b8c
  * Gerador: economy/gen/generate.mjs · regenerar: `pnpm econ:gen` · conferir: `pnpm econ:check`
- * Justificativa de cada número: docs/economia/decisoes.md (proposta v2 — aguardando aprovação).
+ * Justificativa de cada número: docs/economia/decisoes.md (v2.2 — Diamantes; v2/v2.1 para culturas e blocos).
  *
  * Contrato: `EconomyData` em ./types.ts.
  */
 import type { EconomyData } from "./types";
 
 export const economy: EconomyData = {
-  meta: { version: "v2", placeholder: false, source: "economy/economy.csv@sha256:678bc36e4b8c" },
+  meta: { version: "v2.2", placeholder: false, source: "economy/economy.csv@sha256:678bc36e4b8c" },
   rules: {
     startingCoins: "2",
     startingPlotCount: 6,

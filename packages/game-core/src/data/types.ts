@@ -83,9 +83,16 @@ export interface ResourceNodeDef {
   readonly yieldQty: number;
 }
 
-/** Custo de um bloco: Gold + materiais (item id → quantidade). Nunca token. */
+/**
+ * Custo de um bloco: Gold + Diamantes + materiais (item id → quantidade). Nunca token.
+ * Diamantes (`diamond`) = moeda premium off-chain (3ª moeda, ao lado de Gold e token); substitui a
+ * "gema" da referência 1:1 (decisão do usuário 2026-11-22). Como se obtêm ainda não foi decidido e
+ * o `GameState` ainda não tem saldo de Diamantes (pendência do game-core).
+ */
 export interface ExpansionCost {
   readonly gold: DecimalString;
+  /** Diamantes, inteiro >= 0 (0 = bloco não pede Diamantes). */
+  readonly diamonds: number;
   readonly items: Readonly<Record<string, number>>;
 }
 

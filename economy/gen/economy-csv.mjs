@@ -251,11 +251,15 @@ export function toEconomyData(model, version = "v2") {
 // economy/expansions.csv — ilhas, blocos de expansão e custo de mudança de ilha.
 // ---------------------------------------------------------------------------------------------
 export const EXPANSIONS_PATH = join(ECONOMY_DIR, "expansions.csv");
-/** Recursos e nós na ordem das colunas cost_* / add_* (mesmos ids de economy.csv). */
-export const COST_ITEMS = ["driftwood", "flint", "rustite", "glintstone", "dewquartz", "sandglint", "cinderite", "bellpear", "mistplum", "honeydate", "firefig"];
+/**
+ * Recursos e nós na ordem das colunas cost_* / add_* (mesmos ids de economy.csv).
+ * v2.2: frutas não pagam mais expansão (a "gema" da referência virou Diamantes, `cost_diamonds`);
+ * continuam como recurso das frutíferas (venda).
+ */
+export const COST_ITEMS = ["driftwood", "flint", "rustite", "glintstone", "dewquartz", "sandglint", "cinderite"];
 export const ADD_NODES = ["plot", "tree", "flint_rock", "rustite_node", "glintstone_node", "dewquartz_node", "sandglint_node", "cinderite_node", "bellpear_tree", "mistplum_tree", "honeydate_palm", "firefig_tree"];
 export const EXP_COLUMNS = [
-  "row_type", "id", "island", "build_seconds", "min_level", "min_account_days", "cost_gold",
+  "row_type", "id", "island", "build_seconds", "min_level", "min_account_days", "cost_gold", "cost_diamonds",
   ...COST_ITEMS.map((i) => `cost_${i}`), ...ADD_NODES.map((n) => `add_${n}`), "ref_blocks", "note",
 ];
 const UINT_RE = /^(0|[1-9]\d*)$/;
@@ -301,7 +305,7 @@ export function loadExpansionsCsv(model, path = EXPANSIONS_PATH) {
     if (!ID_RE.test(r.id)) err(line, `id "${r.id}" deve ser snake_case ascii minúsculo`);
     if (r.row_type === "island") {
       if (r.id !== r.island) err(line, "linha island: id e island devem ser iguais");
-      for (const c of ["build_seconds", "min_level", "min_account_days", "cost_gold", ...ADD_NODES.map((n) => `add_${n}`)]) {
+      for (const c of ["build_seconds", "min_level", "min_account_days", "cost_gold", "cost_diamonds", ...ADD_NODES.map((n) => `add_${n}`)]) {
         if (r[c] !== "") err(line, `island não usa a coluna ${c}`);
       }
       if (islandSeen.has(r.id)) err(line, `ilha "${r.id}" duplicada`);
@@ -330,6 +334,7 @@ export function loadExpansionsCsv(model, path = EXPANSIONS_PATH) {
         minLevel: qty("min_level"),
         minAccountDays: uint("min_account_days"),
         gold: r.cost_gold,
+        diamonds: qty("cost_diamonds"),
         items,
         plots: qty("add_plot"),
         nodes,
@@ -349,7 +354,7 @@ export function loadExpansionsCsv(model, path = EXPANSIONS_PATH) {
   const first = blocks[0];
   if (!first) errors.push("expansions.csv: nenhum bloco");
   else {
-    if (first.gold !== "0" || Object.keys(first.items).length || first.buildSeconds !== 0) err(first.line, "o primeiro bloco é o terreno inicial: grátis e com build_seconds 0");
+    if (first.gold !== "0" || first.diamonds !== 0 || Object.keys(first.items).length || first.buildSeconds !== 0) err(first.line, "o primeiro bloco é o terreno inicial: grátis e com build_seconds 0");
     if (first.plots !== Number(model.rules.starting_plot_count)) err(first.line, `add_plot do terreno inicial (${String(first.plots)}) ≠ starting_plot_count (${model.rules.starting_plot_count})`);
   }
   for (const isl of islands) if (!blocks.some((b) => b.islandId === isl.id)) err(isl.line, `ilha "${isl.id}" sem blocos`);
@@ -394,7 +399,7 @@ export function toWorldData(model, exp, version = "v2") {
       buildSeconds: b.buildSeconds,
       minLevel: b.minLevel,
       minAccountDays: b.minAccountDays,
-      cost: { gold: b.gold, items: b.items },
+      cost: { gold: b.gold, diamonds: b.diamonds, items: b.items },
       adds: { plots: b.plots, nodes: b.nodes },
       unlocksCrops: model.crops.filter((c) => c.unlockBlock === b.id).map((c) => c.id),
     };

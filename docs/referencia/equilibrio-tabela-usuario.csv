@@ -41,9 +41,9 @@ ilha,bloco,nivel_min,tempo_s,moeda_soft,madeira,pedra,minerio_comum,minerio_raro
 4,6,70,10,,100,50,30,10,,,,,(nada),lida (img ilhas)
 4,7,72,300,320,200,75,25,15,30,4,30,,NI4+1,lida (img ilhas)
 4,8,74,1800,640,300,100,40,20,30,8,60,,Esp+1,lida (img ilhas)
-4,9,76,3600,960,400,150,35,25,60,12,90,,(nada),moeda inferida (img lê ~560; código 1152 × 5/6 = 960; fecha o total); resto lido
+4,9,76,3600,960,400,150,35,25,60,12,90,,(nada),confirmada pelo usuário (2026-11-22)
 4,10,78,7200,1600,450,200,30,20,60,16,120,1,M2+1,lida (img ilhas)
-4,11,80,14400,2500,500,175,30,30,90,20,100,,(nada),gema inferida (img borrada 50/90; código 90); resto lido
+4,11,80,14400,2500,500,175,30,30,90,20,100,,(nada),confirmada pelo usuário (2026-11-22)
 4,12,82,28800,3200,650,225,25,25,150,24,100,2,Esp+1,lida (img ilhas)
 4,13,84,43200,4000,550,200,40,30,150,28,100,,(nada),lida (img ilhas)
 4,14,86,43200,4800,700,250,35,35,150,32,100,1,(nada),lida (img ilhas)
@@ -51,9 +51,9 @@ ilha,bloco,nivel_min,tempo_s,moeda_soft,madeira,pedra,minerio_comum,minerio_raro
 4,16,90,86400,6400,750,250,40,30,150,40,200,4,RI3+1,lida (img ilhas)
 4,17,92,86400,8000,700,200,35,35,150,44,200,4,Esp+1,lida (img ilhas)
 4,18,94,129600,10000,800,300,45,45,180,48,200,6,(nada),lida (img ilhas)
-4,19,96,129600,12800,750,250,40,40,180,52,200,6,Esp+1,moeda inferida (img lê ~12000; código 15360 × 5/6 = 12800; fecha o total); resto lido
+4,19,96,129600,12800,750,250,40,40,180,52,200,6,Esp+1,confirmada pelo usuário (2026-11-22)
 4,20,98,172800,15000,850,300,45,30,180,56,200,8,(nada),lida (img ilhas)
-4,21,100,172800,18000,900,325,50,35,180,60,200,8,Esp+1,madeira inferida (img borrada ~500; código 900; fecha o total); resto lido
+4,21,100,172800,18000,900,325,50,35,180,60,200,8,Esp+1,confirmada pelo usuário (2026-11-22)
 4,22,102,172800,21000,800,300,45,30,180,64,200,10,(nada),lida (img ilhas)
 4,23,104,172800,25000,950,350,50,35,180,68,200,10,M1+1,lida (img ilhas)
 4,24,106,172800,28000,1000,400,55,40,180,72,300,12,NI4+1,lida (img ilhas)

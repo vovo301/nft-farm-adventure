@@ -703,3 +703,121 @@ madeira 900 (lê ~500). Ilha 3 b21–b25 legíveis mas borrados, conferidos com 
 
 **Pendências:** simulação de 90 dias não refeita (pedido enxuto do usuário); a v2 §8 (ilhas 3–4 caras
 para a nossa renda) continua valendo, agora com obras de no máximo 3 d por bloco.
+
+## 2026-11-22 — v2.2 — Diamantes
+
+**Decisões do usuário:** (1) as 4 células inferidas da ilha 4 estão confirmadas (b9 = 960 Gold,
+b11 = 90, b19 = 12 800 Gold, b21 = 900 madeira; `confianca` atualizada em
+`docs/referencia/equilibrio-tabela-usuario.csv`); (2) a "gema" da referência vira **Diamantes**
+(`diamond`), moeda premium off-chain, 3ª moeda ao lado de Gold e token; usos: leilões, acelerar obras e
+cozinheiros, passe VIP (nível de confiança para saque/venda no marketplace), expansões, reabastecer
+ferramentas e sementes; (3) **Diamantes são comprados com o token do jogo**: preço cotado em US$,
+convertido para token pela cotação do momento e debitado na hora (o jogo não vende por dólar).
+
+**O que mudou:** `economy/expansions.csv` troca `cost_bellpear/mistplum/honeydate/firefig` por
+`cost_diamonds` (gema da tabela 1:1); `ExpansionCost.diamonds` (inteiro ≥ 0) em
+`packages/game-core/src/data/types.ts`; versão dos gerados `v2.2`. Sem reducers e sem saldo de
+Diamantes no `GameState` (pendência do game-core). Teste: totais 0 / 225 / 1 020 / 3 690 e nenhuma
+fruta em custo.
+
+**Frutas sem uso além da venda:** as frutíferas continuam (venda 0,25, 10 h × 3 = no máx. 1,80 Gold/dia
+por árvore), mas não pagam mais nada. Blocos cuja única recompensa é uma frutífera: `ochremesa_02`
+(honeydate_palm), `emberpeak_01`, `emberpeak_06` e `emberpeak_16` (firefig_tree, sem equivalente na
+ref). Sugestão: dar uso às frutas na cozinha/pedidos de NPC ou trocar esses nós por outro conteúdo.
+
+### Diamantes exigidos por ilha e preço
+
+| Ilha | Diamantes | US$ preço base (100 = 1,50) | US$ no pacote de 15 500 (−54 %) | US$ no pacote de 200 000 (−56,7 %) |
+|---|---|---|---|---|
+| 1 homestead | 0 | 0 | 0 | 0 |
+| 2 breezewood | 225 | 3,38 | 1,55 | 1,46 |
+| 3 ochremesa | 1 020 | 15,30 | 7,04 | 6,62 |
+| 4 emberpeak | 3 690 | 55,35 | 25,46 | 23,97 |
+| **Total** | **4 935** | **74,03** | **34,05** | **32,05** |
+
+Valores por unidade (proporcionais); na prática o jogador compra pacotes inteiros (ex.: a ilha 2 sai
+por um pacote de 650 = US$ 6,83, sobrando 425).
+
+| Pacote | Desconto | US$ total | US$ por 100 |
+|---|---|---|---|
+| base | — | 1,50 por 100 | 1,50 |
+| 650 | −30 % | 6,83 | 1,05 |
+| 1 200 | −35 % | 11,70 | 0,975 |
+| 2 800 | −40 % | 25,20 | 0,90 |
+| 15 500 | −54 % | 106,95 | 0,69 |
+| 200 000 | −56,7 % | 1 299,00 | 0,65 |
+
+### Simulação (90 dias + projeção de 1 095 dias)
+
+Três cenários de Diamantes (`economy/sim/profiles.json → diamondScenarios`), mesmos perfis e política
+da v2; Diamantes, expansões e nós fora do motor; nível do avatar ignorado. Gráfico:
+`economy/sim/out/sim-90d.png`.
+
+- **(a) sem fonte gratuita:** quem não paga trava em `breezewood_03` (1º bloco com Diamantes, 15):
+  casual no dia 11,3, ativo no 4,5, bot no 2,7. Fica 9 blocos para sempre.
+- **(b) fonte gratuita hipotética — PROPOSTA, não oficial:** tarefas diárias dão **10 Diamantes/dia**,
+  crédito na 1ª visita do dia, teto igual para todos (bot não ganha mais), dia sem visita não acumula.
+- **(c) pagante:** compra com token só o que falta quando Gold e materiais já estão prontos.
+
+| Perfil | Cenário | Ilha 1 · 2 · 3 · 4 completa (dia) | Gold/dia 61–90 | Blocos no dia 90 | US$ de Diamantes (base / 15 500) |
+|---|---|---|---|---|---|
+| casual | (a) | 9,3 · — · — · — | 151 | 9 | 0 |
+| casual | (b) | 9,3 · 31,3 · 271 · não (bloco 63 no dia 1 036) | 263 | 30 | 0 |
+| casual | (c) | igual a (b) | 263 | 30 | 3 anos: 67,27 / 30,95 (90 d: 8,55) |
+| ativo | (a) | 2,5 · — · — · — | 261 | 9 | 0 |
+| ativo | (b) | 2,5 · 23,4 · 196 · 844 | 462 | 32 | 0 |
+| ativo | (c) | 2,5 · 21,4 · 196 · 844 | 463 | 32 | 74,02 / 34,05 (90 d: 10,35) |
+| bot | (a) | 1,0 · — · — · — | 356 | 9 | 0 |
+| bot | (b) | 1,0 · 23,0 · 173 · 614 | 653 | 33 | 0 |
+| bot | (c) | 1,0 · 17,4 · 167 · 611 | 661 | 33 | 74,02 / 34,05 (90 d: 11,48) |
+
+Razões no regime (Gold/dia): (a) bot÷casual 2,36, bot÷ativo 1,37; (b) 2,48 e 1,41; (c) 2,51 e 1,43.
+Sem alarme (> 3) em nenhum cenário.
+
+**Gargalo por bloco** (`summary.json → scenarios.*.projection.*.blockTable`, requisito que ficou
+pronto por último): em (b) o casual nunca espera Diamantes (Gold e `dewquartz`); o ativo espera
+Diamantes em 9 blocos (breezewood_07–12, ochremesa_06–08); o bot em 26. Em (c) o gargalo volta a ser
+`dewquartz` (ilhas 3–4) e Gold (ilha 4).
+
+**Diamantes/dia para não travar** (taxa constante = máx. Diamantes acumulados até o bloco ÷ dia de
+início sem esperar Diamantes): casual 7,9 · ativo 15,2 · bot 21,1. **No ritmo da referência** (só tempo
+de obra, sem esperar Gold/material): **82,6/dia** (média por ilha: 48 / 42,5 / 110); com a nossa renda
+de Gold esse ritmo não é alcançável (v2 §8), então ~10–15/dia basta para Diamantes não serem o gargalo
+de quem joga ativo.
+
+**Pay-to-win:** com Gold e materiais como gargalo, o pagante só ganha dias na ilha 2 (ativo −2 d, bot
+−5,6 d) e quase nada nas ilhas 3–4. O risco real está nos outros usos: se Diamantes **acelerarem obras**
+ou **reabastecerem ferramentas/sementes**, o pagante pula exatamente os gargalos de Gold/material. Sem
+fonte gratuita (cenário a), pagar vira obrigatório para passar do bloco 9 — sinal de alarme da skill
+("itens obrigatórios pagos").
+
+### Riscos da cotação em token (sinalização ao `produtor`; não é parecer jurídico)
+
+- **Manipulação do preço do token:** comprar Diamantes pela cotação instantânea permite inflar/derrubar
+  o preço num pool raso e comprar barato. Mitigar com **preço médio por tempo (TWAP) ou oráculo**,
+  limite por transação e por conta/dia, e recusa da compra se a cotação se desviar muito da média.
+- **Volatilidade:** o jogador paga valor diferente em token a cada dia; mostrar o valor em token antes
+  de confirmar e fixar a cotação por poucos minutos.
+- **Regulatório:** um token que compra moeda premium e dá acesso a saque/venda (passe VIP) aproxima o
+  token de um meio de pagamento/valor mobiliário. Venda ao público não é decisão do economista.
+- Diamantes não devem ser sacáveis nem convertidos em Gold ou materiais (senão viram ponte token→Gold).
+
+### Perguntas ao usuário
+
+1. **Como se obtêm Diamantes sem pagar?** Tarefas diárias, conquistas, eventos, pedidos de NPC, ou nada?
+   Proposta: 10/dia por tarefas diárias (teto igual para todos) + conquistas pontuais.
+2. Comprar Diamantes **só com token** ou também com Gold? (Gold → Diamantes criaria ponte com o bot.)
+3. **Preço do passe VIP** em Diamantes e duração (mensal?).
+4. Acelerar obras e reabastecer ferramentas/sementes com Diamantes: limite diário ou só cosmético?
+5. Compra avulsa no preço base: em lotes de 100, ou só pacotes?
+6. **Viabilidade das ilhas 3–4 (v2 §8), com os números atuais:** casual completa a ilha 3 no dia ~271 e
+   não completa a ilha 4 em 3 anos; ativo 196 / 844; bot 173 / 614 (referência: 29 d / 63 d só de obra).
+   Opções: **A** aceitar jogo longo; **B** fator de conversão no Gold dos blocos (ex.: 0,1–0,2 nas ilhas
+   3–4); **C** subir volume/margem das culturas (renda ×2–3); **D** pedidos de NPC/entregas como fonte
+   de Gold (com teto anti-bot); **E** vender mais recursos (pouco efeito); **F** reduzir `dewquartz`
+   (gargalo do ativo/bot nas ilhas 2–4), `sandglint` e `cinderite`. Novo: **G** Diamantes acelerarem
+   obras — não resolve, porque o gargalo é Gold/material, e abre pay-to-win. Recomendação técnica: D + C
+   moderado + F, e decidir A ou B para as ilhas 3–4.
+
+**Pendências:** saldo de Diamantes no `GameState` e reducers (game-core); custo "P2P" da referência
+para comparar preço não está nas notas de `docs/referencia/` (pedir ao `analista-referencia`, se útil).

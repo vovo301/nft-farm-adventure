@@ -108,6 +108,7 @@ describe("world data (ilhas, blocos, nós) — só dados", () => {
     const first = blocks[0];
     if (!first) throw new Error("sem blocos");
     expect(first.cost.gold).toBe("0");
+    expect(first.cost.diamonds).toBe(0);
     expect(first.buildSeconds).toBe(0);
     expect(first.adds.plots).toBe(economy.rules.startingPlotCount);
   });
@@ -141,6 +142,24 @@ describe("world data (ilhas, blocos, nós) — só dados", () => {
         expect(Number.isInteger(q) && q > 0).toBe(true);
       }
     }
+  });
+
+  it("Diamantes por bloco: inteiro >= 0; totais por ilha = gema da tabela do usuário 1:1 (0 / 225 / 1 020 / 3 690)", () => {
+    const totals = Object.values(world.islands).map((isl) =>
+      isl.blockIds.reduce((sum, id) => {
+        const d = world.blocks[id]?.cost.diamonds ?? Number.NaN;
+        expect(Number.isInteger(d) && d >= 0, id).toBe(true);
+        return sum + d;
+      }, 0),
+    );
+    expect(totals).toEqual([0, 225, 1020, 3690]);
+  });
+
+  it("frutas não pagam expansão (v2.2): nenhum custo de bloco ou travessia cobra item de frutífera", () => {
+    const fruitItems = new Set(Object.values(world.nodes).filter((n) => /_(tree|palm)$/.test(n.id) && n.id !== "tree").map((n) => n.itemId));
+    expect(fruitItems.size).toBeGreaterThan(0);
+    for (const b of blocks) for (const id of Object.keys(b.cost.items)) expect(fruitItems.has(id), `${b.id}: ${id}`).toBe(false);
+    for (const isl of Object.values(world.islands)) for (const id of Object.keys(isl.crossingCost)) expect(fruitItems.has(id), id).toBe(false);
   });
 
   it("toda cultura tem unlockBlock existente e consistente com unlocksCrops", () => {

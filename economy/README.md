@@ -75,7 +75,8 @@ contrato não tinha (nós, blocos, ilhas, `unlockBlock`) vai para `world.generat
 Uma linha por ilha (`row_type=island`, colunas `cost_*` = custo de mudança para ENTRAR nela, pago
 com o 1º bloco) e uma por bloco (`row_type=block`), na ordem de revelação. Colunas:
 `build_seconds`, `min_level` (base da referência; ainda sem XP), `min_account_days`, `cost_gold`
-(Gold, 2 casas), `cost_<recurso>` (11 recursos), `add_plot` e `add_<nó>` (12 tipos), `ref_blocks`,
+(Gold, 2 casas), `cost_diamonds` (Diamantes, inteiro; = gema da referência 1:1, v2.2), `cost_<recurso>`
+(7 recursos; frutas não pagam expansão desde a v2.2), `add_plot` e `add_<nó>` (12 tipos), `ref_blocks`,
 `note`. Vazio = 0. O gerador confere: ids `<ilha>_NN` em sequência, terreno inicial grátis com
 `add_plot = starting_plot_count`, todo material cobrado tem nó revelado num bloco **anterior**
 (inclui custo de mudança), todo nó aparece em algum bloco, `unlock_block` das culturas existe.
@@ -92,6 +93,10 @@ com o 1º bloco) e uma por bloco (`row_type=block`), na ordem de revelação. Co
   reabastece todos os nós e libera culturas) e o desbloqueio de culturas. **Nível do avatar é
   ignorado** (não há XP).
 - Determinístico (PRNG do game-core, `profiles.json → rngSeed`).
+- **Diamantes (v2.2, fora do motor):** cada cenário de `profiles.json → diamondScenarios` roda os 3 perfis:
+  (a) `none` sem fonte (trava no 1º bloco com Diamantes), (b) `daily` fonte gratuita hipotética por dia,
+  (c) `payer` compra com token o que falta (US$ por `diamondPricing`). Saída por cenário em
+  `summary.json → scenarios`, Diamantes/dia necessários em `referencePace` e `payer.projection.*.requiredPerDayForThisPace`.
 - Política: colhe, coleta, vende todas as colheitas e só o **excedente** de recursos (guarda o que
   os blocos restantes pedem), replanta; humano escolhe o maior lucro por colheita que fica pronto
   até a próxima visita e só inicia obra na visita de saída (com o Gold que sobrou depois de

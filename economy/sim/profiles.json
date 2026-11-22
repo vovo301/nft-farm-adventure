@@ -41,5 +41,57 @@
       "kind": "bot",
       "tickSeconds": 60
     }
-  ]
+  ],
+  "diamondScenarios": [
+    {
+      "id": "none",
+      "label": "(a) sem fonte gratuita de Diamantes (não pagante)",
+      "perDay": 0,
+      "doc": "Fonte de Diamantes não decidida: jogador que não paga trava no 1º bloco que pede Diamantes."
+    },
+    {
+      "id": "daily",
+      "label": "(b) fonte gratuita hipotética: 10 Diamantes/dia (tarefas diárias)",
+      "perDay": 10,
+      "doc": "PROPOSTA, não oficial: tarefas diárias dão 10 Diamantes/dia, crédito na 1ª visita do dia, teto igual para todos (bot não ganha mais), dia sem visita não acumula."
+    },
+    {
+      "id": "payer",
+      "label": "(c) pagante: compra com token o que falta (100 Diamantes = US$ 1,50 base)",
+      "perDay": 0,
+      "buyOnDemand": true,
+      "doc": "Compra só a diferença quando Gold e materiais do bloco já estão prontos (Diamantes nunca são o gargalo). Mede o gasto em US$ (preço base, melhor pacote sem o de -98% e com ele) e o ritmo sem Diamantes como gargalo."
+    }
+  ],
+  "diamondPricing": {
+    "_doc": "Diamantes comprados com o TOKEN do jogo; preço cotado em USD e convertido pela cotação do momento, debitado na hora (decisão do usuário 2026-11-22). Tabela final de pacotes do usuário.",
+    "basePer100Usd": 1.5,
+    "packs": [
+      {
+        "qty": 650,
+        "priceUsd": 6.83,
+        "discount": 0.3
+      },
+      {
+        "qty": 1200,
+        "priceUsd": 11.7,
+        "discount": 0.35
+      },
+      {
+        "qty": 2800,
+        "priceUsd": 25.2,
+        "discount": 0.4
+      },
+      {
+        "qty": 15500,
+        "priceUsd": 106.95,
+        "discount": 0.54
+      },
+      {
+        "qty": 200000,
+        "priceUsd": 1299,
+        "discount": 0.567
+      }
+    ]
+  }
 }
