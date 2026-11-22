@@ -28,6 +28,7 @@ pedidos de NPC, tarefas diárias · longo: expansões (Gold, materiais e Diamant
 | Pedidos de NPC + tarefas diárias | planejada | — |
 | Ilhas e expansões (4 ilhas, 65 blocos 7/12/21/25, 23 culturas) + layout livre | especificada | `features/ilhas-e-expansoes.md` (ids: `features/ilhas-e-expansoes-ids.md`) |
 | Diamantes (moeda premium: expansões, leilão, acelerar, VIP, restock; origem em aberto) | especificada | `features/diamantes.md` |
+| Reputação (níveis de confiança anti-bot) | especificada | `features/reputacao.md` |
 | Login com carteira + NFT da fazenda (testnet) | planejada | — |
 | Saque de itens (testnet) | planejada | — |
 | Marketplace, temporadas, facções | futura | — |
