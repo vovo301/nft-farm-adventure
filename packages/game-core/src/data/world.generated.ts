@@ -3,7 +3,7 @@
  *  GERADO — não edite à mão.
  * ============================================================================================
  *
- * Fonte: economy/economy.csv@sha256:678bc36e4b8c + economy/expansions.csv@sha256:55d3b01e3a7d
+ * Fonte: economy/economy.csv@sha256:678bc36e4b8c + economy/expansions.csv@sha256:52f8b543cacd
  * Gerador: economy/gen/generate.mjs · regenerar: `pnpm econ:gen` · conferir: `pnpm econ:check`
  * Justificativa: docs/economia/decisoes.md (v2.2 — Diamantes; v2/v2.1 para culturas e blocos).
  *
@@ -13,7 +13,7 @@
 import type { WorldData } from "./types";
 
 export const world: WorldData = {
-  meta: {"version":"v2.2","placeholder":false,"source":"economy/economy.csv@sha256:678bc36e4b8c + economy/expansions.csv@sha256:55d3b01e3a7d"},
+  meta: {"version":"v2.2","placeholder":false,"source":"economy/economy.csv@sha256:678bc36e4b8c + economy/expansions.csv@sha256:52f8b543cacd"},
   islands: {
     homestead: {"id":"homestead","order":1,"blockIds":["homestead_01","homestead_02","homestead_03","homestead_04","homestead_05","homestead_06","homestead_07"],"crossingCost":{}},
     breezewood: {"id":"breezewood","order":2,"blockIds":["breezewood_01","breezewood_02","breezewood_03","breezewood_04","breezewood_05","breezewood_06","breezewood_07","breezewood_08","breezewood_09","breezewood_10","breezewood_11","breezewood_12"],"crossingCost":{"glintstone":10}},
@@ -40,7 +40,7 @@ export const world: WorldData = {
     breezewood_09: {"id":"breezewood_09","islandId":"breezewood","order":16,"buildSeconds":43200,"minLevel":32,"minAccountDays":0,"cost":{"gold":"0","diamonds":30,"items":{"driftwood":50,"flint":25,"rustite":10,"glintstone":10}},"adds":{"plots":0,"nodes":{"tree":1,"flint_rock":1,"rustite_node":1,"mistplum_tree":1}},"unlocksCrops":[]},
     breezewood_10: {"id":"breezewood_10","islandId":"breezewood","order":17,"buildSeconds":86400,"minLevel":36,"minAccountDays":0,"cost":{"gold":"0","diamonds":30,"items":{"driftwood":100,"flint":10,"dewquartz":5}},"adds":{"plots":2,"nodes":{"bellpear_tree":1}},"unlocksCrops":["crownbloom"]},
     breezewood_11: {"id":"breezewood_11","islandId":"breezewood","order":18,"buildSeconds":86400,"minLevel":40,"minAccountDays":0,"cost":{"gold":"0","diamonds":30,"items":{"driftwood":150,"flint":10,"rustite":10,"glintstone":5,"dewquartz":5}},"adds":{"plots":1,"nodes":{"tree":1,"flint_rock":1,"rustite_node":1,"dewquartz_node":1,"mistplum_tree":1}},"unlocksCrops":[]},
-    breezewood_12: {"id":"breezewood_12","islandId":"breezewood","order":19,"buildSeconds":86400,"minLevel":43,"minAccountDays":0,"cost":{"gold":"0","diamonds":30,"items":{"driftwood":100,"flint":10,"glintstone":5,"dewquartz":8}},"adds":{"plots":1,"nodes":{"tree":1,"glintstone_node":1}},"unlocksCrops":[]},
+    breezewood_12: {"id":"breezewood_12","islandId":"breezewood","order":19,"buildSeconds":86400,"minLevel":46,"minAccountDays":0,"cost":{"gold":"0","diamonds":30,"items":{"driftwood":100,"flint":10,"glintstone":5,"dewquartz":8}},"adds":{"plots":1,"nodes":{"tree":1,"glintstone_node":1}},"unlocksCrops":[]},
     ochremesa_01: {"id":"ochremesa_01","islandId":"ochremesa","order":20,"buildSeconds":60,"minLevel":40,"minAccountDays":5,"cost":{"gold":"0","diamonds":0,"items":{"driftwood":50,"flint":10,"rustite":5,"glintstone":5}},"adds":{"plots":1,"nodes":{"flint_rock":1,"rustite_node":1,"sandglint_node":1}},"unlocksCrops":[]},
     ochremesa_02: {"id":"ochremesa_02","islandId":"ochremesa","order":21,"buildSeconds":300,"minLevel":40,"minAccountDays":0,"cost":{"gold":"0","diamonds":0,"items":{"driftwood":100,"flint":20,"rustite":10,"glintstone":5}},"adds":{"plots":0,"nodes":{"honeydate_palm":1}},"unlocksCrops":[]},
     ochremesa_03: {"id":"ochremesa_03","islandId":"ochremesa","order":22,"buildSeconds":1800,"minLevel":41,"minAccountDays":0,"cost":{"gold":"0","diamonds":15,"items":{"driftwood":150,"flint":20,"rustite":10,"glintstone":5}},"adds":{"plots":2,"nodes":{"dewquartz_node":1}},"unlocksCrops":["sandspud"]},

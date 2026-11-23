@@ -836,3 +836,44 @@ para comparar preço não está nas notas de `docs/referencia/` (pedir ao `anali
   ilha 3 = 40→75, ilha 4 = 70→120 (o usuário citou 46 para a ilha 2; a imagem mostra 43 — a confirmar).
 - Pendente: fontes de XP (culturas, cozinha, tarefas) e calibração do `min_level` das expansões
   contra esta curva; gerador ainda não exporta a tabela para o game-core.
+
+## 2026-11-23 — comidas e XP
+
+- **Correção do usuário:** último bloco da ilha 2 (`breezewood_12`, ref. b16) exige **nível 46** (era 43).
+  Ajustado em `economy/expansions.csv` e `docs/referencia/equilibrio-tabela-usuario.csv`; resolve o
+  "a confirmar" da entrada da curva de XP. `econ:gen`, `econ:check` e testes ok.
+- **Fonte:** tabelas de receitas do usuário (`docs/referencia/img/comidas-*.png`) →
+  `economy/foods.csv` (84 receitas): fogueira (`campfire`) 18 · cozinha (`kitchen`) 28 ·
+  delicatéssen (`delicatessen`) 9 · casa de sucos (`juice_bar`) 12 · padaria (`bakery`) 17.
+  Ainda **não** entra no gerador/game-core.
+- **Confiança:** 29 linhas `lida`, 55 `inferida`. Tempo e XP foram conferidos pela coluna "XP per 1 Day"
+  (XP × 86 400 / tempo) e por "SFL × XP por SFL" — todos consistentes. O que ficou inferido são
+  sobretudo **quantidades de ingredientes** (dígitos 3/5/8, 50/80, 80/90 borrados). Uma célula de XP
+  corrigida por conferência: peixe com azeitonas = 2 000 (lia-se 3 000).
+- **Nível de desbloqueio:** as imagens não mostram nível (mostram o custo "instantâneo" em gemas);
+  `unlock_level` ficou vazio em todas — **pedir ao usuário**.
+- **Sem tempo na imagem** (00:00:00, XP/dia 0): furikake, tigela de surimi, bolinho de caranguejo,
+  óleo de peixe fortificado — parecem itens especiais; `cook_seconds` vazio.
+- **Peixes:** as espécies da referência viraram o recurso genérico `fish` (somando quantidades).
+  **Queijo** (`cheese`) é a própria receita da delicatéssen (leite ×3).
+- **Ingredientes sem equivalente** (prefixo `SEM_EQUIV_` no CSV, para o usuário decidir: criar cultura,
+  trocar por uma das 23 ou cortar a receita): couve (kale), pastinaca (parsnip), rabanete (radish),
+  couve-flor (cauliflower), soja (soybean), mirtilo (blueberry), laranja, banana, limão, azeitona,
+  ruibarbo, alga (seaweed), lula (squid), cogumelo mágico, flocos de peixe, bastão de peixe,
+  bastão de caranguejo, óleo de peixe, gema vermelha. Quase metade das receitas usa ao menos um.
+- **Estimativa de XP/dia comendo** (uma fila por prédio, sem limite de ingredientes):
+  - teto pelo timer: ~94,8 milhões/dia — dominado por receitas de 10–30 s com cogumelo mágico
+    (2,6 M, 5,8 M e 86,4 M XP/dia). **Risco:** precisam de teto por escassez do ingrediente ou de
+    limite diário, senão o bot sobe de nível em horas;
+  - realista (receitas ≥ 1 h, só ingredientes que temos, fila sempre cheia): melhor por prédio =
+    pizza 30 000 + panquecas 24 000 + cheddar com mel 30 000 + suco de maçã 12 000 + bolo de mel
+    12 000 = **~108 000 XP/dia** (jogador ativo; casual 2×/dia ≈ metade).
+  - XP total necessário → dias só comendo (108 k/dia): nível 11 = 10 905 (< 1 dia) · nível 46 =
+    749 405 (~7 dias) · nível 75 = 7 333 905 (~68 dias) · nível 120 = 44 083 905 (~408 dias).
+    A recompensa diária do jogo (`daily_xp_reward`: 735 / 5 524 / 40 399 / 63 613 nesses níveis)
+    é pequena perto da comida até ~nível 70.
+  - Leitura: a ilha 2 (11→46) abre em ~1 semana de comida, rápido demais frente às obras de 1 dia por
+    bloco; ilha 4 (até 120) leva >1 ano. Sem simulação nesta tarefa; recomendo simular quando os
+    ingredientes e os níveis de desbloqueio estiverem decididos.
+- Pendente: `unlock_level` por receita; decisão sobre ingredientes sem equivalente; exportar
+  `foods.csv` no gerador; teto anti-bot das receitas-relâmpago.

@@ -21,7 +21,7 @@ block,breezewood_08,breezewood,43200,29,0,0,30,50,,5,,3,,,2,,,,,,,,,,,,b12,tabel
 block,breezewood_09,breezewood,43200,32,0,0,30,50,25,10,10,,,,,1,1,1,,,,,,1,,,b13,tabela do usuário ilha 2 b13; gema 30 -> diamond 1:1; sem equivalente (fora): Esp+1
 block,breezewood_10,breezewood,86400,36,0,0,30,100,10,,,5,,,2,,,,,,,,1,,,,b14,tabela do usuário ilha 2 b14; gema 30 -> diamond 1:1
 block,breezewood_11,breezewood,86400,40,0,0,30,150,10,10,5,5,,,1,1,1,1,,1,,,,1,,,b15,tabela do usuário ilha 2 b15; gema 30 -> diamond 1:1
-block,breezewood_12,breezewood,86400,43,0,0,30,100,10,,5,8,,,1,1,,,1,,,,,,,,b16,tabela do usuário ilha 2 b16; gema 30 -> diamond 1:1; sem equivalente (fora): Colm+1 Flor+1
+block,breezewood_12,breezewood,86400,46,0,0,30,100,10,,5,8,,,1,1,,,1,,,,,,,,b16,tabela do usuário ilha 2 b16; gema 30 -> diamond 1:1; sem equivalente (fora): Colm+1 Flor+1; min_level 46 (corrigido pelo usuário 2026-11-23)
 block,ochremesa_01,ochremesa,60,40,5,0,,50,10,5,5,,,,1,,1,1,,,1,,,,,,b5,tabela do usuário ilha 3 b5
 block,ochremesa_02,ochremesa,300,40,0,0,,100,20,10,5,,,,,,,,,,,,,,1,,b6,tabela do usuário ilha 3 b6; sem equivalente (fora): Esp+1
 block,ochremesa_03,ochremesa,1800,41,0,0,15,150,20,10,5,,,,2,,,,,1,,,,,,,b7,tabela do usuário ilha 3 b7; gema 15 -> diamond 1:1

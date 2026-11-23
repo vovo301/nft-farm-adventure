@@ -1,0 +1,85 @@
+building,food_id,name_pt,cook_seconds,unlock_level,xp,xp_per_day,ingredients,confianca,ref_note
+campfire,ember_pumpkin_roast,Abóbora na brasa,10,,300,2592000,pumpkin:40;SEM_EQUIV_magic_mushroom:1,inferida,fogueira 1; renomeado (nome próprio da ref.); qtd do cogumelo especial cortada na imagem; tempo conferido por XP/dia; nível não aparece (imagem mostra custo instantâneo 1 gema)
+campfire,pizza_margherita,Pizza margherita,72000,,25000,30000,tomato:30;cheese:5;wheat:20,lida,fogueira 2; instantâneo 40 gemas
+campfire,popcorn,Pipoca,720,,200,24000,sunflower:100;corn:5,inferida,fogueira 3; qtd milho 5 (3/5/8 borrado)
+campfire,antipasto,Antepasto,10800,,3000,24000,SEM_EQUIV_olive:2;grape:2,lida,fogueira 4; azeitona sem equivalente
+campfire,rice_bun,Pãozinho de arroz,18000,,2600,12480,rice:2;wheat:50,inferida,fogueira 5; qtd trigo 50 (50/80 borrado)
+campfire,pumpkin_soup,Sopa de abóbora,180,,24,11520,pumpkin:10,lida,fogueira 6
+campfire,glazed_carrot,Cenoura glaceada,300,,36,10368,carrot:5,inferida,fogueira 7; renomeado (nome temático da ref.); qtd 5 borrada
+campfire,cabbage_mash,Purê com repolho,2400,,250,9000,mashed_potato:10;cabbage:20,inferida,fogueira 8; renomeado (nome próprio da ref.); qtd purê cortada (10?)
+campfire,mashed_potato,Purê de batata,30,,3,8640,potato:8,inferida,fogueira 9; qtd 8 borrada
+campfire,kale_omelette,Omelete de couve,12600,,1250,8571,egg:40;SEM_EQUIV_kale:5,inferida,fogueira 10; qtd borradas; couve (kale) sem equivalente
+campfire,mushroom_soup,Sopa de cogumelo,600,,56,8064,mushroom:5,inferida,fogueira 11; cogumelo silvestre -> mushroom; qtd cortada
+campfire,rhubarb_tart,Torta de ruibarbo,60,,5,7200,SEM_EQUIV_rhubarb:3,inferida,fogueira 12; XP 5 confirmado por XP/dia; ruibarbo sem equivalente; qtd 3 borrada
+campfire,farmer_broth,Caldo do roceiro,1200,,96,6912,carrot:10;cabbage:5,inferida,fogueira 13; renomeado (nome próprio da ref.); qtd repolho borrada
+campfire,fried_tofu,Tofu frito,5400,,400,6400,SEM_EQUIV_soybean:15;sunflower:200,inferida,fogueira 14; soja sem equivalente; qtd soja 15 borrada
+campfire,kale_stew,Ensopado de couve,7200,,400,4800,SEM_EQUIV_kale:10,lida,fogueira 15
+campfire,gumbo,Gumbo,14400,,600,3600,potato:50;pumpkin:30;carrot:20;fish:3,inferida,fogueira 16; peixe vermelho (red snapper) -> fish; qtd batata 50 borrada
+campfire,boiled_eggs,Ovos cozidos,3600,,90,2160,egg:10,lida,fogueira 17
+campfire,furikake,Furikake,,,1000,0,SEM_EQUIV_fish_flake:1;SEM_EQUIV_seaweed:1,inferida,fogueira 18; tempo 00:00:00 e XP/dia 0 na imagem (ilegível ou item especial)
+kitchen,flambeed_beet,Beterraba flambada,30,,2000,5760000,SEM_EQUIV_magic_mushroom:2;beet:50,inferida,cozinha 1; renomeado (nome próprio da ref.); qtd beterraba 50 borrada; XP conferido por SFL×XP/SFL
+kitchen,sushi_roll,Sushi,3600,,2000,48000,fish:1;SEM_EQUIV_seaweed:1;rice:2,lida,cozinha 2; peixe-anjo -> fish
+kitchen,caprese_salad,Salada caprese,10800,,6000,48000,cheese:1;tomato:25;SEM_EQUIV_kale:20,inferida,cozinha 3; qtd tomate/couve borradas
+kitchen,mushroom_jacket_potato,Batata recheada com cogumelo,600,,240,34560,mushroom:10;potato:5,inferida,cozinha 4; qtd batata borrada
+kitchen,pancakes,Panquecas,3600,,1000,24000,wheat:10;egg:10;honey:6,inferida,cozinha 5; qtd mel borrada
+kitchen,fish_with_olives,Peixe com azeitonas,7200,,2000,24000,fish:1;SEM_EQUIV_olive:2,inferida,cozinha 6; renomeado (nome próprio da ref.); XP 2000 inferido (3000 na leitura; SFL×XP/SFL≈2140 e XP/dia=24000 com 2 h)
+kitchen,spaghetti_al_limone,Espaguete ao limão,54000,,15000,24000,wheat:10;SEM_EQUIV_lemon:15;cheese:3,inferida,cozinha 7; qtd limão borrada
+kitchen,steamed_red_rice,Arroz vermelho no vapor,14400,,3000,18000,rice:3;beet:50,inferida,cozinha 8; qtd beterraba borrada
+kitchen,fish_burger,Hambúrguer de peixe,7200,,1300,15600,beet:10;wheat:10;fish:1,lida,cozinha 9; cavalinha -> fish
+kitchen,fish_and_chips,Peixe com fritas,14400,,2000,12000,deluxe_fries:1;fish:1,lida,cozinha 10; linguado -> fish; fritas especiais = prato de outro prédio
+kitchen,fruit_salad,Salada de frutas,1800,,225,10800,apple:1;SEM_EQUIV_orange:1;SEM_EQUIV_blueberry:1,lida,cozinha 11
+kitchen,seafood_basket,Cesta de frutos do mar,18000,,2200,10560,fish:6,inferida,cozinha 12; 3 peixes (2 cada) da ref. somados em fish:6
+kitchen,tofu_scramble,Tofu mexido,10800,,1000,8000,SEM_EQUIV_soybean:20;egg:20;SEM_EQUIV_cauliflower:10,lida,cozinha 13
+kitchen,toasted_seed_snack,Petisco de sementes tostadas,600,,50,7200,sunflower:300,lida,cozinha 14; renomeado (nome com 'Sunflower' na ref.)
+kitchen,fried_calamari,Lula frita,18000,,1500,7200,sunflower:200;wheat:15;SEM_EQUIV_squid:1,inferida,cozinha 15; qtd trigo borrada
+kitchen,fish_omelette,Omelete de peixe,18000,,1500,7200,egg:40;fish:3,inferida,cozinha 16; 2 peixes da ref. (1+2) somados em fish:3
+kitchen,farmer_roast,Assado do roceiro,43200,,2500,5000,mashed_potato:20;roast_veggies:5,inferida,cozinha 17; renomeado (nome próprio da ref.); qtd legumes borrada
+kitchen,hearty_brunch,Brunch reforçado,43200,,2500,5000,boiled_eggs:5;veggie_trio:1,inferida,cozinha 18; renomeado (nome próprio da ref.); qtd ovos borrada
+kitchen,farm_baba_ganoush,Babaganuche da roça,18000,,1000,4800,eggplant:30;potato:50;SEM_EQUIV_parsnip:10,inferida,cozinha 19; renomeado (nome próprio da ref.); qtd batata borrada
+kitchen,chowder,Chowder (sopa cremosa),28800,,1000,3000,beet:10;wheat:10;SEM_EQUIV_parsnip:5;fish:3,inferida,cozinha 20; anchova -> fish; qtd borradas
+kitchen,roast_veggies,Legumes assados,7200,,170,2040,SEM_EQUIV_cauliflower:15;carrot:10,lida,cozinha 21
+kitchen,cauliflower_burger,Hambúrguer de couve-flor,10800,,255,2040,SEM_EQUIV_cauliflower:15;wheat:5,inferida,cozinha 22; qtd trigo borrada
+kitchen,veggie_trio,Trio de legumes,21600,,500,2000,pumpkin:10;SEM_EQUIV_radish:20;cabbage:10,lida,cozinha 23; renomeado (nome próprio da ref.)
+kitchen,farm_salad,Salada da roça,12600,,290,1988,beet:20;SEM_EQUIV_parsnip:10,lida,cozinha 24; renomeado (nome próprio da ref.); tempo 3h30 conferido por XP/dia
+kitchen,club_sandwich,Sanduíche club,10800,,170,1360,sunflower:100;carrot:25;wheat:5,inferida,cozinha 25; qtd cenoura/trigo borradas
+kitchen,surimi_rice_bowl,Tigela de arroz com surimi,,,3000,0,SEM_EQUIV_fish_stick:1;rice:1;onion:1,inferida,cozinha 26; tempo 00:00:00 e XP/dia 0 na imagem
+kitchen,creamy_crab_bite,Bolinho cremoso de caranguejo,,,10000,0,SEM_EQUIV_crab_stick:1;cheese:3,inferida,cozinha 27; tempo 00:00:00 e XP/dia 0
+kitchen,fortified_fish_oil,Óleo de peixe fortificado,,,18000,0,SEM_EQUIV_fish_oil:1;SEM_EQUIV_red_gem:1,inferida,cozinha 28; renomeado (nome próprio da ref.); tempo 00:00:00 e XP/dia 0; gema vermelha da ref. sem equivalente
+delicatessen,mushroom_honey_syrup,Xarope de cogumelo com mel,10,,10000,86400000,SEM_EQUIV_magic_mushroom:3;honey:20,inferida,delicatéssen 1; renomeado; qtds borradas
+delicatessen,blue_cheese,Queijo azul,10800,,6000,48000,cheese:3;SEM_EQUIV_blueberry:10,inferida,delicatéssen 2; qtds borradas
+delicatessen,honey_cheddar,Cheddar com mel,43200,,15000,30000,cheese:3;honey:5,inferida,delicatéssen 3; qtd mel borrada
+delicatessen,fermented_fish,Peixe fermentado,86400,,3000,3000,fish:6,inferida,delicatéssen 4; atum -> fish; qtd borrada
+delicatessen,blueberry_jam,Geleia de mirtilo,43200,,500,1000,SEM_EQUIV_blueberry:5,inferida,delicatéssen 5; qtd borrada
+delicatessen,deluxe_fries,Batata frita especial,86400,,1000,1000,sunflower:500;potato:500,lida,delicatéssen 6; renomeado (nome próprio da ref.)
+delicatessen,sauerkraut,Chucrute,86400,,500,500,cabbage:20,lida,delicatéssen 7
+delicatessen,fermented_carrots,Cenoura fermentada,86400,,250,250,carrot:20,lida,delicatéssen 8
+delicatessen,cheese,Queijo,1200,,1,72,milk:3,lida,delicatéssen 9; insumo de várias receitas
+juice_bar,grape_juice,Suco de uva,10800,,3300,26400,grape:5;SEM_EQUIV_radish:20,inferida,casa de sucos 1; qtd uva borrada
+juice_bar,sour_shake,Batida azeda de limão,3600,,1000,24000,SEM_EQUIV_lemon:20,inferida,casa de sucos 2; renomeado; qtd borrada
+juice_bar,purple_smoothie,Smoothie roxo,1800,,310,14880,SEM_EQUIV_blueberry:5;cabbage:10,inferida,casa de sucos 3; qtd mirtilo borrada
+juice_bar,power_smoothie,Smoothie energético,5400,,775,12400,SEM_EQUIV_blueberry:10;SEM_EQUIV_kale:5,inferida,casa de sucos 4; qtd couve borrada
+juice_bar,orange_juice,Suco de laranja,2700,,375,12000,SEM_EQUIV_orange:5,inferida,casa de sucos 5; qtd borrada
+juice_bar,apple_juice,Suco de maçã,3600,,500,12000,apple:5,inferida,casa de sucos 6; qtd borrada
+juice_bar,detox_juice,Suco detox,7200,,975,11700,apple:5;SEM_EQUIV_orange:5;carrot:10,inferida,casa de sucos 7; renomeado (nome próprio da ref.); qtds borradas
+juice_bar,mixed_fruit_juice,Suco misto de frutas,12600,,1500,10285,SEM_EQUIV_blueberry:1;SEM_EQUIV_orange:1;grape:1;apple:1;SEM_EQUIV_banana:1,lida,casa de sucos 8; renomeado (nome próprio da ref.)
+juice_bar,banana_shake,Vitamina de banana,10800,,1000,8000,SEM_EQUIV_banana:10;egg:10,lida,casa de sucos 9; renomeado
+juice_bar,green_grape_juice,Suco verde de uva,86400,,7500,7500,grape:10;SEM_EQUIV_kale:100,lida,casa de sucos 10; renomeado
+juice_bar,carrot_juice,Suco de cenoura,3600,,200,4800,carrot:30,lida,casa de sucos 11
+juice_bar,express_juice,Suco expresso,1800,,100,4800,sunflower:50;pumpkin:40,inferida,casa de sucos 12; renomeado; qtd girassol borrada
+bakery,lemon_cheesecake,Cheesecake de limão,108000,,30000,24000,SEM_EQUIV_lemon:20;cheese:5;egg:40,inferida,padaria 1; qtds borradas
+bakery,honey_cake,Bolo de mel,28800,,4000,12000,honey:10;wheat:10;egg:20,lida,padaria 2
+bakery,orange_cake,Bolo de laranja,14400,,720,4320,SEM_EQUIV_orange:5;egg:30;wheat:10,inferida,padaria 3; qtd laranja borrada
+bakery,apple_pie,Torta de maçã,14400,,720,4320,apple:5;wheat:10;egg:20,inferida,padaria 4; qtd maçã borrada
+bakery,mushroom_greens_pie,Torta de cogumelo e verduras,14400,,720,4320,mushroom:10;SEM_EQUIV_kale:5;wheat:5,inferida,padaria 5; renomeado; qtds couve/trigo borradas
+bakery,toasted_seed_cake,Bolo de sementes tostadas,23400,,525,1938,sunflower:1000;wheat:10;egg:30,lida,padaria 6; renomeado (nome com 'Sunflower' na ref.); tempo 6h30 conferido por XP/dia
+bakery,potato_cake,Bolo de batata,37800,,650,1485,potato:500;wheat:10;egg:30,lida,padaria 7
+bakery,pumpkin_cake,Bolo de abóbora,37800,,625,1428,pumpkin:130;wheat:10;egg:30,inferida,padaria 8; qtd abóbora borrada
+bakery,eggplant_cake,Bolo de berinjela,86400,,1400,1400,eggplant:30;wheat:10;egg:30,lida,padaria 9
+bakery,carrot_cake,Bolo de cenoura,46800,,750,1384,carrot:120;wheat:10;egg:30,lida,padaria 10
+bakery,cabbage_cake,Bolo de repolho,54000,,860,1376,cabbage:90;wheat:10;egg:30,inferida,padaria 11; qtd repolho borrada (80/90)
+bakery,beet_cake,Bolo de beterraba,79200,,1250,1363,beet:100;wheat:10;egg:30,lida,padaria 12
+bakery,parsnip_cake,Bolo de pastinaca,86400,,1300,1300,SEM_EQUIV_parsnip:45;wheat:10;egg:30,inferida,padaria 13; qtd borrada
+bakery,cauliflower_cake,Bolo de couve-flor,79200,,1190,1298,SEM_EQUIV_cauliflower:60;wheat:10;egg:30,lida,padaria 14
+bakery,cornbread,Pão de milho,43200,,600,1200,corn:15;wheat:5;egg:10,inferida,padaria 15; qtd trigo borrada
+bakery,radish_cake,Bolo de rabanete,86400,,1200,1200,SEM_EQUIV_radish:25;wheat:10;egg:30,inferida,padaria 16; qtd borrada
+bakery,wheat_cake,Bolo de trigo,86400,,1100,1100,wheat:35;egg:30,inferida,padaria 17; qtd trigo borrada

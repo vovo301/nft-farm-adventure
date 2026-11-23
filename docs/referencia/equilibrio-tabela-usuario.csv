@@ -16,7 +16,7 @@ ilha,bloco,nivel_min,tempo_s,moeda_soft,madeira,pedra,minerio_comum,minerio_raro
 2,13,32,43200,,50,25,10,10,30,,,,Frut+1 Árv+1 Ped+1 M1+1 Esp+1,lida (img ilhas)
 2,14,36,86400,,100,10,,,30,5,,,Can+2 Frut+1,lida (img ilhas)
 2,15,40,86400,,150,10,10,5,30,5,,,Can+1 Frut+1 Árv+1 Ped+1 M1+1 MI2+1,lida (img ilhas)
-2,16,43,86400,,100,10,,5,30,8,,,Can+1 Árv+1 M2+1 Colm+1 Flor+1,lida (img ilhas)
+2,16,46,86400,,100,10,,5,30,8,,,Can+1 Árv+1 M2+1 Colm+1 Flor+1,corrigida pelo usuário 2026-11-23
 3,5,40,60,,50,10,5,5,,,,,Can+1 Ped+1 M1+1 RI3+1,lida (img ilhas; nós = acumulado − chegada)
 3,6,40,300,,100,20,10,5,,,,,Frut+1 Esp+1,lida (img ilhas)
 3,7,41,1800,,150,20,10,5,15,,,,Can+2 MI2+1,lida (img ilhas)
