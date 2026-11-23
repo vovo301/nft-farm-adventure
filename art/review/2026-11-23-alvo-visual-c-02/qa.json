@@ -1,0 +1,768 @@
+{
+ "batch": "2026-11-23-alvo-visual-c-02",
+ "replaces": "2026-11-22-alvo-visual-c-01",
+ "palette_version": "3.2",
+ "pieces": 69,
+ "seam_tests": [
+  {
+   "zoom": 0.5,
+   "pixels_checked": 79917,
+   "non_opaque_pixels": 0,
+   "pass": true
+  },
+  {
+   "zoom": 0.75,
+   "pixels_checked": 179599,
+   "non_opaque_pixels": 0,
+   "pass": true
+  },
+  {
+   "zoom": 1,
+   "pixels_checked": 319097,
+   "non_opaque_pixels": 0,
+   "pass": true
+  },
+  {
+   "zoom": 1.5,
+   "pixels_checked": 717541,
+   "non_opaque_pixels": 0,
+   "pass": true
+  },
+  {
+   "zoom": 2,
+   "pixels_checked": 1275249,
+   "non_opaque_pixels": 0,
+   "pass": true
+  }
+ ],
+ "repeat_3x3": {
+  "tiles": 23,
+  "failed": []
+ },
+ "palette": {
+  "rule": "tom da paleta v3 ou mistura de 2 tons vizinhos da mesma rampa (tol. 2/255)",
+  "off_palette": {},
+  "pass": true
+ },
+ "contract": {
+  "errors": [],
+  "pass": true
+ },
+ "contract_user_pieces": {
+  "errors": [],
+  "pass": true
+ },
+ "legibility_05": {
+  "rules_min": {
+   "borda_dL": 16.0,
+   "indice": 1.6
+  },
+  "antes_depois": [
+   {
+    "unidade": "canteiro com trigo maduro",
+    "antes_c01": {
+     "borda_dL": 19.4,
+     "ruido_miolo": 6.55,
+     "indice": 2.96
+    },
+    "depois_c02": {
+     "borda_dL": 22.1,
+     "ruido_miolo": 6.78,
+     "indice": 3.26
+    },
+    "pass": true
+   },
+   {
+    "unidade": "pedra com minério",
+    "antes_c01": {
+     "borda_dL": 21.0,
+     "ruido_miolo": 3.05,
+     "indice": 6.9
+    },
+    "depois_c02": {
+     "borda_dL": 25.1,
+     "ruido_miolo": 4.54,
+     "indice": 5.53
+    },
+    "pass": true
+   },
+   {
+    "unidade": "árvore folhosa",
+    "antes_c01": {
+     "borda_dL": 27.0,
+     "ruido_miolo": 3.48,
+     "indice": 7.76
+    },
+    "depois_c02": {
+     "borda_dL": 29.8,
+     "ruido_miolo": 3.82,
+     "indice": 7.79
+    },
+    "pass": true
+   },
+   {
+    "unidade": "fazendeiro",
+    "antes_c01": {
+     "borda_dL": 21.5,
+     "ruido_miolo": 6.6,
+     "indice": 3.25
+    },
+    "depois_c02": {
+     "borda_dL": 23.8,
+     "ruido_miolo": 7.02,
+     "indice": 3.39
+    },
+    "pass": true
+   },
+   {
+    "unidade": "galpão",
+    "antes_c01": {
+     "borda_dL": 23.3,
+     "ruido_miolo": 1.28,
+     "indice": 18.2
+    },
+    "depois_c02": {
+     "borda_dL": 27.2,
+     "ruido_miolo": 1.49,
+     "indice": 18.26
+    },
+    "pass": true
+   }
+  ],
+  "pecas_interativas": [
+   {
+    "unidade": "macieira",
+    "borda_dL": 29.7,
+    "ruido_miolo": 4.61,
+    "indice": 6.45,
+    "pass": true
+   },
+   {
+    "unidade": "pinheiro",
+    "borda_dL": 30.1,
+    "ruido_miolo": 2.05,
+    "indice": 14.7,
+    "pass": true
+   },
+   {
+    "unidade": "fardos de feno",
+    "borda_dL": 22.2,
+    "ruido_miolo": 3.58,
+    "indice": 6.19,
+    "pass": true
+   },
+   {
+    "unidade": "caixote",
+    "borda_dL": 25.2,
+    "ruido_miolo": 6.12,
+    "indice": 4.12,
+    "pass": true
+   },
+   {
+    "unidade": "canteiro vazio",
+    "borda_dL": 24.2,
+    "ruido_miolo": 4.09,
+    "indice": 5.92,
+    "pass": true
+   },
+   {
+    "unidade": "canteiro tomate s2",
+    "borda_dL": 18.1,
+    "ruido_miolo": 5.24,
+    "indice": 3.44,
+    "pass": true
+   },
+   {
+    "unidade": "canteiro abóbora s3",
+    "borda_dL": 20.7,
+    "ruido_miolo": 5.08,
+    "indice": 4.08,
+    "pass": true
+   },
+   {
+    "unidade": "canteiro cenoura s1",
+    "borda_dL": 21.7,
+    "ruido_miolo": 4.8,
+    "indice": 4.51,
+    "pass": true
+   },
+   {
+    "unidade": "trigo crescendo",
+    "borda_dL": 20.8,
+    "ruido_miolo": 4.81,
+    "indice": 4.33,
+    "pass": true
+   },
+   {
+    "unidade": "tora",
+    "borda_dL": 20.6,
+    "ruido_miolo": 7.02,
+    "indice": 2.94,
+    "pass": true
+   },
+   {
+    "unidade": "minério cinza",
+    "borda_dL": 21.6,
+    "ruido_miolo": 13.43,
+    "indice": 1.61,
+    "pass": true
+   }
+  ],
+  "pass": true
+ },
+ "asset_report": [
+  {
+   "size": "104x224",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "108x64",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "112x76",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "116x36",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "116x52",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "128x120",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "128x68",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "128x88",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "136x116",
+   "files": 12,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "136x68",
+   "files": 23,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "144x72",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "144x96",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "152x72",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "152x96",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "160x108",
+   "files": 8,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "168x112",
+   "files": 2,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "168x80",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "172x188",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "172x232",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "176x144",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "176x80",
+   "files": 2,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "184x72",
+   "files": 2,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "184x96",
+   "files": 2,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "192x96",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "208x108",
+   "files": 2,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "208x448",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "212x72",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "216x128",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "224x152",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "232x104",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "232x72",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "236x60",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "252x84",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "256x136",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "272x136",
+   "files": 23,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "272x232",
+   "files": 12,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "296x172",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "320x216",
+   "files": 8,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "328x332",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "344x376",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "344x464",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "416x216",
+   "files": 2,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "424x144",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "440x192",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "44x108",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "472x120",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "48x28",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "48x60",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "504x168",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "592x344",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "64x44",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "64x60",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "656x664",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "72x36",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "72x48",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "76x36",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "76x48",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "84x40",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "84x56",
+   "files": 2,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "880x384",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "88x216",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "88x40",
+   "files": 2,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "88x72",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "92x36",
+   "files": 2,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "92x48",
+   "files": 2,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "96x120",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "96x48",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "96x56",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "112x104",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "128x64",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "136x144",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "144x152",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "160x152",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "176x120",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "176x136",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "184x120",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "36x40",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "44x24",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "44x44",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "48x28",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "56x52",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "64x32",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "68x72",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "72x76",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "72x80",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "80x76",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "88x48",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "88x60",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "88x68",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "88x88",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "92x60",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  },
+  {
+   "size": "96x56",
+   "files": 1,
+   "exit": 0,
+   "stderr": ""
+  }
+ ],
+ "pass": true
+}

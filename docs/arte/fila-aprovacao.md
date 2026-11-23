@@ -77,7 +77,7 @@ Guia: art/style-guide/README.md (v3.1: esta arte é o estilo-alvo de itens, recu
 Pergunta ao usuário: o recorte está limpo (sem halo, brilho preservado)? Aprova os 108 itens, ou quais refazer e por quê.
 Resposta do usuário: _(pendente)_
 
-## Lote 2026-11-22-alvo-visual-c-01  — status: in_review
+## Lote 2026-11-22-alvo-visual-c-01  — status: substituído por c-02 a pedido do usuário
 Alvo visual do guia v3 (estilo C pintado semirrealista, harmonizado com a arte do usuário), mesma composição do iso-01 para comparar. Vetor por script, sem IA; o trigo dos canteiros é a arte do usuário escalada. Nada é produzido em escala antes da aprovação.
 Prancha: art/review/2026-11-22-alvo-visual-c-01/prancha.png
 Cena: cena.png (@2x: cena@2x.png · 0,5: cena-zoom05.png · celular: cena-celular.png, cena-celular-dpr2.png) · Prova de leitura a 0,5: prova-leitura-05.png · Notas: notas.md
@@ -98,4 +98,24 @@ Cena: cena.png (@2x: cena@2x.png · 0,5: cena-zoom05.png · celular: cena-celula
 | 12 | ui_indicator_ready | 48×60 | indicador discreto (losango fosco com espiga) |
 
 Pergunta ao usuário: aprova a direção para o mundo (proporções, materiais, cores, leitura no celular)? Se não, quais reprovar e por quê.
+Resposta do usuário (2026-11-22): "quero que use as imagens/estilo de arte para a cena" → o mundo deve seguir o estilo das imagens do usuário, não a versão "mais calma" do C. Substituído pelo lote `2026-11-23-alvo-visual-c-02` (entradas do manifesto: `rejected`, `superseded_by`).
+
+## Lote 2026-11-23-alvo-visual-c-02  — status: in_review
+Refaz o alvo visual com o MUNDO no estilo das imagens do usuário (guia v3.2, paleta v3.2): vivo, saturado, luz e sombra pintadas, contorno escuro-quente fino. Mesma composição do c-01. Canteiros com 4 culturas do usuário em estágios diferentes; tora do usuário junto da árvore e minérios do usuário junto da pedra. Vetor por script + recortes do usuário, sem IA.
+Cena: art/review/2026-11-23-alvo-visual-c-02/cena@2x.png · celular: cena-celular-dpr2.png · Antes × depois: antes-depois.png · Prancha: prancha.png · Notas: notas.md
+
+| # | asset | tamanho @1x | nota |
+|---|---|---|---|
+| 1 | ground_grass_a/b/c, ground_water_a/b, ground_path_dirt_* (18), ground_edge_grass_* (12) | 136×68 / 136×116 | chão, caminho, barranco: paleta v3.2 |
+| 2 | ground_pond_2x2 + decor_* (4) | vários | lago, manchas, flores, seixos |
+| 3 | tree_oak_a, tree_apple_a, tree_pine_a, prop_bush_a/b, rock_ore_a | ajustado | natureza viva + acabamento pintado |
+| 4 | plot_raised_bed | ajustado | canteiro de tábuas quentes |
+| 5 | crop_wheat_s1/s2/s3, crop_tomato_s2, crop_pumpkin_s3, crop_carrot_s1 | ajustado | culturas do usuário no canteiro |
+| 6 | res_log_world, res_ore_gray_world, res_ore_gold_world | ajustado | recursos do usuário caídos perto dos nós (+ sombra de contato) |
+| 7 | prop_hay_bales, prop_crate, prop_fence_* (8) | ajustado / 160×108 | feno, caixote, cerca de madeira quente |
+| 8 | bld_barn_small | ajustado | galpão: tábua laranja-quente, telha vermelha |
+| 9 | avatar_base_idle_se | ajustado | fazendeiro adulto, brim azul, colete de couro |
+| 10 | ui_indicator_ready | 48×60 | indicador sobre o trigo maduro |
+
+Pergunta ao usuário: o mundo agora está no estilo das suas imagens? Aprova a direção, ou diga quais peças reprovar e por quê.
 Resposta do usuário: _(pendente)_

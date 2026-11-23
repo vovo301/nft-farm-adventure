@@ -1,0 +1,26 @@
+{
+ "name": "crop_tomato_s2",
+ "size_1x": [
+  72,
+  76
+ ],
+ "anchor_px_1x": [
+  36,
+  74
+ ],
+ "origin": [
+  0.5,
+  0.973684
+ ],
+ "footprint_tiles": [
+  1,
+  1
+ ],
+ "scales": [
+  1,
+  2
+ ],
+ "derived_from": "art/export/user-items/crops/crop_tomato_s2@2x.png",
+ "world_scale_of_user_2x": 0.56,
+ "z_base_px": 11
+}

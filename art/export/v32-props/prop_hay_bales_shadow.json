@@ -1,0 +1,23 @@
+{
+ "name": "prop_hay_bales_shadow",
+ "size_1x": [
+  96,
+  48
+ ],
+ "anchor_px_1x": [
+  38,
+  22
+ ],
+ "origin": [
+  0.395833,
+  0.458333
+ ],
+ "footprint_tiles": [
+  1,
+  1
+ ],
+ "scales": [
+  1,
+  2
+ ]
+}

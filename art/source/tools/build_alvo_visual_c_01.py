@@ -1905,6 +1905,8 @@ def update_manifest(assets, extra, qa_ok):
 # =========================================================================== MAIN
 def main():
     global _ASSETS
+    # c-01 foi feito com a paleta v3.1 (arquivada quando a v3.2 entrou, lote c-02)
+    iv.use_palette(iv.ART / "style-guide" / "archive" / "v3.1" / "palette-v3.1.json")
     assets = build_assets()
     _ASSETS = assets
     for name, (a, fam) in assets.items():

@@ -1,0 +1,23 @@
+{
+ "name": "decor_pebbles_a",
+ "size_1x": [
+  48,
+  28
+ ],
+ "anchor_px_1x": [
+  24,
+  16
+ ],
+ "origin": [
+  0.5,
+  0.571429
+ ],
+ "footprint_tiles": [
+  0.3,
+  0.3
+ ],
+ "scales": [
+  1,
+  2
+ ]
+}

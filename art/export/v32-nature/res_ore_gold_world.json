@@ -1,0 +1,25 @@
+{
+ "name": "res_ore_gold_world",
+ "size_1x": [
+  36,
+  40
+ ],
+ "anchor_px_1x": [
+  18,
+  30
+ ],
+ "origin": [
+  0.5,
+  0.75
+ ],
+ "footprint_tiles": [
+  1,
+  1
+ ],
+ "scales": [
+  1,
+  2
+ ],
+ "derived_from": "art/export/user-items/resources/resource_ore_gold@2x.png",
+ "world_scale_of_user_2x": 0.13
+}

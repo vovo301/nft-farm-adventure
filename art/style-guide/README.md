@@ -1,6 +1,14 @@
-# Guia de estilo: NFT Farm Adventure (v3 · pintado/ilustrado)
+# Guia de estilo: NFT Farm Adventure (v3.2 · pintado/ilustrado)
 
-> Dono: `diretor-de-arte`. **Versão 3.1 (2026-11-22).**
+> Dono: `diretor-de-arte`. **Versão 3.2 (2026-11-23).** A v3.1 está em `archive/v3.1/`.
+>
+> **Mudança da v3.2 (pedido do usuário, 2026-11-23: "quero que use as imagens/estilo de arte para a
+> cena"):** o **mundo** (chão, árvores, construções, cerca, pedras, personagem, água) usa o mesmo
+> estilo das imagens do usuário: pintado/ilustrado, **vivo e saturado**, volumes suaves com luz e
+> sombra pintadas, contorno escuro-quente fino. Acabou o "mundo mais calmo" do estilo C. Continuam:
+> isométrico 2:1, tile 128×64, @1x/@2x, âncoras, sombras separadas, leitura a 0,5 (L1–L5),
+> personagem adulto e nada infantil/arredondado demais. Brilho e partículas seguem só em itens
+> especiais (seção 6).
 > Substitui a v2.1 (isométrico cartoon arredondado, reprovada no lote `2026-11-22-alvo-visual-iso-01`),
 > arquivada em `art/style-guide/archive/cartoon-v2.1/` junto com a paleta v2.1. A v1 (pixel art) está
 > em `archive/pixel-v0/`.
@@ -15,7 +23,7 @@
 >    pontuda, não em lobos redondos.
 >
 > Estado: **proposta.** A grade, o export, as âncoras e as sombras separadas já valem. Forma, cor e
-> acabamento viram oficiais quando o alvo `2026-11-22-alvo-visual-c-01` e os recortes
+> acabamento viram oficiais quando o alvo `2026-11-23-alvo-visual-c-02` e os recortes
 > `2026-11-22-itens-usuario-recortados` forem `approved`.
 
 A arte é original ou do usuário. Nada vem de Sunflower Land, do pack Sunnyside ou de kits de
@@ -115,8 +123,13 @@ Não há cabeça grande nem proporção chibi. As proporções são reais, levem
 - **Sombra projetada longa e suave:** projetada pela luz (`L_CAST`), com ~0,9× a altura do objeto
   para a direita e um pouco para baixo, em 3 camadas (mais escura perto da base). Mais uma elipse de
   contato (`sombra.contact`, 22 %). Nada de sombra preta ou dura.
-- **Chão calmo:** a grama tem valor médio e contraste baixo (textura periódica comum + miolo por
-  variante). O que se clica tem o maior contraste local (seção 8).
+- **Acabamento pintado no raster (v3.2, `paint_finish` em `build_alvo_visual_c_02.py`):** em toda
+  peça do mundo com contorno, antes do contorno: degradê de luz quente no topo-esquerda → sombra
+  fria no baixo-direita (±10 %), oclusão suave nos 28 % de baixo da silhueta (até −16 %) e
+  saturação +12 %. É o "volume pintado" das imagens do usuário aplicado por igual ao mundo.
+- **Chão vivo, textura calma (v3.2):** a grama é verde-amarelada e saturada como as folhas do
+  usuário, mas a textura interna continua de contraste baixo. O que se clica se separa pelo
+  contorno escuro-quente e pelo valor (seção 9), não por o chão ser apagado.
 
 ## 6. Brilho e partículas (só itens especiais)
 
@@ -153,16 +166,19 @@ Regra tirada das imagens do usuário: o **brilho é raro e significa valor**.
   porque são assim, mas têm volume, brilho especular e contorno (como na arte do usuário).
 - **Materiais:** madeira (tábua, casca, madeira cinza de cerca), barro (telha), pedra, terra
   (canteiro, caminho, barranco), palha, metal, tecido (linho, brim, couro), água, cristal.
-- **Paleta `palette.json` v3.1:**
-  - 32 rampas do **estilo C** (terrosas, saturação baixa a média), para chão, construções,
-    natureza e personagem;
+- **Paleta `palette.json` v3.2** (a v3.1 está em `archive/v3.1/palette-v3.1.json`):
+  - 32 rampas do **mundo** (`origin: world_v3.2`), reajustadas lado a lado com as imagens do
+    usuário: grama verde-amarelada viva, folhagem com luz amarela, telha vermelho-alaranjada,
+    tábua e casca em marrom quente (família da tora do usuário), pedra no cinza da pedra do
+    usuário, minério no ouro do usuário, água azul-turquesa, roupa com brim azul e couro marrom;
   - **+14 rampas `origin: user_art`**, extraídas das imagens do usuário por
     `extract_palette_v3.py`: `folha_viva`, `terra_monte`, `fruta_viva`, `laranja_viva`,
     `amarelo_vivo`, `roxo_vivo`, `ouro`, `aco`, `cabo_madeira`, `pedra_ilustrada`,
     `cristal_azul`, `cristal_roxo`, `cristal_verde` e `contorno_item`. Elas são mais saturadas e
     valem para itens, culturas, frutos e efeitos.
-  - **Hierarquia de saturação:** chão < construções < natureza < itens/culturas maduras < efeitos.
-    O que é recompensa é o mais vivo da tela.
+  - **Hierarquia (v3.2):** todo o mundo é vivo e saturado; o que é recompensa se destaca por
+    **brilho e partículas** (só itens especiais, seção 6) e por cor de fruto/grão, não por o resto
+    ser apagado.
   - No SVG-fonte, toda cor é um tom da paleta ou a mistura de **dois tons vizinhos da mesma
     rampa** (`paint_vector.tone`). O QA verifica cada hex, com tolerância de 2/255.
 - **Exclusões:** texto dentro da arte, logos, preto e branco puros, contorno preto, cabeça grande
@@ -209,7 +225,8 @@ objeto com ≥ 24 px @1x; área de toque ≥ 44 CSS px.
 | `art/source/tools/paint_vector.py` | estilo pintado: `tone()`, `crown()` (massas de tufos), `leaf_clump`, `blade_tuft`, `stone`, `rim`, `occlusion`, `soft_shadow` (luz `L_CAST`), `palette_mix_ok` |
 | `art/source/tools/cut_user_items.py` | recorte das imagens do usuário: fundo estimado, objeto por preenchimento a partir da borda (bordas nítidas e contorno bloqueiam), brilho por *unmultiply*, cor descontaminada, @2x original / @1x pré-multiplicado, QA e pranchas |
 | `art/source/tools/extract_palette_v3.py` | rampas `user_art` da paleta v3.1 |
-| `art/source/tools/build_alvo_visual_c_01.py` | alvo visual v3: peças, cenas, prova de leitura a 0,5, QA e manifesto |
+| `art/source/tools/build_alvo_visual_c_01.py` | alvo visual c-01 (paleta v3.1 arquivada): peças, cenas, prova de leitura a 0,5, QA e manifesto |
+| `art/source/tools/build_alvo_visual_c_02.py` | alvo visual c-02 (v3.2): reaproveita o c-01 com a paleta v3.2, `paint_finish`, culturas e recursos do usuário no mundo; exporta em `art/export/v32-*` |
 
 Instalação: `python3 -m pip install -r art/source/tools/requirements.txt` (cairosvg, Pillow,
 numpy). Os builds dos lotes v2.1 continuam reproduzíveis porque apontam para a paleta arquivada.
@@ -221,5 +238,6 @@ a 0,5, 0,75, 1, 1,5 e 2; 3×3 de cada tile; paleta; contrato (canvas, âncora, b
 ## 12. Estado
 
 - Recortes do usuário: lote `2026-11-22-itens-usuario-recortados` (**in_review**).
-- Alvo visual v3: lote `2026-11-22-alvo-visual-c-01` (**in_review**).
+- Alvo visual c-01: **substituído por c-02 a pedido do usuário** (mundo "mais calmo" recusado).
+- Alvo visual v3.2: lote `2026-11-23-alvo-visual-c-02` (**in_review**).
 - Nada é produzido em escala antes das duas aprovações.

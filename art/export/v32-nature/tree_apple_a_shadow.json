@@ -1,0 +1,23 @@
+{
+ "name": "tree_apple_a_shadow",
+ "size_1x": [
+  212,
+  72
+ ],
+ "anchor_px_1x": [
+  50,
+  28
+ ],
+ "origin": [
+  0.235849,
+  0.388889
+ ],
+ "footprint_tiles": [
+  1,
+  1
+ ],
+ "scales": [
+  1,
+  2
+ ]
+}

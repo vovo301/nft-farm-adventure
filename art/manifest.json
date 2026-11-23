@@ -2685,7 +2685,7 @@
     "art/source/v3-ground/ground_grass_b.svg",
     "art/source/v3-ground/ground_grass_c.svg"
    ],
-   "status": "in_review",
+   "status": "rejected",
    "variants": [
     "ground_grass_a",
     "ground_grass_b",
@@ -2737,7 +2737,8 @@
     "approved_by": ""
    },
    "review": "art/review/2026-11-22-alvo-visual-c-01/prancha.png",
-   "notes": "alvo visual v3; ver art/review/2026-11-22-alvo-visual-c-01/notas.md"
+   "notes": "substituído por c-02 a pedido do usuário (2026-11-23: 'quero que use as imagens/estilo de arte para a cena'); ver art/review/2026-11-23-alvo-visual-c-02/notas.md",
+   "superseded_by": "2026-11-23-alvo-visual-c-02"
   },
   {
    "id": "ground_water",
@@ -2756,7 +2757,7 @@
     "art/source/v3-ground/ground_water_a.svg",
     "art/source/v3-ground/ground_water_b.svg"
    ],
-   "status": "in_review",
+   "status": "rejected",
    "variants": [
     "ground_water_a",
     "ground_water_b"
@@ -2807,7 +2808,8 @@
     "approved_by": ""
    },
    "review": "art/review/2026-11-22-alvo-visual-c-01/prancha.png",
-   "notes": "alvo visual v3; ver art/review/2026-11-22-alvo-visual-c-01/notas.md"
+   "notes": "substituído por c-02 a pedido do usuário (2026-11-23: 'quero que use as imagens/estilo de arte para a cena'); ver art/review/2026-11-23-alvo-visual-c-02/notas.md",
+   "superseded_by": "2026-11-23-alvo-visual-c-02"
   },
   {
    "id": "ground_path_dirt",
@@ -2890,7 +2892,7 @@
     "art/source/v3-ground/ground_path_dirt_ypyn.svg",
     "art/source/v3-ground/ground_path_dirt_ypyn_b.svg"
    ],
-   "status": "in_review",
+   "status": "rejected",
    "variants": [
     "ground_path_dirt_none",
     "ground_path_dirt_xn",
@@ -2957,7 +2959,8 @@
     "approved_by": ""
    },
    "review": "art/review/2026-11-22-alvo-visual-c-01/prancha.png",
-   "notes": "alvo visual v3; ver art/review/2026-11-22-alvo-visual-c-01/notas.md"
+   "notes": "substituído por c-02 a pedido do usuário (2026-11-23: 'quero que use as imagens/estilo de arte para a cena'); ver art/review/2026-11-23-alvo-visual-c-02/notas.md",
+   "superseded_by": "2026-11-23-alvo-visual-c-02"
   },
   {
    "id": "ground_edge_grass",
@@ -3016,7 +3019,7 @@
     "art/source/v3-ground/ground_edge_grass_yp_c.svg",
     "art/source/v3-ground/ground_edge_grass_ypxn.svg"
    ],
-   "status": "in_review",
+   "status": "rejected",
    "variants": [
     "ground_edge_grass_xn",
     "ground_edge_grass_xnyn",
@@ -3077,7 +3080,8 @@
     "approved_by": ""
    },
    "review": "art/review/2026-11-22-alvo-visual-c-01/prancha.png",
-   "notes": "alvo visual v3; ver art/review/2026-11-22-alvo-visual-c-01/notas.md"
+   "notes": "substituído por c-02 a pedido do usuário (2026-11-23: 'quero que use as imagens/estilo de arte para a cena'); ver art/review/2026-11-23-alvo-visual-c-02/notas.md",
+   "superseded_by": "2026-11-23-alvo-visual-c-02"
   },
   {
    "id": "ground_pond_2x2",
@@ -3090,7 +3094,7 @@
     "art/export/v3-ground/ground_pond_2x2.json"
    ],
    "source_path": "art/source/v3-ground/ground_pond_2x2.svg",
-   "status": "in_review",
+   "status": "rejected",
    "variants": [],
    "technical": {
     "dimensions": "296x172",
@@ -3138,7 +3142,8 @@
     "approved_by": ""
    },
    "review": "art/review/2026-11-22-alvo-visual-c-01/prancha.png",
-   "notes": "alvo visual v3; ver art/review/2026-11-22-alvo-visual-c-01/notas.md"
+   "notes": "substituído por c-02 a pedido do usuário (2026-11-23: 'quero que use as imagens/estilo de arte para a cena'); ver art/review/2026-11-23-alvo-visual-c-02/notas.md",
+   "superseded_by": "2026-11-23-alvo-visual-c-02"
   },
   {
    "id": "decor_grass_patch_a",
@@ -3151,7 +3156,7 @@
     "art/export/v3-ground/decor_grass_patch_a.json"
    ],
    "source_path": "art/source/v3-ground/decor_grass_patch_a.svg",
-   "status": "in_review",
+   "status": "rejected",
    "variants": [],
    "technical": {
     "dimensions": "208x108",
@@ -3199,7 +3204,8 @@
     "approved_by": ""
    },
    "review": "art/review/2026-11-22-alvo-visual-c-01/prancha.png",
-   "notes": "alvo visual v3; ver art/review/2026-11-22-alvo-visual-c-01/notas.md"
+   "notes": "substituído por c-02 a pedido do usuário (2026-11-23: 'quero que use as imagens/estilo de arte para a cena'); ver art/review/2026-11-23-alvo-visual-c-02/notas.md",
+   "superseded_by": "2026-11-23-alvo-visual-c-02"
   },
   {
    "id": "decor_grass_patch_b",
@@ -3212,7 +3218,7 @@
     "art/export/v3-ground/decor_grass_patch_b.json"
    ],
    "source_path": "art/source/v3-ground/decor_grass_patch_b.svg",
-   "status": "in_review",
+   "status": "rejected",
    "variants": [],
    "technical": {
     "dimensions": "208x108",
@@ -3260,7 +3266,8 @@
     "approved_by": ""
    },
    "review": "art/review/2026-11-22-alvo-visual-c-01/prancha.png",
-   "notes": "alvo visual v3; ver art/review/2026-11-22-alvo-visual-c-01/notas.md"
+   "notes": "substituído por c-02 a pedido do usuário (2026-11-23: 'quero que use as imagens/estilo de arte para a cena'); ver art/review/2026-11-23-alvo-visual-c-02/notas.md",
+   "superseded_by": "2026-11-23-alvo-visual-c-02"
   },
   {
    "id": "decor_flowers_a",
@@ -3273,7 +3280,7 @@
     "art/export/v3-ground/decor_flowers_a.json"
    ],
    "source_path": "art/source/v3-ground/decor_flowers_a.svg",
-   "status": "in_review",
+   "status": "rejected",
    "variants": [],
    "technical": {
     "dimensions": "64x44",
@@ -3321,7 +3328,8 @@
     "approved_by": ""
    },
    "review": "art/review/2026-11-22-alvo-visual-c-01/prancha.png",
-   "notes": "alvo visual v3; ver art/review/2026-11-22-alvo-visual-c-01/notas.md"
+   "notes": "substituído por c-02 a pedido do usuário (2026-11-23: 'quero que use as imagens/estilo de arte para a cena'); ver art/review/2026-11-23-alvo-visual-c-02/notas.md",
+   "superseded_by": "2026-11-23-alvo-visual-c-02"
   },
   {
    "id": "decor_pebbles_a",
@@ -3334,7 +3342,7 @@
     "art/export/v3-ground/decor_pebbles_a.json"
    ],
    "source_path": "art/source/v3-ground/decor_pebbles_a.svg",
-   "status": "in_review",
+   "status": "rejected",
    "variants": [],
    "technical": {
     "dimensions": "48x28",
@@ -3382,7 +3390,8 @@
     "approved_by": ""
    },
    "review": "art/review/2026-11-22-alvo-visual-c-01/prancha.png",
-   "notes": "alvo visual v3; ver art/review/2026-11-22-alvo-visual-c-01/notas.md"
+   "notes": "substituído por c-02 a pedido do usuário (2026-11-23: 'quero que use as imagens/estilo de arte para a cena'); ver art/review/2026-11-23-alvo-visual-c-02/notas.md",
+   "superseded_by": "2026-11-23-alvo-visual-c-02"
   },
   {
    "id": "tree_oak_a",
@@ -3401,7 +3410,7 @@
     "art/source/v3-nature/tree_oak_a.svg",
     "art/source/v3-nature/tree_oak_a_shadow.svg"
    ],
-   "status": "in_review",
+   "status": "rejected",
    "variants": [],
    "technical": {
     "dimensions": "172x232",
@@ -3449,7 +3458,8 @@
     "approved_by": ""
    },
    "review": "art/review/2026-11-22-alvo-visual-c-01/prancha.png",
-   "notes": "alvo visual v3; ver art/review/2026-11-22-alvo-visual-c-01/notas.md"
+   "notes": "substituído por c-02 a pedido do usuário (2026-11-23: 'quero que use as imagens/estilo de arte para a cena'); ver art/review/2026-11-23-alvo-visual-c-02/notas.md",
+   "superseded_by": "2026-11-23-alvo-visual-c-02"
   },
   {
    "id": "tree_apple_a",
@@ -3468,7 +3478,7 @@
     "art/source/v3-nature/tree_apple_a.svg",
     "art/source/v3-nature/tree_apple_a_shadow.svg"
    ],
-   "status": "in_review",
+   "status": "rejected",
    "variants": [],
    "technical": {
     "dimensions": "172x188",
@@ -3516,7 +3526,8 @@
     "approved_by": ""
    },
    "review": "art/review/2026-11-22-alvo-visual-c-01/prancha.png",
-   "notes": "alvo visual v3; ver art/review/2026-11-22-alvo-visual-c-01/notas.md"
+   "notes": "substituído por c-02 a pedido do usuário (2026-11-23: 'quero que use as imagens/estilo de arte para a cena'); ver art/review/2026-11-23-alvo-visual-c-02/notas.md",
+   "superseded_by": "2026-11-23-alvo-visual-c-02"
   },
   {
    "id": "tree_pine_a",
@@ -3535,7 +3546,7 @@
     "art/source/v3-nature/tree_pine_a.svg",
     "art/source/v3-nature/tree_pine_a_shadow.svg"
    ],
-   "status": "in_review",
+   "status": "rejected",
    "variants": [],
    "technical": {
     "dimensions": "104x224",
@@ -3583,7 +3594,8 @@
     "approved_by": ""
    },
    "review": "art/review/2026-11-22-alvo-visual-c-01/prancha.png",
-   "notes": "alvo visual v3; ver art/review/2026-11-22-alvo-visual-c-01/notas.md"
+   "notes": "substituído por c-02 a pedido do usuário (2026-11-23: 'quero que use as imagens/estilo de arte para a cena'); ver art/review/2026-11-23-alvo-visual-c-02/notas.md",
+   "superseded_by": "2026-11-23-alvo-visual-c-02"
   },
   {
    "id": "prop_bush_a",
@@ -3602,7 +3614,7 @@
     "art/source/v3-nature/prop_bush_a.svg",
     "art/source/v3-nature/prop_bush_a_shadow.svg"
    ],
-   "status": "in_review",
+   "status": "rejected",
    "variants": [],
    "technical": {
     "dimensions": "84x56",
@@ -3650,7 +3662,8 @@
     "approved_by": ""
    },
    "review": "art/review/2026-11-22-alvo-visual-c-01/prancha.png",
-   "notes": "alvo visual v3; ver art/review/2026-11-22-alvo-visual-c-01/notas.md"
+   "notes": "substituído por c-02 a pedido do usuário (2026-11-23: 'quero que use as imagens/estilo de arte para a cena'); ver art/review/2026-11-23-alvo-visual-c-02/notas.md",
+   "superseded_by": "2026-11-23-alvo-visual-c-02"
   },
   {
    "id": "prop_bush_b",
@@ -3669,7 +3682,7 @@
     "art/source/v3-nature/prop_bush_b.svg",
     "art/source/v3-nature/prop_bush_b_shadow.svg"
    ],
-   "status": "in_review",
+   "status": "rejected",
    "variants": [],
    "technical": {
     "dimensions": "84x56",
@@ -3717,7 +3730,8 @@
     "approved_by": ""
    },
    "review": "art/review/2026-11-22-alvo-visual-c-01/prancha.png",
-   "notes": "alvo visual v3; ver art/review/2026-11-22-alvo-visual-c-01/notas.md"
+   "notes": "substituído por c-02 a pedido do usuário (2026-11-23: 'quero que use as imagens/estilo de arte para a cena'); ver art/review/2026-11-23-alvo-visual-c-02/notas.md",
+   "superseded_by": "2026-11-23-alvo-visual-c-02"
   },
   {
    "id": "rock_ore_a",
@@ -3736,7 +3750,7 @@
     "art/source/v3-nature/rock_ore_a.svg",
     "art/source/v3-nature/rock_ore_a_shadow.svg"
    ],
-   "status": "in_review",
+   "status": "rejected",
    "variants": [],
    "technical": {
     "dimensions": "108x64",
@@ -3784,7 +3798,8 @@
     "approved_by": ""
    },
    "review": "art/review/2026-11-22-alvo-visual-c-01/prancha.png",
-   "notes": "alvo visual v3; ver art/review/2026-11-22-alvo-visual-c-01/notas.md"
+   "notes": "substituído por c-02 a pedido do usuário (2026-11-23: 'quero que use as imagens/estilo de arte para a cena'); ver art/review/2026-11-23-alvo-visual-c-02/notas.md",
+   "superseded_by": "2026-11-23-alvo-visual-c-02"
   },
   {
    "id": "plot_raised_bed",
@@ -3803,7 +3818,7 @@
     "art/source/v3-crops/plot_raised_bed.svg",
     "art/source/v3-crops/plot_raised_bed_shadow.svg"
    ],
-   "status": "in_review",
+   "status": "rejected",
    "variants": [],
    "technical": {
     "dimensions": "112x76",
@@ -3851,7 +3866,8 @@
     "approved_by": ""
    },
    "review": "art/review/2026-11-22-alvo-visual-c-01/prancha.png",
-   "notes": "alvo visual v3; ver art/review/2026-11-22-alvo-visual-c-01/notas.md"
+   "notes": "substituído por c-02 a pedido do usuário (2026-11-23: 'quero que use as imagens/estilo de arte para a cena'); ver art/review/2026-11-23-alvo-visual-c-02/notas.md",
+   "superseded_by": "2026-11-23-alvo-visual-c-02"
   },
   {
    "id": "prop_hay_bales",
@@ -3870,7 +3886,7 @@
     "art/source/v3-props/prop_hay_bales.svg",
     "art/source/v3-props/prop_hay_bales_shadow.svg"
    ],
-   "status": "in_review",
+   "status": "rejected",
    "variants": [],
    "technical": {
     "dimensions": "88x72",
@@ -3918,7 +3934,8 @@
     "approved_by": ""
    },
    "review": "art/review/2026-11-22-alvo-visual-c-01/prancha.png",
-   "notes": "alvo visual v3; ver art/review/2026-11-22-alvo-visual-c-01/notas.md"
+   "notes": "substituído por c-02 a pedido do usuário (2026-11-23: 'quero que use as imagens/estilo de arte para a cena'); ver art/review/2026-11-23-alvo-visual-c-02/notas.md",
+   "superseded_by": "2026-11-23-alvo-visual-c-02"
   },
   {
    "id": "prop_crate",
@@ -3937,7 +3954,7 @@
     "art/source/v3-props/prop_crate.svg",
     "art/source/v3-props/prop_crate_shadow.svg"
    ],
-   "status": "in_review",
+   "status": "rejected",
    "variants": [],
    "technical": {
     "dimensions": "64x60",
@@ -3985,7 +4002,8 @@
     "approved_by": ""
    },
    "review": "art/review/2026-11-22-alvo-visual-c-01/prancha.png",
-   "notes": "alvo visual v3; ver art/review/2026-11-22-alvo-visual-c-01/notas.md"
+   "notes": "substituído por c-02 a pedido do usuário (2026-11-23: 'quero que use as imagens/estilo de arte para a cena'); ver art/review/2026-11-23-alvo-visual-c-02/notas.md",
+   "superseded_by": "2026-11-23-alvo-visual-c-02"
   },
   {
    "id": "prop_fence_wood",
@@ -4060,7 +4078,7 @@
     "art/source/v3-props/prop_fence_y.svg",
     "art/source/v3-props/prop_fence_y_shadow.svg"
    ],
-   "status": "in_review",
+   "status": "rejected",
    "variants": [
     "prop_fence_corner_e",
     "prop_fence_corner_n",
@@ -4117,7 +4135,8 @@
     "approved_by": ""
    },
    "review": "art/review/2026-11-22-alvo-visual-c-01/prancha.png",
-   "notes": "alvo visual v3; ver art/review/2026-11-22-alvo-visual-c-01/notas.md"
+   "notes": "substituído por c-02 a pedido do usuário (2026-11-23: 'quero que use as imagens/estilo de arte para a cena'); ver art/review/2026-11-23-alvo-visual-c-02/notas.md",
+   "superseded_by": "2026-11-23-alvo-visual-c-02"
   },
   {
    "id": "bld_barn_small",
@@ -4136,7 +4155,7 @@
     "art/source/v3-buildings/bld_barn_small.svg",
     "art/source/v3-buildings/bld_barn_small_shadow.svg"
    ],
-   "status": "in_review",
+   "status": "rejected",
    "variants": [],
    "technical": {
     "dimensions": "328x332",
@@ -4184,7 +4203,8 @@
     "approved_by": ""
    },
    "review": "art/review/2026-11-22-alvo-visual-c-01/prancha.png",
-   "notes": "alvo visual v3; ver art/review/2026-11-22-alvo-visual-c-01/notas.md"
+   "notes": "substituído por c-02 a pedido do usuário (2026-11-23: 'quero que use as imagens/estilo de arte para a cena'); ver art/review/2026-11-23-alvo-visual-c-02/notas.md",
+   "superseded_by": "2026-11-23-alvo-visual-c-02"
   },
   {
    "id": "avatar_base_idle_se",
@@ -4203,7 +4223,7 @@
     "art/source/v3-characters/avatar_base_idle_se.svg",
     "art/source/v3-characters/avatar_base_idle_se_shadow.svg"
    ],
-   "status": "in_review",
+   "status": "rejected",
    "variants": [],
    "technical": {
     "dimensions": "44x108",
@@ -4251,7 +4271,8 @@
     "approved_by": ""
    },
    "review": "art/review/2026-11-22-alvo-visual-c-01/prancha.png",
-   "notes": "alvo visual v3; ver art/review/2026-11-22-alvo-visual-c-01/notas.md"
+   "notes": "substituído por c-02 a pedido do usuário (2026-11-23: 'quero que use as imagens/estilo de arte para a cena'); ver art/review/2026-11-23-alvo-visual-c-02/notas.md",
+   "superseded_by": "2026-11-23-alvo-visual-c-02"
   },
   {
    "id": "ui_indicator_ready",
@@ -4264,7 +4285,7 @@
     "art/export/v3-ui/ui_indicator_ready.json"
    ],
    "source_path": "art/source/v3-ui/ui_indicator_ready.svg",
-   "status": "in_review",
+   "status": "rejected",
    "variants": [],
    "technical": {
     "dimensions": "48x60",
@@ -4312,7 +4333,8 @@
     "approved_by": ""
    },
    "review": "art/review/2026-11-22-alvo-visual-c-01/prancha.png",
-   "notes": "alvo visual v3; ver art/review/2026-11-22-alvo-visual-c-01/notas.md"
+   "notes": "substituído por c-02 a pedido do usuário (2026-11-23: 'quero que use as imagens/estilo de arte para a cena'); ver art/review/2026-11-23-alvo-visual-c-02/notas.md",
+   "superseded_by": "2026-11-23-alvo-visual-c-02"
   },
   {
    "id": "crop_wheat",
@@ -4335,7 +4357,7 @@
     "art/export/user-items/crops/crop_wheat_s2@2x.png",
     "art/export/user-items/crops/crop_wheat_s3@2x.png"
    ],
-   "status": "in_review",
+   "status": "rejected",
    "variants": [
     "crop_wheat_s1",
     "crop_wheat_s2",
@@ -4388,7 +4410,8 @@
     "approved_by": ""
    },
    "review": "art/review/2026-11-22-alvo-visual-c-01/prancha.png",
-   "notes": "alvo visual v3; ver art/review/2026-11-22-alvo-visual-c-01/notas.md"
+   "notes": "substituído por c-02 a pedido do usuário (2026-11-23: 'quero que use as imagens/estilo de arte para a cena'); ver art/review/2026-11-23-alvo-visual-c-02/notas.md",
+   "superseded_by": "2026-11-23-alvo-visual-c-02"
   },
   {
    "id": "resource_stone",
@@ -9465,6 +9488,2147 @@
    },
    "review": "art/review/2026-11-22-itens-usuario-recortados/",
    "notes": "nome descreve o que a imagem mostra; mapeamento para ids do jogo fica para depois"
+  },
+  {
+   "id": "ground_grass",
+   "batch": "2026-11-23-alvo-visual-c-02",
+   "role": "chão de grama pintada, variantes a (sol), b (touceira), c (mancha seca + florzinhas); textura periódica comum",
+   "path": "art/export/v32-ground/ground_grass_a@1x.png",
+   "files": [
+    "art/export/v32-ground/ground_grass_a@1x.png",
+    "art/export/v32-ground/ground_grass_a@2x.png",
+    "art/export/v32-ground/ground_grass_a.json",
+    "art/export/v32-ground/ground_grass_b@1x.png",
+    "art/export/v32-ground/ground_grass_b@2x.png",
+    "art/export/v32-ground/ground_grass_b.json",
+    "art/export/v32-ground/ground_grass_c@1x.png",
+    "art/export/v32-ground/ground_grass_c@2x.png",
+    "art/export/v32-ground/ground_grass_c.json"
+   ],
+   "source_path": [
+    "art/source/v32-ground/ground_grass_a.svg",
+    "art/source/v32-ground/ground_grass_b.svg",
+    "art/source/v32-ground/ground_grass_c.svg"
+   ],
+   "status": "in_review",
+   "variants": [
+    "ground_grass_a",
+    "ground_grass_b",
+    "ground_grass_c"
+   ],
+   "technical": {
+    "dimensions": "136x68",
+    "alpha": true,
+    "anchor": "centro do losango da pegada",
+    "anchor_px_1x": [
+     68,
+     34
+    ],
+    "origin": [
+     0.5,
+     0.5
+    ],
+    "footprint_tiles": [
+     1,
+     1
+    ],
+    "frames": 1,
+    "filtering": "linear",
+    "max_colors": null,
+    "palette": "art/style-guide/palette.json (v3.2)",
+    "shadow": "sem sombra",
+    "interactive_rim": false
+   },
+   "visual_locks": [
+    "palette-v3.2",
+    "projection-2:1",
+    "anchor",
+    "light-direction",
+    "outline-v3",
+    "paint-finish-v3.2"
+   ],
+   "source": {
+    "kind": "scripted",
+    "url_or_tool": "art/source/tools/build_alvo_visual_c_02.py + build_alvo_visual_c_01.py + paint_vector.py + iso_vector.py (cairosvg)",
+    "creator": "agente diretor-de-arte (Claude)",
+    "created_at": "2026-11-23",
+    "license": "original do projeto (todos os direitos do projeto)",
+    "attribution": "",
+    "prompt_or_source_record": "SVG gerado por código com a paleta v3.2; acabamento pintado (paint_finish) e contorno no raster; sem IA; sem referência externa; nada derivado de Sunflower Land/Sunnyside"
+   },
+   "verification": {
+    "native_scale_reviewed": true,
+    "in_engine_reviewed": false,
+    "technical_checks_passed": true,
+    "approved_by": ""
+   },
+   "review": "art/review/2026-11-23-alvo-visual-c-02/antes-depois.png",
+   "notes": "alvo visual c-02 (guia v3.2); substitui c-01; ver art/review/2026-11-23-alvo-visual-c-02/notas.md"
+  },
+  {
+   "id": "ground_water",
+   "batch": "2026-11-23-alvo-visual-c-02",
+   "role": "água de fundo ao redor da ilha (40 px abaixo da grama), variantes a e b",
+   "path": "art/export/v32-ground/ground_water_a@1x.png",
+   "files": [
+    "art/export/v32-ground/ground_water_a@1x.png",
+    "art/export/v32-ground/ground_water_a@2x.png",
+    "art/export/v32-ground/ground_water_a.json",
+    "art/export/v32-ground/ground_water_b@1x.png",
+    "art/export/v32-ground/ground_water_b@2x.png",
+    "art/export/v32-ground/ground_water_b.json"
+   ],
+   "source_path": [
+    "art/source/v32-ground/ground_water_a.svg",
+    "art/source/v32-ground/ground_water_b.svg"
+   ],
+   "status": "in_review",
+   "variants": [
+    "ground_water_a",
+    "ground_water_b"
+   ],
+   "technical": {
+    "dimensions": "136x68",
+    "alpha": true,
+    "anchor": "centro do losango da pegada",
+    "anchor_px_1x": [
+     68,
+     34
+    ],
+    "origin": [
+     0.5,
+     0.5
+    ],
+    "footprint_tiles": [
+     1,
+     1
+    ],
+    "frames": 1,
+    "filtering": "linear",
+    "max_colors": null,
+    "palette": "art/style-guide/palette.json (v3.2)",
+    "shadow": "sem sombra",
+    "interactive_rim": false
+   },
+   "visual_locks": [
+    "palette-v3.2",
+    "projection-2:1",
+    "anchor",
+    "light-direction",
+    "outline-v3",
+    "paint-finish-v3.2"
+   ],
+   "source": {
+    "kind": "scripted",
+    "url_or_tool": "art/source/tools/build_alvo_visual_c_02.py + build_alvo_visual_c_01.py + paint_vector.py + iso_vector.py (cairosvg)",
+    "creator": "agente diretor-de-arte (Claude)",
+    "created_at": "2026-11-23",
+    "license": "original do projeto (todos os direitos do projeto)",
+    "attribution": "",
+    "prompt_or_source_record": "SVG gerado por código com a paleta v3.2; acabamento pintado (paint_finish) e contorno no raster; sem IA; sem referência externa; nada derivado de Sunflower Land/Sunnyside"
+   },
+   "verification": {
+    "native_scale_reviewed": true,
+    "in_engine_reviewed": false,
+    "technical_checks_passed": true,
+    "approved_by": ""
+   },
+   "review": "art/review/2026-11-23-alvo-visual-c-02/antes-depois.png",
+   "notes": "alvo visual c-02 (guia v3.2); substitui c-01; ver art/review/2026-11-23-alvo-visual-c-02/notas.md"
+  },
+  {
+   "id": "ground_path_dirt",
+   "batch": "2026-11-23-alvo-visual-c-02",
+   "role": "caminho de terra batida — autotile de 16 por máscara (+x, +y, -x, -y) + variantes _b dos retos",
+   "path": "art/export/v32-ground/ground_path_dirt_none@1x.png",
+   "files": [
+    "art/export/v32-ground/ground_path_dirt_none@1x.png",
+    "art/export/v32-ground/ground_path_dirt_none@2x.png",
+    "art/export/v32-ground/ground_path_dirt_none.json",
+    "art/export/v32-ground/ground_path_dirt_xn@1x.png",
+    "art/export/v32-ground/ground_path_dirt_xn@2x.png",
+    "art/export/v32-ground/ground_path_dirt_xn.json",
+    "art/export/v32-ground/ground_path_dirt_xnyn@1x.png",
+    "art/export/v32-ground/ground_path_dirt_xnyn@2x.png",
+    "art/export/v32-ground/ground_path_dirt_xnyn.json",
+    "art/export/v32-ground/ground_path_dirt_xp@1x.png",
+    "art/export/v32-ground/ground_path_dirt_xp@2x.png",
+    "art/export/v32-ground/ground_path_dirt_xp.json",
+    "art/export/v32-ground/ground_path_dirt_xpxn@1x.png",
+    "art/export/v32-ground/ground_path_dirt_xpxn@2x.png",
+    "art/export/v32-ground/ground_path_dirt_xpxn.json",
+    "art/export/v32-ground/ground_path_dirt_xpxn_b@1x.png",
+    "art/export/v32-ground/ground_path_dirt_xpxn_b@2x.png",
+    "art/export/v32-ground/ground_path_dirt_xpxn_b.json",
+    "art/export/v32-ground/ground_path_dirt_xpxnyn@1x.png",
+    "art/export/v32-ground/ground_path_dirt_xpxnyn@2x.png",
+    "art/export/v32-ground/ground_path_dirt_xpxnyn.json",
+    "art/export/v32-ground/ground_path_dirt_xpyn@1x.png",
+    "art/export/v32-ground/ground_path_dirt_xpyn@2x.png",
+    "art/export/v32-ground/ground_path_dirt_xpyn.json",
+    "art/export/v32-ground/ground_path_dirt_xpyp@1x.png",
+    "art/export/v32-ground/ground_path_dirt_xpyp@2x.png",
+    "art/export/v32-ground/ground_path_dirt_xpyp.json",
+    "art/export/v32-ground/ground_path_dirt_xpypxn@1x.png",
+    "art/export/v32-ground/ground_path_dirt_xpypxn@2x.png",
+    "art/export/v32-ground/ground_path_dirt_xpypxn.json",
+    "art/export/v32-ground/ground_path_dirt_xpypxnyn@1x.png",
+    "art/export/v32-ground/ground_path_dirt_xpypxnyn@2x.png",
+    "art/export/v32-ground/ground_path_dirt_xpypxnyn.json",
+    "art/export/v32-ground/ground_path_dirt_xpypyn@1x.png",
+    "art/export/v32-ground/ground_path_dirt_xpypyn@2x.png",
+    "art/export/v32-ground/ground_path_dirt_xpypyn.json",
+    "art/export/v32-ground/ground_path_dirt_yn@1x.png",
+    "art/export/v32-ground/ground_path_dirt_yn@2x.png",
+    "art/export/v32-ground/ground_path_dirt_yn.json",
+    "art/export/v32-ground/ground_path_dirt_yp@1x.png",
+    "art/export/v32-ground/ground_path_dirt_yp@2x.png",
+    "art/export/v32-ground/ground_path_dirt_yp.json",
+    "art/export/v32-ground/ground_path_dirt_ypxn@1x.png",
+    "art/export/v32-ground/ground_path_dirt_ypxn@2x.png",
+    "art/export/v32-ground/ground_path_dirt_ypxn.json",
+    "art/export/v32-ground/ground_path_dirt_ypxnyn@1x.png",
+    "art/export/v32-ground/ground_path_dirt_ypxnyn@2x.png",
+    "art/export/v32-ground/ground_path_dirt_ypxnyn.json",
+    "art/export/v32-ground/ground_path_dirt_ypyn@1x.png",
+    "art/export/v32-ground/ground_path_dirt_ypyn@2x.png",
+    "art/export/v32-ground/ground_path_dirt_ypyn.json",
+    "art/export/v32-ground/ground_path_dirt_ypyn_b@1x.png",
+    "art/export/v32-ground/ground_path_dirt_ypyn_b@2x.png",
+    "art/export/v32-ground/ground_path_dirt_ypyn_b.json"
+   ],
+   "source_path": [
+    "art/source/v32-ground/ground_path_dirt_none.svg",
+    "art/source/v32-ground/ground_path_dirt_xn.svg",
+    "art/source/v32-ground/ground_path_dirt_xnyn.svg",
+    "art/source/v32-ground/ground_path_dirt_xp.svg",
+    "art/source/v32-ground/ground_path_dirt_xpxn.svg",
+    "art/source/v32-ground/ground_path_dirt_xpxn_b.svg",
+    "art/source/v32-ground/ground_path_dirt_xpxnyn.svg",
+    "art/source/v32-ground/ground_path_dirt_xpyn.svg",
+    "art/source/v32-ground/ground_path_dirt_xpyp.svg",
+    "art/source/v32-ground/ground_path_dirt_xpypxn.svg",
+    "art/source/v32-ground/ground_path_dirt_xpypxnyn.svg",
+    "art/source/v32-ground/ground_path_dirt_xpypyn.svg",
+    "art/source/v32-ground/ground_path_dirt_yn.svg",
+    "art/source/v32-ground/ground_path_dirt_yp.svg",
+    "art/source/v32-ground/ground_path_dirt_ypxn.svg",
+    "art/source/v32-ground/ground_path_dirt_ypxnyn.svg",
+    "art/source/v32-ground/ground_path_dirt_ypyn.svg",
+    "art/source/v32-ground/ground_path_dirt_ypyn_b.svg"
+   ],
+   "status": "in_review",
+   "variants": [
+    "ground_path_dirt_none",
+    "ground_path_dirt_xn",
+    "ground_path_dirt_xnyn",
+    "ground_path_dirt_xp",
+    "ground_path_dirt_xpxn",
+    "ground_path_dirt_xpxn_b",
+    "ground_path_dirt_xpxnyn",
+    "ground_path_dirt_xpyn",
+    "ground_path_dirt_xpyp",
+    "ground_path_dirt_xpypxn",
+    "ground_path_dirt_xpypxnyn",
+    "ground_path_dirt_xpypyn",
+    "ground_path_dirt_yn",
+    "ground_path_dirt_yp",
+    "ground_path_dirt_ypxn",
+    "ground_path_dirt_ypxnyn",
+    "ground_path_dirt_ypyn",
+    "ground_path_dirt_ypyn_b"
+   ],
+   "technical": {
+    "dimensions": "136x68",
+    "alpha": true,
+    "anchor": "centro do losango da pegada",
+    "anchor_px_1x": [
+     68,
+     34
+    ],
+    "origin": [
+     0.5,
+     0.5
+    ],
+    "footprint_tiles": [
+     1,
+     1
+    ],
+    "frames": 1,
+    "filtering": "linear",
+    "max_colors": null,
+    "palette": "art/style-guide/palette.json (v3.2)",
+    "shadow": "sem sombra",
+    "interactive_rim": false
+   },
+   "visual_locks": [
+    "palette-v3.2",
+    "projection-2:1",
+    "anchor",
+    "light-direction",
+    "outline-v3",
+    "paint-finish-v3.2"
+   ],
+   "source": {
+    "kind": "scripted",
+    "url_or_tool": "art/source/tools/build_alvo_visual_c_02.py + build_alvo_visual_c_01.py + paint_vector.py + iso_vector.py (cairosvg)",
+    "creator": "agente diretor-de-arte (Claude)",
+    "created_at": "2026-11-23",
+    "license": "original do projeto (todos os direitos do projeto)",
+    "attribution": "",
+    "prompt_or_source_record": "SVG gerado por código com a paleta v3.2; acabamento pintado (paint_finish) e contorno no raster; sem IA; sem referência externa; nada derivado de Sunflower Land/Sunnyside"
+   },
+   "verification": {
+    "native_scale_reviewed": true,
+    "in_engine_reviewed": false,
+    "technical_checks_passed": true,
+    "approved_by": ""
+   },
+   "review": "art/review/2026-11-23-alvo-visual-c-02/antes-depois.png",
+   "notes": "alvo visual c-02 (guia v3.2); substitui c-01; ver art/review/2026-11-23-alvo-visual-c-02/notas.md"
+  },
+  {
+   "id": "ground_edge_grass",
+   "batch": "2026-11-23-alvo-visual-c-02",
+   "role": "borda da ilha: barranco com estratos, raízes e pedras angulares; beiço de grama pendente",
+   "path": "art/export/v32-ground/ground_edge_grass_xn@1x.png",
+   "files": [
+    "art/export/v32-ground/ground_edge_grass_xn@1x.png",
+    "art/export/v32-ground/ground_edge_grass_xn@2x.png",
+    "art/export/v32-ground/ground_edge_grass_xn.json",
+    "art/export/v32-ground/ground_edge_grass_xnyn@1x.png",
+    "art/export/v32-ground/ground_edge_grass_xnyn@2x.png",
+    "art/export/v32-ground/ground_edge_grass_xnyn.json",
+    "art/export/v32-ground/ground_edge_grass_xp@1x.png",
+    "art/export/v32-ground/ground_edge_grass_xp@2x.png",
+    "art/export/v32-ground/ground_edge_grass_xp.json",
+    "art/export/v32-ground/ground_edge_grass_xp_b@1x.png",
+    "art/export/v32-ground/ground_edge_grass_xp_b@2x.png",
+    "art/export/v32-ground/ground_edge_grass_xp_b.json",
+    "art/export/v32-ground/ground_edge_grass_xp_c@1x.png",
+    "art/export/v32-ground/ground_edge_grass_xp_c@2x.png",
+    "art/export/v32-ground/ground_edge_grass_xp_c.json",
+    "art/export/v32-ground/ground_edge_grass_xpyn@1x.png",
+    "art/export/v32-ground/ground_edge_grass_xpyn@2x.png",
+    "art/export/v32-ground/ground_edge_grass_xpyn.json",
+    "art/export/v32-ground/ground_edge_grass_xpyp@1x.png",
+    "art/export/v32-ground/ground_edge_grass_xpyp@2x.png",
+    "art/export/v32-ground/ground_edge_grass_xpyp.json",
+    "art/export/v32-ground/ground_edge_grass_yn@1x.png",
+    "art/export/v32-ground/ground_edge_grass_yn@2x.png",
+    "art/export/v32-ground/ground_edge_grass_yn.json",
+    "art/export/v32-ground/ground_edge_grass_yp@1x.png",
+    "art/export/v32-ground/ground_edge_grass_yp@2x.png",
+    "art/export/v32-ground/ground_edge_grass_yp.json",
+    "art/export/v32-ground/ground_edge_grass_yp_b@1x.png",
+    "art/export/v32-ground/ground_edge_grass_yp_b@2x.png",
+    "art/export/v32-ground/ground_edge_grass_yp_b.json",
+    "art/export/v32-ground/ground_edge_grass_yp_c@1x.png",
+    "art/export/v32-ground/ground_edge_grass_yp_c@2x.png",
+    "art/export/v32-ground/ground_edge_grass_yp_c.json",
+    "art/export/v32-ground/ground_edge_grass_ypxn@1x.png",
+    "art/export/v32-ground/ground_edge_grass_ypxn@2x.png",
+    "art/export/v32-ground/ground_edge_grass_ypxn.json"
+   ],
+   "source_path": [
+    "art/source/v32-ground/ground_edge_grass_xn.svg",
+    "art/source/v32-ground/ground_edge_grass_xnyn.svg",
+    "art/source/v32-ground/ground_edge_grass_xp.svg",
+    "art/source/v32-ground/ground_edge_grass_xp_b.svg",
+    "art/source/v32-ground/ground_edge_grass_xp_c.svg",
+    "art/source/v32-ground/ground_edge_grass_xpyn.svg",
+    "art/source/v32-ground/ground_edge_grass_xpyp.svg",
+    "art/source/v32-ground/ground_edge_grass_yn.svg",
+    "art/source/v32-ground/ground_edge_grass_yp.svg",
+    "art/source/v32-ground/ground_edge_grass_yp_b.svg",
+    "art/source/v32-ground/ground_edge_grass_yp_c.svg",
+    "art/source/v32-ground/ground_edge_grass_ypxn.svg"
+   ],
+   "status": "in_review",
+   "variants": [
+    "ground_edge_grass_xn",
+    "ground_edge_grass_xnyn",
+    "ground_edge_grass_xp",
+    "ground_edge_grass_xp_b",
+    "ground_edge_grass_xp_c",
+    "ground_edge_grass_xpyn",
+    "ground_edge_grass_xpyp",
+    "ground_edge_grass_yn",
+    "ground_edge_grass_yp",
+    "ground_edge_grass_yp_b",
+    "ground_edge_grass_yp_c",
+    "ground_edge_grass_ypxn"
+   ],
+   "technical": {
+    "dimensions": "136x116",
+    "alpha": true,
+    "anchor": "centro do losango da pegada",
+    "anchor_px_1x": [
+     68,
+     34
+    ],
+    "origin": [
+     0.5,
+     0.293103
+    ],
+    "footprint_tiles": [
+     1,
+     1
+    ],
+    "frames": 1,
+    "filtering": "linear",
+    "max_colors": null,
+    "palette": "art/style-guide/palette.json (v3.2)",
+    "shadow": "sem sombra",
+    "interactive_rim": false
+   },
+   "visual_locks": [
+    "palette-v3.2",
+    "projection-2:1",
+    "anchor",
+    "light-direction",
+    "outline-v3",
+    "paint-finish-v3.2"
+   ],
+   "source": {
+    "kind": "scripted",
+    "url_or_tool": "art/source/tools/build_alvo_visual_c_02.py + build_alvo_visual_c_01.py + paint_vector.py + iso_vector.py (cairosvg)",
+    "creator": "agente diretor-de-arte (Claude)",
+    "created_at": "2026-11-23",
+    "license": "original do projeto (todos os direitos do projeto)",
+    "attribution": "",
+    "prompt_or_source_record": "SVG gerado por código com a paleta v3.2; acabamento pintado (paint_finish) e contorno no raster; sem IA; sem referência externa; nada derivado de Sunflower Land/Sunnyside"
+   },
+   "verification": {
+    "native_scale_reviewed": true,
+    "in_engine_reviewed": false,
+    "technical_checks_passed": true,
+    "approved_by": ""
+   },
+   "review": "art/review/2026-11-23-alvo-visual-c-02/antes-depois.png",
+   "notes": "alvo visual c-02 (guia v3.2); substitui c-01; ver art/review/2026-11-23-alvo-visual-c-02/notas.md"
+  },
+  {
+   "id": "ground_pond_2x2",
+   "batch": "2026-11-23-alvo-visual-c-02",
+   "role": "lago 2x2 de margem irregular (decalque), folhas flutuantes, taboas, seixos",
+   "path": "art/export/v32-ground/ground_pond_2x2@1x.png",
+   "files": [
+    "art/export/v32-ground/ground_pond_2x2@1x.png",
+    "art/export/v32-ground/ground_pond_2x2@2x.png",
+    "art/export/v32-ground/ground_pond_2x2.json"
+   ],
+   "source_path": "art/source/v32-ground/ground_pond_2x2.svg",
+   "status": "in_review",
+   "variants": [],
+   "technical": {
+    "dimensions": "296x172",
+    "alpha": true,
+    "anchor": "centro do losango da pegada",
+    "anchor_px_1x": [
+     148,
+     98
+    ],
+    "origin": [
+     0.5,
+     0.569767
+    ],
+    "footprint_tiles": [
+     2,
+     2
+    ],
+    "frames": 1,
+    "filtering": "linear",
+    "max_colors": null,
+    "palette": "art/style-guide/palette.json (v3.2)",
+    "shadow": "sem sombra",
+    "interactive_rim": false
+   },
+   "visual_locks": [
+    "palette-v3.2",
+    "projection-2:1",
+    "anchor",
+    "light-direction",
+    "outline-v3",
+    "paint-finish-v3.2"
+   ],
+   "source": {
+    "kind": "scripted",
+    "url_or_tool": "art/source/tools/build_alvo_visual_c_02.py + build_alvo_visual_c_01.py + paint_vector.py + iso_vector.py (cairosvg)",
+    "creator": "agente diretor-de-arte (Claude)",
+    "created_at": "2026-11-23",
+    "license": "original do projeto (todos os direitos do projeto)",
+    "attribution": "",
+    "prompt_or_source_record": "SVG gerado por código com a paleta v3.2; acabamento pintado (paint_finish) e contorno no raster; sem IA; sem referência externa; nada derivado de Sunflower Land/Sunnyside"
+   },
+   "verification": {
+    "native_scale_reviewed": true,
+    "in_engine_reviewed": false,
+    "technical_checks_passed": true,
+    "approved_by": ""
+   },
+   "review": "art/review/2026-11-23-alvo-visual-c-02/antes-depois.png",
+   "notes": "alvo visual c-02 (guia v3.2); substitui c-01; ver art/review/2026-11-23-alvo-visual-c-02/notas.md"
+  },
+  {
+   "id": "decor_grass_patch_a",
+   "batch": "2026-11-23-alvo-visual-c-02",
+   "role": "mancha seca de grama (decalque)",
+   "path": "art/export/v32-ground/decor_grass_patch_a@1x.png",
+   "files": [
+    "art/export/v32-ground/decor_grass_patch_a@1x.png",
+    "art/export/v32-ground/decor_grass_patch_a@2x.png",
+    "art/export/v32-ground/decor_grass_patch_a.json"
+   ],
+   "source_path": "art/source/v32-ground/decor_grass_patch_a.svg",
+   "status": "in_review",
+   "variants": [],
+   "technical": {
+    "dimensions": "208x108",
+    "alpha": true,
+    "anchor": "centro do losango da pegada",
+    "anchor_px_1x": [
+     104,
+     54
+    ],
+    "origin": [
+     0.5,
+     0.5
+    ],
+    "footprint_tiles": [
+     1.5,
+     1.5
+    ],
+    "frames": 1,
+    "filtering": "linear",
+    "max_colors": null,
+    "palette": "art/style-guide/palette.json (v3.2)",
+    "shadow": "sem sombra",
+    "interactive_rim": false
+   },
+   "visual_locks": [
+    "palette-v3.2",
+    "projection-2:1",
+    "anchor",
+    "light-direction",
+    "outline-v3",
+    "paint-finish-v3.2"
+   ],
+   "source": {
+    "kind": "scripted",
+    "url_or_tool": "art/source/tools/build_alvo_visual_c_02.py + build_alvo_visual_c_01.py + paint_vector.py + iso_vector.py (cairosvg)",
+    "creator": "agente diretor-de-arte (Claude)",
+    "created_at": "2026-11-23",
+    "license": "original do projeto (todos os direitos do projeto)",
+    "attribution": "",
+    "prompt_or_source_record": "SVG gerado por código com a paleta v3.2; acabamento pintado (paint_finish) e contorno no raster; sem IA; sem referência externa; nada derivado de Sunflower Land/Sunnyside"
+   },
+   "verification": {
+    "native_scale_reviewed": true,
+    "in_engine_reviewed": false,
+    "technical_checks_passed": true,
+    "approved_by": ""
+   },
+   "review": "art/review/2026-11-23-alvo-visual-c-02/antes-depois.png",
+   "notes": "alvo visual c-02 (guia v3.2); substitui c-01; ver art/review/2026-11-23-alvo-visual-c-02/notas.md"
+  },
+  {
+   "id": "decor_grass_patch_b",
+   "batch": "2026-11-23-alvo-visual-c-02",
+   "role": "mancha de grama alta (decalque)",
+   "path": "art/export/v32-ground/decor_grass_patch_b@1x.png",
+   "files": [
+    "art/export/v32-ground/decor_grass_patch_b@1x.png",
+    "art/export/v32-ground/decor_grass_patch_b@2x.png",
+    "art/export/v32-ground/decor_grass_patch_b.json"
+   ],
+   "source_path": "art/source/v32-ground/decor_grass_patch_b.svg",
+   "status": "in_review",
+   "variants": [],
+   "technical": {
+    "dimensions": "208x108",
+    "alpha": true,
+    "anchor": "centro do losango da pegada",
+    "anchor_px_1x": [
+     104,
+     54
+    ],
+    "origin": [
+     0.5,
+     0.5
+    ],
+    "footprint_tiles": [
+     1.5,
+     1.5
+    ],
+    "frames": 1,
+    "filtering": "linear",
+    "max_colors": null,
+    "palette": "art/style-guide/palette.json (v3.2)",
+    "shadow": "sem sombra",
+    "interactive_rim": false
+   },
+   "visual_locks": [
+    "palette-v3.2",
+    "projection-2:1",
+    "anchor",
+    "light-direction",
+    "outline-v3",
+    "paint-finish-v3.2"
+   ],
+   "source": {
+    "kind": "scripted",
+    "url_or_tool": "art/source/tools/build_alvo_visual_c_02.py + build_alvo_visual_c_01.py + paint_vector.py + iso_vector.py (cairosvg)",
+    "creator": "agente diretor-de-arte (Claude)",
+    "created_at": "2026-11-23",
+    "license": "original do projeto (todos os direitos do projeto)",
+    "attribution": "",
+    "prompt_or_source_record": "SVG gerado por código com a paleta v3.2; acabamento pintado (paint_finish) e contorno no raster; sem IA; sem referência externa; nada derivado de Sunflower Land/Sunnyside"
+   },
+   "verification": {
+    "native_scale_reviewed": true,
+    "in_engine_reviewed": false,
+    "technical_checks_passed": true,
+    "approved_by": ""
+   },
+   "review": "art/review/2026-11-23-alvo-visual-c-02/antes-depois.png",
+   "notes": "alvo visual c-02 (guia v3.2); substitui c-01; ver art/review/2026-11-23-alvo-visual-c-02/notas.md"
+  },
+  {
+   "id": "decor_flowers_a",
+   "batch": "2026-11-23-alvo-visual-c-02",
+   "role": "florzinhas do campo (decoração)",
+   "path": "art/export/v32-ground/decor_flowers_a@1x.png",
+   "files": [
+    "art/export/v32-ground/decor_flowers_a@1x.png",
+    "art/export/v32-ground/decor_flowers_a@2x.png",
+    "art/export/v32-ground/decor_flowers_a.json"
+   ],
+   "source_path": "art/source/v32-ground/decor_flowers_a.svg",
+   "status": "in_review",
+   "variants": [],
+   "technical": {
+    "dimensions": "64x44",
+    "alpha": true,
+    "anchor": "centro do losango da pegada",
+    "anchor_px_1x": [
+     32,
+     30
+    ],
+    "origin": [
+     0.5,
+     0.681818
+    ],
+    "footprint_tiles": [
+     0.4,
+     0.4
+    ],
+    "frames": 1,
+    "filtering": "linear",
+    "max_colors": null,
+    "palette": "art/style-guide/palette.json (v3.2)",
+    "shadow": "sem sombra",
+    "interactive_rim": false
+   },
+   "visual_locks": [
+    "palette-v3.2",
+    "projection-2:1",
+    "anchor",
+    "light-direction",
+    "outline-v3",
+    "paint-finish-v3.2"
+   ],
+   "source": {
+    "kind": "scripted",
+    "url_or_tool": "art/source/tools/build_alvo_visual_c_02.py + build_alvo_visual_c_01.py + paint_vector.py + iso_vector.py (cairosvg)",
+    "creator": "agente diretor-de-arte (Claude)",
+    "created_at": "2026-11-23",
+    "license": "original do projeto (todos os direitos do projeto)",
+    "attribution": "",
+    "prompt_or_source_record": "SVG gerado por código com a paleta v3.2; acabamento pintado (paint_finish) e contorno no raster; sem IA; sem referência externa; nada derivado de Sunflower Land/Sunnyside"
+   },
+   "verification": {
+    "native_scale_reviewed": true,
+    "in_engine_reviewed": false,
+    "technical_checks_passed": true,
+    "approved_by": ""
+   },
+   "review": "art/review/2026-11-23-alvo-visual-c-02/antes-depois.png",
+   "notes": "alvo visual c-02 (guia v3.2); substitui c-01; ver art/review/2026-11-23-alvo-visual-c-02/notas.md"
+  },
+  {
+   "id": "decor_pebbles_a",
+   "batch": "2026-11-23-alvo-visual-c-02",
+   "role": "seixos angulares (decoração)",
+   "path": "art/export/v32-ground/decor_pebbles_a@1x.png",
+   "files": [
+    "art/export/v32-ground/decor_pebbles_a@1x.png",
+    "art/export/v32-ground/decor_pebbles_a@2x.png",
+    "art/export/v32-ground/decor_pebbles_a.json"
+   ],
+   "source_path": "art/source/v32-ground/decor_pebbles_a.svg",
+   "status": "in_review",
+   "variants": [],
+   "technical": {
+    "dimensions": "48x28",
+    "alpha": true,
+    "anchor": "centro do losango da pegada",
+    "anchor_px_1x": [
+     24,
+     16
+    ],
+    "origin": [
+     0.5,
+     0.571429
+    ],
+    "footprint_tiles": [
+     0.3,
+     0.3
+    ],
+    "frames": 1,
+    "filtering": "linear",
+    "max_colors": null,
+    "palette": "art/style-guide/palette.json (v3.2)",
+    "shadow": "sem sombra",
+    "interactive_rim": false
+   },
+   "visual_locks": [
+    "palette-v3.2",
+    "projection-2:1",
+    "anchor",
+    "light-direction",
+    "outline-v3",
+    "paint-finish-v3.2"
+   ],
+   "source": {
+    "kind": "scripted",
+    "url_or_tool": "art/source/tools/build_alvo_visual_c_02.py + build_alvo_visual_c_01.py + paint_vector.py + iso_vector.py (cairosvg)",
+    "creator": "agente diretor-de-arte (Claude)",
+    "created_at": "2026-11-23",
+    "license": "original do projeto (todos os direitos do projeto)",
+    "attribution": "",
+    "prompt_or_source_record": "SVG gerado por código com a paleta v3.2; acabamento pintado (paint_finish) e contorno no raster; sem IA; sem referência externa; nada derivado de Sunflower Land/Sunnyside"
+   },
+   "verification": {
+    "native_scale_reviewed": true,
+    "in_engine_reviewed": false,
+    "technical_checks_passed": true,
+    "approved_by": ""
+   },
+   "review": "art/review/2026-11-23-alvo-visual-c-02/antes-depois.png",
+   "notes": "alvo visual c-02 (guia v3.2); substitui c-01; ver art/review/2026-11-23-alvo-visual-c-02/notas.md"
+  },
+  {
+   "id": "tree_oak_a",
+   "batch": "2026-11-23-alvo-visual-c-02",
+   "role": "árvore folhosa: copa em 6 massas de tufos pontudos, tronco com casca",
+   "path": "art/export/v32-nature/tree_oak_a@1x.png",
+   "files": [
+    "art/export/v32-nature/tree_oak_a@1x.png",
+    "art/export/v32-nature/tree_oak_a@2x.png",
+    "art/export/v32-nature/tree_oak_a.json",
+    "art/export/v32-nature/tree_oak_a_shadow@1x.png",
+    "art/export/v32-nature/tree_oak_a_shadow@2x.png",
+    "art/export/v32-nature/tree_oak_a_shadow.json"
+   ],
+   "source_path": [
+    "art/source/v32-nature/tree_oak_a.svg",
+    "art/source/v32-nature/tree_oak_a_shadow.svg"
+   ],
+   "status": "in_review",
+   "variants": [],
+   "technical": {
+    "dimensions": "172x232",
+    "alpha": true,
+    "anchor": "centro do losango da pegada",
+    "anchor_px_1x": [
+     86,
+     222
+    ],
+    "origin": [
+     0.5,
+     0.956897
+    ],
+    "footprint_tiles": [
+     1,
+     1
+    ],
+    "frames": 1,
+    "filtering": "linear",
+    "max_colors": null,
+    "palette": "art/style-guide/palette.json (v3.2)",
+    "shadow": "separada (_shadow, canvas e âncora próprios)",
+    "interactive_rim": true
+   },
+   "visual_locks": [
+    "palette-v3.2",
+    "projection-2:1",
+    "anchor",
+    "light-direction",
+    "outline-v3",
+    "paint-finish-v3.2"
+   ],
+   "source": {
+    "kind": "scripted",
+    "url_or_tool": "art/source/tools/build_alvo_visual_c_02.py + build_alvo_visual_c_01.py + paint_vector.py + iso_vector.py (cairosvg)",
+    "creator": "agente diretor-de-arte (Claude)",
+    "created_at": "2026-11-23",
+    "license": "original do projeto (todos os direitos do projeto)",
+    "attribution": "",
+    "prompt_or_source_record": "SVG gerado por código com a paleta v3.2; acabamento pintado (paint_finish) e contorno no raster; sem IA; sem referência externa; nada derivado de Sunflower Land/Sunnyside"
+   },
+   "verification": {
+    "native_scale_reviewed": true,
+    "in_engine_reviewed": false,
+    "technical_checks_passed": true,
+    "approved_by": ""
+   },
+   "review": "art/review/2026-11-23-alvo-visual-c-02/antes-depois.png",
+   "notes": "alvo visual c-02 (guia v3.2); substitui c-01; ver art/review/2026-11-23-alvo-visual-c-02/notas.md"
+  },
+  {
+   "id": "tree_apple_a",
+   "batch": "2026-11-23-alvo-visual-c-02",
+   "role": "macieira: copa em 5 massas, maçãs em pares, 2 caídas",
+   "path": "art/export/v32-nature/tree_apple_a@1x.png",
+   "files": [
+    "art/export/v32-nature/tree_apple_a@1x.png",
+    "art/export/v32-nature/tree_apple_a@2x.png",
+    "art/export/v32-nature/tree_apple_a.json",
+    "art/export/v32-nature/tree_apple_a_shadow@1x.png",
+    "art/export/v32-nature/tree_apple_a_shadow@2x.png",
+    "art/export/v32-nature/tree_apple_a_shadow.json"
+   ],
+   "source_path": [
+    "art/source/v32-nature/tree_apple_a.svg",
+    "art/source/v32-nature/tree_apple_a_shadow.svg"
+   ],
+   "status": "in_review",
+   "variants": [],
+   "technical": {
+    "dimensions": "172x188",
+    "alpha": true,
+    "anchor": "centro do losango da pegada",
+    "anchor_px_1x": [
+     86,
+     168
+    ],
+    "origin": [
+     0.5,
+     0.893617
+    ],
+    "footprint_tiles": [
+     1,
+     1
+    ],
+    "frames": 1,
+    "filtering": "linear",
+    "max_colors": null,
+    "palette": "art/style-guide/palette.json (v3.2)",
+    "shadow": "separada (_shadow, canvas e âncora próprios)",
+    "interactive_rim": true
+   },
+   "visual_locks": [
+    "palette-v3.2",
+    "projection-2:1",
+    "anchor",
+    "light-direction",
+    "outline-v3",
+    "paint-finish-v3.2"
+   ],
+   "source": {
+    "kind": "scripted",
+    "url_or_tool": "art/source/tools/build_alvo_visual_c_02.py + build_alvo_visual_c_01.py + paint_vector.py + iso_vector.py (cairosvg)",
+    "creator": "agente diretor-de-arte (Claude)",
+    "created_at": "2026-11-23",
+    "license": "original do projeto (todos os direitos do projeto)",
+    "attribution": "",
+    "prompt_or_source_record": "SVG gerado por código com a paleta v3.2; acabamento pintado (paint_finish) e contorno no raster; sem IA; sem referência externa; nada derivado de Sunflower Land/Sunnyside"
+   },
+   "verification": {
+    "native_scale_reviewed": true,
+    "in_engine_reviewed": false,
+    "technical_checks_passed": true,
+    "approved_by": ""
+   },
+   "review": "art/review/2026-11-23-alvo-visual-c-02/antes-depois.png",
+   "notes": "alvo visual c-02 (guia v3.2); substitui c-01; ver art/review/2026-11-23-alvo-visual-c-02/notas.md"
+  },
+  {
+   "id": "tree_pine_a",
+   "batch": "2026-11-23-alvo-visual-c-02",
+   "role": "pinheiro: 9 andares de saias pontudas, realce no lado da luz",
+   "path": "art/export/v32-nature/tree_pine_a@1x.png",
+   "files": [
+    "art/export/v32-nature/tree_pine_a@1x.png",
+    "art/export/v32-nature/tree_pine_a@2x.png",
+    "art/export/v32-nature/tree_pine_a.json",
+    "art/export/v32-nature/tree_pine_a_shadow@1x.png",
+    "art/export/v32-nature/tree_pine_a_shadow@2x.png",
+    "art/export/v32-nature/tree_pine_a_shadow.json"
+   ],
+   "source_path": [
+    "art/source/v32-nature/tree_pine_a.svg",
+    "art/source/v32-nature/tree_pine_a_shadow.svg"
+   ],
+   "status": "in_review",
+   "variants": [],
+   "technical": {
+    "dimensions": "104x224",
+    "alpha": true,
+    "anchor": "centro do losango da pegada",
+    "anchor_px_1x": [
+     52,
+     214
+    ],
+    "origin": [
+     0.5,
+     0.955357
+    ],
+    "footprint_tiles": [
+     1,
+     1
+    ],
+    "frames": 1,
+    "filtering": "linear",
+    "max_colors": null,
+    "palette": "art/style-guide/palette.json (v3.2)",
+    "shadow": "separada (_shadow, canvas e âncora próprios)",
+    "interactive_rim": true
+   },
+   "visual_locks": [
+    "palette-v3.2",
+    "projection-2:1",
+    "anchor",
+    "light-direction",
+    "outline-v3",
+    "paint-finish-v3.2"
+   ],
+   "source": {
+    "kind": "scripted",
+    "url_or_tool": "art/source/tools/build_alvo_visual_c_02.py + build_alvo_visual_c_01.py + paint_vector.py + iso_vector.py (cairosvg)",
+    "creator": "agente diretor-de-arte (Claude)",
+    "created_at": "2026-11-23",
+    "license": "original do projeto (todos os direitos do projeto)",
+    "attribution": "",
+    "prompt_or_source_record": "SVG gerado por código com a paleta v3.2; acabamento pintado (paint_finish) e contorno no raster; sem IA; sem referência externa; nada derivado de Sunflower Land/Sunnyside"
+   },
+   "verification": {
+    "native_scale_reviewed": true,
+    "in_engine_reviewed": false,
+    "technical_checks_passed": true,
+    "approved_by": ""
+   },
+   "review": "art/review/2026-11-23-alvo-visual-c-02/antes-depois.png",
+   "notes": "alvo visual c-02 (guia v3.2); substitui c-01; ver art/review/2026-11-23-alvo-visual-c-02/notas.md"
+  },
+  {
+   "id": "prop_bush_a",
+   "batch": "2026-11-23-alvo-visual-c-02",
+   "role": "arbusto de tufos pontudos",
+   "path": "art/export/v32-nature/prop_bush_a@1x.png",
+   "files": [
+    "art/export/v32-nature/prop_bush_a@1x.png",
+    "art/export/v32-nature/prop_bush_a@2x.png",
+    "art/export/v32-nature/prop_bush_a.json",
+    "art/export/v32-nature/prop_bush_a_shadow@1x.png",
+    "art/export/v32-nature/prop_bush_a_shadow@2x.png",
+    "art/export/v32-nature/prop_bush_a_shadow.json"
+   ],
+   "source_path": [
+    "art/source/v32-nature/prop_bush_a.svg",
+    "art/source/v32-nature/prop_bush_a_shadow.svg"
+   ],
+   "status": "in_review",
+   "variants": [],
+   "technical": {
+    "dimensions": "84x56",
+    "alpha": true,
+    "anchor": "centro do losango da pegada",
+    "anchor_px_1x": [
+     42,
+     50
+    ],
+    "origin": [
+     0.5,
+     0.892857
+    ],
+    "footprint_tiles": [
+     1,
+     1
+    ],
+    "frames": 1,
+    "filtering": "linear",
+    "max_colors": null,
+    "palette": "art/style-guide/palette.json (v3.2)",
+    "shadow": "separada (_shadow, canvas e âncora próprios)",
+    "interactive_rim": false
+   },
+   "visual_locks": [
+    "palette-v3.2",
+    "projection-2:1",
+    "anchor",
+    "light-direction",
+    "outline-v3",
+    "paint-finish-v3.2"
+   ],
+   "source": {
+    "kind": "scripted",
+    "url_or_tool": "art/source/tools/build_alvo_visual_c_02.py + build_alvo_visual_c_01.py + paint_vector.py + iso_vector.py (cairosvg)",
+    "creator": "agente diretor-de-arte (Claude)",
+    "created_at": "2026-11-23",
+    "license": "original do projeto (todos os direitos do projeto)",
+    "attribution": "",
+    "prompt_or_source_record": "SVG gerado por código com a paleta v3.2; acabamento pintado (paint_finish) e contorno no raster; sem IA; sem referência externa; nada derivado de Sunflower Land/Sunnyside"
+   },
+   "verification": {
+    "native_scale_reviewed": true,
+    "in_engine_reviewed": false,
+    "technical_checks_passed": true,
+    "approved_by": ""
+   },
+   "review": "art/review/2026-11-23-alvo-visual-c-02/antes-depois.png",
+   "notes": "alvo visual c-02 (guia v3.2); substitui c-01; ver art/review/2026-11-23-alvo-visual-c-02/notas.md"
+  },
+  {
+   "id": "prop_bush_b",
+   "batch": "2026-11-23-alvo-visual-c-02",
+   "role": "arbusto com espigas de flor lilás",
+   "path": "art/export/v32-nature/prop_bush_b@1x.png",
+   "files": [
+    "art/export/v32-nature/prop_bush_b@1x.png",
+    "art/export/v32-nature/prop_bush_b@2x.png",
+    "art/export/v32-nature/prop_bush_b.json",
+    "art/export/v32-nature/prop_bush_b_shadow@1x.png",
+    "art/export/v32-nature/prop_bush_b_shadow@2x.png",
+    "art/export/v32-nature/prop_bush_b_shadow.json"
+   ],
+   "source_path": [
+    "art/source/v32-nature/prop_bush_b.svg",
+    "art/source/v32-nature/prop_bush_b_shadow.svg"
+   ],
+   "status": "in_review",
+   "variants": [],
+   "technical": {
+    "dimensions": "84x56",
+    "alpha": true,
+    "anchor": "centro do losango da pegada",
+    "anchor_px_1x": [
+     42,
+     52
+    ],
+    "origin": [
+     0.5,
+     0.928571
+    ],
+    "footprint_tiles": [
+     1,
+     1
+    ],
+    "frames": 1,
+    "filtering": "linear",
+    "max_colors": null,
+    "palette": "art/style-guide/palette.json (v3.2)",
+    "shadow": "separada (_shadow, canvas e âncora próprios)",
+    "interactive_rim": false
+   },
+   "visual_locks": [
+    "palette-v3.2",
+    "projection-2:1",
+    "anchor",
+    "light-direction",
+    "outline-v3",
+    "paint-finish-v3.2"
+   ],
+   "source": {
+    "kind": "scripted",
+    "url_or_tool": "art/source/tools/build_alvo_visual_c_02.py + build_alvo_visual_c_01.py + paint_vector.py + iso_vector.py (cairosvg)",
+    "creator": "agente diretor-de-arte (Claude)",
+    "created_at": "2026-11-23",
+    "license": "original do projeto (todos os direitos do projeto)",
+    "attribution": "",
+    "prompt_or_source_record": "SVG gerado por código com a paleta v3.2; acabamento pintado (paint_finish) e contorno no raster; sem IA; sem referência externa; nada derivado de Sunflower Land/Sunnyside"
+   },
+   "verification": {
+    "native_scale_reviewed": true,
+    "in_engine_reviewed": false,
+    "technical_checks_passed": true,
+    "approved_by": ""
+   },
+   "review": "art/review/2026-11-23-alvo-visual-c-02/antes-depois.png",
+   "notes": "alvo visual c-02 (guia v3.2); substitui c-01; ver art/review/2026-11-23-alvo-visual-c-02/notas.md"
+  },
+  {
+   "id": "rock_ore_a",
+   "batch": "2026-11-23-alvo-visual-c-02",
+   "role": "pedra angular de 3 planos com 4 pepitas de minério e pedra menor",
+   "path": "art/export/v32-nature/rock_ore_a@1x.png",
+   "files": [
+    "art/export/v32-nature/rock_ore_a@1x.png",
+    "art/export/v32-nature/rock_ore_a@2x.png",
+    "art/export/v32-nature/rock_ore_a.json",
+    "art/export/v32-nature/rock_ore_a_shadow@1x.png",
+    "art/export/v32-nature/rock_ore_a_shadow@2x.png",
+    "art/export/v32-nature/rock_ore_a_shadow.json"
+   ],
+   "source_path": [
+    "art/source/v32-nature/rock_ore_a.svg",
+    "art/source/v32-nature/rock_ore_a_shadow.svg"
+   ],
+   "status": "in_review",
+   "variants": [],
+   "technical": {
+    "dimensions": "108x64",
+    "alpha": true,
+    "anchor": "centro do losango da pegada",
+    "anchor_px_1x": [
+     54,
+     48
+    ],
+    "origin": [
+     0.5,
+     0.75
+    ],
+    "footprint_tiles": [
+     1,
+     1
+    ],
+    "frames": 1,
+    "filtering": "linear",
+    "max_colors": null,
+    "palette": "art/style-guide/palette.json (v3.2)",
+    "shadow": "separada (_shadow, canvas e âncora próprios)",
+    "interactive_rim": true
+   },
+   "visual_locks": [
+    "palette-v3.2",
+    "projection-2:1",
+    "anchor",
+    "light-direction",
+    "outline-v3",
+    "paint-finish-v3.2"
+   ],
+   "source": {
+    "kind": "scripted",
+    "url_or_tool": "art/source/tools/build_alvo_visual_c_02.py + build_alvo_visual_c_01.py + paint_vector.py + iso_vector.py (cairosvg)",
+    "creator": "agente diretor-de-arte (Claude)",
+    "created_at": "2026-11-23",
+    "license": "original do projeto (todos os direitos do projeto)",
+    "attribution": "",
+    "prompt_or_source_record": "SVG gerado por código com a paleta v3.2; acabamento pintado (paint_finish) e contorno no raster; sem IA; sem referência externa; nada derivado de Sunflower Land/Sunnyside"
+   },
+   "verification": {
+    "native_scale_reviewed": true,
+    "in_engine_reviewed": false,
+    "technical_checks_passed": true,
+    "approved_by": ""
+   },
+   "review": "art/review/2026-11-23-alvo-visual-c-02/antes-depois.png",
+   "notes": "alvo visual c-02 (guia v3.2); substitui c-01; ver art/review/2026-11-23-alvo-visual-c-02/notas.md"
+  },
+  {
+   "id": "plot_raised_bed",
+   "batch": "2026-11-23-alvo-visual-c-02",
+   "role": "canteiro elevado de tábuas com mourões e terra em camalhões (vazio)",
+   "path": "art/export/v32-crops/plot_raised_bed@1x.png",
+   "files": [
+    "art/export/v32-crops/plot_raised_bed@1x.png",
+    "art/export/v32-crops/plot_raised_bed@2x.png",
+    "art/export/v32-crops/plot_raised_bed.json",
+    "art/export/v32-crops/plot_raised_bed_shadow@1x.png",
+    "art/export/v32-crops/plot_raised_bed_shadow@2x.png",
+    "art/export/v32-crops/plot_raised_bed_shadow.json"
+   ],
+   "source_path": [
+    "art/source/v32-crops/plot_raised_bed.svg",
+    "art/source/v32-crops/plot_raised_bed_shadow.svg"
+   ],
+   "status": "in_review",
+   "variants": [],
+   "technical": {
+    "dimensions": "112x76",
+    "alpha": true,
+    "anchor": "centro do losango da pegada",
+    "anchor_px_1x": [
+     56,
+     44
+    ],
+    "origin": [
+     0.5,
+     0.578947
+    ],
+    "footprint_tiles": [
+     1,
+     1
+    ],
+    "frames": 1,
+    "filtering": "linear",
+    "max_colors": null,
+    "palette": "art/style-guide/palette.json (v3.2)",
+    "shadow": "separada (_shadow, canvas e âncora próprios)",
+    "interactive_rim": true
+   },
+   "visual_locks": [
+    "palette-v3.2",
+    "projection-2:1",
+    "anchor",
+    "light-direction",
+    "outline-v3",
+    "paint-finish-v3.2"
+   ],
+   "source": {
+    "kind": "scripted",
+    "url_or_tool": "art/source/tools/build_alvo_visual_c_02.py + build_alvo_visual_c_01.py + paint_vector.py + iso_vector.py (cairosvg)",
+    "creator": "agente diretor-de-arte (Claude)",
+    "created_at": "2026-11-23",
+    "license": "original do projeto (todos os direitos do projeto)",
+    "attribution": "",
+    "prompt_or_source_record": "SVG gerado por código com a paleta v3.2; acabamento pintado (paint_finish) e contorno no raster; sem IA; sem referência externa; nada derivado de Sunflower Land/Sunnyside"
+   },
+   "verification": {
+    "native_scale_reviewed": true,
+    "in_engine_reviewed": false,
+    "technical_checks_passed": true,
+    "approved_by": ""
+   },
+   "review": "art/review/2026-11-23-alvo-visual-c-02/antes-depois.png",
+   "notes": "alvo visual c-02 (guia v3.2); substitui c-01; ver art/review/2026-11-23-alvo-visual-c-02/notas.md"
+  },
+  {
+   "id": "prop_hay_bales",
+   "batch": "2026-11-23-alvo-visual-c-02",
+   "role": "pilha de 3 fardos retangulares de feno com barbante",
+   "path": "art/export/v32-props/prop_hay_bales@1x.png",
+   "files": [
+    "art/export/v32-props/prop_hay_bales@1x.png",
+    "art/export/v32-props/prop_hay_bales@2x.png",
+    "art/export/v32-props/prop_hay_bales.json",
+    "art/export/v32-props/prop_hay_bales_shadow@1x.png",
+    "art/export/v32-props/prop_hay_bales_shadow@2x.png",
+    "art/export/v32-props/prop_hay_bales_shadow.json"
+   ],
+   "source_path": [
+    "art/source/v32-props/prop_hay_bales.svg",
+    "art/source/v32-props/prop_hay_bales_shadow.svg"
+   ],
+   "status": "in_review",
+   "variants": [],
+   "technical": {
+    "dimensions": "88x72",
+    "alpha": true,
+    "anchor": "centro do losango da pegada",
+    "anchor_px_1x": [
+     44,
+     50
+    ],
+    "origin": [
+     0.5,
+     0.694444
+    ],
+    "footprint_tiles": [
+     1,
+     1
+    ],
+    "frames": 1,
+    "filtering": "linear",
+    "max_colors": null,
+    "palette": "art/style-guide/palette.json (v3.2)",
+    "shadow": "separada (_shadow, canvas e âncora próprios)",
+    "interactive_rim": true
+   },
+   "visual_locks": [
+    "palette-v3.2",
+    "projection-2:1",
+    "anchor",
+    "light-direction",
+    "outline-v3",
+    "paint-finish-v3.2"
+   ],
+   "source": {
+    "kind": "scripted",
+    "url_or_tool": "art/source/tools/build_alvo_visual_c_02.py + build_alvo_visual_c_01.py + paint_vector.py + iso_vector.py (cairosvg)",
+    "creator": "agente diretor-de-arte (Claude)",
+    "created_at": "2026-11-23",
+    "license": "original do projeto (todos os direitos do projeto)",
+    "attribution": "",
+    "prompt_or_source_record": "SVG gerado por código com a paleta v3.2; acabamento pintado (paint_finish) e contorno no raster; sem IA; sem referência externa; nada derivado de Sunflower Land/Sunnyside"
+   },
+   "verification": {
+    "native_scale_reviewed": true,
+    "in_engine_reviewed": false,
+    "technical_checks_passed": true,
+    "approved_by": ""
+   },
+   "review": "art/review/2026-11-23-alvo-visual-c-02/antes-depois.png",
+   "notes": "alvo visual c-02 (guia v3.2); substitui c-01; ver art/review/2026-11-23-alvo-visual-c-02/notas.md"
+  },
+  {
+   "id": "prop_crate",
+   "batch": "2026-11-23-alvo-visual-c-02",
+   "role": "caixote de ripas com maçãs",
+   "path": "art/export/v32-props/prop_crate@1x.png",
+   "files": [
+    "art/export/v32-props/prop_crate@1x.png",
+    "art/export/v32-props/prop_crate@2x.png",
+    "art/export/v32-props/prop_crate.json",
+    "art/export/v32-props/prop_crate_shadow@1x.png",
+    "art/export/v32-props/prop_crate_shadow@2x.png",
+    "art/export/v32-props/prop_crate_shadow.json"
+   ],
+   "source_path": [
+    "art/source/v32-props/prop_crate.svg",
+    "art/source/v32-props/prop_crate_shadow.svg"
+   ],
+   "status": "in_review",
+   "variants": [],
+   "technical": {
+    "dimensions": "64x60",
+    "alpha": true,
+    "anchor": "centro do losango da pegada",
+    "anchor_px_1x": [
+     32,
+     42
+    ],
+    "origin": [
+     0.5,
+     0.7
+    ],
+    "footprint_tiles": [
+     1,
+     1
+    ],
+    "frames": 1,
+    "filtering": "linear",
+    "max_colors": null,
+    "palette": "art/style-guide/palette.json (v3.2)",
+    "shadow": "separada (_shadow, canvas e âncora próprios)",
+    "interactive_rim": true
+   },
+   "visual_locks": [
+    "palette-v3.2",
+    "projection-2:1",
+    "anchor",
+    "light-direction",
+    "outline-v3",
+    "paint-finish-v3.2"
+   ],
+   "source": {
+    "kind": "scripted",
+    "url_or_tool": "art/source/tools/build_alvo_visual_c_02.py + build_alvo_visual_c_01.py + paint_vector.py + iso_vector.py (cairosvg)",
+    "creator": "agente diretor-de-arte (Claude)",
+    "created_at": "2026-11-23",
+    "license": "original do projeto (todos os direitos do projeto)",
+    "attribution": "",
+    "prompt_or_source_record": "SVG gerado por código com a paleta v3.2; acabamento pintado (paint_finish) e contorno no raster; sem IA; sem referência externa; nada derivado de Sunflower Land/Sunnyside"
+   },
+   "verification": {
+    "native_scale_reviewed": true,
+    "in_engine_reviewed": false,
+    "technical_checks_passed": true,
+    "approved_by": ""
+   },
+   "review": "art/review/2026-11-23-alvo-visual-c-02/antes-depois.png",
+   "notes": "alvo visual c-02 (guia v3.2); substitui c-01; ver art/review/2026-11-23-alvo-visual-c-02/notas.md"
+  },
+  {
+   "id": "prop_fence_wood",
+   "batch": "2026-11-23-alvo-visual-c-02",
+   "role": "cerca de madeira envelhecida: retos, cantos e pontas (8 peças)",
+   "path": "art/export/v32-props/prop_fence_corner_e@1x.png",
+   "files": [
+    "art/export/v32-props/prop_fence_corner_e@1x.png",
+    "art/export/v32-props/prop_fence_corner_e@2x.png",
+    "art/export/v32-props/prop_fence_corner_e.json",
+    "art/export/v32-props/prop_fence_corner_e_shadow@1x.png",
+    "art/export/v32-props/prop_fence_corner_e_shadow@2x.png",
+    "art/export/v32-props/prop_fence_corner_e_shadow.json",
+    "art/export/v32-props/prop_fence_corner_n@1x.png",
+    "art/export/v32-props/prop_fence_corner_n@2x.png",
+    "art/export/v32-props/prop_fence_corner_n.json",
+    "art/export/v32-props/prop_fence_corner_n_shadow@1x.png",
+    "art/export/v32-props/prop_fence_corner_n_shadow@2x.png",
+    "art/export/v32-props/prop_fence_corner_n_shadow.json",
+    "art/export/v32-props/prop_fence_corner_s@1x.png",
+    "art/export/v32-props/prop_fence_corner_s@2x.png",
+    "art/export/v32-props/prop_fence_corner_s.json",
+    "art/export/v32-props/prop_fence_corner_s_shadow@1x.png",
+    "art/export/v32-props/prop_fence_corner_s_shadow@2x.png",
+    "art/export/v32-props/prop_fence_corner_s_shadow.json",
+    "art/export/v32-props/prop_fence_corner_w@1x.png",
+    "art/export/v32-props/prop_fence_corner_w@2x.png",
+    "art/export/v32-props/prop_fence_corner_w.json",
+    "art/export/v32-props/prop_fence_corner_w_shadow@1x.png",
+    "art/export/v32-props/prop_fence_corner_w_shadow@2x.png",
+    "art/export/v32-props/prop_fence_corner_w_shadow.json",
+    "art/export/v32-props/prop_fence_end_xn@1x.png",
+    "art/export/v32-props/prop_fence_end_xn@2x.png",
+    "art/export/v32-props/prop_fence_end_xn.json",
+    "art/export/v32-props/prop_fence_end_xn_shadow@1x.png",
+    "art/export/v32-props/prop_fence_end_xn_shadow@2x.png",
+    "art/export/v32-props/prop_fence_end_xn_shadow.json",
+    "art/export/v32-props/prop_fence_end_xp@1x.png",
+    "art/export/v32-props/prop_fence_end_xp@2x.png",
+    "art/export/v32-props/prop_fence_end_xp.json",
+    "art/export/v32-props/prop_fence_end_xp_shadow@1x.png",
+    "art/export/v32-props/prop_fence_end_xp_shadow@2x.png",
+    "art/export/v32-props/prop_fence_end_xp_shadow.json",
+    "art/export/v32-props/prop_fence_x@1x.png",
+    "art/export/v32-props/prop_fence_x@2x.png",
+    "art/export/v32-props/prop_fence_x.json",
+    "art/export/v32-props/prop_fence_x_shadow@1x.png",
+    "art/export/v32-props/prop_fence_x_shadow@2x.png",
+    "art/export/v32-props/prop_fence_x_shadow.json",
+    "art/export/v32-props/prop_fence_y@1x.png",
+    "art/export/v32-props/prop_fence_y@2x.png",
+    "art/export/v32-props/prop_fence_y.json",
+    "art/export/v32-props/prop_fence_y_shadow@1x.png",
+    "art/export/v32-props/prop_fence_y_shadow@2x.png",
+    "art/export/v32-props/prop_fence_y_shadow.json"
+   ],
+   "source_path": [
+    "art/source/v32-props/prop_fence_corner_e.svg",
+    "art/source/v32-props/prop_fence_corner_e_shadow.svg",
+    "art/source/v32-props/prop_fence_corner_n.svg",
+    "art/source/v32-props/prop_fence_corner_n_shadow.svg",
+    "art/source/v32-props/prop_fence_corner_s.svg",
+    "art/source/v32-props/prop_fence_corner_s_shadow.svg",
+    "art/source/v32-props/prop_fence_corner_w.svg",
+    "art/source/v32-props/prop_fence_corner_w_shadow.svg",
+    "art/source/v32-props/prop_fence_end_xn.svg",
+    "art/source/v32-props/prop_fence_end_xn_shadow.svg",
+    "art/source/v32-props/prop_fence_end_xp.svg",
+    "art/source/v32-props/prop_fence_end_xp_shadow.svg",
+    "art/source/v32-props/prop_fence_x.svg",
+    "art/source/v32-props/prop_fence_x_shadow.svg",
+    "art/source/v32-props/prop_fence_y.svg",
+    "art/source/v32-props/prop_fence_y_shadow.svg"
+   ],
+   "status": "in_review",
+   "variants": [
+    "prop_fence_corner_e",
+    "prop_fence_corner_n",
+    "prop_fence_corner_s",
+    "prop_fence_corner_w",
+    "prop_fence_end_xn",
+    "prop_fence_end_xp",
+    "prop_fence_x",
+    "prop_fence_y"
+   ],
+   "technical": {
+    "dimensions": "160x108",
+    "alpha": true,
+    "anchor": "centro do losango da pegada",
+    "anchor_px_1x": [
+     80,
+     64
+    ],
+    "origin": [
+     0.5,
+     0.592593
+    ],
+    "footprint_tiles": [
+     1,
+     1
+    ],
+    "frames": 1,
+    "filtering": "linear",
+    "max_colors": null,
+    "palette": "art/style-guide/palette.json (v3.2)",
+    "shadow": "separada (_shadow, canvas e âncora próprios)",
+    "interactive_rim": false
+   },
+   "visual_locks": [
+    "palette-v3.2",
+    "projection-2:1",
+    "anchor",
+    "light-direction",
+    "outline-v3",
+    "paint-finish-v3.2"
+   ],
+   "source": {
+    "kind": "scripted",
+    "url_or_tool": "art/source/tools/build_alvo_visual_c_02.py + build_alvo_visual_c_01.py + paint_vector.py + iso_vector.py (cairosvg)",
+    "creator": "agente diretor-de-arte (Claude)",
+    "created_at": "2026-11-23",
+    "license": "original do projeto (todos os direitos do projeto)",
+    "attribution": "",
+    "prompt_or_source_record": "SVG gerado por código com a paleta v3.2; acabamento pintado (paint_finish) e contorno no raster; sem IA; sem referência externa; nada derivado de Sunflower Land/Sunnyside"
+   },
+   "verification": {
+    "native_scale_reviewed": true,
+    "in_engine_reviewed": false,
+    "technical_checks_passed": true,
+    "approved_by": ""
+   },
+   "review": "art/review/2026-11-23-alvo-visual-c-02/antes-depois.png",
+   "notes": "alvo visual c-02 (guia v3.2); substitui c-01; ver art/review/2026-11-23-alvo-visual-c-02/notas.md"
+  },
+  {
+   "id": "bld_barn_small",
+   "batch": "2026-11-23-alvo-visual-c-02",
+   "role": "galpão 3x3 de tábuas verticais, fundação de pedra, porta dupla, porta de feno, telhado de telhas de barro",
+   "path": "art/export/v32-buildings/bld_barn_small@1x.png",
+   "files": [
+    "art/export/v32-buildings/bld_barn_small@1x.png",
+    "art/export/v32-buildings/bld_barn_small@2x.png",
+    "art/export/v32-buildings/bld_barn_small.json",
+    "art/export/v32-buildings/bld_barn_small_shadow@1x.png",
+    "art/export/v32-buildings/bld_barn_small_shadow@2x.png",
+    "art/export/v32-buildings/bld_barn_small_shadow.json"
+   ],
+   "source_path": [
+    "art/source/v32-buildings/bld_barn_small.svg",
+    "art/source/v32-buildings/bld_barn_small_shadow.svg"
+   ],
+   "status": "in_review",
+   "variants": [],
+   "technical": {
+    "dimensions": "328x332",
+    "alpha": true,
+    "anchor": "centro do losango da pegada",
+    "anchor_px_1x": [
+     164,
+     252
+    ],
+    "origin": [
+     0.5,
+     0.759036
+    ],
+    "footprint_tiles": [
+     3,
+     3
+    ],
+    "frames": 1,
+    "filtering": "linear",
+    "max_colors": null,
+    "palette": "art/style-guide/palette.json (v3.2)",
+    "shadow": "separada (_shadow, canvas e âncora próprios)",
+    "interactive_rim": true
+   },
+   "visual_locks": [
+    "palette-v3.2",
+    "projection-2:1",
+    "anchor",
+    "light-direction",
+    "outline-v3",
+    "paint-finish-v3.2"
+   ],
+   "source": {
+    "kind": "scripted",
+    "url_or_tool": "art/source/tools/build_alvo_visual_c_02.py + build_alvo_visual_c_01.py + paint_vector.py + iso_vector.py (cairosvg)",
+    "creator": "agente diretor-de-arte (Claude)",
+    "created_at": "2026-11-23",
+    "license": "original do projeto (todos os direitos do projeto)",
+    "attribution": "",
+    "prompt_or_source_record": "SVG gerado por código com a paleta v3.2; acabamento pintado (paint_finish) e contorno no raster; sem IA; sem referência externa; nada derivado de Sunflower Land/Sunnyside"
+   },
+   "verification": {
+    "native_scale_reviewed": true,
+    "in_engine_reviewed": false,
+    "technical_checks_passed": true,
+    "approved_by": ""
+   },
+   "review": "art/review/2026-11-23-alvo-visual-c-02/antes-depois.png",
+   "notes": "alvo visual c-02 (guia v3.2); substitui c-01; ver art/review/2026-11-23-alvo-visual-c-02/notas.md"
+  },
+  {
+   "id": "avatar_base_idle_se",
+   "batch": "2026-11-23-alvo-visual-c-02",
+   "role": "fazendeiro adulto (~6 cabeças), camisa de linho, colete, chapéu de palha, barba curta",
+   "path": "art/export/v32-characters/avatar_base_idle_se@1x.png",
+   "files": [
+    "art/export/v32-characters/avatar_base_idle_se@1x.png",
+    "art/export/v32-characters/avatar_base_idle_se@2x.png",
+    "art/export/v32-characters/avatar_base_idle_se.json",
+    "art/export/v32-characters/avatar_base_idle_se_shadow@1x.png",
+    "art/export/v32-characters/avatar_base_idle_se_shadow@2x.png",
+    "art/export/v32-characters/avatar_base_idle_se_shadow.json"
+   ],
+   "source_path": [
+    "art/source/v32-characters/avatar_base_idle_se.svg",
+    "art/source/v32-characters/avatar_base_idle_se_shadow.svg"
+   ],
+   "status": "in_review",
+   "variants": [],
+   "technical": {
+    "dimensions": "44x108",
+    "alpha": true,
+    "anchor": "centro do losango da pegada",
+    "anchor_px_1x": [
+     22,
+     100
+    ],
+    "origin": [
+     0.5,
+     0.925926
+    ],
+    "footprint_tiles": [
+     0.3,
+     0.3
+    ],
+    "frames": 1,
+    "filtering": "linear",
+    "max_colors": null,
+    "palette": "art/style-guide/palette.json (v3.2)",
+    "shadow": "separada (_shadow, canvas e âncora próprios)",
+    "interactive_rim": true
+   },
+   "visual_locks": [
+    "palette-v3.2",
+    "projection-2:1",
+    "anchor",
+    "light-direction",
+    "outline-v3",
+    "paint-finish-v3.2"
+   ],
+   "source": {
+    "kind": "scripted",
+    "url_or_tool": "art/source/tools/build_alvo_visual_c_02.py + build_alvo_visual_c_01.py + paint_vector.py + iso_vector.py (cairosvg)",
+    "creator": "agente diretor-de-arte (Claude)",
+    "created_at": "2026-11-23",
+    "license": "original do projeto (todos os direitos do projeto)",
+    "attribution": "",
+    "prompt_or_source_record": "SVG gerado por código com a paleta v3.2; acabamento pintado (paint_finish) e contorno no raster; sem IA; sem referência externa; nada derivado de Sunflower Land/Sunnyside"
+   },
+   "verification": {
+    "native_scale_reviewed": true,
+    "in_engine_reviewed": false,
+    "technical_checks_passed": true,
+    "approved_by": ""
+   },
+   "review": "art/review/2026-11-23-alvo-visual-c-02/antes-depois.png",
+   "notes": "alvo visual c-02 (guia v3.2); substitui c-01; ver art/review/2026-11-23-alvo-visual-c-02/notas.md"
+  },
+  {
+   "id": "ui_indicator_ready",
+   "batch": "2026-11-23-alvo-visual-c-02",
+   "role": "indicador discreto 'pronto para colher' (losango fosco com espiga)",
+   "path": "art/export/v32-ui/ui_indicator_ready@1x.png",
+   "files": [
+    "art/export/v32-ui/ui_indicator_ready@1x.png",
+    "art/export/v32-ui/ui_indicator_ready@2x.png",
+    "art/export/v32-ui/ui_indicator_ready.json"
+   ],
+   "source_path": "art/source/v32-ui/ui_indicator_ready.svg",
+   "status": "in_review",
+   "variants": [],
+   "technical": {
+    "dimensions": "48x60",
+    "alpha": true,
+    "anchor": "centro do losango da pegada",
+    "anchor_px_1x": [
+     24,
+     56
+    ],
+    "origin": [
+     0.5,
+     0.933333
+    ],
+    "footprint_tiles": [
+     0,
+     0
+    ],
+    "frames": 1,
+    "filtering": "linear",
+    "max_colors": null,
+    "palette": "art/style-guide/palette.json (v3.2)",
+    "shadow": "sem sombra",
+    "interactive_rim": false
+   },
+   "visual_locks": [
+    "palette-v3.2",
+    "projection-2:1",
+    "anchor",
+    "light-direction",
+    "outline-v3",
+    "paint-finish-v3.2"
+   ],
+   "source": {
+    "kind": "scripted",
+    "url_or_tool": "art/source/tools/build_alvo_visual_c_02.py + build_alvo_visual_c_01.py + paint_vector.py + iso_vector.py (cairosvg)",
+    "creator": "agente diretor-de-arte (Claude)",
+    "created_at": "2026-11-23",
+    "license": "original do projeto (todos os direitos do projeto)",
+    "attribution": "",
+    "prompt_or_source_record": "SVG gerado por código com a paleta v3.2; acabamento pintado (paint_finish) e contorno no raster; sem IA; sem referência externa; nada derivado de Sunflower Land/Sunnyside"
+   },
+   "verification": {
+    "native_scale_reviewed": true,
+    "in_engine_reviewed": false,
+    "technical_checks_passed": true,
+    "approved_by": ""
+   },
+   "review": "art/review/2026-11-23-alvo-visual-c-02/antes-depois.png",
+   "notes": "alvo visual c-02 (guia v3.2); substitui c-01; ver art/review/2026-11-23-alvo-visual-c-02/notas.md"
+  },
+  {
+   "id": "crop_wheat",
+   "batch": "2026-11-23-alvo-visual-c-02",
+   "role": "trigo do usuário (culturas-d.webp) no canteiro: s1, s2, s3 (escala 0,60 do @2x)",
+   "path": "art/export/v32-crops/crop_wheat_s1@1x.png",
+   "files": [
+    "art/export/v32-crops/crop_wheat_s1@1x.png",
+    "art/export/v32-crops/crop_wheat_s1@2x.png",
+    "art/export/v32-crops/crop_wheat_s1.json",
+    "art/export/v32-crops/crop_wheat_s2@1x.png",
+    "art/export/v32-crops/crop_wheat_s2@2x.png",
+    "art/export/v32-crops/crop_wheat_s2.json",
+    "art/export/v32-crops/crop_wheat_s3@1x.png",
+    "art/export/v32-crops/crop_wheat_s3@2x.png",
+    "art/export/v32-crops/crop_wheat_s3.json"
+   ],
+   "source_path": [
+    "art/export/user-items/crops/crop_wheat_s1@2x.png",
+    "art/export/user-items/crops/crop_wheat_s2@2x.png",
+    "art/export/user-items/crops/crop_wheat_s3@2x.png"
+   ],
+   "status": "in_review",
+   "variants": [
+    "crop_wheat_s1",
+    "crop_wheat_s2",
+    "crop_wheat_s3"
+   ],
+   "technical": {
+    "dimensions": "88x60",
+    "alpha": true,
+    "anchor": "centro do losango da pegada",
+    "anchor_px_1x": [
+     44,
+     58
+    ],
+    "origin": [
+     0.5,
+     0.966667
+    ],
+    "footprint_tiles": [
+     1,
+     1
+    ],
+    "frames": 3,
+    "filtering": "linear",
+    "max_colors": null,
+    "palette": "arte do usuário (sem requantizar)",
+    "shadow": "sem sombra",
+    "interactive_rim": true
+   },
+   "visual_locks": [
+    "palette-v3.2",
+    "projection-2:1",
+    "anchor",
+    "light-direction",
+    "outline-v3",
+    "paint-finish-v3.2"
+   ],
+   "source": {
+    "kind": "user_owned",
+    "url_or_tool": "art/source/tools/build_alvo_visual_c_02.py (escala + âncora, sem repintura)",
+    "creator": "usuário (dono do projeto); recorte e escala pelo agente diretor-de-arte",
+    "created_at": "2026-11-23",
+    "license": "do usuário; uso autorizado (art/source/user-provided/2026-11-22/PROVENIENCIA.md)",
+    "attribution": "",
+    "prompt_or_source_record": "derivado dos recortes em art/export/user-items/"
+   },
+   "verification": {
+    "native_scale_reviewed": true,
+    "in_engine_reviewed": false,
+    "technical_checks_passed": true,
+    "approved_by": ""
+   },
+   "review": "art/review/2026-11-23-alvo-visual-c-02/antes-depois.png",
+   "notes": "alvo visual c-02 (guia v3.2); substitui c-01; ver art/review/2026-11-23-alvo-visual-c-02/notas.md"
+  },
+  {
+   "id": "crop_tomato",
+   "batch": "2026-11-23-alvo-visual-c-02",
+   "role": "tomate do usuário (culturas-d.webp) no canteiro: s2 crescendo (escala 0,56 do @2x)",
+   "path": "art/export/v32-crops/crop_tomato_s2@1x.png",
+   "files": [
+    "art/export/v32-crops/crop_tomato_s2@1x.png",
+    "art/export/v32-crops/crop_tomato_s2@2x.png",
+    "art/export/v32-crops/crop_tomato_s2.json"
+   ],
+   "source_path": [
+    "art/export/user-items/crops/crop_tomato_s2@2x.png"
+   ],
+   "status": "in_review",
+   "variants": [],
+   "technical": {
+    "dimensions": "72x76",
+    "alpha": true,
+    "anchor": "centro do losango da pegada",
+    "anchor_px_1x": [
+     36,
+     74
+    ],
+    "origin": [
+     0.5,
+     0.973684
+    ],
+    "footprint_tiles": [
+     1,
+     1
+    ],
+    "frames": 1,
+    "filtering": "linear",
+    "max_colors": null,
+    "palette": "arte do usuário (sem requantizar)",
+    "shadow": "sem sombra",
+    "interactive_rim": true
+   },
+   "visual_locks": [
+    "palette-v3.2",
+    "projection-2:1",
+    "anchor",
+    "light-direction",
+    "outline-v3",
+    "paint-finish-v3.2"
+   ],
+   "source": {
+    "kind": "user_owned",
+    "url_or_tool": "art/source/tools/build_alvo_visual_c_02.py (escala + âncora, sem repintura)",
+    "creator": "usuário (dono do projeto); recorte e escala pelo agente diretor-de-arte",
+    "created_at": "2026-11-23",
+    "license": "do usuário; uso autorizado (art/source/user-provided/2026-11-22/PROVENIENCIA.md)",
+    "attribution": "",
+    "prompt_or_source_record": "derivado dos recortes em art/export/user-items/"
+   },
+   "verification": {
+    "native_scale_reviewed": true,
+    "in_engine_reviewed": false,
+    "technical_checks_passed": true,
+    "approved_by": ""
+   },
+   "review": "art/review/2026-11-23-alvo-visual-c-02/antes-depois.png",
+   "notes": "alvo visual c-02 (guia v3.2); substitui c-01; ver art/review/2026-11-23-alvo-visual-c-02/notas.md"
+  },
+  {
+   "id": "crop_pumpkin",
+   "batch": "2026-11-23-alvo-visual-c-02",
+   "role": "abóbora do usuário (culturas-d.webp) no canteiro: s3 madura (escala 0,50 do @2x)",
+   "path": "art/export/v32-crops/crop_pumpkin_s3@1x.png",
+   "files": [
+    "art/export/v32-crops/crop_pumpkin_s3@1x.png",
+    "art/export/v32-crops/crop_pumpkin_s3@2x.png",
+    "art/export/v32-crops/crop_pumpkin_s3.json"
+   ],
+   "source_path": [
+    "art/export/user-items/crops/crop_pumpkin_s3@2x.png"
+   ],
+   "status": "in_review",
+   "variants": [],
+   "technical": {
+    "dimensions": "88x68",
+    "alpha": true,
+    "anchor": "centro do losango da pegada",
+    "anchor_px_1x": [
+     44,
+     66
+    ],
+    "origin": [
+     0.5,
+     0.970588
+    ],
+    "footprint_tiles": [
+     1,
+     1
+    ],
+    "frames": 1,
+    "filtering": "linear",
+    "max_colors": null,
+    "palette": "arte do usuário (sem requantizar)",
+    "shadow": "sem sombra",
+    "interactive_rim": true
+   },
+   "visual_locks": [
+    "palette-v3.2",
+    "projection-2:1",
+    "anchor",
+    "light-direction",
+    "outline-v3",
+    "paint-finish-v3.2"
+   ],
+   "source": {
+    "kind": "user_owned",
+    "url_or_tool": "art/source/tools/build_alvo_visual_c_02.py (escala + âncora, sem repintura)",
+    "creator": "usuário (dono do projeto); recorte e escala pelo agente diretor-de-arte",
+    "created_at": "2026-11-23",
+    "license": "do usuário; uso autorizado (art/source/user-provided/2026-11-22/PROVENIENCIA.md)",
+    "attribution": "",
+    "prompt_or_source_record": "derivado dos recortes em art/export/user-items/"
+   },
+   "verification": {
+    "native_scale_reviewed": true,
+    "in_engine_reviewed": false,
+    "technical_checks_passed": true,
+    "approved_by": ""
+   },
+   "review": "art/review/2026-11-23-alvo-visual-c-02/antes-depois.png",
+   "notes": "alvo visual c-02 (guia v3.2); substitui c-01; ver art/review/2026-11-23-alvo-visual-c-02/notas.md"
+  },
+  {
+   "id": "crop_carrot",
+   "batch": "2026-11-23-alvo-visual-c-02",
+   "role": "cenoura do usuário (culturas-d.webp) no canteiro: s1 broto (escala 0,58 do @2x)",
+   "path": "art/export/v32-crops/crop_carrot_s1@1x.png",
+   "files": [
+    "art/export/v32-crops/crop_carrot_s1@1x.png",
+    "art/export/v32-crops/crop_carrot_s1@2x.png",
+    "art/export/v32-crops/crop_carrot_s1.json"
+   ],
+   "source_path": [
+    "art/export/user-items/crops/crop_carrot_s1@2x.png"
+   ],
+   "status": "in_review",
+   "variants": [],
+   "technical": {
+    "dimensions": "92x60",
+    "alpha": true,
+    "anchor": "centro do losango da pegada",
+    "anchor_px_1x": [
+     46,
+     58
+    ],
+    "origin": [
+     0.5,
+     0.966667
+    ],
+    "footprint_tiles": [
+     1,
+     1
+    ],
+    "frames": 1,
+    "filtering": "linear",
+    "max_colors": null,
+    "palette": "arte do usuário (sem requantizar)",
+    "shadow": "sem sombra",
+    "interactive_rim": true
+   },
+   "visual_locks": [
+    "palette-v3.2",
+    "projection-2:1",
+    "anchor",
+    "light-direction",
+    "outline-v3",
+    "paint-finish-v3.2"
+   ],
+   "source": {
+    "kind": "user_owned",
+    "url_or_tool": "art/source/tools/build_alvo_visual_c_02.py (escala + âncora, sem repintura)",
+    "creator": "usuário (dono do projeto); recorte e escala pelo agente diretor-de-arte",
+    "created_at": "2026-11-23",
+    "license": "do usuário; uso autorizado (art/source/user-provided/2026-11-22/PROVENIENCIA.md)",
+    "attribution": "",
+    "prompt_or_source_record": "derivado dos recortes em art/export/user-items/"
+   },
+   "verification": {
+    "native_scale_reviewed": true,
+    "in_engine_reviewed": false,
+    "technical_checks_passed": true,
+    "approved_by": ""
+   },
+   "review": "art/review/2026-11-23-alvo-visual-c-02/antes-depois.png",
+   "notes": "alvo visual c-02 (guia v3.2); substitui c-01; ver art/review/2026-11-23-alvo-visual-c-02/notas.md"
+  },
+  {
+   "id": "res_log_world",
+   "batch": "2026-11-23-alvo-visual-c-02",
+   "role": "tora do usuário (recursos.webp) caída junto da árvore folhosa (escala 0,24 do @2x) + sombra de contato",
+   "path": "art/export/v32-nature/res_log_world@1x.png",
+   "files": [
+    "art/export/v32-nature/res_log_world@1x.png",
+    "art/export/v32-nature/res_log_world@2x.png",
+    "art/export/v32-nature/res_log_world.json",
+    "art/export/v32-nature/res_log_world_shadow@1x.png",
+    "art/export/v32-nature/res_log_world_shadow@2x.png",
+    "art/export/v32-nature/res_log_world_shadow.json"
+   ],
+   "source_path": [
+    "art/export/user-items/resources/resource_log@2x.png"
+   ],
+   "status": "in_review",
+   "variants": [],
+   "technical": {
+    "dimensions": "56x52",
+    "alpha": true,
+    "anchor": "base da silhueta (contato)",
+    "anchor_px_1x": [
+     28,
+     44
+    ],
+    "origin": [
+     0.5,
+     0.846154
+    ],
+    "footprint_tiles": [
+     1,
+     1
+    ],
+    "frames": 1,
+    "filtering": "linear",
+    "max_colors": null,
+    "palette": "arte do usuário (sem requantizar)",
+    "shadow": "separada (_shadow, canvas e âncora próprios)",
+    "interactive_rim": true
+   },
+   "visual_locks": [
+    "palette-v3.2",
+    "projection-2:1",
+    "anchor",
+    "light-direction",
+    "outline-v3",
+    "paint-finish-v3.2"
+   ],
+   "source": {
+    "kind": "user_owned",
+    "url_or_tool": "art/source/tools/build_alvo_visual_c_02.py (escala + âncora, sem repintura)",
+    "creator": "usuário (dono do projeto); recorte e escala pelo agente diretor-de-arte",
+    "created_at": "2026-11-23",
+    "license": "do usuário; uso autorizado (art/source/user-provided/2026-11-22/PROVENIENCIA.md)",
+    "attribution": "",
+    "prompt_or_source_record": "derivado dos recortes em art/export/user-items/"
+   },
+   "verification": {
+    "native_scale_reviewed": true,
+    "in_engine_reviewed": false,
+    "technical_checks_passed": true,
+    "approved_by": ""
+   },
+   "review": "art/review/2026-11-23-alvo-visual-c-02/antes-depois.png",
+   "notes": "alvo visual c-02 (guia v3.2); substitui c-01; ver art/review/2026-11-23-alvo-visual-c-02/notas.md"
+  },
+  {
+   "id": "res_ore_gray_world",
+   "batch": "2026-11-23-alvo-visual-c-02",
+   "role": "minério cinza do usuário (recursos.webp) junto da pedra (escala 0,17 do @2x) + sombra de contato",
+   "path": "art/export/v32-nature/res_ore_gray_world@1x.png",
+   "files": [
+    "art/export/v32-nature/res_ore_gray_world@1x.png",
+    "art/export/v32-nature/res_ore_gray_world@2x.png",
+    "art/export/v32-nature/res_ore_gray_world.json",
+    "art/export/v32-nature/res_ore_gray_world_shadow@1x.png",
+    "art/export/v32-nature/res_ore_gray_world_shadow@2x.png",
+    "art/export/v32-nature/res_ore_gray_world_shadow.json"
+   ],
+   "source_path": [
+    "art/export/user-items/resources/resource_ore_gray@2x.png"
+   ],
+   "status": "in_review",
+   "variants": [],
+   "technical": {
+    "dimensions": "44x44",
+    "alpha": true,
+    "anchor": "base da silhueta (contato)",
+    "anchor_px_1x": [
+     22,
+     36
+    ],
+    "origin": [
+     0.5,
+     0.818182
+    ],
+    "footprint_tiles": [
+     1,
+     1
+    ],
+    "frames": 1,
+    "filtering": "linear",
+    "max_colors": null,
+    "palette": "arte do usuário (sem requantizar)",
+    "shadow": "separada (_shadow, canvas e âncora próprios)",
+    "interactive_rim": true
+   },
+   "visual_locks": [
+    "palette-v3.2",
+    "projection-2:1",
+    "anchor",
+    "light-direction",
+    "outline-v3",
+    "paint-finish-v3.2"
+   ],
+   "source": {
+    "kind": "user_owned",
+    "url_or_tool": "art/source/tools/build_alvo_visual_c_02.py (escala + âncora, sem repintura)",
+    "creator": "usuário (dono do projeto); recorte e escala pelo agente diretor-de-arte",
+    "created_at": "2026-11-23",
+    "license": "do usuário; uso autorizado (art/source/user-provided/2026-11-22/PROVENIENCIA.md)",
+    "attribution": "",
+    "prompt_or_source_record": "derivado dos recortes em art/export/user-items/"
+   },
+   "verification": {
+    "native_scale_reviewed": true,
+    "in_engine_reviewed": false,
+    "technical_checks_passed": true,
+    "approved_by": ""
+   },
+   "review": "art/review/2026-11-23-alvo-visual-c-02/antes-depois.png",
+   "notes": "alvo visual c-02 (guia v3.2); substitui c-01; ver art/review/2026-11-23-alvo-visual-c-02/notas.md"
+  },
+  {
+   "id": "res_ore_gold_world",
+   "batch": "2026-11-23-alvo-visual-c-02",
+   "role": "minério dourado do usuário (recursos.webp) junto da pedra (escala 0,13 do @2x) + sombra de contato",
+   "path": "art/export/v32-nature/res_ore_gold_world@1x.png",
+   "files": [
+    "art/export/v32-nature/res_ore_gold_world@1x.png",
+    "art/export/v32-nature/res_ore_gold_world@2x.png",
+    "art/export/v32-nature/res_ore_gold_world.json",
+    "art/export/v32-nature/res_ore_gold_world_shadow@1x.png",
+    "art/export/v32-nature/res_ore_gold_world_shadow@2x.png",
+    "art/export/v32-nature/res_ore_gold_world_shadow.json"
+   ],
+   "source_path": [
+    "art/export/user-items/resources/resource_ore_gold@2x.png"
+   ],
+   "status": "in_review",
+   "variants": [],
+   "technical": {
+    "dimensions": "36x40",
+    "alpha": true,
+    "anchor": "base da silhueta (contato)",
+    "anchor_px_1x": [
+     18,
+     30
+    ],
+    "origin": [
+     0.5,
+     0.75
+    ],
+    "footprint_tiles": [
+     1,
+     1
+    ],
+    "frames": 1,
+    "filtering": "linear",
+    "max_colors": null,
+    "palette": "arte do usuário (sem requantizar)",
+    "shadow": "separada (_shadow, canvas e âncora próprios)",
+    "interactive_rim": true
+   },
+   "visual_locks": [
+    "palette-v3.2",
+    "projection-2:1",
+    "anchor",
+    "light-direction",
+    "outline-v3",
+    "paint-finish-v3.2"
+   ],
+   "source": {
+    "kind": "user_owned",
+    "url_or_tool": "art/source/tools/build_alvo_visual_c_02.py (escala + âncora, sem repintura)",
+    "creator": "usuário (dono do projeto); recorte e escala pelo agente diretor-de-arte",
+    "created_at": "2026-11-23",
+    "license": "do usuário; uso autorizado (art/source/user-provided/2026-11-22/PROVENIENCIA.md)",
+    "attribution": "",
+    "prompt_or_source_record": "derivado dos recortes em art/export/user-items/"
+   },
+   "verification": {
+    "native_scale_reviewed": true,
+    "in_engine_reviewed": false,
+    "technical_checks_passed": true,
+    "approved_by": ""
+   },
+   "review": "art/review/2026-11-23-alvo-visual-c-02/antes-depois.png",
+   "notes": "alvo visual c-02 (guia v3.2); substitui c-01; ver art/review/2026-11-23-alvo-visual-c-02/notas.md"
   }
  ],
  "support_files": [
@@ -9512,15 +11676,22 @@
   {
    "path": "art/review/2026-11-22-alvo-visual-c-01/",
    "role": "alvo visual v3 (cenas, prancha, prova de leitura a 0,5, técnica, debug, qa.json, notas.md)",
-   "status": "in_review",
-   "batch": "2026-11-22-alvo-visual-c-01"
+   "status": "rejected",
+   "batch": "2026-11-22-alvo-visual-c-01",
+   "superseded_by": "2026-11-23-alvo-visual-c-02"
   },
   {
    "path": "art/review/2026-11-22-itens-usuario-recortados/",
    "role": "pranchas de conferência do recorte (claro, escuro, grama, bordas @2x) + qa.json + notas.md",
    "status": "in_review",
    "batch": "2026-11-22-itens-usuario-recortados"
+  },
+  {
+   "path": "art/review/2026-11-23-alvo-visual-c-02/",
+   "role": "alvo visual c-02 (cenas, antes×depois, prancha, qa.json, notas.md)",
+   "status": "in_review",
+   "batch": "2026-11-23-alvo-visual-c-02"
   }
  ],
- "style_version": "3.1 (pintado/ilustrado: arte do usuário como alvo + estilo C no mundo) — 2026-11-22"
+ "style_version": "3.2 (o mundo usa o estilo das imagens do usuário: pintado, vivo, saturado) — 2026-11-23"
 }

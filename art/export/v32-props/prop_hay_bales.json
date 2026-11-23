@@ -1,0 +1,23 @@
+{
+ "name": "prop_hay_bales",
+ "size_1x": [
+  88,
+  72
+ ],
+ "anchor_px_1x": [
+  44,
+  50
+ ],
+ "origin": [
+  0.5,
+  0.694444
+ ],
+ "footprint_tiles": [
+  1,
+  1
+ ],
+ "scales": [
+  1,
+  2
+ ]
+}

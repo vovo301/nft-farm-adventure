@@ -1,0 +1,23 @@
+{
+ "name": "prop_fence_corner_n_shadow",
+ "size_1x": [
+  92,
+  36
+ ],
+ "anchor_px_1x": [
+  26,
+  8
+ ],
+ "origin": [
+  0.282609,
+  0.222222
+ ],
+ "footprint_tiles": [
+  1,
+  1
+ ],
+ "scales": [
+  1,
+  2
+ ]
+}

@@ -1,0 +1,23 @@
+{
+ "name": "rock_ore_a_shadow",
+ "size_1x": [
+  116,
+  52
+ ],
+ "anchor_px_1x": [
+  40,
+  22
+ ],
+ "origin": [
+  0.344828,
+  0.423077
+ ],
+ "footprint_tiles": [
+  1,
+  1
+ ],
+ "scales": [
+  1,
+  2
+ ]
+}

@@ -1,0 +1,23 @@
+{
+ "name": "tree_pine_a_shadow",
+ "size_1x": [
+  236,
+  60
+ ],
+ "anchor_px_1x": [
+  38,
+  22
+ ],
+ "origin": [
+  0.161017,
+  0.366667
+ ],
+ "footprint_tiles": [
+  1,
+  1
+ ],
+ "scales": [
+  1,
+  2
+ ]
+}
