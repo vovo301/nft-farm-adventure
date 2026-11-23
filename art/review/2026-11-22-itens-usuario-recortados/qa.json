@@ -1,0 +1,499 @@
+{
+ "items": 108,
+ "halo": [
+  {
+   "name": "resource_stone",
+   "ring_lum": 1.7
+  },
+  {
+   "name": "resource_ore_gray",
+   "ring_lum": 63.0
+  },
+  {
+   "name": "resource_ore_gold",
+   "ring_lum": 155.4
+  },
+  {
+   "name": "resource_crystal_blue",
+   "ring_lum": 127.2
+  },
+  {
+   "name": "resource_crystal_purple",
+   "ring_lum": 113.3
+  },
+  {
+   "name": "resource_crystal_green",
+   "ring_lum": 181.7
+  },
+  {
+   "name": "resource_log",
+   "ring_lum": 12.5
+  },
+  {
+   "name": "tool_axe",
+   "ring_lum": 193.2
+  },
+  {
+   "name": "tool_pickaxe_iron",
+   "ring_lum": 205.5
+  },
+  {
+   "name": "tool_pickaxe_iron_reinforced",
+   "ring_lum": 234.1
+  },
+  {
+   "name": "tool_pickaxe_gold",
+   "ring_lum": 166.5
+  },
+  {
+   "name": "tool_pickaxe_crystal",
+   "ring_lum": 184.2
+  },
+  {
+   "name": "tool_drill",
+   "ring_lum": 239.5
+  },
+  {
+   "name": "tool_fishing_rod",
+   "ring_lum": 229.5
+  },
+  {
+   "name": "crop_rice_s0",
+   "ring_lum": 105.5
+  },
+  {
+   "name": "crop_rice_s1",
+   "ring_lum": 167.2
+  },
+  {
+   "name": "crop_rice_s2",
+   "ring_lum": 183.9
+  },
+  {
+   "name": "crop_rice_s3",
+   "ring_lum": 172.7
+  },
+  {
+   "name": "crop_pea_s0",
+   "ring_lum": 132.1
+  },
+  {
+   "name": "crop_pea_s1",
+   "ring_lum": 168.0
+  },
+  {
+   "name": "crop_pea_s2",
+   "ring_lum": 172.1
+  },
+  {
+   "name": "crop_pea_s3",
+   "ring_lum": 110.2
+  },
+  {
+   "name": "crop_grape_s0",
+   "ring_lum": 95.5
+  },
+  {
+   "name": "crop_grape_s1",
+   "ring_lum": 182.5
+  },
+  {
+   "name": "crop_grape_s2",
+   "ring_lum": 206.7
+  },
+  {
+   "name": "crop_grape_s3",
+   "ring_lum": 171.8
+  },
+  {
+   "name": "crop_apple_tree_s0",
+   "ring_lum": 120.3
+  },
+  {
+   "name": "crop_apple_tree_s1",
+   "ring_lum": 185.3
+  },
+  {
+   "name": "crop_apple_tree_s2",
+   "ring_lum": 148.9
+  },
+  {
+   "name": "crop_mushroom_s0",
+   "ring_lum": 159.0
+  },
+  {
+   "name": "crop_mushroom_s1",
+   "ring_lum": 167.9
+  },
+  {
+   "name": "crop_mushroom_s2",
+   "ring_lum": 170.7
+  },
+  {
+   "name": "crop_mushroom_s3",
+   "ring_lum": 166.2
+  },
+  {
+   "name": "crop_eggplant_s0",
+   "ring_lum": 187.0
+  },
+  {
+   "name": "crop_eggplant_s1",
+   "ring_lum": 190.2
+  },
+  {
+   "name": "crop_eggplant_s2",
+   "ring_lum": 181.5
+  },
+  {
+   "name": "crop_eggplant_s3",
+   "ring_lum": 62.7
+  },
+  {
+   "name": "crop_chili_pepper_s0",
+   "ring_lum": 199.5
+  },
+  {
+   "name": "crop_chili_pepper_s1",
+   "ring_lum": 222.2
+  },
+  {
+   "name": "crop_chili_pepper_s2",
+   "ring_lum": 181.9
+  },
+  {
+   "name": "crop_chili_pepper_s3",
+   "ring_lum": 177.4
+  },
+  {
+   "name": "crop_bell_pepper_s0",
+   "ring_lum": 190.6
+  },
+  {
+   "name": "crop_bell_pepper_s1",
+   "ring_lum": 166.7
+  },
+  {
+   "name": "crop_bell_pepper_s2",
+   "ring_lum": 180.3
+  },
+  {
+   "name": "crop_bell_pepper_s3",
+   "ring_lum": 175.1
+  },
+  {
+   "name": "crop_strawberry_s0",
+   "ring_lum": 182.1
+  },
+  {
+   "name": "crop_strawberry_s1",
+   "ring_lum": 168.0
+  },
+  {
+   "name": "crop_strawberry_s2",
+   "ring_lum": 151.1
+  },
+  {
+   "name": "crop_strawberry_s3",
+   "ring_lum": 182.2
+  },
+  {
+   "name": "crop_watermelon_s0",
+   "ring_lum": 184.4
+  },
+  {
+   "name": "crop_watermelon_s1",
+   "ring_lum": 170.1
+  },
+  {
+   "name": "crop_watermelon_s2",
+   "ring_lum": 115.4
+  },
+  {
+   "name": "crop_watermelon_s3",
+   "ring_lum": 156.8
+  },
+  {
+   "name": "crop_sunflower_s0",
+   "ring_lum": 185.8
+  },
+  {
+   "name": "crop_sunflower_s2",
+   "ring_lum": 175.6
+  },
+  {
+   "name": "crop_sunflower_s3",
+   "ring_lum": 186.4
+  },
+  {
+   "name": "crop_beet_s0",
+   "ring_lum": 87.2
+  },
+  {
+   "name": "crop_beet_s1",
+   "ring_lum": 128.8
+  },
+  {
+   "name": "crop_beet_s2",
+   "ring_lum": 226.1
+  },
+  {
+   "name": "crop_beet_s3",
+   "ring_lum": 167.6
+  },
+  {
+   "name": "crop_cabbage_s0",
+   "ring_lum": 142.1
+  },
+  {
+   "name": "crop_cabbage_s1",
+   "ring_lum": 137.7
+  },
+  {
+   "name": "crop_cabbage_s2",
+   "ring_lum": 81.0
+  },
+  {
+   "name": "crop_cabbage_s3",
+   "ring_lum": 4.3
+  },
+  {
+   "name": "crop_lettuce_s0",
+   "ring_lum": 96.1
+  },
+  {
+   "name": "crop_lettuce_s1",
+   "ring_lum": 134.4
+  },
+  {
+   "name": "crop_lettuce_s2",
+   "ring_lum": 102.1
+  },
+  {
+   "name": "crop_lettuce_s3",
+   "ring_lum": 162.4
+  },
+  {
+   "name": "crop_onion_s0",
+   "ring_lum": 135.0
+  },
+  {
+   "name": "crop_onion_s1",
+   "ring_lum": 128.9
+  },
+  {
+   "name": "crop_onion_s2",
+   "ring_lum": 227.6
+  },
+  {
+   "name": "crop_onion_s3",
+   "ring_lum": 159.3
+  },
+  {
+   "name": "crop_garlic_s0",
+   "ring_lum": 177.6
+  },
+  {
+   "name": "crop_garlic_s1",
+   "ring_lum": 141.9
+  },
+  {
+   "name": "crop_garlic_s2",
+   "ring_lum": 218.9
+  },
+  {
+   "name": "crop_garlic_s3",
+   "ring_lum": 158.2
+  },
+  {
+   "name": "crop_cucumber_s0",
+   "ring_lum": 131.7
+  },
+  {
+   "name": "crop_cucumber_s1",
+   "ring_lum": 119.9
+  },
+  {
+   "name": "crop_cucumber_s2",
+   "ring_lum": 81.3
+  },
+  {
+   "name": "crop_cucumber_s3",
+   "ring_lum": 164.1
+  },
+  {
+   "name": "crop_carrot_s0",
+   "ring_lum": 92.8
+  },
+  {
+   "name": "crop_carrot_s1",
+   "ring_lum": 103.4
+  },
+  {
+   "name": "crop_carrot_s2",
+   "ring_lum": 138.7
+  },
+  {
+   "name": "crop_carrot_s3",
+   "ring_lum": 125.0
+  },
+  {
+   "name": "crop_pumpkin_s0",
+   "ring_lum": 71.7
+  },
+  {
+   "name": "crop_pumpkin_s1",
+   "ring_lum": 110.7
+  },
+  {
+   "name": "crop_pumpkin_s2",
+   "ring_lum": 136.6
+  },
+  {
+   "name": "crop_pumpkin_s3",
+   "ring_lum": 129.0
+  },
+  {
+   "name": "crop_tomato_s0",
+   "ring_lum": 108.6
+  },
+  {
+   "name": "crop_tomato_s1",
+   "ring_lum": 124.2
+  },
+  {
+   "name": "crop_tomato_s2",
+   "ring_lum": 143.6
+  },
+  {
+   "name": "crop_tomato_s3",
+   "ring_lum": 163.4
+  },
+  {
+   "name": "crop_corn_s0",
+   "ring_lum": 146.5
+  },
+  {
+   "name": "crop_corn_s1",
+   "ring_lum": 123.8
+  },
+  {
+   "name": "crop_corn_s2",
+   "ring_lum": 170.9
+  },
+  {
+   "name": "crop_corn_s3",
+   "ring_lum": 188.3
+  },
+  {
+   "name": "crop_wheat_s0",
+   "ring_lum": 116.3
+  },
+  {
+   "name": "crop_wheat_s1",
+   "ring_lum": 130.9
+  },
+  {
+   "name": "crop_wheat_s2",
+   "ring_lum": 122.2
+  },
+  {
+   "name": "crop_wheat_s3",
+   "ring_lum": 169.8
+  },
+  {
+   "name": "crop_potato_s0",
+   "ring_lum": 117.8
+  },
+  {
+   "name": "crop_potato_s1",
+   "ring_lum": 120.8
+  },
+  {
+   "name": "crop_potato_s2",
+   "ring_lum": 107.1
+  },
+  {
+   "name": "crop_potato_s3",
+   "ring_lum": 121.3
+  }
+ ],
+ "asset_report": [
+  {
+   "size": "196x146",
+   "files": 92,
+   "exit": 0
+  },
+  {
+   "size": "212x212",
+   "files": 9,
+   "exit": 0
+  },
+  {
+   "size": "244x244",
+   "files": 7,
+   "exit": 0
+  },
+  {
+   "size": "392x292",
+   "files": 92,
+   "exit": 0
+  },
+  {
+   "size": "424x424",
+   "files": 9,
+   "exit": 0
+  },
+  {
+   "size": "488x488",
+   "files": 7,
+   "exit": 0
+  }
+ ],
+ "darkest_ring": [
+  {
+   "name": "resource_stone",
+   "ring_lum": 1.7
+  },
+  {
+   "name": "crop_cabbage_s3",
+   "ring_lum": 4.3
+  },
+  {
+   "name": "resource_log",
+   "ring_lum": 12.5
+  },
+  {
+   "name": "crop_eggplant_s3",
+   "ring_lum": 62.7
+  },
+  {
+   "name": "resource_ore_gray",
+   "ring_lum": 63.0
+  }
+ ],
+ "pass": true,
+ "families": {
+  "resources": {
+   "count": 7,
+   "canvas_1x": [
+    244,
+    244
+   ]
+  },
+  "tools": {
+   "count": 9,
+   "canvas_1x": [
+    212,
+    212
+   ]
+  },
+  "crops": {
+   "count": 92,
+   "canvas_1x": [
+    196,
+    146
+   ]
+  }
+ }
+}

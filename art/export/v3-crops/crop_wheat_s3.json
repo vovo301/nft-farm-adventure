@@ -1,0 +1,26 @@
+{
+ "name": "crop_wheat_s3",
+ "size_1x": [
+  80,
+  76
+ ],
+ "anchor_px_1x": [
+  40,
+  72
+ ],
+ "origin": [
+  0.5,
+  0.947368
+ ],
+ "footprint_tiles": [
+  1,
+  1
+ ],
+ "scales": [
+  1,
+  2
+ ],
+ "derived_from": "art/export/user-items/crops/crop_wheat_s3@2x.png",
+ "world_scale_of_user_2x": 0.6,
+ "z_base_px": 11
+}

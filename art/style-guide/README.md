@@ -1,204 +1,225 @@
-# Guia de estilo: NFT Farm Adventure (isométrico cartoon)
+# Guia de estilo: NFT Farm Adventure (v3 · pintado/ilustrado)
 
-> Dono: `diretor-de-arte`. **Versão 2.1 (2026-11-22).** Substitui a v1 em pixel art top-down
-> (reprovada no lote `2026-11-21-alvo-visual-01`), arquivada em
-> `art/style-guide/archive/pixel-v0/` só como histórico.
-> Estado: **proposta técnica.** As regras de grade, export e âncora já valem. Forma, cor e
-> acabamento viram oficiais quando o alvo visual vetorial for `approved` pelo usuário.
+> Dono: `diretor-de-arte`. **Versão 3.1 (2026-11-22).**
+> Substitui a v2.1 (isométrico cartoon arredondado, reprovada no lote `2026-11-22-alvo-visual-iso-01`),
+> arquivada em `art/style-guide/archive/cartoon-v2.1/` junto com a paleta v2.1. A v1 (pixel art) está
+> em `archive/pixel-v0/`.
+>
+> **Decisões do usuário que este guia segue:**
+> 1. Estilo **C · pintado semirrealista** da prancha `2026-11-22-estilos-comparativo` ("o modelo C
+>    ainda é o melhor").
+> 2. As imagens próprias do usuário (`art/source/user-provided/2026-11-22/`, uso autorizado) são o
+>    **estilo-alvo oficial** de ícones, recursos, ferramentas e culturas. Elas também são a referência
+>    de acabamento para todo o resto: "aqui estão modelos que eu quero que crie nesse estilo".
+> 3. Nada infantil e nada arredondado demais: o personagem é adulto e a natureza tem silhueta
+>    pontuda, não em lobos redondos.
+>
+> Estado: **proposta.** A grade, o export, as âncoras e as sombras separadas já valem. Forma, cor e
+> acabamento viram oficiais quando o alvo `2026-11-22-alvo-visual-c-01` e os recortes
+> `2026-11-22-itens-usuario-recortados` forem `approved`.
 
-Arte 100% original. Nada derivado de Sunflower Land, do pack Sunnyside ou dos kits de terceiros
-que o usuário mostrou como direção geral. Não copiamos composição, formas, proporções nem assets.
+A arte é original ou do usuário. Nada vem de Sunflower Land, do pack Sunnyside ou de kits de
+terceiros, e não copiamos composição, forma nem proporção de lá.
 
-## 0. Método de produção (decisão do usuário, 2026-11-22)
+## 0. Fontes de arte e método
 
-- **Só vetor por script.** Cada asset é gerado por código Python como SVG e rasterizado para PNG
-  (`art/source/tools/iso_vector.py`).
-- **Nenhum gerador de imagem por IA**, nem para conceito ou alvo visual. Todo manifesto registra
-  `source.kind: "scripted"`.
-- Corrigir um asset é editar o script que o gera, nunca o PNG. O PNG é sempre reproduzível.
+| Fonte | Para quê | Como entra | `source.kind` |
+|---|---|---|---|
+| **Arte do usuário** (`art/source/user-provided/`) | ícones de item, recursos, ferramentas e culturas (23 × 4 estágios) | recorte por script (`cut_user_items.py`); escala/âncora para o mundo por script | `user_owned` |
+| **Vetor por script** (`iso_vector.py` + `paint_vector.py`) | mundo: chão, ilha, árvores, construções, cercas, props, personagem | SVG gerado por código, PNG @1x/@2x | `scripted` |
+
+- **Nós não usamos gerador de imagem por IA**, nem para conceito. Também não pintamos à mão sobre
+  a arte do usuário: só recortamos, escalamos e ancoramos.
+- Para corrigir um asset, edite o script que o gera e nunca o PNG. Todo PNG pode ser refeito.
+- Peças novas da família do usuário (por exemplo, uma ferramenta que falta) precisam de nova arte
+  do usuário ou de uma peça vetorial que siga as seções 5 a 9. O manifesto registra qual foi o caso.
 
 ## 1. Quadro do jogo
 
 | Item | Decisão |
 |---|---|
-| Fantasia | cuidar de uma fazendinha colorida e aconchegante, voltar e sempre ter algo pronto |
-| Verbos | plantar, colher, coletar, cozinhar, vender, decorar |
-| Engine | Phaser 4 (WebGL), **`pixelArt: false`**, filtro **linear**, `roundPixels: false` |
+| Fantasia | cuidar de uma fazenda bonita e viva, voltar e sempre ter algo pronto |
+| Verbos | plantar, colher, coletar, minerar, cozinhar, vender, decorar |
+| Engine | Phaser 4 (WebGL), `pixelArt: false`, filtro **linear**, `roundPixels: false` |
 | Plataformas | navegador desktop e celular (retrato e paisagem) |
-| Vista | **isométrica 2:1 (dimétrica de jogo)**, câmera fixa olhando do sul, sem rotação |
-| Tile de chão | losango **128×64 px a 1×** (passo da grade: 64 px em x e 32 px em y por tile) |
-| Densidade de tela | texturas **@1x** e **@2x**. Usar @2x quando `devicePixelRatio × zoom > 1,2` |
-| Zoom de câmera | desktop 1,0 (faixa 0,75–1,5); celular 0,5–0,75. Zoom livre (não precisa ser inteiro) |
+| Vista | **isométrica 2:1**, câmera fixa olhando do sul, sem rotação |
+| Tile de chão | losango **128×64 px a 1×** (passo de 64 px em x e 32 px em y por tile) |
+| Densidade | texturas **@1x** e **@2x**. Usar @2x quando `devicePixelRatio × zoom > 1,2` |
+| Zoom | desktop 1,0 (faixa 0,75–1,5); celular 0,5–0,75 |
 
-## 2. Projeção e grade
+## 2. Projeção e grade (igual à v2.1)
 
-- Coordenadas de grade `(x, y)`: o eixo x desce para a **direita** e o eixo y desce para a
-  **esquerda**. Tela: `sx = (x − y)·64`, `sy = (x + y)·32 − z` (z = altura em px a 1×).
-- Linhas do chão em 2:1 exato (2 px em x para 1 px em y). Não usamos 30° "verdadeiros".
-- Ordem de desenho (profundidade): chão → decoração plana → **sombras** → objetos e personagens
-  ordenados por `x + y` da âncora (empate: maior `x` por último).
-- Objetos de mais de um tile ordenam pela âncora do canto frontal da pegada. Construções grandes
-  podem ser fatiadas em colunas se a ordenação falhar.
+- Grade `(x, y)`: x desce para a **direita**, y desce para a **esquerda**. Tela:
+  `sx = (x − y)·64`, `sy = (x + y)·32 − z` (z em px a 1×).
+- Para volumes (sombra, faces), use o mundo de `paint_vector.py`: 1 tile = 72 px de mundo, e
+  z de tela = z de mundo × 1,0887.
+- Ordem de desenho: chão → decalques → **sombras** → objetos por `x + y` da âncora (empate: maior
+  `x` por último) → overlays (indicadores) → UI.
 
-## 3. Contrato técnico (tamanhos a 1×; @2x = tudo ×2)
+## 3. Contrato técnico (tamanhos a 1×; @2x = ×2)
 
-| Tipo | Canvas @1x | Pegada | Âncora (px @1x) | Prefixo |
-|---|---|---|---|---|
-| Tile de chão | **136×68** (128×64 + sangria) | 1×1 | (68, 34) = centro do losango | `ground_` |
-| Tile de chão com borda/espessura (ilha, barranco) | 136×(68+altura) | 1×1 | (68, 34) | `ground_edge_` |
-| Objeto pequeno (feno, caixote, arbusto) | 160×(altura+44) | 1×1 | (80, H−44) | `prop_` |
-| Recurso (árvore, pedra, minério) | 160×(altura+44) | 1×1 | (80, H−44) | `tree_`, `rock_` |
-| Cultura (estágios) | 128×(altura+40) | 1×1 (sobre `ground_soil_*`) | (64, H−40) | `crop_<nome>_s<N>` |
-| Personagem/NPC | 64–96×(altura+12) | ponto | (W/2, H−12) = entre os pés | `avatar_`, `npc_`, `animal_` |
-| Construção n×m | (n+m)·64 + 32 × (altura + (n+m)·16 + 12) | n×m | centro do losango da pegada | `bld_` |
-| Ícone de UI/inventário | 64×64 (exibido 32–64 CSS px) | — | centro | `icon_` |
-| Canteiro elevado (objeto) | 160×96 | 1×1 | (80, 52) | `plot_` |
-| Decalque de chão (lago, manchas, flores soltas) | livre, múltiplo de 4 | n×m | centro da pegada | `ground_` (n×m), `decor_` |
-| Indicador sobre objeto | 48×60 | — | (24, 56) = ponta do rabicho | `ui_` |
-
-Regras gerais:
-
-- **Âncora = centro do losango da pegada** (ponto de chão onde o objeto "está"). Cada export tem
-  um `<nome>.json` ao lado com `size_1x`, `anchor_px_1x`, `origin` (fração para
-  `setOrigin`) e `footprint_tiles`. O cliente lê o `origin` daí e não usa números fixos no código.
-- Canvas sempre com largura e altura **múltiplas de 4**, e âncora em x = metade da largura.
-- **Sangria do chão:** o losango é desenhado 4 px mais largo e 2 px mais alto, com borda nítida
-  (`crispEdges`). Vizinhos se sobrepõem e não aparece costura com filtro linear nem a zoom 0,5.
-  No Tiled, use um tileset de 136×68 com `tileoffset` (−4, +2) sobre um mapa de 128×64.
-- **Sombra projetada = arquivo separado** `<nome>_shadow@Nx.png`, com o mesmo canvas e a mesma
-  âncora do sprite. Vai numa camada de sombras acima do chão e abaixo de todos os objetos, para
-  não "pintar" objetos vizinhos.
-- PNG RGBA, sRGB, alfa reto. Atlas com 2 px de padding e extrusão. Mipmaps ligados só em atlas POT.
-- Nomes em inglês, `snake_case`: `<prefixo>_<nome>[_<variante a|b|c>][_<estado>][_<dir>]@<1|2>x.png`.
-  Direções: `_se` (padrão, de frente para a câmera), `_sw`, `_ne`, `_nw`. Os lados opostos
-  podem ser espelhados (`flipX`) se o asset não tiver texto nem assimetria importante.
-- Pastas: fonte gerada `art/source/<familia>/<nome>.svg` (não editar, ela sai do script), script
-  `art/source/tools/build_<lote>.py`, export `art/export/<familia>/`, revisão
-  `art/review/<lote>/`.
-
-### 3.1 Regras adicionadas na v2.1 (alvo visual iso-01)
-
-- **Autotile de chão por máscara de 4 vizinhos:** sufixo `_<máscara>` com `xp`, `yp`, `xn`,
-  `yn` (ex.: `ground_path_dirt_xpyn`), ou `none` sem vizinhos. Variantes do mesmo encaixe
-  ganham `_b`, `_c` e são escolhidas por hash da posição.
-- **Ilha:** a água fica 40 px abaixo da grama. `ground_edge_grass_<máscara>` (136×116) tem
-  barranco em +x e +y e um filete de luz em −x e −y. O pé do barranco e os estratos são
-  periódicos em 1 tile.
-- **Culturas sobre canteiro:** o sprite da cultura tem a mesma âncora do `plot_raised_bed`. A
-  base das plantas fica em `z_base_px` = 12, registrado no manifesto.
-- **Peças de cerca/trilho contínuo:** cor chapada (sem degradê por bounding box), cortadas na
-  linha da borda do tile, para emendar sem costura.
-- **Nunca** use arco "‿" isolado como marca de folha: a 1× ele lê como rostinho. Use escamas de
-  2–3 lóbulos ligados.
-
-## 4. Escala relativa (a 1×, tile = 128×64)
-
-| Coisa | Altura na tela | Pegada | Nota |
+| Tipo | Canvas @1x | Âncora | Prefixo |
 |---|---|---|---|
-| Personagem adulto (avatar) | **~92 px** (≈ 0,72 da largura do tile) | círculo de ~0,3 tile | cabeça grande (≈ 2,8 cabeças de altura), chibi |
-| Animal pequeno (galinha) | 36–44 px | ponto | |
-| Animal grande (vaca) | 70–80 px | 1×1 | |
-| Cultura madura | 40–64 px | 1 tile de canteiro | estágios crescem de baixo para cima, base fixa |
-| Fardo de feno / caixote | 50–60 px | ~0,6×0,45 | |
-| Árvore redonda | **160–190 px** (≈ 2× o avatar) | 1×1 | copa de 120–135 px de largura |
-| Cerca (segmento) | 40–48 px | aresta de 1 tile | |
-| Casa / celeiro pequeno | 220–300 px | 3×3 | porta com ~1,15× a altura do avatar |
-| Celeiro grande | 300–380 px | 4×4 | |
+| Tile de chão | 136×68 (128×64 + sangria) | (68, 34), centro do losango | `ground_` |
+| Borda da ilha | 136×116 | (68, 34) | `ground_edge_` |
+| Objeto, recurso, árvore, construção (vetor) | **ajustado ao conteúdo** (múltiplo de 4, âncora x = W/2) | centro do losango da pegada | `prop_`, `tree_`, `rock_`, `bld_` |
+| Personagem | ajustado ao conteúdo | entre os pés | `avatar_`, `npc_` |
+| Cultura no mundo (sobre canteiro) | ajustado | base do monte de terra em `z_base_px = 11` | `crop_<nome>_s<N>` |
+| Cerca (peça por máscara) | 160×108 fixo | (80, 64) | `prop_fence_` |
+| Indicador sobre objeto | 48×60 | (24, 56), ponta | `ui_` |
+| **Item do usuário: recurso** | 244×244 (@2x 488) | centro | `resource_` |
+| **Item do usuário: ferramenta** | 212×212 (@2x 424) | centro | `tool_` |
+| **Item do usuário: cultura** | 196×146 (@2x 392×292) | base-centro (base do monte de terra) | `crop_<nome>_s0..s3` |
 
-O boneco cinza `ref_scale_figure` é o gabarito de escala até o avatar existir. Toda prancha de
-revisão inclui um boneco de escala ou o avatar.
+- Cada export tem um `<nome>.json` com `size_1x`, `anchor_px_1x`, `origin` e `footprint_tiles`.
+  O cliente lê o `origin` daí e não usa números fixos.
+- Canvas sempre com lados múltiplos de 4, âncora par e nenhum pixel encostado na borda.
+- **Sombra projetada = arquivo separado** `<nome>_shadow`. Ela tem **canvas e âncora próprios**
+  (novo na v3: a sombra longa sai para a direita e não cabe no canvas do sprite) e o mesmo ponto
+  de âncora no mundo. Vai na camada `Shadows`, que é composta inteira antes dos objetos.
+- Os itens do usuário em `art/export/user-items/` estão em **resolução de ícone**. No mundo, as
+  culturas usam a versão escalada pelo build da cena (`CROP_WORLD_SCALE = 0,60` do @2x), com a
+  âncora na terra do canteiro.
+- PNG RGBA, sRGB, alfa reto. As reduções (@2x → @1x, mundo) são feitas em **alfa
+  pré-multiplicado**, para não criar franja escura.
+- Nomes em inglês, `snake_case`. Itens do usuário são nomeados pelo que a imagem mostra
+  (`crop_rice`, `crop_wheat`, `tool_pickaxe_gold`). O mapeamento para os ids do jogo fica para
+  depois.
 
-## 5. Luz, volume e sombra
+## 4. Escala (a 1×, tile = 128×64)
 
-- **Luz do topo-esquerda** da tela. Em caixas, o **topo** fica mais claro (light → highlight), a
-  **face esquerda** (sudoeste) em tom médio (base → light) e a **face direita** (sudeste) na
-  sombra (shadow → deep).
-- **2–3 tons por superfície** com degradê leve, só entre tons **vizinhos** da mesma rampa (nada
-  de degradê de base para deep, por exemplo). Um brilho pontual (`highlight`) por objeto, no
-  topo-esquerda.
-- Formas orgânicas (copas, arbustos, frutas) usam lobos com degradê radial deslocado para o
-  topo-esquerda, mais um escurecimento global da massa no canto inferior-direito.
-- Aresta frontal do topo de caixas com filete de luz de 1 px (`highlight`). Aresta vertical
-  frontal com 1 px de `deep` a 70%.
-- **Sombra projetada:** elipse no chão deslocada para baixo-direita (≈ +10 a +14 px em x e
-  +5 a +6 px em y por objeto de 1 tile), cor `sombra.cast` com opacidade 0,28–0,35 e degradê
-  radial até 0 na borda. Nada de sombra dura ou preta.
-- **Chão sem degradê por tile** (repetiria a grade). Variação vem de 2–3 variantes por tipo,
-  tufos, manchas suaves e das sombras dos objetos.
-
-## 6. Contorno
-
-| Tipo | Espessura visível @1x | Cor |
+| Coisa | Altura na tela | Nota |
 |---|---|---|
-| Objetos, recursos, culturas, personagens | **2 px** | `outline` da rampa do material |
-| Construções | **3 px** | `outline` da rampa dominante (telhado, parede) |
-| Linhas internas (lobos, dobras, tábuas) | 1 px | `shadow` ou `deep` da rampa |
-| Tiles de chão | **sem contorno** | transições usam `shadow`/`deep` |
-| Ícones de UI | 2 px a 64×64 | `outline` do material |
+| Personagem adulto | **~94 px** com chapéu | **~6 cabeças** (cabeça ≈ 14,6 px), ombros largos, mandíbula marcada, olho de traço |
+| Cultura madura no canteiro | 40–70 px | base fixa entre estágios |
+| Fardos de feno / caixote | 35–50 px | |
+| Árvore folhosa | 200–215 px | ≈ 2,2× o personagem |
+| Pinheiro | ~235 px | |
+| Galpão 3×3 | ~300 px | porta ≈ 1,1× o personagem |
 
-- O contorno é **colorido escuro**, da rampa do próprio material (verde-escuro na folhagem,
-  marrom no feno). Nunca preto puro. A `tinta` (`#2e2438`) só aparece em olhos e boca.
-- Na técnica de "traço atrás", a silhueta é desenhada antes do preenchimento com traço de
-  2×espessura, então a espessura visível fica exata e as junções saem arredondadas.
-- Cada material dentro do mesmo objeto mantém o próprio contorno (tronco marrom, copa verde).
+Não há cabeça grande nem proporção chibi. As proporções são reais, levemente estilizadas.
 
-## 7. Formas e cor
+## 5. Luz, volume e sombra (extraído da arte do usuário + estilo C)
 
-- **Formas arredondadas e fofas:** cantos com raio, junções `round`, copas em lobos, nada de
-  quinas vivas em coisas orgânicas. Construções têm proporções "gordinhas" (telhado grande,
-  paredes baixas).
-- **Cor saturada e alegre:** grama verde-limão, caminhos bege, canteiros marrom-avermelhados,
-  telhados vermelhos e azuis, água ciano. Hue shift: sombras puxam para azul/roxo, luzes para
-  amarelo.
-- A folhagem é mais escura e azulada que a grama, para a árvore se destacar do chão.
-- **Valores:** o chão é médio e calmo; o que se clica (culturas maduras, objetos, personagens)
-  tem o maior contraste.
-- Paleta: `palette.json` v2.1 (121 cores em 24 rampas; +`barranco`, +`fruta_vermelha`, +`flor_rosa`). No SVG-fonte só entram cores da paleta. As cores
-  intermediárias que surgem do antialias ou do degradê no PNG são esperadas. Não existe limite
-  de cores no PNG.
-- **Exclusões:** texto ou letras dentro da arte (texto é i18n), logos, preto e branco puros,
-  texturas fotográficas, ruído, contornos pretos, perspectiva com fuga, pixel art.
+- **Luz do topo-esquerda.** Nas imagens do usuário, o brilho especular cai sempre no topo-esquerda
+  (cristais, frutos, metal) e o lado direito-baixo escurece. No mundo: topo claro, face +y (esquerda
+  da tela) média, face +x (direita) na sombra.
+- **Volume pintado:** degradês suaves dentro de cada forma, com 3 a 5 tons da rampa, só entre tons
+  vizinhos. Superfícies lisas (fruto, cristal, metal) têm **1 brilho especular** pequeno e nítido
+  no topo-esquerda. Superfícies foscas (terra, madeira, folha) não têm brilho, só a luz difusa.
+- **Textura sugerida, não fotográfica:** veios de madeira, estrias de casca, telhas
+  desencontradas, grãos da espiga e torrões de terra. O contraste interno da textura fica em
+  ΔL\* ≤ 8 dentro de um plano (some com elegância a 0,5).
+- **Luz de borda (rim):** as imagens do usuário têm um filete claro na borda do lado da luz. No
+  mundo, `paint_vector.rim()` (1,2–1,6 px, highlight da rampa, 40–70 %) só nas peças interativas.
+- **Sombra projetada longa e suave:** projetada pela luz (`L_CAST`), com ~0,9× a altura do objeto
+  para a direita e um pouco para baixo, em 3 camadas (mais escura perto da base). Mais uma elipse de
+  contato (`sombra.contact`, 22 %). Nada de sombra preta ou dura.
+- **Chão calmo:** a grama tem valor médio e contraste baixo (textura periódica comum + miolo por
+  variante). O que se clica tem o maior contraste local (seção 8).
 
-## 8. Leitura no celular
+## 6. Brilho e partículas (só itens especiais)
 
-1. Todo asset precisa ser reconhecível a **zoom 0,5** (tile com 64 CSS px). É a vista mais
-   afastada do celular. A prancha técnica sempre mostra a cena a 0,5.
-2. Nenhum detalhe que importa pode ter menos de **4 px @1x** (2 CSS px a 0,5). O contorno de 2 px
-   continua visível a 0,5.
-3. Silhueta primeiro: o objeto precisa ser reconhecível pintado de uma cor só, a 0,5.
-4. Estados de jogo (pronto para colher, com fome, quebrado) mudam forma **e** cor, nunca só
-   um detalhe pequeno. Indicadores de "pronto" ficam acima do objeto, com 24 px ou mais @1x.
-5. Duas coisas interativas vizinhas não podem ter a mesma silhueta e a mesma cor dominante.
-6. Área de toque mínima de 44 CSS px. Objetos menores ganham hitbox maior que o sprite.
-7. Se só dá para entender com zoom, simplifique em vez de adicionar detalhe.
+Regra tirada das imagens do usuário: o **brilho é raro e significa valor**.
 
-## 9. Camadas
+| Quem brilha | Como |
+|---|---|
+| cristais (azul, roxo, verde) | halo da cor do cristal + 6–12 partículas pequenas (2–6 px @2x) em volta |
+| minério de ouro, ferramenta de ouro/cristal | halo quente fraco + poucas faíscas |
+| cogumelo (cultura especial) | luz interna quente sob o chapéu e pontos de luz na terra |
+| maduro com destaque (girassol, pepino) | 1–3 faíscas discretas, sem halo |
 
-**No SVG** (`<g id>`, nesta ordem): `outline` (silhueta por trás) → `body`/`base` →
-`texture`/`detail` → `twine`/acessórios → `highlight`. A sombra fica sempre em outro arquivo,
-`_shadow`. Camadas de depuração (`debug`: pegada e âncora) nunca vão para o export.
+- Brilho e partículas são **alfa suave** no PNG (sem halo escuro e sem fundo). O recorte por
+  "unmultiply" preserva isso (seção 11).
+- Itens comuns (pedra, tora, culturas normais, ferramentas de ferro) **não brilham**.
+- No mundo, o brilho é um efeito do cliente (sprite aditivo por cima) e não é pintado no sprite
+  de chão.
 
-**No jogo (Phaser/Tiled):** `Water` → `Ground` → `GroundDecor` (plana, sem profundidade) →
-`Shadows` → `Objects` (com profundidade por `x + y`) → `Overlay` (balões, indicadores) → UI.
+## 7. Contorno
 
-## 10. Ferramenta
+| Tipo | Contorno |
+|---|---|
+| Itens do usuário (ícones, recursos, ferramentas, culturas) | o da própria arte: **escuro quente, fino**, ~3 px @2x (1,5 px @1x), cor `contorno_item` (nunca preto puro) |
+| Objetos vetoriais do mundo (árvores, construção, props, personagem, canteiro) | silhueta por valor + **anel de raster** de 3 px no @2x em `contorno_item.base` a 85 % (`outline_pair` do build); o @1x é a redução do @2x, então fica com 1,5 px, a mesma espessura da arte do usuário. Harmoniza o mundo com a arte do usuário |
+| Peças interativas | + `rim()` no lado da luz e `occlusion()` (filete escuro no lado da sombra) |
+| Chão, decalques, água | **sem contorno**: transições por valor |
+| Linhas internas | traços de 0,7–1,2 px em `deep`/`shadow` da rampa, a 45–75 % |
 
-`art/source/tools/iso_vector.py` tem as primitivas: `iso()`, `ground_diamond()` (losango com
-sangria), `ground_clip()`, `iso_box()` (bloco de 3 faces com luz), `cylinder()`, `fluffy()` (copa
-fofa de lobos), `sphere()`, `drop_shadow()`, `outline_path()`, `scatter()` (detalhe
-determinístico) e `Asset.export()` (SVG + PNG @1x/@2x + JSON de âncora).
-Instalação: `python3 -m pip install -r art/source/tools/requirements.txt` (cairosvg + Pillow;
-o cairosvg precisa da libcairo do sistema). Ela também funciona como CLI:
-`python3 art/source/tools/iso_vector.py render arquivo.svg --out-dir pasta/`.
+## 8. Forma, materiais e cor
 
-QA de cada lote: `asset_report.py --expect-size WxH --require-alpha` em todo PNG @1x e @2x
-(sem `--max-colors`, porque o vetor tem antialias), teste de costura do chão a zoom 0,5, 1, 1,5
-e 2 (zero pixels não opacos), além da prancha com debug de âncora e pegada.
+- **Forma:** proporções reais. A folhagem é feita em **massas** (sub-copas) de **tufos pontudos**
+  (`paint_vector.crown`), nunca em lobos redondos. As pedras são angulares, em 3 planos. As
+  construções têm quinas vivas, tábuas e telhas. Frutos, cristais e legumes podem ser redondos
+  porque são assim, mas têm volume, brilho especular e contorno (como na arte do usuário).
+- **Materiais:** madeira (tábua, casca, madeira cinza de cerca), barro (telha), pedra, terra
+  (canteiro, caminho, barranco), palha, metal, tecido (linho, brim, couro), água, cristal.
+- **Paleta `palette.json` v3.1:**
+  - 32 rampas do **estilo C** (terrosas, saturação baixa a média), para chão, construções,
+    natureza e personagem;
+  - **+14 rampas `origin: user_art`**, extraídas das imagens do usuário por
+    `extract_palette_v3.py`: `folha_viva`, `terra_monte`, `fruta_viva`, `laranja_viva`,
+    `amarelo_vivo`, `roxo_vivo`, `ouro`, `aco`, `cabo_madeira`, `pedra_ilustrada`,
+    `cristal_azul`, `cristal_roxo`, `cristal_verde` e `contorno_item`. Elas são mais saturadas e
+    valem para itens, culturas, frutos e efeitos.
+  - **Hierarquia de saturação:** chão < construções < natureza < itens/culturas maduras < efeitos.
+    O que é recompensa é o mais vivo da tela.
+  - No SVG-fonte, toda cor é um tom da paleta ou a mistura de **dois tons vizinhos da mesma
+    rampa** (`paint_vector.tone`). O QA verifica cada hex, com tolerância de 2/255.
+- **Exclusões:** texto dentro da arte, logos, preto e branco puros, contorno preto, cabeça grande
+  ou olhos grandes, copas em bolas, textura fotográfica, ruído, perspectiva com fuga e pixel art.
 
-## 11. Estado
+## 9. Leitura a zoom 0,5 (o ponto fraco do estilo C, com regras e prova)
 
-- Base técnica: lote `2026-11-22-base-isometrica` (draft).
-- **Alvo visual:** lote `2026-11-22-alvo-visual-iso-01` (**in_review**), em
-  `art/review/2026-11-22-alvo-visual-iso-01/`. Build: `art/source/tools/build_alvo_visual_iso_01.py`.
-  Quando for `approved`, forma, cor e acabamento deste guia viram oficiais. Nada é produzido em
-  escala antes disso.
+Na prancha comparativa, o estilo C virava mancha a 0,5 (trigo e pedra). As regras:
+
+- **L1 · Silhueta forte.** O objeto precisa ser reconhecível pintado de uma cor só a 0,5. A
+  folhagem vai em 4–6 **massas** com vão escuro entre elas. O trigo vai em **touceiras**
+  agrupadas (não em 64 hastes soltas). A pedra é feita de 2–3 planos grandes, com pepitas de
+  ≥ 7 px @1x.
+- **L2 · Contraste local mínimo.** Peça interativa contra o que está atrás dela: **ΔL\* médio
+  ≥ 16 no anel da silhueta**, medido a 0,5. O chão fica numa faixa de valor média, e a peça é
+  claramente mais clara ou mais escura que ele, com plano claro e plano escuro.
+- **L3 · Menos micro-detalhe.** Detalhe que importa tem ≥ 4 px @1x. Traço < 1 px só em textura
+  de material e dentro de um plano (ΔL\* ≤ 8), e nunca cruza a silhueta. Na pintura, o número de
+  marcas finas cai pela metade em relação à prancha C (agulhas, estrias, líquen).
+- **L4 · Realce sutil nas peças clicáveis.** `rim()` no lado da luz + `occlusion()` no lado da
+  sombra + o contorno fino (seção 7). No jogo, o hover/seleção reforça o mesmo filete (mais
+  claro e mais largo). Não usamos brilho em volta.
+- **L5 · Medida no QA.** O build mede cada peça interativa a 0,5, sobre a mesma grama: `borda_dL`
+  (ΔL\* no anel de 1 px da silhueta) ≥ 16 e `indice` (borda ÷ ruído médio do miolo) ≥ 1,6. Se
+  falhar, o build sai com 1. A prova antes/depois fica em
+  `art/review/2026-11-22-alvo-visual-c-01/prova-leitura-05.png`.
+
+Regras gerais que continuam: estados de jogo mudam forma **e** cor; indicadores ficam acima do
+objeto com ≥ 24 px @1x; área de toque ≥ 44 CSS px.
+
+## 10. Camadas
+
+**No SVG:** corpo → textura/detalhe → acessórios → realce (`rim`) → oclusão. A sombra sempre em
+`_shadow`. Debug nunca vai para o export.
+
+**No jogo:** `Water` → `Ground` → `GroundDecor` → `Shadows` → `Objects` (profundidade `x + y`) →
+`Overlay` (indicadores, brilho aditivo) → UI.
+
+## 11. Ferramentas
+
+| Script | Faz |
+|---|---|
+| `art/source/tools/iso_vector.py` | projeção, `Asset` (SVG → PNG @1x/@2x + JSON), losango de chão, `use_palette()` |
+| `art/source/tools/paint_vector.py` | estilo pintado: `tone()`, `crown()` (massas de tufos), `leaf_clump`, `blade_tuft`, `stone`, `rim`, `occlusion`, `soft_shadow` (luz `L_CAST`), `palette_mix_ok` |
+| `art/source/tools/cut_user_items.py` | recorte das imagens do usuário: fundo estimado, objeto por preenchimento a partir da borda (bordas nítidas e contorno bloqueiam), brilho por *unmultiply*, cor descontaminada, @2x original / @1x pré-multiplicado, QA e pranchas |
+| `art/source/tools/extract_palette_v3.py` | rampas `user_art` da paleta v3.1 |
+| `art/source/tools/build_alvo_visual_c_01.py` | alvo visual v3: peças, cenas, prova de leitura a 0,5, QA e manifesto |
+
+Instalação: `python3 -m pip install -r art/source/tools/requirements.txt` (cairosvg, Pillow,
+numpy). Os builds dos lotes v2.1 continuam reproduzíveis porque apontam para a paleta arquivada.
+
+QA de cada lote: `asset_report.py --expect-size WxH --require-alpha` em todo PNG; costura do chão
+a 0,5, 0,75, 1, 1,5 e 2; 3×3 de cada tile; paleta; contrato (canvas, âncora, borda); leitura a 0,5
+(L5); pranchas sobre fundo claro e escuro.
+
+## 12. Estado
+
+- Recortes do usuário: lote `2026-11-22-itens-usuario-recortados` (**in_review**).
+- Alvo visual v3: lote `2026-11-22-alvo-visual-c-01` (**in_review**).
+- Nada é produzido em escala antes das duas aprovações.

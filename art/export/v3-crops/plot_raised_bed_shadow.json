@@ -1,0 +1,23 @@
+{
+ "name": "plot_raised_bed_shadow",
+ "size_1x": [
+  128,
+  68
+ ],
+ "anchor_px_1x": [
+  58,
+  32
+ ],
+ "origin": [
+  0.453125,
+  0.470588
+ ],
+ "footprint_tiles": [
+  1,
+  1
+ ],
+ "scales": [
+  1,
+  2
+ ]
+}

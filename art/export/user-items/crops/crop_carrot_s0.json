@@ -1,0 +1,27 @@
+{
+ "name": "crop_carrot_s0",
+ "size_1x": [
+  196,
+  146
+ ],
+ "anchor_px_1x": [
+  98.0,
+  128.0
+ ],
+ "origin": [
+  0.5,
+  0.876712
+ ],
+ "scales": [
+  1,
+  2
+ ],
+ "anchor": "base-centro (base do monte de terra)",
+ "source_file": "art/source/user-provided/2026-11-22/culturas-d.webp",
+ "source_box_px": [
+  171,
+  124,
+  415,
+  220
+ ]
+}

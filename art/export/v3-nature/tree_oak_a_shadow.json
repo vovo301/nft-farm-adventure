@@ -1,0 +1,23 @@
+{
+ "name": "tree_oak_a_shadow",
+ "size_1x": [
+  252,
+  84
+ ],
+ "anchor_px_1x": [
+  56,
+  30
+ ],
+ "origin": [
+  0.222222,
+  0.357143
+ ],
+ "footprint_tiles": [
+  1,
+  1
+ ],
+ "scales": [
+  1,
+  2
+ ]
+}

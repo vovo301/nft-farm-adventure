@@ -1,0 +1,27 @@
+{
+ "name": "resource_crystal_blue",
+ "size_1x": [
+  244,
+  244
+ ],
+ "anchor_px_1x": [
+  122.0,
+  122.0
+ ],
+ "origin": [
+  0.5,
+  0.5
+ ],
+ "scales": [
+  1,
+  2
+ ],
+ "anchor": "centro",
+ "source_file": "art/source/user-provided/2026-11-22/recursos.webp",
+ "source_box_px": [
+  1532,
+  126,
+  1937,
+  596
+ ]
+}

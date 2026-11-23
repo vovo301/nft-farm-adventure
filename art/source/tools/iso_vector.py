@@ -52,6 +52,17 @@ def palette() -> dict:
     return _PAL
 
 
+def use_palette(path: Path) -> None:
+    """Troca a paleta usada por c()/has()/tone_or() (ex.: builds antigos -> paleta arquivada).
+
+    Desde o guia v3 (2026-11-22), `palette.json` é a paleta do estilo C. Os builds dos lotes
+    v2.1 chamam isto com art/style-guide/archive/cartoon-v2.1/palette-cartoon-v2.1.json.
+    """
+    global _PAL, PALETTE_PATH
+    PALETTE_PATH = Path(path)
+    _PAL = None
+
+
 def c(ramp: str, tone: str) -> str:
     """Hex de um tom da paleta. Erro se não existir (nenhuma cor fora da paleta)."""
     for t in palette()["ramps"][ramp]["tones"]:

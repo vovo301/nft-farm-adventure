@@ -1,0 +1,27 @@
+{
+ "name": "tool_shovel",
+ "size_1x": [
+  212,
+  212
+ ],
+ "anchor_px_1x": [
+  106.0,
+  106.0
+ ],
+ "origin": [
+  0.5,
+  0.5
+ ],
+ "scales": [
+  1,
+  2
+ ],
+ "anchor": "centro",
+ "source_file": "art/source/user-provided/2026-11-22/ferramentas.webp",
+ "source_box_px": [
+  203,
+  66,
+  576,
+  436
+ ]
+}

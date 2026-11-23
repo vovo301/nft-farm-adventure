@@ -24,6 +24,7 @@ from PIL import Image, ImageDraw
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import iso_vector as iv  # noqa: E402
 from iso_vector import Asset, c, iso  # noqa: E402
+iv.use_palette(iv.ART / "style-guide" / "archive" / "cartoon-v2.1" / "palette-cartoon-v2.1.json")  # guia v3: paleta arquivada
 
 ROOT = iv.ART.parent
 SRC = iv.ART / "source" / "iso-base"

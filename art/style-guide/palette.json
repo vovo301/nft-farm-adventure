@@ -1,625 +1,1221 @@
 {
- "name": "nfa-iso-cartoon",
- "version": "2.1",
+ "name": "nfa-iso-painted",
+ "version": "3.1",
  "date": "2026-11-22",
- "supersedes": "art/style-guide/archive/pixel-v0/palette-pixel-v0.json",
- "description": "Paleta da direção isométrica cartoon saturada. Rampas por material, do contorno (escuro colorido) ao brilho. Hue shift: sombras puxam para azul/roxo, luzes para amarelo. Degradês só entre tons VIZINHOS da mesma rampa. Nenhuma cor fora daqui no SVG-fonte (as cores intermediárias do antialias/degradê são esperadas no PNG).",
+ "supersedes": "art/style-guide/archive/cartoon-v2.1/palette-cartoon-v2.1.json",
+ "description": "Paleta do estilo C (pintado semirrealista). Terrosa, saturação baixa a média, contraste moderado. Rampas de 5 tons por material, do mais escuro ao mais claro. Hue shift leve: sombras puxam para frio, luzes para quente. No SVG-fonte, toda cor é um tom daqui ou uma mistura de dois tons VIZINHOS da mesma rampa (paint_vector.tone). Não há tom 'outline': o contorno é feito por valor (ver guia, seção 6). [3.1] Rampas com origin=user_art vêm das imagens do usuário e são mais saturadas: use-as em itens, culturas, frutos e efeitos; o chão e as construções seguem as rampas terrosas do estilo C, um degrau mais vivas (ver guia).",
  "tone_roles": {
-  "outline": "contorno externo do objeto",
-  "deep": "oclusão, fresta, base que toca o chão",
-  "shadow": "face/lado na sombra (direita)",
-  "base": "cor local",
-  "light": "face/lado iluminado (esquerda/topo)",
-  "highlight": "brilho pontual, aresta do topo-esquerda"
+  "deep": "oclusão, frestas, linha de contato, lado mais escuro",
+  "shadow": "plano na sombra (face direita/sudeste)",
+  "base": "cor local (plano médio)",
+  "light": "plano iluminado (topo e face esquerda)",
+  "highlight": "realce de borda e brilho pontual (topo-esquerda)",
+  "cast": "sombra projetada",
+  "contact": "oclusão de contato com o chão"
  },
+ "colors_total": 224,
+ "changelog": [
+  "3.0 (2026-11-22): nova paleta do estilo C (escolhido pelo usuário). Substitui a v2.1 cartoon (arquivada).",
+  "3.1 (2026-11-22): +14 rampas extraídas da arte do usuário (estilo-alvo oficial de itens, recursos, ferramentas e culturas) por art/source/tools/extract_palette_v3.py"
+ ],
  "ramps": {
   "grama": {
-   "use": "chão de grama verde-limão saturada",
+   "use": "chão de grama (verde-oliva natural, contraste baixo)",
    "tones": [
     {
-     "tone": "outline",
-     "hex": "#2f7a2e"
-    },
-    {
      "tone": "deep",
-     "hex": "#4f9e34"
+     "hex": "#3f5228"
     },
     {
      "tone": "shadow",
-     "hex": "#74bf3c"
+     "hex": "#56693a"
     },
     {
      "tone": "base",
-     "hex": "#9bd94a"
+     "hex": "#6c7f48"
     },
     {
      "tone": "light",
-     "hex": "#bfeb67"
+     "hex": "#86965c"
     },
     {
      "tone": "highlight",
-     "hex": "#e0f78f"
+     "hex": "#a5ae76"
+    }
+   ]
+  },
+  "grama_seca": {
+   "use": "manchas secas, beiradas e variação da grama (ocre)",
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#5a5530"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#77703f"
+    },
+    {
+     "tone": "base",
+     "hex": "#938a52"
+    },
+    {
+     "tone": "light",
+     "hex": "#ada56a"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#c7bf8a"
     }
    ]
   },
   "terra_caminho": {
-   "use": "caminhos de terra batida bege",
+   "use": "caminho de terra batida",
    "tones": [
     {
-     "tone": "outline",
-     "hex": "#8a6440"
-    },
-    {
      "tone": "deep",
-     "hex": "#b08a58"
+     "hex": "#6e5c46"
     },
     {
      "tone": "shadow",
-     "hex": "#d3b47c"
+     "hex": "#8d7a60"
     },
     {
      "tone": "base",
-     "hex": "#e9d29e"
+     "hex": "#a7957a"
     },
     {
      "tone": "light",
-     "hex": "#f6e4b8"
+     "hex": "#bfae92"
     },
     {
      "tone": "highlight",
-     "hex": "#fff3d6"
+     "hex": "#d4c6ab"
     }
    ]
   },
-  "canteiro": {
+  "terra": {
    "use": "terra arada dos canteiros",
    "tones": [
     {
-     "tone": "outline",
-     "hex": "#4a2717"
-    },
-    {
      "tone": "deep",
-     "hex": "#62351f"
+     "hex": "#2e231c"
     },
     {
      "tone": "shadow",
-     "hex": "#7d462a"
+     "hex": "#45362b"
     },
     {
      "tone": "base",
-     "hex": "#9a5c36"
+     "hex": "#5c4a3a"
     },
     {
      "tone": "light",
-     "hex": "#b8784a"
+     "hex": "#74604c"
     },
     {
      "tone": "highlight",
-     "hex": "#d29a66"
-    }
-   ]
-  },
-  "agua": {
-   "use": "lagos, rios, bebedouro",
-   "tones": [
-    {
-     "tone": "outline",
-     "hex": "#1f4c8c"
-    },
-    {
-     "tone": "deep",
-     "hex": "#2a6fb3"
-    },
-    {
-     "tone": "shadow",
-     "hex": "#3592d4"
-    },
-    {
-     "tone": "base",
-     "hex": "#4fbbe8"
-    },
-    {
-     "tone": "light",
-     "hex": "#8edcf5"
-    },
-    {
-     "tone": "highlight",
-     "hex": "#d6f7ff"
-    }
-   ]
-  },
-  "madeira": {
-   "use": "cercas, caixotes, troncos, estruturas",
-   "tones": [
-    {
-     "tone": "outline",
-     "hex": "#5a311b"
-    },
-    {
-     "tone": "deep",
-     "hex": "#7b4724"
-    },
-    {
-     "tone": "shadow",
-     "hex": "#a0652f"
-    },
-    {
-     "tone": "base",
-     "hex": "#c8894a"
-    },
-    {
-     "tone": "light",
-     "hex": "#e2ab68"
-    },
-    {
-     "tone": "highlight",
-     "hex": "#f4cd92"
-    }
-   ]
-  },
-  "telhado_vermelho": {
-   "use": "telhados e paredes de celeiro",
-   "tones": [
-    {
-     "tone": "outline",
-     "hex": "#7a1d2c"
-    },
-    {
-     "tone": "deep",
-     "hex": "#a12a35"
-    },
-    {
-     "tone": "shadow",
-     "hex": "#c7393b"
-    },
-    {
-     "tone": "base",
-     "hex": "#e5503f"
-    },
-    {
-     "tone": "light",
-     "hex": "#f37a5a"
-    },
-    {
-     "tone": "highlight",
-     "hex": "#ffa784"
-    }
-   ]
-  },
-  "telhado_azul": {
-   "use": "telhados de casas/lojas",
-   "tones": [
-    {
-     "tone": "outline",
-     "hex": "#1d3a7a"
-    },
-    {
-     "tone": "deep",
-     "hex": "#2851a6"
-    },
-    {
-     "tone": "shadow",
-     "hex": "#326bc9"
-    },
-    {
-     "tone": "base",
-     "hex": "#438ce0"
-    },
-    {
-     "tone": "light",
-     "hex": "#6daef0"
-    },
-    {
-     "tone": "highlight",
-     "hex": "#a6d4ff"
-    }
-   ]
-  },
-  "pedra": {
-   "use": "pedras, rochas, minério, poço",
-   "tones": [
-    {
-     "tone": "outline",
-     "hex": "#454a62"
-    },
-    {
-     "tone": "deep",
-     "hex": "#62697f"
-    },
-    {
-     "tone": "shadow",
-     "hex": "#838ba0"
-    },
-    {
-     "tone": "base",
-     "hex": "#a7afc0"
-    },
-    {
-     "tone": "light",
-     "hex": "#c8cfdb"
-    },
-    {
-     "tone": "highlight",
-     "hex": "#e7ecf2"
-    }
-   ]
-  },
-  "folhagem": {
-   "use": "copas de árvore, arbustos, folhas de cultura (mais escura/azulada que a grama para destacar)",
-   "tones": [
-    {
-     "tone": "outline",
-     "hex": "#1d5230"
-    },
-    {
-     "tone": "deep",
-     "hex": "#2b7034"
-    },
-    {
-     "tone": "shadow",
-     "hex": "#3e913a"
-    },
-    {
-     "tone": "base",
-     "hex": "#5cb441"
-    },
-    {
-     "tone": "light",
-     "hex": "#88d14c"
-    },
-    {
-     "tone": "highlight",
-     "hex": "#bde86e"
-    }
-   ]
-  },
-  "feno": {
-   "use": "fardos de feno, trigo, palha",
-   "tones": [
-    {
-     "tone": "outline",
-     "hex": "#8a5a20"
-    },
-    {
-     "tone": "shadow",
-     "hex": "#cf9630"
-    },
-    {
-     "tone": "base",
-     "hex": "#eebf45"
-    },
-    {
-     "tone": "light",
-     "hex": "#fadb6a"
-    },
-    {
-     "tone": "highlight",
-     "hex": "#fff0a3"
-    }
-   ]
-  },
-  "pele_clara": {
-   "use": "pele (tom 1)",
-   "tones": [
-    {
-     "tone": "outline",
-     "hex": "#8f4f3c"
-    },
-    {
-     "tone": "shadow",
-     "hex": "#e8a882"
-    },
-    {
-     "tone": "base",
-     "hex": "#f8cda8"
-    },
-    {
-     "tone": "light",
-     "hex": "#ffe3c8"
-    }
-   ]
-  },
-  "pele_media": {
-   "use": "pele (tom 2)",
-   "tones": [
-    {
-     "tone": "outline",
-     "hex": "#6b3a26"
-    },
-    {
-     "tone": "shadow",
-     "hex": "#b8774b"
-    },
-    {
-     "tone": "base",
-     "hex": "#d69a68"
-    },
-    {
-     "tone": "light",
-     "hex": "#ecbd8c"
-    }
-   ]
-  },
-  "pele_escura": {
-   "use": "pele (tom 3)",
-   "tones": [
-    {
-     "tone": "outline",
-     "hex": "#3e2219"
-    },
-    {
-     "tone": "shadow",
-     "hex": "#6e4330"
-    },
-    {
-     "tone": "base",
-     "hex": "#8f5a3e"
-    },
-    {
-     "tone": "light",
-     "hex": "#b07a56"
-    }
-   ]
-  },
-  "tecido_azul": {
-   "use": "jardineira/roupas azuis",
-   "tones": [
-    {
-     "tone": "outline",
-     "hex": "#1f2f6e"
-    },
-    {
-     "tone": "shadow",
-     "hex": "#2f4fa8"
-    },
-    {
-     "tone": "base",
-     "hex": "#4170d0"
-    },
-    {
-     "tone": "light",
-     "hex": "#6c97e6"
-    }
-   ]
-  },
-  "tecido_vermelho": {
-   "use": "camisa xadrez, lenço",
-   "tones": [
-    {
-     "tone": "outline",
-     "hex": "#741b2a"
-    },
-    {
-     "tone": "shadow",
-     "hex": "#b8303a"
-    },
-    {
-     "tone": "base",
-     "hex": "#de4b48"
-    },
-    {
-     "tone": "light",
-     "hex": "#f27c6c"
-    }
-   ]
-  },
-  "tecido_amarelo": {
-   "use": "chapéu, roupas amarelas",
-   "tones": [
-    {
-     "tone": "outline",
-     "hex": "#8a5a14"
-    },
-    {
-     "tone": "shadow",
-     "hex": "#d99a26"
-    },
-    {
-     "tone": "base",
-     "hex": "#f6c142"
-    },
-    {
-     "tone": "light",
-     "hex": "#ffe07a"
-    }
-   ]
-  },
-  "tecido_creme": {
-   "use": "camisas claras, sacos, toldos",
-   "tones": [
-    {
-     "tone": "outline",
-     "hex": "#7d6a55"
-    },
-    {
-     "tone": "shadow",
-     "hex": "#d9cbb1"
-    },
-    {
-     "tone": "base",
-     "hex": "#f2e8d2"
-    },
-    {
-     "tone": "light",
-     "hex": "#fffaf0"
-    }
-   ]
-  },
-  "ouro": {
-   "use": "moeda Gold, molduras raras, brilho de recompensa",
-   "tones": [
-    {
-     "tone": "outline",
-     "hex": "#8f5410"
-    },
-    {
-     "tone": "deep",
-     "hex": "#c47a19"
-    },
-    {
-     "tone": "shadow",
-     "hex": "#e6a226"
-    },
-    {
-     "tone": "base",
-     "hex": "#ffcf3f"
-    },
-    {
-     "tone": "light",
-     "hex": "#ffe57a"
-    },
-    {
-     "tone": "highlight",
-     "hex": "#fff7c4"
-    }
-   ]
-  },
-  "ui": {
-   "use": "painéis, botões e texto da interface",
-   "tones": [
-    {
-     "tone": "text_dark",
-     "hex": "#3a2a40"
-    },
-    {
-     "tone": "panel_border",
-     "hex": "#8a5a34"
-    },
-    {
-     "tone": "panel_shadow",
-     "hex": "#e6d3ad"
-    },
-    {
-     "tone": "panel",
-     "hex": "#fff4dc"
-    },
-    {
-     "tone": "button_ok",
-     "hex": "#4cb84a"
-    },
-    {
-     "tone": "button_ok_dark",
-     "hex": "#2f8a3a"
-    },
-    {
-     "tone": "button_cancel",
-     "hex": "#e5503f"
-    },
-    {
-     "tone": "accent",
-     "hex": "#438ce0"
-    },
-    {
-     "tone": "disabled",
-     "hex": "#b9b3a8"
-    },
-    {
-     "tone": "text_light",
-     "hex": "#fffaf0"
-    }
-   ]
-  },
-  "tinta": {
-   "use": "olhos, boca, detalhes mínimos (nunca preto puro)",
-   "tones": [
-    {
-     "tone": "ink",
-     "hex": "#2e2438"
-    }
-   ]
-  },
-  "sombra": {
-   "use": "sombra projetada no chão (usar com opacidade 0.28-0.35, degradê radial até 0)",
-   "tones": [
-    {
-     "tone": "cast",
-     "hex": "#24364f"
+     "hex": "#8c7862"
     }
    ]
   },
   "barranco": {
-   "use": "barranco/encosta da ilha, margem de lago (terra alaranjada, distinta do canteiro)",
+   "use": "barranco da ilha, margem do lago (terra ocre-avermelhada)",
    "tones": [
     {
-     "tone": "outline",
-     "hex": "#5e2f1f"
-    },
-    {
      "tone": "deep",
-     "hex": "#7f4226"
+     "hex": "#33261d"
     },
     {
      "tone": "shadow",
-     "hex": "#a35a32"
+     "hex": "#4d392b"
     },
     {
      "tone": "base",
-     "hex": "#c97c48"
+     "hex": "#68503c"
     },
     {
      "tone": "light",
-     "hex": "#e3a265"
+     "hex": "#82684f"
     },
     {
      "tone": "highlight",
-     "hex": "#f3c891"
+     "hex": "#9c8366"
     }
    ]
   },
-  "fruta_vermelha": {
-   "use": "tomate, maçã, frutinhas (vermelho mais frio e saturado que o telhado, para não se confundir com o celeiro)",
+  "folhagem": {
+   "use": "copa de árvore folhosa",
    "tones": [
     {
-     "tone": "outline",
-     "hex": "#6e1022"
-    },
-    {
      "tone": "deep",
-     "hex": "#9e1830"
+     "hex": "#24331c"
     },
     {
      "tone": "shadow",
-     "hex": "#c8243a"
+     "hex": "#3a4f2d"
     },
     {
      "tone": "base",
-     "hex": "#ec3d4c"
+     "hex": "#55703d"
     },
     {
      "tone": "light",
-     "hex": "#ff7a7a"
+     "hex": "#76904f"
     },
     {
      "tone": "highlight",
-     "hex": "#ffc2b8"
+     "hex": "#a3b26c"
     }
    ]
   },
-  "flor_rosa": {
-   "use": "flores, detalhes delicados",
+  "arbusto": {
+   "use": "arbustos e juncos (verde-oliva, separado da copa)",
    "tones": [
     {
-     "tone": "outline",
-     "hex": "#8a2f5e"
+     "tone": "deep",
+     "hex": "#2a321d"
     },
     {
      "tone": "shadow",
-     "hex": "#d9579a"
+     "hex": "#40492a"
     },
     {
      "tone": "base",
-     "hex": "#f57fb8"
+     "hex": "#5a6438"
     },
     {
      "tone": "light",
-     "hex": "#ffb3d6"
+     "hex": "#77824c"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#99a36a"
+    }
+   ]
+  },
+  "pinho": {
+   "use": "pinheiro (verde frio)",
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#1c2c23"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#2b4233"
+    },
+    {
+     "tone": "base",
+     "hex": "#3e5a44"
+    },
+    {
+     "tone": "light",
+     "hex": "#587459"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#7d9677"
+    }
+   ]
+  },
+  "casca": {
+   "use": "tronco e galhos",
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#3a2e25"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#54443a"
+    },
+    {
+     "tone": "base",
+     "hex": "#6e5c4e"
+    },
+    {
+     "tone": "light",
+     "hex": "#8b7865"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#a89580"
+    }
+   ]
+  },
+  "tabua": {
+   "use": "tábuas: paredes do galpão, canteiros, caixote",
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#4e3a2c"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#6a5040"
+    },
+    {
+     "tone": "base",
+     "hex": "#86684f"
+    },
+    {
+     "tone": "light",
+     "hex": "#a08262"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#b89d7c"
+    }
+   ]
+  },
+  "madeira_cinza": {
+   "use": "madeira envelhecida: cerca",
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#3b3833"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#55514a"
+    },
+    {
+     "tone": "base",
+     "hex": "#716b61"
+    },
+    {
+     "tone": "light",
+     "hex": "#8e877a"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#aaa394"
+    }
+   ]
+  },
+  "telha": {
+   "use": "telhas de barro",
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#5a3428"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#7a4634"
+    },
+    {
+     "tone": "base",
+     "hex": "#995a42"
+    },
+    {
+     "tone": "light",
+     "hex": "#b47456"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#c99173"
+    }
+   ]
+  },
+  "pedra": {
+   "use": "pedra, fundação, seixos",
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#4a4843"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#66635b"
+    },
+    {
+     "tone": "base",
+     "hex": "#838076"
+    },
+    {
+     "tone": "light",
+     "hex": "#a19d92"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#bdb9ae"
+    }
+   ]
+  },
+  "minerio": {
+   "use": "minério (cobre/ouro fosco) embutido na pedra",
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#6a3b1f"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#8e5429"
+    },
+    {
+     "tone": "base",
+     "hex": "#b07038"
+    },
+    {
+     "tone": "light",
+     "hex": "#c99550"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#e8c47c"
+    }
+   ]
+  },
+  "trigo": {
+   "use": "trigo maduro",
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#7a6232"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#9e8343"
+    },
+    {
+     "tone": "base",
+     "hex": "#bfa45a"
+    },
+    {
+     "tone": "light",
+     "hex": "#d6be78"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#e8d7a0"
+    }
+   ]
+  },
+  "trigo_verde": {
+   "use": "trigo em crescimento (verde-amarelado, mais vivo que a grama)",
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#384a22"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#50662c"
+    },
+    {
+     "tone": "base",
+     "hex": "#6c8438"
+    },
+    {
+     "tone": "light",
+     "hex": "#8ca04c"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#b0bf6e"
+    }
+   ]
+  },
+  "feno": {
+   "use": "fardos de feno, palha",
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#5e4f2b"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#7d6a3a"
+    },
+    {
+     "tone": "base",
+     "hex": "#9e8a4e"
+    },
+    {
+     "tone": "light",
+     "hex": "#bba567"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#d3c08a"
+    }
+   ]
+  },
+  "agua": {
+   "use": "água do mar e do lago (verde-azulado fosco)",
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#1f3a45"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#2c5260"
+    },
+    {
+     "tone": "base",
+     "hex": "#3d6b78"
+    },
+    {
+     "tone": "light",
+     "hex": "#5a8a93"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#86aeb0"
+    }
+   ]
+  },
+  "fruta": {
+   "use": "maçãs e frutas vermelhas (vermelho terroso)",
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#4a1f1a"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#6e2c24"
+    },
+    {
+     "tone": "base",
+     "hex": "#913d2f"
+    },
+    {
+     "tone": "light",
+     "hex": "#b05a42"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#c98065"
+    }
+   ]
+  },
+  "flor_creme": {
+   "use": "flores do campo claras",
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#8a8068"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#b0a68a"
+    },
+    {
+     "tone": "base",
+     "hex": "#cfc6a8"
+    },
+    {
+     "tone": "light",
+     "hex": "#e2dbc2"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#f0ebdb"
+    }
+   ]
+  },
+  "flor_lilas": {
+   "use": "flores do campo lilás",
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#3e3446"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#574a60"
+    },
+    {
+     "tone": "base",
+     "hex": "#73647c"
+    },
+    {
+     "tone": "light",
+     "hex": "#8f8198"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#ab9fb3"
+    }
+   ]
+  },
+  "pele": {
+   "use": "pele",
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#7a5240"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#9c6c54"
+    },
+    {
+     "tone": "base",
+     "hex": "#b8876a"
+    },
+    {
+     "tone": "light",
+     "hex": "#cfa283"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#e0bc9d"
+    }
+   ]
+  },
+  "linho": {
+   "use": "camisa de linho",
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#7d7360"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#a09580"
+    },
+    {
+     "tone": "base",
+     "hex": "#bcb29c"
+    },
+    {
+     "tone": "light",
+     "hex": "#d2c9b4"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#e4dccb"
+    }
+   ]
+  },
+  "colete": {
+   "use": "colete de couro/lona escura",
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#2e241d"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#43352b"
+    },
+    {
+     "tone": "base",
+     "hex": "#594739"
+    },
+    {
+     "tone": "light",
+     "hex": "#6f5a49"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#857060"
+    }
+   ]
+  },
+  "calca": {
+   "use": "calça de brim",
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#2d323c"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#3e4552"
+    },
+    {
+     "tone": "base",
+     "hex": "#525b6a"
+    },
+    {
+     "tone": "light",
+     "hex": "#6a7484"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#848d9b"
+    }
+   ]
+  },
+  "bota": {
+   "use": "botas e cinto",
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#2a1f19"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#3e2e24"
+    },
+    {
+     "tone": "base",
+     "hex": "#544032"
+    },
+    {
+     "tone": "light",
+     "hex": "#6a5242"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#806652"
+    }
+   ]
+  },
+  "chapeu": {
+   "use": "chapéu de palha trançada",
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#5e4a2e"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#7f6640"
+    },
+    {
+     "tone": "base",
+     "hex": "#a08455"
+    },
+    {
+     "tone": "light",
+     "hex": "#bba06c"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#d1b886"
+    }
+   ]
+  },
+  "cabelo": {
+   "use": "cabelo e barba",
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#2a201a"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#3b2e25"
+    },
+    {
+     "tone": "base",
+     "hex": "#4e3d31"
+    },
+    {
+     "tone": "light",
+     "hex": "#5f4b3c"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#715a48"
+    }
+   ]
+  },
+  "ferro": {
+   "use": "ferragens: dobradiças, pregos, aros",
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#26282b"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#3a3d41"
+    },
+    {
+     "tone": "base",
+     "hex": "#52565b"
+    },
+    {
+     "tone": "light",
+     "hex": "#6e7378"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#8d9297"
+    }
+   ]
+  },
+  "vidro": {
+   "use": "vidro de janela (escuro, reflexo frio)",
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#1c2226"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#2a3338"
+    },
+    {
+     "tone": "base",
+     "hex": "#3c4a50"
+    },
+    {
+     "tone": "light",
+     "hex": "#5a6b70"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#7f9095"
+    }
+   ]
+  },
+  "pergaminho": {
+   "use": "indicadores de UI no mundo (fundo claro fosco)",
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#4a3f30"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#7a6b52"
+    },
+    {
+     "tone": "base",
+     "hex": "#b8a888"
+    },
+    {
+     "tone": "light",
+     "hex": "#ddd0b2"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#f1e9d6"
+    }
+   ]
+  },
+  "sombra": {
+   "use": "sombra projetada (cast, opacidade 0,10–0,30) e linha de contato/oclusão (contact)",
+   "tones": [
+    {
+     "tone": "cast",
+     "hex": "#2a2e2a"
+    },
+    {
+     "tone": "contact",
+     "hex": "#1d1915"
+    }
+   ]
+  },
+  "folha_viva": {
+   "use": "folhas das culturas (verde vivo)",
+   "origin": "user_art",
+   "source": [
+    "crops/crop_pea_s2",
+    "crops/crop_bell_pepper_s2",
+    "crops/crop_cucumber_s2",
+    "crops/crop_tomato_s2",
+    "crops/crop_strawberry_s2"
+   ],
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#182307"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#3d5d12"
+    },
+    {
+     "tone": "base",
+     "hex": "#5c7f1f"
+    },
+    {
+     "tone": "light",
+     "hex": "#7f9f28"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#9eba39"
+    }
+   ]
+  },
+  "terra_monte": {
+   "use": "monte de terra das culturas",
+   "origin": "user_art",
+   "source": [
+    "crops/crop_pea_s0",
+    "crops/crop_beet_s0",
+    "crops/crop_carrot_s0",
+    "crops/crop_onion_s0"
+   ],
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#321c13"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#3b2319"
+    },
+    {
+     "tone": "base",
+     "hex": "#472c1e"
+    },
+    {
+     "tone": "light",
+     "hex": "#5a3926"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#724d36"
+    }
+   ]
+  },
+  "fruta_viva": {
+   "use": "frutos vermelhos (tomate, morango, pimenta, maçã)",
+   "origin": "user_art",
+   "source": [
+    "crops/crop_tomato_s3",
+    "crops/crop_strawberry_s3",
+    "crops/crop_chili_pepper_s3"
+   ],
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#470603"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#9c0205"
+    },
+    {
+     "tone": "base",
+     "hex": "#b20c08"
+    },
+    {
+     "tone": "light",
+     "hex": "#d62212"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#ea4334"
+    }
+   ]
+  },
+  "laranja_viva": {
+   "use": "cenoura, abóbora",
+   "origin": "user_art",
+   "source": [
+    "crops/crop_carrot_s3",
+    "crops/crop_pumpkin_s3"
+   ],
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#392113"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#693416"
+    },
+    {
+     "tone": "base",
+     "hex": "#ce5104"
+    },
+    {
+     "tone": "light",
+     "hex": "#ef7b09"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#fba023"
+    }
+   ]
+  },
+  "amarelo_vivo": {
+   "use": "girassol, milho",
+   "origin": "user_art",
+   "source": [
+    "crops/crop_sunflower_s3",
+    "crops/crop_corn_s3"
+   ],
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#3c330d"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#dca411"
+    },
+    {
+     "tone": "base",
+     "hex": "#f5c422"
+    },
+    {
+     "tone": "light",
+     "hex": "#fcdd3e"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#ffe95f"
+    }
+   ]
+  },
+  "roxo_vivo": {
+   "use": "berinjela, uva",
+   "origin": "user_art",
+   "source": [
+    "crops/crop_eggplant_s3",
+    "crops/crop_grape_s3"
+   ],
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#1a0224"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#290736"
+    },
+    {
+     "tone": "base",
+     "hex": "#381149"
+    },
+    {
+     "tone": "light",
+     "hex": "#552261"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#824188"
+    }
+   ]
+  },
+  "ouro": {
+   "use": "ouro: minério, ferramenta de ouro",
+   "origin": "user_art",
+   "source": [
+    "resources/resource_ore_gold",
+    "tools/tool_pickaxe_gold"
+   ],
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#844a0a"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#a66917"
+    },
+    {
+     "tone": "base",
+     "hex": "#c38b31"
+    },
+    {
+     "tone": "light",
+     "hex": "#e9b64e"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#fce177"
+    }
+   ]
+  },
+  "aco": {
+   "use": "metal das ferramentas",
+   "origin": "user_art",
+   "source": [
+    "tools/tool_shovel",
+    "tools/tool_pickaxe_iron",
+    "tools/tool_drill"
+   ],
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#3e3d43"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#5c5c63"
+    },
+    {
+     "tone": "base",
+     "hex": "#7b7c82"
+    },
+    {
+     "tone": "light",
+     "hex": "#a7abaf"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#eaebe8"
+    }
+   ]
+  },
+  "cabo_madeira": {
+   "use": "cabos de madeira, tora",
+   "origin": "user_art",
+   "source": [
+    "tools/tool_shovel",
+    "tools/tool_rake",
+    "resources/resource_log"
+   ],
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#3a1e12"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#5c3420"
+    },
+    {
+     "tone": "base",
+     "hex": "#8d5833"
+    },
+    {
+     "tone": "light",
+     "hex": "#ca9156"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#ecb46b"
+    }
+   ]
+  },
+  "pedra_ilustrada": {
+   "use": "pedra e minério cinza (itens)",
+   "origin": "user_art",
+   "source": [
+    "resources/resource_stone",
+    "resources/resource_ore_gray"
+   ],
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#343134"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#494547"
+    },
+    {
+     "tone": "base",
+     "hex": "#716c6d"
+    },
+    {
+     "tone": "light",
+     "hex": "#b1aca9"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#e4dfdd"
+    }
+   ]
+  },
+  "cristal_azul": {
+   "use": "cristal azul e brilho",
+   "origin": "user_art",
+   "source": [
+    "resources/resource_crystal_blue"
+   ],
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#1b5ba6"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#3082cc"
+    },
+    {
+     "tone": "base",
+     "hex": "#41a0e4"
+    },
+    {
+     "tone": "light",
+     "hex": "#5bc1f4"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#87e1fb"
+    }
+   ]
+  },
+  "cristal_roxo": {
+   "use": "cristal roxo e brilho",
+   "origin": "user_art",
+   "source": [
+    "resources/resource_crystal_purple"
+   ],
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#4f187b"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#6d2fa7"
+    },
+    {
+     "tone": "base",
+     "hex": "#8646bf"
+    },
+    {
+     "tone": "light",
+     "hex": "#ac5fe1"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#d689f6"
+    }
+   ]
+  },
+  "cristal_verde": {
+   "use": "cristal verde e brilho",
+   "origin": "user_art",
+   "source": [
+    "resources/resource_crystal_green"
+   ],
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#04571d"
+    },
+    {
+     "tone": "shadow",
+     "hex": "#0f812c"
+    },
+    {
+     "tone": "base",
+     "hex": "#22a034"
+    },
+    {
+     "tone": "light",
+     "hex": "#3ec24d"
+    },
+    {
+     "tone": "highlight",
+     "hex": "#7aeb6a"
+    }
+   ]
+  },
+  "contorno_item": {
+   "use": "contorno das peças no estilo do usuário (escuro quente, nunca preto)",
+   "origin": "user_art",
+   "source": "anel de 3 px na borda de todos os recortes",
+   "tones": [
+    {
+     "tone": "deep",
+     "hex": "#160c04"
+    },
+    {
+     "tone": "base",
+     "hex": "#241e10"
     }
    ]
   }
- },
- "colors_total": 121,
- "changelog": [
-  "2.1 (2026-11-22): +barranco, +fruta_vermelha, +flor_rosa para o alvo visual iso-01"
- ]
+ }
 }

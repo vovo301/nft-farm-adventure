@@ -1,0 +1,23 @@
+{
+ "name": "ground_edge_grass_yn",
+ "size_1x": [
+  136,
+  116
+ ],
+ "anchor_px_1x": [
+  68,
+  34
+ ],
+ "origin": [
+  0.5,
+  0.293103
+ ],
+ "footprint_tiles": [
+  1,
+  1
+ ],
+ "scales": [
+  1,
+  2
+ ]
+}

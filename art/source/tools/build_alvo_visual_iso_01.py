@@ -31,6 +31,7 @@ from PIL import Image, ImageDraw, ImageFont
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import iso_vector as iv  # noqa: E402
 from iso_vector import Asset, c, iso  # noqa: E402
+iv.use_palette(iv.ART / "style-guide" / "archive" / "cartoon-v2.1" / "palette-cartoon-v2.1.json")  # guia v3: paleta arquivada
 
 BATCH = "2026-11-22-alvo-visual-iso-01"
 ROOT = iv.ART.parent

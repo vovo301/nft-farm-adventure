@@ -1,0 +1,23 @@
+{
+ "name": "prop_crate_shadow",
+ "size_1x": [
+  84,
+  40
+ ],
+ "anchor_px_1x": [
+  32,
+  18
+ ],
+ "origin": [
+  0.380952,
+  0.45
+ ],
+ "footprint_tiles": [
+  1,
+  1
+ ],
+ "scales": [
+  1,
+  2
+ ]
+}

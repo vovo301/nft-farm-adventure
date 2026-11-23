@@ -1,0 +1,23 @@
+{
+ "name": "prop_bush_a_shadow",
+ "size_1x": [
+  88,
+  40
+ ],
+ "anchor_px_1x": [
+  32,
+  18
+ ],
+ "origin": [
+  0.363636,
+  0.45
+ ],
+ "footprint_tiles": [
+  1,
+  1
+ ],
+ "scales": [
+  1,
+  2
+ ]
+}

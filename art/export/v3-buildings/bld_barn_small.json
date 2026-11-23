@@ -1,0 +1,23 @@
+{
+ "name": "bld_barn_small",
+ "size_1x": [
+  328,
+  332
+ ],
+ "anchor_px_1x": [
+  164,
+  252
+ ],
+ "origin": [
+  0.5,
+  0.759036
+ ],
+ "footprint_tiles": [
+  3,
+  3
+ ],
+ "scales": [
+  1,
+  2
+ ]
+}

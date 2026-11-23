@@ -1,0 +1,23 @@
+{
+ "name": "decor_flowers_a",
+ "size_1x": [
+  64,
+  44
+ ],
+ "anchor_px_1x": [
+  32,
+  30
+ ],
+ "origin": [
+  0.5,
+  0.681818
+ ],
+ "footprint_tiles": [
+  0.4,
+  0.4
+ ],
+ "scales": [
+  1,
+  2
+ ]
+}
