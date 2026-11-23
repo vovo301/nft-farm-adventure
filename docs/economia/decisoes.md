@@ -829,7 +829,10 @@ para comparar preço não está nas notas de `docs/referencia/` (pedir ao `anali
 - Pontos de atenção (são como o usuário enviou, não erros de soma):
   - níveis 60 e 61 pedem o mesmo XP (158 500);
   - no nível 150 o XP por nível **cai** de 2 290 000 para 1 328 700 e volta a crescer ~3%/nível até o 200.
-- Coluna `day2_xp_reward`: recompensa de XP do "2º dia" como na tabela; significado de uso a
-  confirmar com o usuário.
+- Coluna `daily_xp_reward` (era "Day 2 XP reward"): **XP diário que o jogo dá ao jogador em cada
+  nível** (confirmado pelo usuário). Ex.: no nível 71 o jogador ganha 38 910 XP/dia e precisa de
+  510 000 para subir (~13 dias só com a recompensa diária).
+- Níveis mínimos das expansões conferidos com as imagens do usuário: ilha 1 = 1→11, ilha 2 = 11→43,
+  ilha 3 = 40→75, ilha 4 = 70→120 (o usuário citou 46 para a ilha 2; a imagem mostra 43 — a confirmar).
 - Pendente: fontes de XP (culturas, cozinha, tarefas) e calibração do `min_level` das expansões
   contra esta curva; gerador ainda não exporta a tabela para o game-core.
