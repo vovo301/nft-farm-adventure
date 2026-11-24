@@ -38,3 +38,6 @@ próxima rodada reforça a casca.
 Ver `comparativo-v2.png` (macieira s3 × folhosa v2, mesma escala @2x, + zoom 0,5). `comparativo.png` e `zoom-0.5.png` (este regerado) ficam como histórico da v1.
 
 Resposta do usuário: _(pendente)_
+
+## v3 (2026-11-24)
+Usuário reprovou a v2 ("brócolis gigante") e pediu para recortar a macieira dele e só modificá-la. A v3 é a macieira do usuário (crop_apple_tree_s3) com as maçãs trocadas por folhagem da própria copa (`art/source/tools/derive_trees_from_user.py`). As versões pintadas por script (v1/v2) foram descartadas.
