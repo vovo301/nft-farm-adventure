@@ -1,0 +1,23 @@
+{
+ "name": "tree_leafy_a",
+ "size_1x": [
+  200,
+  240
+ ],
+ "anchor_px_1x": [
+  100,
+  218
+ ],
+ "origin": [
+  0.5,
+  0.908333
+ ],
+ "footprint_tiles": [
+  1,
+  1
+ ],
+ "scales": [
+  1,
+  2
+ ]
+}

@@ -119,3 +119,10 @@ Cena: art/review/2026-11-23-alvo-visual-c-02/cena@2x.png · celular: cena-celula
 
 Pergunta ao usuário: o mundo agora está no estilo das suas imagens? Aprova a direção, ou diga quais peças reprovar e por quê.
 Resposta do usuário: _(pendente)_
+
+## Lote 2026-11-24-arvore-folhosa  — status: in_review
+Comparativo: art/review/2026-11-24-arvore-folhosa/comparativo.png · Zoom 0,5: zoom-0.5.png · Notas: notas.md
+| # | asset | tamanho @1x | nota |
+|---|---|---|---|
+| 1 | tree_leafy_a (+ _shadow) | 200×240 (sombra 264×60) | árvore folhosa pintada em raster por script, no acabamento das imagens do usuário; proposta para substituir `v32 tree_oak_a` |
+Resposta do usuário: _(pendente)_

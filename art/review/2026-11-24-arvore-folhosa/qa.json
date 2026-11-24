@@ -1,0 +1,54 @@
+{
+ "sprite": {
+  "name": "tree_leafy_a",
+  "size_1x": [
+   200,
+   240
+  ],
+  "anchor_px_1x": [
+   100,
+   218
+  ],
+  "origin": [
+   0.5,
+   0.908333
+  ],
+  "footprint_tiles": [
+   1,
+   1
+  ],
+  "scales": [
+   1,
+   2
+  ]
+ },
+ "shadow": {
+  "name": "tree_leafy_a_shadow",
+  "size_1x": [
+   264,
+   60
+  ],
+  "anchor_px_1x": [
+   30,
+   16
+  ],
+  "origin": [
+   0.113636,
+   0.266667
+  ],
+  "footprint_tiles": [
+   1,
+   1
+  ],
+  "scales": [
+   1,
+   2
+  ]
+ },
+ "height_px_1x": 213,
+ "read_05": {
+  "borda_dL": 23.09,
+  "indice": 6.18
+ },
+ "errors": []
+}

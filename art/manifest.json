@@ -11629,6 +11629,78 @@
    },
    "review": "art/review/2026-11-23-alvo-visual-c-02/antes-depois.png",
    "notes": "alvo visual c-02 (guia v3.2); substitui c-01; ver art/review/2026-11-23-alvo-visual-c-02/notas.md"
+  },
+  {
+   "id": "tree_leafy_a",
+   "batch": "2026-11-24-arvore-folhosa",
+   "role": "árvore folhosa do mundo pintada em raster (substituta proposta de v32 tree_oak_a)",
+   "path": "art/export/world-painted/tree_leafy_a@1x.png",
+   "files": [
+    "art/export/world-painted/tree_leafy_a@1x.png",
+    "art/export/world-painted/tree_leafy_a@2x.png",
+    "art/export/world-painted/tree_leafy_a.json",
+    "art/export/world-painted/tree_leafy_a_shadow@1x.png",
+    "art/export/world-painted/tree_leafy_a_shadow@2x.png",
+    "art/export/world-painted/tree_leafy_a_shadow.json"
+   ],
+   "source_path": [
+    "art/source/tools/paint_tree_leafy.py"
+   ],
+   "status": "in_review",
+   "variants": [],
+   "technical": {
+    "dimensions": "200x240",
+    "dimensions_2x": "400x480",
+    "alpha": true,
+    "anchor": "centro do losango da pegada",
+    "anchor_px_1x": [
+     100,
+     218
+    ],
+    "origin": [
+     0.5,
+     0.908333
+    ],
+    "footprint_tiles": [
+     1,
+     1
+    ],
+    "frames": 1,
+    "filtering": "linear",
+    "max_colors": null,
+    "palette": "art/style-guide/palette.json (v3.2)",
+    "shadow": "separada (_shadow 264x60, âncora [30, 16])",
+    "height_px_1x": 213,
+    "read_05": {
+     "borda_dL": 23.09,
+     "indice": 6.18
+    },
+    "interactive_rim": true
+   },
+   "visual_locks": [
+    "palette-v3.2",
+    "projection-2:1",
+    "anchor",
+    "light-direction",
+    "outline-v3"
+   ],
+   "source": {
+    "kind": "scripted",
+    "url_or_tool": "art/source/tools/paint_tree_leafy.py (Python + Pillow + numpy, pintura raster a 4x)",
+    "creator": "agente artista-recursos (Claude)",
+    "created_at": "2026-11-24",
+    "license": "original do projeto (todos os direitos do projeto)",
+    "attribution": "",
+    "prompt_or_source_record": "pintura raster por script, semente fixa; sem IA; sem referência externa; nada derivado de Sunflower Land/Sunnyside"
+   },
+   "verification": {
+    "native_scale_reviewed": true,
+    "in_engine_reviewed": false,
+    "technical_checks_passed": true,
+    "approved_by": ""
+   },
+   "review": "art/review/2026-11-24-arvore-folhosa/comparativo.png",
+   "notes": "ver art/review/2026-11-24-arvore-folhosa/notas.md; QA em qa.json"
   }
  ],
  "support_files": [
