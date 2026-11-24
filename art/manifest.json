@@ -11649,17 +11649,17 @@
    "status": "in_review",
    "variants": [],
    "technical": {
-    "dimensions": "200x240",
+    "dimensions": "228x236",
     "dimensions_2x": "400x480",
     "alpha": true,
     "anchor": "centro do losango da pegada",
     "anchor_px_1x": [
-     100,
-     218
+     114,
+     212
     ],
     "origin": [
      0.5,
-     0.908333
+     0.898305
     ],
     "footprint_tiles": [
      1,
@@ -11669,11 +11669,11 @@
     "filtering": "linear",
     "max_colors": null,
     "palette": "art/style-guide/palette.json (v3.2)",
-    "shadow": "separada (_shadow 264x60, âncora [30, 16])",
-    "height_px_1x": 213,
+    "shadow": "separada (_shadow 288x60, âncora [44, 18])",
+    "height_px_1x": 208,
     "read_05": {
-     "borda_dL": 23.09,
-     "indice": 6.18
+     "borda_dL": 23.97,
+     "indice": 7.23
     },
     "interactive_rim": true
    },
@@ -11700,7 +11700,7 @@
     "approved_by": ""
    },
    "review": "art/review/2026-11-24-arvore-folhosa/comparativo.png",
-   "notes": "ver art/review/2026-11-24-arvore-folhosa/notas.md; QA em qa.json"
+   "notes": "ver art/review/2026-11-24-arvore-folhosa/notas.md; QA em qa.json | v2 (2026-11-24): copa em tufinhos densos e tronco curto com raízes, no visual da macieira do usuário (pedido do usuário); ver comparativo-v2.png"
   }
  ],
  "support_files": [

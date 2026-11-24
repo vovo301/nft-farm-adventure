@@ -1,16 +1,16 @@
 {
  "name": "tree_leafy_a_shadow",
  "size_1x": [
-  264,
+  288,
   60
  ],
  "anchor_px_1x": [
-  30,
-  16
+  44,
+  18
  ],
  "origin": [
-  0.113636,
-  0.266667
+  0.152778,
+  0.3
  ],
  "footprint_tiles": [
   1,

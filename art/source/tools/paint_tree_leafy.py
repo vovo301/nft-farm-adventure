@@ -12,7 +12,7 @@ Trabalha a 4x do @1x, reduz em alfa pré-multiplicado (Lanczos) para @2x e @1x.
 Saídas:
   art/export/world-painted/tree_leafy_a@{1x,2x}.png + tree_leafy_a.json
   art/export/world-painted/tree_leafy_a_shadow@{1x,2x}.png + tree_leafy_a_shadow.json
-  art/review/2026-11-24-arvore-folhosa/{comparativo.png, zoom-0.5.png, qa.json}
+  art/review/2026-11-24-arvore-folhosa/{comparativo-v2.png, zoom-0.5.png, qa.json}
 
 Uso:  python3 art/source/tools/paint_tree_leafy.py      (sai 1 se o QA falhar)
 """
@@ -34,7 +34,7 @@ NAME = "tree_leafy_a"
 SEED = 20261124
 
 SS = 4                      # supersample: px de trabalho por px @1x
-W1, H1 = 200, 252           # canvas de trabalho @1x (recortado depois)
+W1, H1 = 280, 272           # canvas de trabalho @1x (recortado depois)
 AX1, AY1 = W1 // 2, 236     # âncora @1x no canvas de trabalho
 W, H = W1 * SS, H1 * SS
 AX, AY = AX1 * SS, AY1 * SS
@@ -166,6 +166,7 @@ def paint_limb(rgb, alpha, pts, widths, tex):
 
 
 def paint_trunk(rgb, alpha):
+    """Tronco curto e grosso, raízes abertas e 3 forquilhas que entram na copa."""
     trng = np.random.default_rng(SEED + 1)
     # textura da casca: estrias verticais (ruído esticado em y) + grão fino
     streak = np.asarray(Image.fromarray(trng.random((H // 90 + 2, W // 7 + 2)).astype(np.float32), "F")
@@ -174,156 +175,148 @@ def paint_trunk(rgb, alpha):
     tex = 0.80 * streak + 0.20 * grain
     tex = (tex - tex.min()) / (tex.max() - tex.min())
     limbs = [
-        # raízes (baixas, espalham no chão)
-        ([(-5, -10), (-12, 0), (-17, 6)], [16, 11, 5]),
-        ([(5, -10), (12, -1), (18, 4)], [16, 11, 5]),
-        ([(1, -8), (3, 4), (5, 9)], [16, 11, 5]),
-        ([(-3, -8), (-8, 2), (-10, 4)], [12, 8, 4]),
-        # tronco, levemente torto, alarga na base
-        ([(0, 3), (0, -10), (-2, -34), (1, -60), (0, -80)], [32, 24, 20, 17, 15]),
-        # galhos principais (entram na copa)
-        ([(0, -74), (-14, -92), (-30, -110), (-44, -122)], [11, 8, 6, 3]),
-        ([(1, -72), (14, -90), (28, -106), (42, -118)], [11, 8, 6, 3]),
-        ([(0, -76), (4, -106), (2, -134), (6, -154)], [10, 8, 5, 3]),
-        # galhos finos que aparecem nos vãos
-        ([(-24, -104), (-30, -132), (-26, -150)], [4, 3, 2]),
-        ([(22, -100), (34, -132), (30, -146)], [4, 3, 2]),
-        ([(-36, -116), (-58, -118)], [3.5, 2]),
-        ([(34, -112), (56, -110)], [3.5, 2]),
+        # raízes abertas no chão
+        ([(-10, -14), (-24, -3), (-33, 3)], [20, 12, 5]),
+        ([(10, -14), (23, -3), (33, 2)], [20, 12, 5]),
+        ([(3, -10), (8, 3), (11, 7)], [16, 10, 4]),
+        ([(-5, -10), (-14, 2), (-18, 5)], [14, 8, 3]),
+        # tronco curto e grosso
+        ([(0, -12), (0, -16), (-1, -36), (0, -58)], [46, 40, 32, 29]),
+        # forquilhas (aparecem embaixo da copa)
+        ([(-4, -54), (-22, -82), (-38, -104)], [19, 13, 7]),
+        ([(4, -54), (23, -84), (36, -106)], [19, 13, 7]),
+        ([(0, -58), (3, -86), (5, -102)], [13, 9, 5]),
     ]
+    trgb, ta = np.zeros_like(rgb), np.zeros_like(alpha)
     for pts, ws in limbs:
-        rgb, alpha = paint_limb(rgb, alpha, pts, ws, tex)
-    return rgb, alpha
+        trgb, ta = paint_limb(trgb, ta, pts, ws, tex)
+    # a copa sombreia o alto do tronco
+    yy = (np.arange(H)[:, None] - AY) / SS
+    k = np.clip((-yy - 40) / 30, 0, 0.55)[..., None]
+    trgb = trgb * (1 - k) + CASCA[0] * k
+    return over(rgb, alpha, trgb, ta)
 
 
-# ---------------------------------------------------------------- copa
-# massas (cx, cy, rx, ry, profundidade): @1x relativo à âncora; profundidade 0 = fundo
-MASSES = [
-    (2, -174, 40, 27, 0),
-    (-44, -156, 32, 24, 0),
-    (44, -152, 33, 24, 0),
-    (-20, -134, 29, 21, 1),
-    (24, -131, 29, 21, 1),
-    (-56, -118, 25, 18, 2),
-    (56, -114, 25, 18, 2),
-]
-CROWN = dict(x0=-78, x1=78, y0=-206, y1=-86)
+# ---------------------------------------------------------------- copa em tufinhos
+# Copa "couve-flor" (padrão das árvores, ver guia §8): domo largo feito de muitos tufinhos
+# arredondados com borda em pequenos lóbulos; cada tufo tem luz amarelo-esverdeada em cima e
+# sombra verde-azulada embaixo, separado dos vizinhos por um vão escuro.
+CANOPY = dict(cx=0, cy=-128, rx=100, ry_top=72, ry_bot=74, notch_w=30, notch_h=16)
 
 
-def leaf_poly(cx, cy, length, width, ang):
-    ts = np.linspace(0, 1, 11)
-    ax = (ts - 0.5) * length
-    hw = width / 2 * np.sin(np.pi * ts) ** 0.7
-    # leve assimetria: ponta mais fina que a base
-    hw *= 1.0 - 0.25 * ts
-    up = list(zip(ax, hw))
-    dn = list(zip(ax[::-1], -hw[::-1]))
-    c, s = math.cos(ang), math.sin(ang)
-    return [(cx + x * c - y * s, cy + x * s + y * c) for x, y in up + dn]
+def canopy_shape(x, y, C, ph):
+    """(dentro?, borda de baixo) da silhueta do domo, em px @1x relativos à âncora."""
+    ox = (x - C["cx"]) / C["rx"]
+    ry = np.where(y < C["cy"], C["ry_top"], C["ry_bot"])
+    oy = (y - C["cy"]) / ry
+    th = np.arctan2(oy, ox)
+    k = 1 + 0.06 * np.sin(5 * th + ph[0]) + 0.03 * np.sin(9 * th + ph[1])
+    rr = np.hypot(ox, oy) / k
+    bottom = (C["cy"] + C["ry_bot"] * np.sqrt(np.clip(1 - ox * ox, 0, 1))
+              - C["notch_h"] * np.exp(-((x - C["cx"]) / C["notch_w"]) ** 2))
+    return (rr < 1.0) & (y < bottom), bottom
 
 
-def blob_poly(cx, cy, rx, ry, k, lrng):
-    n = 40
-    ph = lrng.random(3) * 6.28
+def canopy_value(x, y, C):
+    """Luz do domo inteiro (0 escuro-frio .. 1 claro-quente), luz do topo-esquerda."""
+    ox = (x - C["cx"]) / C["rx"]
+    oy = (y - C["cy"]) / np.where(y < C["cy"], C["ry_top"], C["ry_bot"])
+    nz = np.sqrt(np.clip(1 - ox * ox - oy * oy, 0, 1))
+    n = np.stack([ox, oy, nz], -1)
+    n /= np.linalg.norm(n, axis=-1, keepdims=True) + 1e-9
+    diff = np.clip(n @ LIGHT3, 0, 1)
+    return 0.15 + 0.70 * diff - 0.12 * ox - 0.10 * oy
+
+
+def paint_canopy_core(rgb, alpha, C, seed, ramp_stops=None):
+    """Miolo escuro do domo (vãos e barriga da copa). Pinte ANTES do tronco/forquilhas."""
+    stops = ramp_stops or COPA
+    ph = np.random.default_rng(seed).random(2) * 6.28
+    yy, xx = np.mgrid[0:H, 0:W].astype(float)
+    inside, _ = canopy_shape((xx - AX) / SS, (yy - AY) / SS, C, ph)
+    core = blur(inside.astype(float), 0.8 * SS) * inside
+    return over(rgb, alpha, np.broadcast_to(ramp(stops, 0.03), rgb.shape), core)
+
+
+def paint_canopy_tufts(rgb, alpha, C, seed, ramp_stops=None, spacing=13.0, tuft_r=(9.0, 12.6)):
+    """Pinta a copa em tufinhos densos (DEPOIS do tronco). Reutilizável: troque C, seed e rampa."""
+    stops = ramp_stops or COPA
+    ph = np.random.default_rng(seed).random(2) * 6.28
+    trng = np.random.default_rng(seed + 100)
+    # 2) centros dos tufos: grade hexagonal com jitter; nenhum tufo na barriga (forquilhas)
     pts = []
-    for i in range(n):
-        a = 2 * math.pi * i / n
-        r = k * (1 + 0.10 * math.sin(3 * a + ph[0]) + 0.07 * math.sin(5 * a + ph[1])
-                 + 0.05 * math.sin(8 * a + ph[2]))
-        pts.append((cx + rx * r * math.cos(a), cy + ry * r * math.sin(a)))
-    return pts
-
-
-def leaf_value(px, py, m):
-    cx, cy, rx, ry, depth = m
-    ox, oy = (px - cx) / rx, (py - cy) / ry
-    r2 = ox * ox + oy * oy
-    nz = math.sqrt(max(0.0, 1 - min(r2, 1)))
-    n = np.array([ox, oy, nz])
-    n /= np.linalg.norm(n) + 1e-9
-    diff = max(0.0, float(n @ LIGHT3))
-    gx = (px - (CROWN["x0"] + CROWN["x1"]) / 2) / (CROWN["x1"] - CROWN["x0"])
-    gy = (py - (CROWN["y0"] + CROWN["y1"]) / 2) / (CROWN["y1"] - CROWN["y0"])
-    t = 0.17 + 0.68 * diff - 0.16 * gx - 0.22 * gy
-    if oy > 0.25:
-        t -= 0.26 * (oy - 0.25)                      # oclusão embaixo da massa
-    t += (depth - 1) * 0.05                          # fundo um pouco mais escuro
-    return t
-
-
-def paint_mass(m, lrng):
-    cx, cy, rx, ry, depth = m
-    lay = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    d = ImageDraw.Draw(lay)
-    # miolo escuro irregular (sem furos)
-    base = blob_poly(AX + cx * SS, AY + cy * SS, rx * SS, ry * SS, 0.82, lrng)
-    d.polygon(base, fill=tuple(int(v) for v in ramp(COPA, 0.12 + 0.04 * depth)) + (255,))
-    leaves = []
-    area = math.pi * rx * ry
-    n = int(area / 12)
-    for _ in range(n):
-        r = math.sqrt(lrng.random()) ** 0.8
-        a = lrng.random() * 2 * math.pi
-        px, py = cx + rx * r * math.cos(a) * 0.98, cy + ry * r * math.sin(a) * 0.98
-        L = lrng.uniform(8.5, 13.5)
-        Wd = L * lrng.uniform(0.38, 0.52)
-        if r > 0.7:
-            L *= lrng.uniform(1.05, 1.3)   # folhas da borda apontam para fora -> silhueta pontuda
-            ang = math.atan2((py - cy) / ry, (px - cx) / rx) + lrng.normal(0, 0.35)
-            px += math.cos(ang) * L * 0.30
-            py += math.sin(ang) * L * 0.30
-        else:         # folhas de dentro pendem para baixo/fora
-            ang = math.atan2(0.6 + lrng.normal(0, 0.5), (px - cx) / rx + lrng.normal(0, 0.6))
-        t = leaf_value(px, py, m) + lrng.normal(0, 0.055)
-        leaves.append((t + lrng.random() * 0.25, t, px, py, L, Wd, ang))
-    leaves.sort(key=lambda z: z[0])
-    for _, t, px, py, L, Wd, ang in leaves:
-        X, Y = AX + px * SS, AY + py * SS
-        Ls, Ws = L * SS, Wd * SS
-        # sombra da folha (oclusão entre folhas), deslocada para baixo-direita
-        sh = leaf_poly(X + 1.2 * SS, Y + 1.8 * SS, Ls, Ws * 1.05, ang)
-        t = max(t, 0.13 + 0.05 * lrng.random())   # até no escuro a folha se lê
-        d.polygon(sh, fill=tuple(int(v) for v in ramp(COPA, t - 0.2)) + (255,))
-        d.polygon(leaf_poly(X, Y, Ls, Ws, ang), fill=tuple(int(v) for v in ramp(COPA, t)) + (255,))
-        if t > 0.32:  # meia-folha iluminada do lado da luz
-            ox, oy = -0.18 * Ws * 0.9, -0.22 * Ws * 0.9
-            d.polygon(leaf_poly(X + ox, Y + oy, Ls * 0.72, Ws * 0.48, ang),
-                      fill=tuple(int(v) for v in ramp(COPA, t + 0.14)) + (255,))
-        if L > 10.5 and lrng.random() < 0.5:  # nervura discreta
-            c, s = math.cos(ang), math.sin(ang)
-            d.line([(X - c * Ls * 0.35, Y - s * Ls * 0.35), (X + c * Ls * 0.35, Y + s * Ls * 0.35)],
-                   fill=tuple(int(v) for v in ramp(COPA, t - 0.10)) + (150,), width=max(1, SS // 2))
-    arr = np.asarray(lay, float) / 255
-    return arr[..., :3] * 255, arr[..., 3]
-
-
-def paint_crown(rgb, alpha):
-    lrng = np.random.default_rng(SEED + 2)
-    order = sorted(MASSES, key=lambda m: (m[4], m[1]))
-    for m in order:
-        mrgb, ma = paint_mass(m, lrng)
-        # pincelada suave (tira o serrilhado das bordas internas)
-        mrgb = np.stack([blur(mrgb[..., c] * ma, 1.0) for c in range(3)], -1)
-        ma_b = blur(ma, 1.0)
-        mrgb = mrgb / np.maximum(ma_b[..., None], 1e-6)
-        ma = np.where(ma > 0.5, np.maximum(ma, ma_b), ma_b)
-        # oclusão da massa da frente sobre o que está atrás (vão escuro entre massas)
-        if m[4] > 0:
-            halo = blur(np.roll(np.roll(ma, int(2.5 * SS), 0), int(1.5 * SS), 1), 3.0 * SS)
-            dark = ramp(COPA, 0.0)
-            k = np.clip(halo * 0.75, 0, 0.75)[..., None]
-            rgb = rgb * (1 - k) + dark * k
-        rgb, alpha = over(rgb, alpha, mrgb, ma)
-    # frestas fechadas entre folhas: tudo que não se alcança de fora vira miolo escuro
-    solid = Image.fromarray(((alpha > 0.5) * 255).astype(np.uint8), "L").copy()
-    ImageDraw.floodfill(solid, (0, 0), 128)
-    enclosed = (np.asarray(solid) != 128).astype(float)
-    closed = np.maximum(enclosed, erode(dilate(enclosed, SS // 2), SS // 2))
-    gap = np.clip(closed - (alpha > 0.5), 0, 1)
-    big = dilate(erode(gap, 2 * SS), 2 * SS)       # vãos grandes (entre galhos) ficam abertos
-    holes = np.clip(closed - alpha - big, 0, 1)
-    rgb, alpha = over(np.broadcast_to(ramp(COPA, 0.02), rgb.shape).astype(float), holes, rgb, alpha)
+    dy = spacing * 0.866
+    j = 0
+    for gy in np.arange(C["cy"] - C["ry_top"] * 1.2, C["cy"] + C["ry_bot"], dy):
+        for gx in np.arange(C["cx"] - C["rx"] * 1.2, C["cx"] + C["rx"] * 1.2, spacing):
+            px = gx + (spacing / 2 if j % 2 else 0) + trng.normal(0, spacing * 0.18)
+            py = gy + trng.normal(0, spacing * 0.18)
+            ok, bot = canopy_shape(np.array(px), np.array(py), C, ph)
+            margin = 12 * math.exp(-((px - C["cx"]) / C["notch_w"]) ** 2)
+            if ok and py < bot - margin:
+                pts.append((py + trng.normal(0, 1.5), px, py, trng.uniform(*tuft_r)))
+        j += 1
+    pts.sort()
+    # 3) cada tufo: vão escuro (halo) + corpo lobado com luz própria
+    for _, x, y, r in pts:
+        X, Y, R = AX + x * SS, AY + y * SS, r * SS
+        n = int(trng.integers(6, 9))
+        ang0 = trng.random() * 6.28
+        lobes = [(X, Y, 0.62 * R)]
+        for i in range(n):
+            a = ang0 + 2 * math.pi * i / n + trng.normal(0, 0.18)
+            d = 0.58 * R * trng.uniform(0.9, 1.1)
+            lobes.append((X + d * math.cos(a), Y + d * math.sin(a), 0.42 * R * trng.uniform(0.85, 1.15)))
+        pad = int(1.3 * R + 3 * SS)
+        bx0, by0 = max(0, int(X) - pad), max(0, int(Y) - pad)
+        bx1, by1 = min(W, int(X) + pad), min(H, int(Y) + pad)
+        sy, sx = np.mgrid[by0:by1, bx0:bx1].astype(float)
+        sl = (slice(by0, by1), slice(bx0, bx1))
+        L = np.array(lobes)
+        dist = np.hypot(sx[None] - L[:, 0, None, None], sy[None] - L[:, 1, None, None])
+        sd_all = dist - L[:, 2, None, None]
+        sd = sd_all.min(0)
+        kk = sd_all.argmin(0)
+        # vão escuro ao redor (um pouco para baixo): separa o tufo do que está atrás
+        dh = np.hypot(sx[None] - L[:, 0, None, None] - 0.5 * SS,
+                      sy[None] - L[:, 1, None, None] - 1.0 * SS) - L[:, 2, None, None]
+        halo_a = np.clip(0.5 - (dh.min(0) - 1.3 * SS) / (1.2 * SS), 0, 1) * 0.6
+        g = canopy_value((sx - AX) / SS, (sy - AY) / SS, C)
+        rgb[sl], alpha[sl] = over(rgb[sl], alpha[sl], ramp(stops, np.clip(g - 0.4, 0, 1) * 0.5), halo_a)
+        # luz local: normal do tufo + normal do lóbulo mais próximo (borda recortada clara)
+        tx, ty = (sx - X) / R, (sy - Y) / R
+        lx = (sx - L[kk, 0]) / L[kk, 2]
+        ly = (sy - L[kk, 1]) / L[kk, 2]
+        nx, ny = 0.62 * tx + 0.38 * lx, 0.62 * ty + 0.38 * ly
+        nz = np.sqrt(np.clip(1 - nx * nx - ny * ny, 0.05, 1))
+        nn = np.sqrt(nx * nx + ny * ny + nz * nz)
+        ld = np.clip((nx * LIGHT3[0] + ny * LIGHT3[1] + nz * LIGHT3[2]) / nn, 0, 1)
+        t = 0.72 * g + 0.50 * ld - 0.13 - 0.18 * np.clip(ty - 0.2, 0, 1) + trng.normal(0, 0.035)
+        body_a = np.clip(0.5 - sd / (0.9 * SS) * 2, 0, 1)
+        rgb[sl], alpha[sl] = over(rgb[sl], alpha[sl], ramp(stops, np.clip(t, 0.04, 1)), body_a)
     return rgb, alpha
+
+
+def paint_dirt(alpha_shape):
+    """Terra discreta na base (sem contorno; assenta no gramado). Fica atrás de tudo."""
+    drng = np.random.default_rng(SEED + 4)
+    yy, xx = np.mgrid[0:H, 0:W].astype(float)
+    x1, y1 = (xx - AX) / SS - 3, (yy - AY) / SS - 3
+    th = np.arctan2(y1, x1)
+    k = 1 + 0.12 * np.sin(3 * th + 1.3) + 0.07 * np.sin(7 * th + 0.4)
+    rr = np.hypot(x1 / 50, y1 / 12) / k
+    a = np.clip((1 - rr) * 2.2, 0, 1) * 0.9
+    tex = vnoise(H, W, 3 * SS, drng)
+    TM = [tone("terra_monte", r) for r in ("deep", "shadow", "base", "light", "highlight")]
+    col = ramp(TM, np.clip(0.35 + 0.25 * (tex - 0.5) - 0.15 * y1 / 12 - 0.08 * x1 / 50, 0, 1))
+    # torrões claros
+    for _ in range(7):
+        cx, cy = drng.uniform(-44, 44), drng.uniform(-4, 8)
+        if abs(cx) < 30:
+            continue
+        m = np.hypot((x1 - cx) / 2.2, (y1 + 2 - cy) / 1.4) < 1
+        col[m] = ramp(TM, 0.85)
+    return col, a
 
 
 # ---------------------------------------------------------------- acabamento
@@ -545,21 +538,30 @@ def boards(meta, smeta, qa):
     ui = ROOT / "art/export/user-items"
     log = Image.open(ui / "resources/resource_log@2x.png").convert("RGBA")
     apple = Image.open(ui / "crops/crop_apple_tree_s3@2x.png").convert("RGBA")
-    # comparativo @2x: vetorial v32 | pintada nova | tora do usuário | macieira do usuário
-    Wc, Hc = 1880, 620
-    can = grass_bg(Wc, Hc, 2)
-    gy = 560
-    place(can, f"{vec}@2x.png", vmeta, 230, gy, 2, (f"{vec}_shadow@2x.png", vsm))
-    place(can, OUT / f"{NAME}@2x.png", meta, 690, gy, 2,
+    # comparativo v2: macieira do usuário (s3) x árvore folhosa nova, mesma escala (@2x),
+    # sobre a grama; embaixo, as duas a zoom 0,5 (1:1) e ampliadas 3x
+    Wc, Ht = 1040, 560
+    can = grass_bg(Wc, Ht, 2)
+    gy = 480
+    can.alpha_composite(apple, (60, gy - 250))           # base de terra da macieira em gy
+    place(can, OUT / f"{NAME}@2x.png", meta, 720, gy, 2,
           (OUT / f"{NAME}_shadow@2x.png", smeta))
-    can.alpha_composite(log, (1040, gy - log.height + 40))
-    can.alpha_composite(apple, (1460, gy - apple.height + 10))
-    d = ImageDraw.Draw(can)
-    for x, txt in [(130, "vetorial v32 (atual)"), (600, "pintada raster (nova)"),
-                   (1150, "usuario: tora"), (1560, "usuario: macieira")]:
-        d.rectangle([x - 6, 8, x + 8 * len(txt) + 6, 30], fill=(20, 14, 8, 200))
-        d.text((x, 12), txt, fill=(245, 236, 210, 255))
-    can.convert("RGB").save(REV / "comparativo.png", optimize=True)
+    sc = grass_bg(520, 250, 1)
+    ap1 = apple.resize((apple.width // 2, apple.height // 2), Image.LANCZOS)
+    sc.alpha_composite(ap1, (30, 210 - 125))
+    place(sc, OUT / f"{NAME}@1x.png", meta, 360, 210, 1, (OUT / f"{NAME}_shadow@1x.png", smeta))
+    half = sc.resize((260, 125), Image.LANCZOS)
+    big = half.resize((780, 375), Image.NEAREST)
+    board = Image.new("RGBA", (Wc, Ht + 395), (24, 20, 14, 255))
+    board.paste(can, (0, 0))
+    board.paste(half, (10, Ht + 10))
+    board.paste(big, (Wc - 790, Ht + 10))
+    d = ImageDraw.Draw(board)
+    for x, y, txt in [(150, 8, "usuario: macieira (s3) @2x"), (600, 8, "arvore folhosa v2 @2x"),
+                      (10, Ht + 145, "zoom 0,5 (1:1)"), (Wc - 790, Ht + 388 - 12, "zoom 0,5 ampliado 3x")]:
+        d.rectangle([x - 6, y - 2, x + 7 * len(txt) + 6, y + 14], fill=(20, 14, 8, 200))
+        d.text((x, y), txt, fill=(245, 236, 210, 255))
+    board.convert("RGB").save(REV / "comparativo-v2.png", optimize=True)
 
     # teste a zoom 0,5: cena @1x reduzida 0,5 (tamanho real) + ampliação 3x para inspeção
     sc = grass_bg(560, 300, 1)
@@ -583,16 +585,18 @@ def boards(meta, smeta, qa):
 def main():
     rgb = np.zeros((H, W, 3))
     alpha = np.zeros((H, W))
-    rgb, alpha = paint_trunk(rgb, alpha)
-    trunk_a = alpha.copy()
-    rgb, alpha = paint_crown(rgb, alpha)
+    rgb, alpha = paint_canopy_core(rgb, alpha, CANOPY, SEED + 2)
+    t_rgb, trunk_a = paint_trunk(np.zeros_like(rgb), np.zeros_like(alpha))
+    rgb, alpha = over(rgb, alpha, t_rgb, trunk_a)
+    rgb, alpha = paint_canopy_tufts(rgb, alpha, CANOPY, SEED + 2)
     crown_mask = np.clip(alpha - trunk_a, 0, 1)
     crown_mask = (blur(crown_mask, 2) > 0.2).astype(float)
     rgb = finish(rgb, alpha, crown_mask)
     rgb, alpha = outline(rgb, alpha)
+    srgb, sa, (sax, say) = cast_shadow(alpha)
+    drgb, da = paint_dirt(alpha.shape)
+    rgb, alpha = over(drgb, da, rgb, alpha)
     full_alpha = alpha
-
-    srgb, sa, (sax, say) = cast_shadow(full_alpha)
 
     rgb_c, a_c, anc, size = fit_crop(rgb, full_alpha, AX, AY)
     meta = export(NAME, rgb_c, a_c, anc, size)

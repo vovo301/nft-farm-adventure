@@ -164,6 +164,9 @@ Regra tirada das imagens do usuário: o **brilho é raro e significa valor**.
   (`paint_vector.crown`), nunca em lobos redondos. As pedras são angulares, em 3 planos. As
   construções têm quinas vivas, tábuas e telhas. Frutos, cristais e legumes podem ser redondos
   porque são assim, mas têm volume, brilho especular e contorno (como na arte do usuário).
+- **Árvores:** seguem a aparência da macieira do usuário (copa em tufinhos densos, tronco curto e
+  grosso com raízes). Vale para todas as árvores e substitui "tufos pontudos" nelas; fonte:
+  `paint_canopy_tufts` em `art/source/tools/paint_tree_leafy.py`.
 - **Materiais:** madeira (tábua, casca, madeira cinza de cerca), barro (telha), pedra, terra
   (canteiro, caminho, barranco), palha, metal, tecido (linho, brim, couro), água, cristal.
 - **Paleta `palette.json` v3.2** (a v3.1 está em `archive/v3.1/palette-v3.1.json`):

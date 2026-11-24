@@ -34,4 +34,7 @@ Diferenças restantes: a casca do tronco é mais lisa que a da tora do usuário,
 iluminadas ficam um pouco repetitivas de perto (some em zoom 1 e 0,5). Se o usuário quiser, a
 próxima rodada reforça a casca.
 
+**v2 (pedido do usuário: "todas as árvores com a aparência da macieira"):** copa em domo largo de tufinhos densos tipo couve-flor (`paint_canopy_tufts`), luz amarelo-esverdeada em cima e sombra verde-azulada embaixo de cada tufo; tronco curto e grosso com raízes e terra discreta. 228×236 @1x, âncora (114, 212), altura 208, L5 24,0/7,2, QA exit 0.
+Ver `comparativo-v2.png` (macieira s3 × folhosa v2, mesma escala @2x, + zoom 0,5). `comparativo.png` e `zoom-0.5.png` (este regerado) ficam como histórico da v1.
+
 Resposta do usuário: _(pendente)_
