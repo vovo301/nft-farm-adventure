@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terminal Quant GEX v3.1 — WIN | 6L1 | AI Desk Analyst</title>
+<style>
+  :root {
+    --bg: #070b14; --panel: #111827; --panel-alt: #1e293b; --border: #334155;
+    --text: #f8fafc; --muted: #94a3b8; --accent: #38bdf8; --green: #10b981;
+    --red: #ef4444; --yellow: #facc15; --purple: #a855f7;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 14px; font-size: 13px; }
+  .container { max-width: 1380px; margin: auto; }
+
+  .topbar { display: flex; justify-content: space-between; align-items: center; background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 12px 18px; margin-bottom: 14px; flex-wrap: wrap; gap: 12px; }
+  .brand h1 { margin: 0; font-size: 1.15rem; color: var(--accent); letter-spacing: 0.4px; }
+  .brand span { font-size: 0.75rem; color: var(--muted); }
+  .controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+  .status-pill { display: flex; align-items: center; gap: 10px; background: rgba(16,185,129,0.14); border: 1.5px solid var(--green); padding: 8px 16px; border-radius: 999px; font-weight: 800; font-size: 0.85rem; color: #6ee7b7; letter-spacing: 0.5px; }
+  .status-pill.offline { background: rgba(245,158,11,0.14); border-color: #f59e0b; color: #fcd34d; }
+  .pulse-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--green); animation: pulse 1.5s infinite; }
+  .status-pill.offline .pulse-dot { background: #f59e0b; animation: none; }
+  @keyframes pulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16,185,129,0.85); }
+    70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(16,185,129,0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+  }
+
+  .clock-box { background: #0f172a; border: 1px solid var(--border); padding: 6px 12px; border-radius: 8px; text-align: right; font-variant-numeric: tabular-nums; }
+  .clock-box .time { font-size: 0.95rem; font-weight: 700; color: #fff; }
+  .clock-box .sync { font-size: 0.7rem; color: var(--muted); }
+
+  .btn { background: var(--accent); color: #090d16; border: none; padding: 8px 13px; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.8rem; }
+  .btn:hover { opacity: 0.9; }
+  .btn-ghost { background: #1e293b; color: #e2e8f0; border: 1px solid var(--border); }
+
+  .quick-sync { display: flex; align-items: center; gap: 6px; background: #0f172a; border: 1px solid #38bdf866; padding: 5px 10px; border-radius: 8px; }
+  .quick-sync label { font-size: 0.72rem; color: var(--accent); font-weight: 700; }
+  .quick-sync input { width: 96px; background: #1e293b; border: 1px solid #475569; color: #fff; padding: 4px 6px; border-radius: 4px; font-weight: 700; font-size: 0.85rem; }
+
+  .drawer { display: none; background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 15px; margin-bottom: 14px; }
+  .drawer.open { display: block; }
+  .drawer-section-title { font-size: 0.75rem; color: var(--accent); font-weight: 800; text-transform: uppercase; margin: 0 0 8px 0; border-bottom: 1px solid #1e293b; padding-bottom: 4px; }
+  .drawer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 12px; }
+  .field label { display: block; font-size: 0.68rem; color: var(--muted); margin-bottom: 4px; text-transform: uppercase; }
+  .field input, .field select { width: 100%; background: #0f172a; border: 1px solid #475569; color: #fff; padding: 6px 8px; border-radius: 5px; font-size: 0.83rem; }
+  .hint { font-size: 0.72rem; color: var(--muted); margin: 0 0 6px 0; }
+
+  .kpi-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 14px; }
+  @media (max-width: 1100px) { .kpi-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 600px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+  .kpi { background: var(--panel); border: 1px solid var(--border); border-radius: 9px; padding: 11px 13px; min-width: 0; }
+  .kpi.highlight { border-color: var(--accent); background: linear-gradient(180deg, #132238 0%, #111827 100%); }
+  .kpi .lbl { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; display: flex; justify-content: space-between; gap: 6px; }
+  .kpi .val { font-size: 1.25rem; font-weight: 800; margin: 4px 0 2px 0; font-variant-numeric: tabular-nums; }
+  .kpi .sub { font-size: 0.73rem; color: var(--muted); }
+  .up { color: var(--green); } .down { color: var(--red); } .warn { color: var(--yellow); }
+
+  .gex-ruler-card, .thermo-card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; margin-bottom: 14px; }
+  .ruler-header, .thermo-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px; }
+  .card-title { font-weight: 800; font-size: 0.85rem; color: var(--text); }
+  .ruler-track { position: relative; height: 38px; background: #1e293b; border: 1px solid #475569; border-radius: 8px; margin: 26px 0 22px 0; }
+  .zone-short { position: absolute; left: 0; top: 0; bottom: 0; background: rgba(239,68,68,0.14); border-right: 2px dashed var(--yellow); border-radius: 7px 0 0 7px; }
+  .zone-long { position: absolute; right: 0; top: 0; bottom: 0; background: rgba(16,185,129,0.14); border-radius: 0 7px 7px 0; }
+  .lvl-mark { position: absolute; top: 0; bottom: 0; width: 2px; transform: translateX(-50%); }
+  .lvl-tag { position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%); font-size: 0.68rem; font-weight: 700; white-space: nowrap; }
+  .win-pin { position: absolute; top: -10px; bottom: -10px; width: 4px; background: var(--accent); box-shadow: 0 0 12px var(--accent); transform: translateX(-50%); z-index: 5; transition: left 0.35s ease; }
+  .win-pin-badge { position: absolute; top: -22px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #06101d; font-weight: 800; font-size: 0.72rem; padding: 2px 7px; border-radius: 4px; white-space: nowrap; }
+
+  .thermo-bar { position: relative; height: 22px; border-radius: 11px; background: linear-gradient(90deg, #dc2626 0%, #f97316 28%, #475569 50%, #22c55e 72%, #10b981 100%); margin: 12px 0 8px 0; }
+  .thermo-needle { position: absolute; top: -6px; left: 50%; width: 6px; height: 34px; background: #fff; border: 1.5px solid #090d16; border-radius: 3px; box-shadow: 0 0 10px #fff; transform: translateX(-50%); transition: left 0.4s cubic-bezier(0.22,1,0.36,1); }
+  .thermo-labels { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--muted); font-weight: 700; gap: 4px; }
+  .audit-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; padding-top: 10px; border-top: 1px solid #1e293b; }
+  .apill { background: #0f172a; border: 1px solid var(--border); padding: 4px 9px; border-radius: 6px; font-size: 0.73rem; }
+
+  .main-grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: 14px; margin-bottom: 14px; }
+  @media (max-width: 1024px) { .main-grid { grid-template-columns: 1fr; } }
+  .desk-card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; min-width: 0; }
+  .desk-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 12px; gap: 8px; flex-wrap: wrap; }
+  .desk-title { font-weight: 800; font-size: 0.95rem; color: var(--accent); }
+  .regime-badge { padding: 4px 10px; border-radius: 6px; font-weight: 800; font-size: 0.75rem; }
+  .thesis-box { background: #0f172a; border-left: 4px solid var(--accent); padding: 12px; border-radius: 6px; line-height: 1.55; color: #e2e8f0; margin-bottom: 12px; }
+  .plan-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
+  @media (max-width: 600px) { .plan-grid { grid-template-columns: repeat(2, 1fr); } }
+  .plan-item { background: #1e293b; padding: 8px 10px; border-radius: 6px; border: 1px solid #334155; }
+  .plan-item span { display: block; font-size: 0.68rem; color: var(--muted); text-transform: uppercase; }
+  .plan-item strong { font-size: 0.92rem; color: #fff; }
+
+  .chat-box { background: #0b111e; border: 1px solid #38bdf844; border-radius: 8px; padding: 11px; }
+  .chat-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 6px; font-size: 0.75rem; font-weight: 700; }
+  .ai-mode-tag { font-size: 0.68rem; padding: 2px 7px; border-radius: 4px; font-weight: 700; background: rgba(168,85,247,0.2); color: #d8b4fe; border: 1px solid rgba(168,85,247,0.4); }
+  .chat-log { max-height: 240px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; padding-right: 4px; }
+  .msg { padding: 8px 11px; border-radius: 6px; font-size: 0.81rem; line-height: 1.5; white-space: pre-line; }
+  .msg.user { background: #1e293b; color: #38bdf8; align-self: flex-end; max-width: 85%; border: 1px solid #334155; }
+  .msg.ai { background: #111c2e; color: #e2e8f0; align-self: flex-start; border-left: 3px solid var(--purple); width: 100%; }
+  .chat-input-row { display: flex; gap: 6px; }
+  .chat-input-row input { flex: 1; min-width: 0; background: #1e293b; border: 1px solid #475569; color: #fff; padding: 9px 11px; border-radius: 6px; font-size: 0.83rem; }
+  .quick-prompts { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 8px; }
+  .qp-btn { background: #1e293b; color: #94a3b8; border: 1px solid #334155; padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; }
+  .qp-btn:hover { color: #fff; border-color: var(--accent); }
+
+  .chart-card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; min-width: 0; }
+  .chart-sub { font-size: 0.72rem; color: var(--muted); }
+  canvas { width: 100%; height: 295px; background: #0b111e; border: 1px solid #1e293b; border-radius: 8px; margin-top: 8px; display: block; }
+  .ohlc-row { display: flex; gap: 12px; flex-wrap: wrap; font-size: 0.75rem; color: var(--muted); margin-top: 8px; font-variant-numeric: tabular-nums; }
+
+  .table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; background: var(--panel); min-width: 640px; }
+  th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid #1e293b; font-size: 0.82rem; }
+  th { background: #0f172a; color: var(--muted); font-size: 0.72rem; text-transform: uppercase; }
+  .disclaimer { font-size: 0.7rem; color: #64748b; text-align: center; margin: 14px 0 4px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="brand">
+      <h1>TERMINAL QUANT GEX v3.1 — MINI ÍNDICE (WIN)</h1>
+      <span>Arquitetura Auditada • Feed Multi-Rota • 6L1 Candlestick • Agente IA LLM Integrado</span>
+    </div>
+    <div class="controls">
+      <div class="quick-sync">
+        <label for="quickWinInput">WIN AO VIVO:</label>
+        <input id="quickWinInput" type="number" step="5" placeholder="ex: 168450" onkeydown="if(event.key==='Enter')sincronizarWinManual()">
+        <button class="btn" onclick="sincronizarWinManual()" title="Vazio = volta ao automático">Sync</button>
+      </div>
+      <div class="status-pill offline" id="statusPill"><div class="pulse-dot"></div><span id="statusText">CONECTANDO...</span></div>
+      <div class="clock-box">
+        <div class="time" id="clockBrt">--:--:-- BRT</div>
+        <div class="sync" id="lastSync">Última sinc: aguardando...</div>
+      </div>
+      <button class="btn btn-ghost" onclick="forcarAtualizacao()">↻ Atualizar</button>
+      <button class="btn btn-ghost" onclick="toggleDrawer()">⚙ Calibrar / IA</button>
+    </div>
+  </div>
+
+  <!-- DRAWER -->
+  <div class="drawer" id="calDrawer">
+    <div class="drawer-section-title">1. Calibração de Strikes GEX, Curva DI1 e Fluxo</div>
+    <p class="hint">Strikes em pontos do IBOV à vista. O terminal projeta cada nível no WIN somando o ágio do DI. Os valores ficam salvos neste navegador.</p>
+    <div class="drawer-grid">
+      <div class="field"><label>Call Wall 2 (IBOV)</label><input id="inCw2" type="number" value="182000"></div>
+      <div class="field"><label>Call Wall 1 (IBOV)</label><input id="inCw1" type="number" value="179000"></div>
+      <div class="field"><label>Gamma Flip (IBOV)</label><input id="inFlip" type="number" value="169724"></div>
+      <div class="field"><label>Put Wall 1 (IBOV)</label><input id="inPw1" type="number" value="162000"></div>
+      <div class="field"><label>Put Wall 2 (IBOV)</label><input id="inPw2" type="number" value="158500"></div>
+      <div class="field"><label>DI1 Futuro (% a.a.)</label><input id="inDi1" type="number" step="0.01" value="13.85"></div>
+      <div class="field"><label>Variação DI1 (bps)</label><input id="inDiBps" type="number" step="1" value="-4"></div>
+      <div class="field"><label>Dias Úteis Venc. WIN</label><input id="inDu" type="number" step="1" value="15"></div>
+      <div class="field"><label>Fluxo CVG Intradiário</label>
+        <select id="inCvgMode">
+          <option value="auto">Automático (Derivado do Momentum)</option>
+          <option value="comprador">CVG Forte Comprador (+)</option>
+          <option value="vendedor">CVG Forte Vendedor (-)</option>
+          <option value="absorcao_topo">Topo Travado + CVG Nova Máxima</option>
+          <option value="exaustao_fundo">Fundo Travado + Absorção Passiva</option>
+        </select>
+      </div>
+      <div class="field"><label>Token Brapi (Opcional)</label><input id="inBrapi" type="password" placeholder="token brapi.dev"></div>
+    </div>
+
+    <div class="drawer-section-title">Importar níveis (copiados da sua conta Investorama ou outra fonte)</div>
+    <p class="hint">Abra a página de GEX logado na sua conta, selecione o texto (Ctrl+A, Ctrl+C) e cole aqui. O terminal procura "Call Wall", "Put Wall", "Gamma Flip"/"Zero Gamma" e "DI1" e preenche os campos acima. Nada é enviado para nenhum servidor.</p>
+    <div class="field" style="margin-bottom:8px"><textarea id="importText" rows="4" style="width:100%;background:#0f172a;border:1px solid #475569;color:#fff;padding:8px;border-radius:5px;font-size:0.8rem;resize:vertical" placeholder="Ex: Call Wall 179.000 | Gamma Flip 169.724 | Put Wall 162.000 ..."></textarea></div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px">
+      <button class="btn" onclick="importarNiveis()">Importar níveis</button>
+      <span id="importResult" class="hint" style="margin:0"></span>
+    </div>
+
+    <div class="drawer-section-title">2. Configuração do Agente IA Generativo (Analista Sênior LLM)</div>
+    <div class="drawer-grid">
+      <div class="field"><label>Provedor de IA</label>
+        <select id="aiProvider" onchange="atualizarConfigIA(true)">
+          <option value="groq">Groq Cloud (Gratuito / Llama 3.3 70B)</option>
+          <option value="openai">OpenAI (GPT-4o-mini)</option>
+          <option value="custom">Endpoint Local / Ollama (compatível OpenAI)</option>
+        </select>
+      </div>
+      <div class="field"><label>Chave API (Salva só no navegador)</label><input id="aiApiKey" type="password" placeholder="gsk_... ou sk-..." onchange="atualizarConfigIA(false)"></div>
+      <div class="field"><label>Modelo / Endpoint</label><input id="aiModel" type="text" onchange="atualizarConfigIA(false)"></div>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpi-grid">
+    <div class="kpi highlight">
+      <div class="lbl"><span>WIN Projetado</span><span id="srcWin" class="warn">AUTO</span></div>
+      <div class="val" id="kpiWin">--</div>
+      <div class="sub" id="kpiWinSub">Ágio DI: --</div>
+    </div>
+    <div class="kpi">
+      <div class="lbl"><span>Ibovespa à Vista</span><span id="kpiIbovPct">--</span></div>
+      <div class="val" id="kpiIbov">--</div>
+      <div class="sub" id="kpiIbovRange">Abert: --</div>
+    </div>
+    <div class="kpi">
+      <div class="lbl"><span>6L1 (BRL/USD)</span><span id="kpi6l1Pct">--</span></div>
+      <div class="val" id="kpi6l1">--</div>
+      <div class="sub" id="kpi6l1Sub">Fluxo Estrangeiro</div>
+    </div>
+    <div class="kpi">
+      <div class="lbl"><span>Dólar Comercial</span><span id="kpiUsdPct">--</span></div>
+      <div class="val" id="kpiUsd">--</div>
+      <div class="sub">Paridade inversa 6L1</div>
+    </div>
+    <div class="kpi">
+      <div class="lbl"><span>DI1 Futuro</span><span id="kpiDiBps">--</span></div>
+      <div class="val" id="kpiDi">--</div>
+      <div class="sub" id="kpiDiSub">--</div>
+    </div>
+    <div class="kpi">
+      <div class="lbl"><span>Janela Inst.</span><span id="kpiRisk">--</span></div>
+      <div class="val" id="kpiWindow" style="font-size:1rem">--</div>
+      <div class="sub" id="kpiLot">Lote Sugerido: --</div>
+    </div>
+  </div>
+
+  <!-- RÉGUA GEX -->
+  <div class="gex-ruler-card">
+    <div class="ruler-header">
+      <span class="card-title">MAPA ESPACIAL DE EXPOSIÇÃO GAMMA (GEX) — PROJEÇÃO WIN</span>
+      <span id="regimeBanner" style="font-weight:800;font-size:0.8rem">REGIME: --</span>
+    </div>
+    <div class="ruler-track">
+      <div class="zone-short" id="zoneShort"></div>
+      <div class="zone-long" id="zoneLong"></div>
+      <div class="lvl-mark" id="mPw2" style="background:var(--green)"><span class="lvl-tag" id="tPw2" style="color:var(--green)">PW2</span></div>
+      <div class="lvl-mark" id="mPw1" style="background:#4ade80"><span class="lvl-tag" id="tPw1" style="color:#4ade80">PW1</span></div>
+      <div class="lvl-mark" id="mFlip" style="background:var(--yellow)"><span class="lvl-tag" id="tFlip" style="color:var(--yellow)">FLIP</span></div>
+      <div class="lvl-mark" id="mCw1" style="background:#f87171"><span class="lvl-tag" id="tCw1" style="color:#f87171">CW1</span></div>
+      <div class="lvl-mark" id="mCw2" style="background:var(--red)"><span class="lvl-tag" id="tCw2" style="color:var(--red)">CW2</span></div>
+      <div class="win-pin" id="winPin"><span class="win-pin-badge" id="winPinBadge">WIN --</span></div>
+    </div>
+  </div>
+
+  <!-- TERMÔMETRO -->
+  <div class="thermo-card">
+    <div class="thermo-top">
+      <span class="card-title">TERMÔMETRO QUANTITATIVO DE GATILHO (COMPRA vs. VENDA) <span class="chart-sub">Motor Auditado v3.1</span></span>
+      <span id="scoreReadout" style="font-weight:800">SCORE: --</span>
+    </div>
+    <div class="thermo-bar"><div class="thermo-needle" id="thermoNeedle"></div></div>
+    <div class="thermo-labels">
+      <span>-100 VENDA FORTE</span><span>-40 VENDA</span><span>0 NEUTRO</span><span>+40 COMPRA</span><span>+100 COMPRA FORTE</span>
+    </div>
+    <div class="audit-pills" id="auditPills"></div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-grid">
+    <div class="desk-card">
+      <div class="desk-header">
+        <span class="desk-title">🤖 ANALISTA SÊNIOR DE DERIVATIVOS & MESA QUANT</span>
+        <span class="regime-badge" id="conviccaoBadge">CONVICÇÃO: --</span>
+      </div>
+      <div class="thesis-box" id="analystThesis">Sincronizando leitura institucional do pregão...</div>
+      <div class="plan-grid">
+        <div class="plan-item"><span>Gatilho Tático</span><strong id="planEntry">-</strong></div>
+        <div class="plan-item"><span>Alvo 1 (TP1)</span><strong id="planTp1">-</strong></div>
+        <div class="plan-item"><span>Alvo 2 (TP2)</span><strong id="planTp2">-</strong></div>
+        <div class="plan-item"><span>Stop / Invalidação</span><strong id="planStop">-</strong></div>
+      </div>
+
+      <div class="chat-box">
+        <div class="chat-top-bar">
+          <span>💬 CONSULTA DIRETA COM IA (SKILLS DE MESA PROPRIETÁRIA)</span>
+          <span class="ai-mode-tag" id="aiModeTag">MODO LOCAL</span>
+        </div>
+        <div class="quick-prompts">
+          <button class="qp-btn" onclick="perguntarRapido('Faça a leitura completa do pregão agora.')">Leitura completa agora</button>
+          <button class="qp-btn" onclick="perguntarRapido('Qual a confluência entre 6L1 e DI1 para o WIN agora?')">Confluência 6L1 + DI1</button>
+          <button class="qp-btn" onclick="perguntarRapido('Quais as armadilhas (traps) e onde posicionar o stop?')">Armadilhas & Stop</button>
+          <button class="qp-btn" onclick="perguntarRapido('Como operar o teste do Gamma Flip?')">Teste do Gamma Flip</button>
+        </div>
+        <div class="chat-log" id="chatLog">
+          <div class="msg ai">Analista IA online com contexto em tempo real de GEX, WIN, 6L1 e DI1. Para respostas via LLM (Llama 3.3 70B grátis na Groq ou GPT-4o-mini), cole sua chave em ⚙ Calibrar / IA. Sem chave, respondo usando o motor quantitativo local.</div>
+        </div>
+        <div class="chat-input-row">
+          <input id="chatInput" type="text" placeholder="Pergunte ao analista..." onkeydown="if(event.key==='Enter')enviarPergunta()">
+          <button class="btn" onclick="enviarPergunta()">Perguntar à IA</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="desk-header" style="margin-bottom:0">
+        <div>
+          <div class="desk-title">GRÁFICO DE VELAS — 6L1 (BRL/USD)</div>
+          <div class="chart-sub">Candles M5 • 09:00–18:00 BRT • Linha amarela = abertura</div>
+        </div>
+        <span class="apill" id="candleSrc">CARREGANDO</span>
+      </div>
+      <canvas id="candleCanvas"></canvas>
+      <div class="ohlc-row">
+        <span id="c6Open">Abert: --</span><span id="c6High">Máx: --</span><span id="c6Low">Mín: --</span><span id="c6Close">Atual: --</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABELA -->
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Nível Institucional</th><th>Strike IBOV</th><th>Projeção WIN</th><th>Distância WIN</th><th>Dinâmica de Hedge dos Dealers</th></tr></thead>
+      <tbody id="levelsTableBody"></tbody>
+    </table>
+  </div>
+
+  <p class="disclaimer">Ferramenta de estudo. Níveis GEX são calibrados manualmente; WIN é projetado pelo IBOV + ágio do DI. Não é recomendação de investimento.</p>
+</div>
+
+<script>
+// =========================================================
+// ESTADO
+// =========================================================
+const state = {
+  ibovOpen: 164090, ibovPrice: 167030, ibovHigh: 167400, ibovLow: 164090,
+  winManual: null, winPrice: 168450, agio: 1420,
+  usdOpen: 5.7750, usdPrice: 5.7405,
+  candles6L1: [], candlesReal: false,
+  lastScore: 0, lastAction: 'NEUTRO', lastThesis: '',
+  levels: {}, chatHistory: []
+};
+
+const fmt = (n) => Math.round(n).toLocaleString('pt-BR');
+const sign = (n) => (n >= 0 ? '+' : '');
+const $ = (id) => document.getElementById(id);
+const escHtml = (s) => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+
+// Hora/minuto no fuso de Brasília
+function brtParts(date = new Date()) {
+  const p = new Intl.DateTimeFormat('en-GB', { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit', hour12: false }).formatToParts(date);
+  const h = parseInt(p.find(x => x.type === 'hour').value, 10) % 24;
+  const m = parseInt(p.find(x => x.type === 'minute').value, 10);
+  return { h, m, hm: h * 60 + m };
+}
+function brtDayKey(date) { return date.toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' }); }
+
+// =========================================================
+// CONFIG / PERSISTÊNCIA
+// =========================================================
+const CAL_FIELDS = ['inCw2', 'inCw1', 'inFlip', 'inPw1', 'inPw2', 'inDi1', 'inDiBps', 'inDu', 'inCvgMode', 'inBrapi'];
+
+function carregarConfig() {
+  CAL_FIELDS.forEach(id => {
+    const v = load('quant_' + id);
+    if (v !== null && v !== '') $(id).value = v;
+    $(id).addEventListener('change', () => { store('quant_' + id, $(id).value); recalcularTudo(); });
+    $(id).addEventListener('input', () => { if ($(id).tagName === 'INPUT' && id !== 'inBrapi') recalcularTudo(); });
+  });
+  const savedKey = load('quant_ai_key');
+  const savedProv = load('quant_ai_provider');
+  const savedModel = load('quant_ai_model');
+  if (savedKey) $('aiApiKey').value = savedKey;
+  if (savedProv) $('aiProvider').value = savedProv;
+  if (savedModel) $('aiModel').value = savedModel;
+  atualizarConfigIA(!savedModel);
+}
+
+// Importa níveis a partir de texto colado (copiado da página de GEX)
+function parseNum(str) {
+  let t = str.trim().replace(/\s/g, '');
+  if (/^\d{1,3}([.,]\d{3})+$/.test(t)) return parseFloat(t.replace(/[.,]/g, ''));       // 179.000 / 179,000
+  if (/^\d{1,3}([.,]\d{1,2})?[kK]$/.test(t)) return parseFloat(t.replace(',', '.')) * 1000; // 179k / 179,5k
+  return parseFloat(t.replace(',', '.'));
+}
+function extrairNumerosApos(texto, regexRotulo) {
+  const out = [];
+  const re = new RegExp(regexRotulo.source + '[^0-9\\n]{0,40}?(\\d{1,3}(?:[.,]\\d{3})+|\\d{5,6}(?:[.,]\\d+)?|\\d{2,3}(?:[.,]\\d)?[kK])', 'gi');
+  let m;
+  while ((m = re.exec(texto)) !== null) {
+    const v = parseNum(m[m.length - 1]);
+    if (v > 50000 && v < 500000) out.push(v);
+  }
+  return out;
+}
+function importarNiveis() {
+  const txt = $('importText').value;
+  const res = $('importResult');
+  if (!txt.trim()) { res.textContent = 'Cole o texto primeiro.'; return; }
+  const calls = [...new Set(extrairNumerosApos(txt, /(?:call\s*wall|cw)(?:\s*[12](?![\d.,kK]))?/))].sort((a, b) => a - b);
+  const puts = [...new Set(extrairNumerosApos(txt, /(?:put\s*wall|pw)(?:\s*[12](?![\d.,kK]))?/))].sort((a, b) => b - a);
+  const flips = extrairNumerosApos(txt, /(?:gamma\s*flip|zero\s*gamma|flip)/);
+  const achados = [];
+  const set = (id, v, nome) => { $(id).value = Math.round(v); store('quant_' + id, $(id).value); achados.push(nome + ' ' + fmt(v)); };
+  if (calls[0]) set('inCw1', calls[0], 'CW1');
+  if (calls[1]) set('inCw2', calls[1], 'CW2');
+  if (puts[0]) set('inPw1', puts[0], 'PW1');
+  if (puts[1]) set('inPw2', puts[1], 'PW2');
+  if (flips[0]) set('inFlip', flips[0], 'Flip');
+  const di = /DI1?(?:\s*[FfNn]\d{2})?[^0-9\n]{0,25}?(\d{1,2}[.,]\d{1,3})\s*%/i.exec(txt);
+  if (di) { const v = parseFloat(di[1].replace(',', '.')); if (v > 2 && v < 40) { $('inDi1').value = v; store('quant_inDi1', v); achados.push('DI1 ' + v + '%'); } }
+  if (achados.length) {
+    res.textContent = '✔ Importado: ' + achados.join(' • ');
+    res.style.color = 'var(--green)';
+    recalcularTudo();
+  } else {
+    res.textContent = 'Nenhum nível reconhecido. Me mande um exemplo do texto copiado para eu ajustar o leitor.';
+    res.style.color = 'var(--yellow)';
+  }
+}
+
+function atualizarConfigIA(resetModel = true) {
+  const prov = $('aiProvider').value;
+  const key = $('aiApiKey').value.trim();
+  const modelEl = $('aiModel');
+  if (resetModel) {
+    if (prov === 'groq') modelEl.value = 'llama-3.3-70b-versatile';
+    else if (prov === 'openai') modelEl.value = 'gpt-4o-mini';
+    else modelEl.value = 'http://localhost:11434/v1/chat/completions';
+  }
+  store('quant_ai_key', key);
+  store('quant_ai_provider', prov);
+  store('quant_ai_model', modelEl.value);
+  const tag = $('aiModeTag');
+  if (key || prov === 'custom') {
+    tag.innerText = `LLM ATIVO: ${prov.toUpperCase()}`;
+    tag.style.background = 'rgba(16,185,129,0.2)'; tag.style.color = '#6ee7b7'; tag.style.borderColor = 'rgba(16,185,129,0.5)';
+  } else {
+    tag.innerText = 'MODO LOCAL (CHAVE EM ⚙ PARA LLM)';
+    tag.style.background = 'rgba(168,85,247,0.2)'; tag.style.color = '#d8b4fe'; tag.style.borderColor = 'rgba(168,85,247,0.4)';
+  }
+}
+
+// =========================================================
+// RELÓGIO / UI
+// =========================================================
+function atualizarRelogio() {
+  $('clockBrt').innerText = new Date().toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo' }) + ' BRT';
+}
+function toggleDrawer() { $('calDrawer').classList.toggle('open'); }
+
+function sincronizarWinManual() {
+  const raw = $('quickWinInput').value.trim();
+  if (raw === '') {
+    state.winManual = null;
+    $('srcWin').innerText = 'AUTO';
+    recalcularTudo();
+    return;
+  }
+  const val = parseFloat(raw);
+  if (!isNaN(val) && val > 50000) {
+    state.winManual = val;
+    $('srcWin').innerText = 'SYNC MANUAL';
+    $('lastSync').innerText = 'Sync manual: ' + new Date().toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+    recalcularTudo();
+  }
+}
+
+// =========================================================
+// FEEDS
+// =========================================================
+async function fetchJson(url, ms = 9000) {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), ms);
+  try {
+    const r = await fetch(url, { signal: ctrl.signal, cache: 'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return await r.json();
+  } finally { clearTimeout(t); }
+}
+
+// Filtra candles do pregão de hoje (09:00–18:00 BRT)
+function candlesDoPregao(candles) {
+  if (!candles || !candles.length) return [];
+  const lastDay = brtDayKey(new Date(candles[candles.length - 1].t * 1000));
+  return candles.filter(c => {
+    const d = new Date(c.t * 1000);
+    if (brtDayKey(d) !== lastDay) return false;
+    const { hm } = brtParts(d);
+    return hm >= 540 && hm < 1080;
+  });
+}
+
+let buscando = false;
+async function buscarFeedsAoVivo() {
+  if (buscando) return;
+  buscando = true;
+  try { await _buscarFeeds(); } finally { buscando = false; }
+}
+async function _buscarFeeds() {
+  let feedOk = false;
+  let ibovOk = false;
+
+  // 1) Rota principal: função serverless /api/market (Yahoo + AwesomeAPI)
+  try {
+    const d = await fetchJson('/api/market');
+    if (d.ibov && d.ibov.price) {
+      const ib = d.ibov;
+      const sess = candlesDoPregao(ib.candles);
+      state.ibovPrice = ib.price;
+      state.ibovOpen = sess.length ? sess[0].o : (ib.prevClose || state.ibovOpen);
+      state.ibovHigh = ib.high || Math.max(state.ibovHigh, ib.price);
+      state.ibovLow = ib.low || Math.min(state.ibovLow, ib.price);
+      ibovOk = true; feedOk = true;
+      if (!state.winManual) $('srcWin').innerText = 'YAHOO LIVE';
+    }
+    if (d.brl && d.brl.price) {
+      const sess = candlesDoPregao(d.brl.candles);
+      state.usdPrice = d.brl.price;
+      if (sess.length) {
+        state.usdOpen = sess[0].o;
+        // 6L1 = 1 / USDBRL  (máx/mín se invertem)
+        state.candles6L1 = sess.map(c => {
+          const { hm } = brtParts(new Date(c.t * 1000));
+          return { open: 1 / c.o, close: 1 / c.c, high: 1 / c.l, low: 1 / c.h, slot: Math.floor((hm - 540) / 5) };
+        });
+        state.candlesReal = true;
+      } else if (d.brl.prevClose) {
+        state.usdOpen = d.brl.prevClose;
+      }
+      feedOk = true;
+    } else if (d.usd && d.usd.bid) {
+      state.usdPrice = d.usd.bid;
+      state.usdOpen = d.usd.bid / (1 + d.usd.pctChange / 100);
+      feedOk = true;
+    }
+  } catch (e) { /* segue para rotas alternativas */ }
+
+  // 1b) Sem servidor próprio (site estático): Yahoo via proxy público CORS
+  if (!ibovOk) {
+    const viaProxy = (sym) => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(sym)}?interval=5m&range=1d`);
+    const parseChart = (j) => {
+      const r = j && j.chart && j.chart.result && j.chart.result[0];
+      if (!r || !r.meta) return null;
+      const q = (r.indicators && r.indicators.quote && r.indicators.quote[0]) || {};
+      const candles = (r.timestamp || []).map((t, i) => ({ t, o: q.open?.[i], h: q.high?.[i], l: q.low?.[i], c: q.close?.[i] }))
+        .filter(c => [c.o, c.h, c.l, c.c].every(v => typeof v === 'number' && isFinite(v)));
+      return { price: r.meta.regularMarketPrice, prevClose: r.meta.chartPreviousClose, high: r.meta.regularMarketDayHigh, low: r.meta.regularMarketDayLow, candles };
+    };
+    try {
+      const ib = parseChart(await fetchJson(viaProxy('^BVSP'), 12000));
+      if (ib && ib.price) {
+        const sess = candlesDoPregao(ib.candles);
+        state.ibovPrice = ib.price;
+        state.ibovOpen = sess.length ? sess[0].o : (ib.prevClose || state.ibovOpen);
+        state.ibovHigh = ib.high || Math.max(state.ibovHigh, ib.price);
+        state.ibovLow = ib.low || Math.min(state.ibovLow, ib.price);
+        ibovOk = true; feedOk = true;
+        if (!state.winManual) $('srcWin').innerText = 'YAHOO LIVE';
+      }
+    } catch (e) {}
+    if (!state.candlesReal) {
+      try {
+        const br = parseChart(await fetchJson(viaProxy('BRL=X'), 12000));
+        if (br && br.price) {
+          const sess = candlesDoPregao(br.candles);
+          state.usdPrice = br.price;
+          if (sess.length) {
+            state.usdOpen = sess[0].o;
+            state.candles6L1 = sess.map(c => {
+              const { hm } = brtParts(new Date(c.t * 1000));
+              return { open: 1 / c.o, close: 1 / c.c, high: 1 / c.l, low: 1 / c.h, slot: Math.floor((hm - 540) / 5) };
+            });
+            state.candlesReal = true;
+          }
+          feedOk = true;
+        }
+      } catch (e) {}
+    }
+  }
+
+  // 2) Dólar direto da AwesomeAPI (caso a rota principal falhe)
+  if (!feedOk) {
+    try {
+      const dUsd = await fetchJson('https://economia.awesomeapi.com.br/json/last/USD-BRL');
+      if (dUsd.USDBRL) {
+        state.usdPrice = parseFloat(dUsd.USDBRL.bid);
+        const pctVar = parseFloat(dUsd.USDBRL.pctChange) || 0;
+        state.usdOpen = state.usdPrice / (1 + pctVar / 100);
+        feedOk = true;
+      }
+    } catch (e) {}
+  }
+
+  // 3) IBOV via Brapi (se houver token)
+  const token = $('inBrapi').value.trim();
+  if (token && !ibovOk) {
+    try {
+      const dB = await fetchJson(`https://brapi.dev/api/quote/%5EBVSP?token=${encodeURIComponent(token)}`);
+      if (dB.results && dB.results[0] && dB.results[0].regularMarketPrice) {
+        const res = dB.results[0];
+        state.ibovPrice = res.regularMarketPrice;
+        state.ibovOpen = res.regularMarketOpen || state.ibovOpen;
+        state.ibovHigh = res.regularMarketDayHigh || Math.max(state.ibovHigh, state.ibovPrice);
+        state.ibovLow = res.regularMarketDayLow || Math.min(state.ibovLow, state.ibovPrice);
+        if (!state.winManual) $('srcWin').innerText = 'BRAPI LIVE';
+        ibovOk = true; feedOk = true;
+      }
+    } catch (e) {}
+  }
+
+  const pill = $('statusPill');
+  const stTxt = $('statusText');
+  const hora = new Date().toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+  if (feedOk) {
+    pill.classList.remove('offline');
+    stTxt.innerText = ibovOk ? 'SISTEMA ATIVO' : 'PARCIAL (SÓ DÓLAR)';
+    $('lastSync').innerText = 'Última sinc: ' + hora;
+  } else {
+    pill.classList.add('offline');
+    stTxt.innerText = 'MODO LOCAL / SYNC';
+    $('lastSync').innerText = 'Sem rede — use Sync manual';
+  }
+  if (!ibovOk && !state.winManual) $('srcWin').innerText = 'ESTIMADO';
+
+  atualizarVela6L1Atual();
+  recalcularTudo();
+}
+
+function forcarAtualizacao() { buscarFeedsAoVivo(); }
+
+// Velas estimadas (só quando não há histórico real M5)
+function inicializarVelas6L1(open6, curr6) {
+  const { hm } = brtParts();
+  const totalSlots = Math.max(1, Math.min(108, Math.floor((Math.max(hm, 545) - 540) / 5)));
+  const arr = [];
+  let prevClose = open6;
+  for (let i = 0; i < totalSlots; i++) {
+    const target = open6 + (curr6 - open6) * ((i + 1) / totalSlots);
+    const wave = Math.sin(i * 0.45) * 0.00028;
+    const close = i === totalSlots - 1 ? curr6 : target + wave;
+    const open = prevClose;
+    arr.push({ open, close, high: Math.max(open, close) + 0.00016, low: Math.min(open, close) - 0.00016, slot: i });
+    prevClose = close;
+  }
+  state.candles6L1 = arr;
+}
+
+function atualizarVela6L1Atual() {
+  const curr6 = 1 / state.usdPrice;
+  const open6 = 1 / state.usdOpen;
+  if (state.candlesReal) {
+    $('candleSrc').innerText = 'VELAS M5 REAIS';
+    $('candleSrc').style.color = 'var(--green)';
+  } else {
+    if (state.candles6L1.length === 0) inicializarVelas6L1(open6, curr6);
+    const last = state.candles6L1[state.candles6L1.length - 1];
+    last.close = curr6;
+    last.high = Math.max(last.high, curr6);
+    last.low = Math.min(last.low, curr6);
+    $('candleSrc').innerText = 'VELAS ESTIMADAS';
+    $('candleSrc').style.color = 'var(--yellow)';
+  }
+}
+
+// =========================================================
+// MOTOR QUANT
+// =========================================================
+function num(id, def) { const v = parseFloat($(id).value); return isNaN(v) ? def : v; }
+
+function recalcularTudo() {
+  const cw2Ibov = num('inCw2', 182000);
+  const cw1Ibov = num('inCw1', 179000);
+  const flipIbov = num('inFlip', 169724);
+  const pw1Ibov = num('inPw1', 162000);
+  const pw2Ibov = num('inPw2', 158500);
+  const diRate = num('inDi1', 13.85);
+  const diBps = num('inDiBps', 0);
+  const du = num('inDu', 15);
+  const cvgMode = $('inCvgMode').value;
+
+  const fatorDi = Math.pow(1 + diRate / 100, du / 252) - 1;
+  if (state.winManual) {
+    // Sync manual: o WIN informado manda; IBOV é derivado
+    state.winPrice = state.winManual;
+    state.agio = Math.round(state.winManual - state.winManual / (1 + fatorDi));
+    state.ibovPrice = state.winManual - state.agio;
+    state.ibovHigh = Math.max(state.ibovHigh, state.ibovPrice);
+    state.ibovLow = Math.min(state.ibovLow, state.ibovPrice);
+  } else {
+    state.agio = Math.round(state.ibovPrice * fatorDi);
+    state.winPrice = Math.round(state.ibovPrice + state.agio);
+  }
+  const win = state.winPrice;
+  // Projeção dos strikes no WIN usando o mesmo fator de carrego
+  const proj = (v) => Math.round(v * (1 + fatorDi));
+  const cw2 = proj(cw2Ibov), cw1 = proj(cw1Ibov), flip = proj(flipIbov), pw1 = proj(pw1Ibov), pw2 = proj(pw2Ibov);
+  state.levels = { cw2, cw1, flip, pw1, pw2 };
+
+  const ibovPct = ((state.ibovPrice - state.ibovOpen) / state.ibovOpen) * 100;
+  const curr6 = 1 / state.usdPrice;
+  const open6 = 1 / state.usdOpen;
+  const pct6l1 = ((curr6 - open6) / open6) * 100;
+  const pctUsd = ((state.usdPrice - state.usdOpen) / state.usdOpen) * 100;
+
+  // KPIs
+  $('kpiWin').innerText = fmt(win);
+  $('kpiWinSub').innerText = `Ágio DI (${du}du): +${fmt(state.agio)} pts`;
+  $('kpiIbov').innerText = fmt(state.ibovPrice);
+  const elIbovPct = $('kpiIbovPct');
+  elIbovPct.innerText = `${sign(ibovPct)}${ibovPct.toFixed(2)}%`;
+  elIbovPct.className = ibovPct >= 0 ? 'up' : 'down';
+  $('kpiIbovRange').innerText = `Abert: ${fmt(state.ibovOpen)} • Máx ${fmt(state.ibovHigh)} • Mín ${fmt(state.ibovLow)}`;
+  $('kpi6l1').innerText = curr6.toFixed(5);
+  const el6Pct = $('kpi6l1Pct');
+  el6Pct.innerText = `${sign(pct6l1)}${pct6l1.toFixed(2)}%`;
+  el6Pct.className = pct6l1 >= 0 ? 'up' : 'down';
+  $('kpi6l1Sub').innerText = pct6l1 >= 0 ? 'Real forte (Fluxo +)' : 'Real fraco (Saída -)';
+  $('kpiUsd').innerText = 'R$ ' + state.usdPrice.toFixed(4).replace('.', ',');
+  const elUsdPct = $('kpiUsdPct');
+  elUsdPct.innerText = `${sign(pctUsd)}${pctUsd.toFixed(2)}%`;
+  elUsdPct.className = pctUsd <= 0 ? 'up' : 'down';
+  $('kpiDi').innerText = diRate.toFixed(2).replace('.', ',') + '%';
+  const elDiBps = $('kpiDiBps');
+  elDiBps.innerText = `${sign(diBps)}${diBps} bps`;
+  elDiBps.className = diBps <= 0 ? 'up' : 'down';
+  $('kpiDiSub').innerText = diBps <= 0 ? 'Fechando curva (Alívio)' : 'Abrindo curva (Estresse)';
+
+  // Janela institucional (horário de Brasília)
+  const { hm } = brtParts();
+  let winLabel = 'Pregão Regular', riskLabel = 'NORMAL';
+  if (hm < 540 || hm >= 1095) { winLabel = 'Fora do Pregão'; riskLabel = 'FECHADO'; }
+  else if (hm < 600) { winLabel = 'Pré-abertura (WIN 9h)'; riskLabel = 'MODERADO'; }
+  else if (hm < 630) { winLabel = 'Abertura B3 (10h)'; riskLabel = 'ALTO'; }
+  else if (hm >= 690 && hm < 720) { winLabel = 'Abertura NYSE (11h30)'; riskLabel = 'ALTO'; }
+  else if (hm >= 770 && hm < 795) { winLabel = 'Janela PTAX (13h)'; riskLabel = 'MODERADO'; }
+  else if (hm >= 950 && hm < 975) { winLabel = 'Ajuste B3 (16h)'; riskLabel = 'ALTO'; }
+  else if (hm >= 975) { winLabel = 'Fluxo Charm / Fim Dia'; riskLabel = 'MODERADO'; }
+  $('kpiWindow').innerText = winLabel;
+  const elRisk = $('kpiRisk');
+  elRisk.innerText = riskLabel;
+  elRisk.className = riskLabel === 'ALTO' ? 'down' : (riskLabel === 'NORMAL' ? 'up' : 'warn');
+
+  // Score
+  const isLongGamma = win >= flip;
+  let ptsMomentum = 0, ptsGexStruct = 0, ptsMacro = 0, ptsCvg = 0;
+  if (ibovPct >= 1.2) ptsMomentum = 40;
+  else if (ibovPct >= 0.5) ptsMomentum = 28;
+  else if (ibovPct >= 0.15) ptsMomentum = 15;
+  else if (ibovPct <= -1.2) ptsMomentum = -40;
+  else if (ibovPct <= -0.5) ptsMomentum = -28;
+  else if (ibovPct <= -0.15) ptsMomentum = -15;
+
+  if (isLongGamma) {
+    ptsGexStruct = (win >= cw1 - 400) ? -35 : 20;
+  } else {
+    if (win <= pw1 + 400 && ibovPct > -0.3) ptsGexStruct = 30;
+    else if (ibovPct > 0.35) ptsGexStruct = 25;
+    else if (ibovPct < -0.35) ptsGexStruct = -30;
+    else ptsGexStruct = -10;
+  }
+
+  if (pct6l1 > 0.15) ptsMacro += 15; else if (pct6l1 < -0.15) ptsMacro -= 15;
+  if (diBps <= -3) ptsMacro += 15; else if (diBps >= 3) ptsMacro -= 15;
+
+  if (cvgMode === 'comprador') ptsCvg = 20;
+  else if (cvgMode === 'vendedor') ptsCvg = -20;
+  else if (cvgMode === 'absorcao_topo') ptsCvg = -35;
+  else if (cvgMode === 'exaustao_fundo') ptsCvg = 35;
+  else ptsCvg = Math.round(ptsMomentum * 0.3);
+
+  let totalScore = Math.max(-100, Math.min(100, ptsMomentum + ptsGexStruct + ptsMacro + ptsCvg));
+  const macroContraCompra = (pct6l1 < -0.2 && diBps >= 4);
+  const macroContraVenda = (pct6l1 > 0.2 && diBps <= -4);
+  let travaAtiva = false;
+  if (totalScore > 35 && macroContraCompra) { totalScore = 35; travaAtiva = true; }
+  if (totalScore < -35 && macroContraVenda) { totalScore = -35; travaAtiva = true; }
+  state.lastScore = totalScore;
+
+  // Régua GEX
+  const minScale = Math.min(pw2, win) - 1500;
+  const maxScale = Math.max(cw2, win) + 1500;
+  const toPct = (v) => Math.max(2, Math.min(98, ((v - minScale) / (maxScale - minScale)) * 100));
+  const pFlip = toPct(flip);
+  $('zoneShort').style.width = pFlip + '%';
+  $('zoneLong').style.width = (100 - pFlip) + '%';
+  $('mPw2').style.left = toPct(pw2) + '%';
+  $('mPw1').style.left = toPct(pw1) + '%';
+  $('mFlip').style.left = pFlip + '%';
+  $('mCw1').style.left = toPct(cw1) + '%';
+  $('mCw2').style.left = toPct(cw2) + '%';
+  $('tPw2').innerText = `PW2 ${(pw2 / 1000).toFixed(1)}k`;
+  $('tPw1').innerText = `PW1 ${(pw1 / 1000).toFixed(1)}k`;
+  $('tFlip').innerText = `FLIP ${(flip / 1000).toFixed(1)}k`;
+  $('tCw1').innerText = `CW1 ${(cw1 / 1000).toFixed(1)}k`;
+  $('tCw2').innerText = `CW2 ${(cw2 / 1000).toFixed(1)}k`;
+  $('winPin').style.left = toPct(win) + '%';
+  $('winPinBadge').innerText = `WIN ${fmt(win)}`;
+
+  const regBanner = $('regimeBanner');
+  regBanner.innerText = isLongGamma ? 'REGIME: LONG GAMMA (VOLATILIDADE COMPRIMIDA)' : 'REGIME: SHORT GAMMA (VOLATILIDADE EXPANDIDA)';
+  regBanner.style.color = isLongGamma ? 'var(--green)' : 'var(--yellow)';
+  $('kpiLot').innerText = `Lote Sugerido: ${isLongGamma ? '100%' : '50% (Short Gamma)'}`;
+
+  // Termômetro
+  $('thermoNeedle').style.left = ((totalScore + 100) / 200) * 100 + '%';
+  let labelAction = 'NEUTRO / AGUARDAR', colorAction = 'var(--muted)';
+  if (totalScore >= 55) { labelAction = 'COMPRA FORTE (FLUXO ALINHADO)'; colorAction = 'var(--green)'; }
+  else if (totalScore >= 20) { labelAction = 'COMPRA TÁTICA / RETOMADA'; colorAction = '#4ade80'; }
+  else if (totalScore <= -55) { labelAction = 'VENDA FORTE (PRESSÃO INSTITUCIONAL)'; colorAction = 'var(--red)'; }
+  else if (totalScore <= -20) { labelAction = 'VENDA TÁTICA / REALIZAÇÃO'; colorAction = '#f87171'; }
+  state.lastAction = labelAction;
+  const scEl = $('scoreReadout');
+  scEl.innerText = `SCORE: ${sign(totalScore)}${totalScore} (${labelAction})`;
+  scEl.style.color = colorAction;
+
+  $('auditPills').innerHTML =
+    `<span class="apill">Momentum Preço: <strong>${sign(ptsMomentum)}${ptsMomentum}</strong></span>` +
+    `<span class="apill">Estrutura GEX: <strong>${sign(ptsGexStruct)}${ptsGexStruct}</strong></span>` +
+    `<span class="apill">Macro (6L1 + DI1): <strong>${sign(ptsMacro)}${ptsMacro}</strong></span>` +
+    `<span class="apill">Leitura CVG: <strong>${sign(ptsCvg)}${ptsCvg}</strong></span>` +
+    (travaAtiva ? '<span class="apill" style="border-color:var(--yellow);color:var(--yellow);">⚠ TRAVA MACRO ATIVA</span>' : '');
+
+  atualizarParecerAnalista(win, flip, cw1, cw2, pw1, pw2, isLongGamma, totalScore, pct6l1, diBps);
+  atualizarTabelaNiveis(win, cw2Ibov, cw1Ibov, flipIbov, pw1Ibov, pw2Ibov, cw2, cw1, flip, pw1, pw2);
+  desenharVelas6L1();
+}
+
+function atualizarParecerAnalista(win, flip, cw1, cw2, pw1, pw2, isLongGamma, score, pct6l1, diBps) {
+  const distFlip = flip - win;
+  let tese = '', entry = '', tp1 = '', tp2 = '', stop = '';
+  const conf = ` Confluência: 6L1 em <strong>${sign(pct6l1)}${pct6l1.toFixed(2)}%</strong> e DI1 em <strong>${sign(diBps)}${diBps} bps</strong>.`;
+
+  if (score >= 20) {
+    tese = `<strong>Viés Comprador (${isLongGamma ? 'Long Gamma' : 'Short Squeeze rumo ao Flip'}):</strong> O WIN negocia a <strong>${fmt(win)} pts</strong> com momentum positivo. `;
+    tese += !isLongGamma
+      ? `Mesmo abaixo do Gamma Flip (<strong>${fmt(flip)}</strong>), a recuperação força os dealers a recomprarem delta hedge, alimentando a pernada de alta até o Flip (${fmt(Math.abs(distFlip))} pts de alvo).`
+      : `Acima do Gamma Flip, o fluxo comprador caminha de forma controlada em direção à Call Wall 1 (<strong>${fmt(cw1)}</strong>).`;
+    tese += conf;
+    entry = `${fmt(win - 150)} / ${fmt(win)}`;
+    const acima = [pw2, pw1, flip, cw1, cw2].filter(l => l > win + 100).sort((a, b) => a - b);
+    const t1 = acima[0] ?? win + 600;
+    tp1 = fmt(t1);
+    tp2 = fmt(acima[1] ?? t1 + 600);
+    stop = fmt(win - 650);
+  } else if (score <= -20) {
+    tese = `<strong>Viés Vendedor (${isLongGamma ? 'Absorção na Call Wall' : 'Short Gamma Acelerado'}):</strong> O WIN em <strong>${fmt(win)} pts</strong> enfrenta pressão vendedora. `;
+    tese += !isLongGamma
+      ? `Abaixo do Gamma Flip, os dealers vendem futuros a favor da queda para proteger puts, criando magnetismo em direção à Put Wall 1 (<strong>${fmt(pw1)}</strong>).`
+      : `Próximo à Call Wall, a absorção passiva favorece realização de lucro de volta ao Gamma Flip (<strong>${fmt(flip)}</strong>).`;
+    tese += conf;
+    entry = `${fmt(win)} / ${fmt(win + 150)}`;
+    const abaixo = [pw2, pw1, flip, cw1, cw2].filter(l => l < win - 100).sort((a, b) => b - a);
+    const t1 = abaixo[0] ?? win - 600;
+    tp1 = fmt(t1);
+    tp2 = fmt(abaixo[1] ?? t1 - 600);
+    stop = fmt(win + 650);
+  } else {
+    tese = `<strong>Zona de Equilíbrio / Aguardar Confirmação:</strong> O WIN está em <strong>${fmt(win)} pts</strong> sem alinhamento pleno entre preço, GEX e macro (6L1 ${pct6l1.toFixed(2)}% | DI1 ${diBps} bps). Evite antecipar rompimentos no meio do range; aguarde teste da Put Wall 1 (<strong>${fmt(pw1)}</strong>) ou rompimento confirmado do Gamma Flip (<strong>${fmt(flip)}</strong>).`;
+    entry = 'Aguardar Gatilho';
+    tp1 = fmt(flip);
+    tp2 = fmt(cw1);
+    stop = 'Fora de posição';
+  }
+  state.lastThesis = tese.replace(/<[^>]*>/g, '');
+  $('analystThesis').innerHTML = tese;
+  $('planEntry').innerText = entry;
+  $('planTp1').innerText = tp1;
+  $('planTp2').innerText = tp2;
+  $('planStop').innerText = stop;
+
+  const badge = $('conviccaoBadge');
+  const absS = Math.abs(score);
+  if (absS >= 55) { badge.innerText = 'CONVICÇÃO: ALTA'; badge.style.background = 'rgba(16,185,129,0.22)'; badge.style.color = '#6ee7b7'; }
+  else if (absS >= 25) { badge.innerText = 'CONVICÇÃO: MODERADA'; badge.style.background = 'rgba(250,204,21,0.2)'; badge.style.color = '#fde047'; }
+  else { badge.innerText = 'CONVICÇÃO: BAIXA (AGUARDAR)'; badge.style.background = 'rgba(148,163,184,0.2)'; badge.style.color = '#cbd5e1'; }
+}
+
+function atualizarTabelaNiveis(win, cw2I, cw1I, flipI, pw1I, pw2I, cw2, cw1, flip, pw1, pw2) {
+  const rows = [
+    { name: 'Call Wall 2 (Exaustão Máxima)', ib: cw2I, w: cw2, col: 'var(--red)', desc: 'Barreira extrema de calls; venda pesada de hedge.' },
+    { name: 'Call Wall 1 (Resistência Primária)', ib: cw1I, w: cw1, col: '#f87171', desc: 'Teto institucional; dealers travam altas.' },
+    { name: 'Gamma Flip (Ponto de Virada)', ib: flipI, w: flip, col: 'var(--yellow)', desc: 'Divisor entre Short Gamma (abaixo) e Long Gamma (acima).' },
+    { name: 'Put Wall 1 (Suporte Primário)', ib: pw1I, w: pw1, col: '#4ade80', desc: 'Piso institucional; alta chance de exaustão e repique.' },
+    { name: 'Put Wall 2 (Suporte Extremo)', ib: pw2I, w: pw2, col: 'var(--green)', desc: 'Defesa máxima de puts; desmonte de hedge gera squeeze.' }
+  ];
+  $('levelsTableBody').innerHTML = rows.map(r => {
+    const dist = r.w - win;
+    return `<tr>
+      <td style="color:${r.col};font-weight:700">${r.name}</td>
+      <td>${fmt(r.ib)}</td>
+      <td><strong>${fmt(r.w)}</strong></td>
+      <td class="${dist >= 0 ? 'up' : 'down'}">${sign(dist)}${fmt(dist)} pts</td>
+      <td style="color:var(--muted)">${r.desc}</td>
+    </tr>`;
+  }).join('');
+}
+
+// =========================================================
+// GRÁFICO DE VELAS 6L1
+// =========================================================
+function desenharVelas6L1() {
+  const canvas = $('candleCanvas');
+  const dpr = window.devicePixelRatio || 1;
+  const cssW = canvas.clientWidth || 600, cssH = canvas.clientHeight || 295;
+  if (canvas.width !== Math.round(cssW * dpr) || canvas.height !== Math.round(cssH * dpr)) {
+    canvas.width = Math.round(cssW * dpr);
+    canvas.height = Math.round(cssH * dpr);
+  }
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const W = cssW, H = cssH;
+  ctx.clearRect(0, 0, W, H);
+  const candles = state.candles6L1;
+  if (!candles.length) return;
+
+  const openDay = 1 / state.usdOpen;
+  let minP = openDay, maxP = openDay;
+  candles.forEach(c => { if (c.low < minP) minP = c.low; if (c.high > maxP) maxP = c.high; });
+  const pad = (maxP - minP) * 0.15 || 0.0005;
+  minP -= pad; maxP += pad;
+
+  const padL = 12, padR = 62, padT = 18, padB = 24;
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+  const toY = (price) => padT + ((maxP - price) / (maxP - minP)) * plotH;
+
+  ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 1;
+  ctx.font = '10px monospace'; ctx.fillStyle = '#94a3b8';
+  for (let i = 0; i <= 4; i++) {
+    const y = padT + (plotH / 4) * i;
+    const val = maxP - ((maxP - minP) / 4) * i;
+    ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(W - padR, y); ctx.stroke();
+    ctx.fillText(val.toFixed(5), W - padR + 5, y + 3);
+  }
+
+  const yOpen = toY(openDay);
+  ctx.save();
+  ctx.strokeStyle = '#facc15'; ctx.setLineDash([4, 4]);
+  ctx.beginPath(); ctx.moveTo(padL, yOpen); ctx.lineTo(W - padR, yOpen); ctx.stroke();
+  ctx.restore();
+
+  const totalDaySlots = 108; // 09:00–18:00 em M5
+  const stepX = plotW / totalDaySlots;
+  const bodyW = Math.max(1.5, stepX * 0.68);
+  candles.forEach(c => {
+    const x = padL + c.slot * stepX + stepX / 2;
+    const color = c.close >= c.open ? '#10b981' : '#ef4444';
+    ctx.strokeStyle = color; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(x, toY(c.high)); ctx.lineTo(x, toY(c.low)); ctx.stroke();
+    const yTop = toY(Math.max(c.open, c.close));
+    const yBot = toY(Math.min(c.open, c.close));
+    ctx.fillStyle = color;
+    ctx.fillRect(x - bodyW / 2, yTop, bodyW, Math.max(1.5, yBot - yTop));
+  });
+
+  ctx.fillStyle = '#64748b'; ctx.font = '10px sans-serif';
+  [9, 11, 13, 15, 17].forEach(h => {
+    const x = padL + ((h - 9) * 12) * stepX;
+    ctx.fillText(String(h).padStart(2, '0') + ':00', Math.min(W - padR - 28, x), H - 6);
+  });
+
+  const lastC = candles[candles.length - 1];
+  $('c6Open').innerText = 'Abert: ' + openDay.toFixed(5);
+  $('c6High').innerText = 'Máx: ' + Math.max(...candles.map(c => c.high)).toFixed(5);
+  $('c6Low').innerText = 'Mín: ' + Math.min(...candles.map(c => c.low)).toFixed(5);
+  $('c6Close').innerText = 'Atual: ' + lastC.close.toFixed(5);
+}
+
+// =========================================================
+// IA GENERATIVA (LLM)
+// =========================================================
+function montarContextoMercado() {
+  const { cw1, cw2, flip, pw1, pw2 } = state.levels;
+  const curr6 = 1 / state.usdPrice;
+  const open6 = 1 / state.usdOpen;
+  const pct6 = ((curr6 - open6) / open6) * 100;
+  return `DADOS AO VIVO DO TERMINAL (${new Date().toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo' })} BRT):
+• WIN Futuro: ${Math.round(state.winPrice)} pts (Ágio DI: +${state.agio} pts)
+• IBOV à Vista: ${Math.round(state.ibovPrice)} pts (Abertura: ${Math.round(state.ibovOpen)}, Máx ${Math.round(state.ibovHigh)}, Mín ${Math.round(state.ibovLow)})
+• Regime GEX Atual: ${state.winPrice >= flip ? 'LONG GAMMA (Volatilidade amortecida)' : 'SHORT GAMMA (Volatilidade expandida)'}
+• Níveis GEX projetados no WIN: CW2=${cw2} | CW1=${cw1} | Gamma Flip=${flip} | PW1=${pw1} | PW2=${pw2}
+• 6L1 (BRL/USD): ${curr6.toFixed(5)} (${sign(pct6)}${pct6.toFixed(2)}% no dia)
+• Dólar Spot: R$ ${state.usdPrice.toFixed(4)}
+• DI1 Futuro: ${$('inDi1').value}% a.a. (Variação intradiária: ${$('inDiBps').value} bps)
+• Leitura CVG selecionada: ${$('inCvgMode').value}
+• Score Quantitativo do Termômetro: ${state.lastScore} (-100 Venda Forte a +100 Compra Forte) | Sinal: ${state.lastAction}`;
+}
+
+function perguntarRapido(texto) { $('chatInput').value = texto; enviarPergunta(); }
+
+function formatarResposta(txt) {
+  return escHtml(txt).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+}
+
+async function enviarPergunta() {
+  const input = $('chatInput');
+  const q = input.value.trim();
+  if (!q) return;
+  input.value = '';
+  const log = $('chatLog');
+  const uDiv = document.createElement('div');
+  uDiv.className = 'msg user'; uDiv.textContent = q;
+  log.appendChild(uDiv);
+  const aDiv = document.createElement('div');
+  aDiv.className = 'msg ai'; aDiv.textContent = '⏳ Analisando fluxo institucional e curva GEX...';
+  log.appendChild(aDiv);
+  log.scrollTop = log.scrollHeight;
+
+  const prov = $('aiProvider').value;
+  const key = $('aiApiKey').value.trim();
+  const model = $('aiModel').value.trim();
+  const systemPrompt = `Você é um Analista Sênior de Derivativos, Fluxo Institucional e Mesa Proprietária especializado em Mini Índice (WIN), Ibovespa, Gamma Exposure (GEX), Vanna/Charm, 6L1 (BRL Futures CME) e Curva de Juros (DI1).
+Responda em português do Brasil de forma objetiva, técnica, direta e acionável (máximo 2 parágrafos curtos ou tópicos diretos).
+Sempre baseie sua resposta nos números exatos fornecidos no snapshot ao vivo abaixo, apontando gatilho de entrada, alvos (Gamma Flip / Walls), risco de armadilha (trap) e confluência com 6L1/DI1. Os dados ao vivo estão abaixo.
+${montarContextoMercado()}`;
+
+  if (key || prov === 'custom') {
+    try {
+      let endpoint = 'https://api.groq.com/openai/v1/chat/completions';
+      let modelName = model || 'llama-3.3-70b-versatile';
+      if (prov === 'openai') {
+        endpoint = 'https://api.openai.com/v1/chat/completions';
+        modelName = model || 'gpt-4o-mini';
+      } else if (prov === 'custom') {
+        endpoint = model || 'http://localhost:11434/v1/chat/completions';
+        modelName = 'llama3';
+      }
+      const headers = { 'Content-Type': 'application/json' };
+      if (key) headers['Authorization'] = `Bearer ${key}`;
+      const resp = await fetch(endpoint, {
+        method: 'POST', headers,
+        body: JSON.stringify({
+          model: modelName, temperature: 0.25, max_tokens: 500,
+          messages: [{ role: 'system', content: systemPrompt }, ...state.chatHistory.slice(-4), { role: 'user', content: q }]
+        })
+      });
+      if (!resp.ok) {
+        let detail = '';
+        try { const e = await resp.json(); detail = (e.error && e.error.message) || ''; } catch (_) {}
+        throw new Error(`HTTP ${resp.status}${detail ? ' — ' + detail : ''}`);
+      }
+      const data = await resp.json();
+      const answer = data.choices[0].message.content.trim();
+      state.chatHistory.push({ role: 'user', content: q }, { role: 'assistant', content: answer });
+      aDiv.innerHTML = `<strong>Analista IA (${escHtml(prov.toUpperCase())}):</strong> ${formatarResposta(answer)}`;
+    } catch (err) {
+      aDiv.innerHTML = `<strong>Analista IA (Fallback Local — erro: ${escHtml(err.message)}):</strong> ${escHtml(respostaQuantLocal(q))}`;
+    }
+    log.scrollTop = log.scrollHeight;
+    return;
+  }
+
+  setTimeout(() => {
+    aDiv.innerHTML = `<strong>Analista Quant (Modo Local):</strong> ${escHtml(respostaQuantLocal(q))}\n\n<em style="color:#94a3b8;font-size:0.74rem;">Dica: crie uma chave gratuita em console.groq.com e cole em ⚙ Calibrar / IA para ativar respostas generativas.</em>`;
+    log.scrollTop = log.scrollHeight;
+  }, 300);
+}
+
+function respostaQuantLocal(q) {
+  const win = state.winPrice;
+  const { cw1, flip, pw1 } = state.levels;
+  const isLong = win >= flip;
+  const curr6 = 1 / state.usdPrice;
+  const pct6 = ((curr6 - 1 / state.usdOpen) / (1 / state.usdOpen)) * 100;
+  const diBps = num('inDiBps', 0);
+  return `Com o WIN a ${fmt(win)} pts (${isLong ? 'Long Gamma' : 'Short Gamma'}), Score ${state.lastScore} (${state.lastAction}), 6L1 em ${sign(pct6)}${pct6.toFixed(2)}% e DI1 em ${diBps} bps: ${state.lastThesis} Referências imediatas: Suporte PW1 em ${fmt(pw1)}, Virada Flip em ${fmt(flip)} e Teto CW1 em ${fmt(cw1)}.`;
+}
+
+// =========================================================
+// INICIALIZAÇÃO
+// =========================================================
+window.addEventListener('DOMContentLoaded', () => {
+  carregarConfig();
+  atualizarRelogio();
+  setInterval(atualizarRelogio, 1000);
+  atualizarVela6L1Atual();
+  recalcularTudo();
+  buscarFeedsAoVivo();
+  setInterval(buscarFeedsAoVivo, 15000);
+  window.addEventListener('resize', desenharVelas6L1);
+});
+</script>
+</body>
+</html>
