@@ -491,6 +491,7 @@ async function buscarFeedsAoVivo() {
 }
 async function _buscarFeeds() {
   let feedOk = false;
+  let usdOk = false;
   let ibovOk = false;
 
   // 1) Rota principal: função serverless /api/market (Yahoo + AwesomeAPI)
@@ -509,6 +510,7 @@ async function _buscarFeeds() {
     if (d.brl && d.brl.price) {
       const sess = candlesDoPregao(d.brl.candles);
       state.usdPrice = d.brl.price;
+      usdOk = true;
       if (sess.length) {
         state.usdOpen = sess[0].o;
         // 6L1 = 1 / USDBRL  (máx/mín se invertem)
@@ -523,6 +525,7 @@ async function _buscarFeeds() {
       feedOk = true;
     } else if (d.usd && d.usd.bid) {
       state.usdPrice = d.usd.bid;
+      usdOk = true;
       state.usdOpen = d.usd.bid / (1 + d.usd.pctChange / 100);
       feedOk = true;
     }
@@ -557,6 +560,7 @@ async function _buscarFeeds() {
         if (br && br.price) {
           const sess = candlesDoPregao(br.candles);
           state.usdPrice = br.price;
+          usdOk = true;
           if (sess.length) {
             state.usdOpen = sess[0].o;
             state.candles6L1 = sess.map(c => {
@@ -572,11 +576,12 @@ async function _buscarFeeds() {
   }
 
   // 2) Dólar direto da AwesomeAPI (caso a rota principal falhe)
-  if (!feedOk) {
+  if (!usdOk) {
     try {
       const dUsd = await fetchJson('https://economia.awesomeapi.com.br/json/last/USD-BRL');
       if (dUsd.USDBRL) {
         state.usdPrice = parseFloat(dUsd.USDBRL.bid);
+        usdOk = true;
         const pctVar = parseFloat(dUsd.USDBRL.pctChange) || 0;
         state.usdOpen = state.usdPrice / (1 + pctVar / 100);
         feedOk = true;
@@ -584,8 +589,22 @@ async function _buscarFeeds() {
     } catch (e) {}
   }
 
-  // 3) IBOV via Brapi (se houver token)
   const token = $('inBrapi').value.trim();
+  // 3a) Dólar via Brapi (com token) quando as rotas grátis falharem
+  if (token && !usdOk) {
+    try {
+      const dC = await fetchJson(`https://brapi.dev/api/v2/currency?currency=USD-BRL&token=${encodeURIComponent(token)}`);
+      const c = dC && dC.currency && dC.currency[0];
+      const bid = c && parseFloat(c.bidPrice);
+      if (bid > 0) {
+        const pct = parseFloat(c.percentageChange) || 0;
+        state.usdPrice = bid;
+        state.usdOpen = bid / (1 + pct / 100);
+        usdOk = true; feedOk = true;
+      }
+    } catch (e) {}
+  }
+  // 3) IBOV via Brapi (se houver token)
   if (token && !ibovOk) {
     try {
       const dB = await fetchJson(`https://brapi.dev/api/quote/%5EBVSP?token=${encodeURIComponent(token)}`);
@@ -606,12 +625,12 @@ async function _buscarFeeds() {
   const hora = new Date().toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo' });
   if (feedOk) {
     pill.classList.remove('offline');
-    stTxt.innerText = ibovOk ? 'SISTEMA ATIVO' : 'PARCIAL (SÓ DÓLAR)';
+    stTxt.innerText = ibovOk && usdOk ? 'SISTEMA ATIVO' : ibovOk ? 'PARCIAL (SÓ IBOV)' : 'PARCIAL (SÓ DÓLAR)';
     $('lastSync').innerText = 'Última sinc: ' + hora;
   } else {
     pill.classList.add('offline');
     stTxt.innerText = 'MODO LOCAL / SYNC';
-    $('lastSync').innerText = 'Sem rede — use Sync manual';
+    $('lastSync').innerText = token ? 'Fontes sem resposta — confira o token Brapi' : 'Fontes grátis fora — cole token Brapi em ⚙';
   }
   if (!ibovOk && !state.winManual) $('srcWin').innerText = 'ESTIMADO';
 
