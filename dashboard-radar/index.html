@@ -49,8 +49,8 @@
   .hint { font-size: .72rem; color: var(--muted); margin: 0 0 8px; line-height: 1.45; }
 
   /* Faixa macro */
-  .macro { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
-  @media (max-width: 1150px) { .macro { grid-template-columns: repeat(3, 1fr); } }
+  .macro { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
+  @media (max-width: 1250px) { .macro { grid-template-columns: repeat(4, 1fr); } }
   @media (max-width: 560px) { .macro { grid-template-columns: repeat(2, 1fr); } }
   .kpi .lbl { font-size: .68rem; color: var(--muted); text-transform: uppercase; display: flex; justify-content: space-between; gap: 6px; }
   .kpi .val { font-size: 1.25rem; font-weight: 800; margin: 4px 0 2px; font-variant-numeric: tabular-nums; }
@@ -112,12 +112,13 @@
   <div class="card row between">
     <div>
       <h1>RADAR GEX MULTI-ATIVOS — B3 + EWZ</h1>
-      <div class="sub">Cotações ao vivo (Yahoo · Brapi · Finnhub) • Níveis GEX Investorama / B3Lab • 6L1 CME • S&amp;P 500 • Analista IA Groq</div>
+      <div class="sub">Cotações ao vivo (B3 · Yahoo · Finnhub · Brapi) • Níveis GEX Investorama / B3Lab • 6L1 CME • S&amp;P 500 • Analista IA Groq</div>
     </div>
     <div class="row">
       <span class="pill off" id="pSrv"><span class="dot"></span>SERVIDOR YAHOO</span>
       <span class="pill off" id="pBrapi"><span class="dot"></span>BRAPI</span>
       <span class="pill off" id="pFinn"><span class="dot"></span>FINNHUB</span>
+      <span class="pill off" id="pB3"><span class="dot"></span>B3</span>
       <div style="text-align:right"><div class="clock" id="clock">--:--:-- BRT</div><div class="sub" id="lastUpd">aguardando dados…</div></div>
       <button class="btn ghost" id="btnRefresh" type="button">↻ Atualizar</button>
       <button class="btn" id="btnCfg" type="button">⚙ Configurar</button>
@@ -140,19 +141,20 @@
       <div class="f" style="display:flex;align-items:flex-end"><button class="btn" id="btnApply" type="button" style="width:100%">Aplicar níveis</button></div>
     </div>
 
-    <div class="sec"><span>2. WIN (o WIN não tem cotação gratuita ao vivo)</span></div>
-    <p class="hint">O WIN é calculado a partir do IBOV ao vivo. Para usar o ágio real, digite o preço do WIN da sua plataforma e clique em Sincronizar: o painel guarda a razão WIN/IBOV e o WIN passa a acompanhar o IBOV com esse ágio.</p>
+    <div class="sec"><span>2. WIN e DI1</span></div>
+    <p class="hint">O WIN vem direto da B3 (contrato vigente escolhido sozinho, ex. WINZ26), junto com o DI1. Os campos abaixo só são usados se a B3 não responder: aí o WIN é calculado pelo IBOV, ou fica o preço que você digitar em Sincronizar.</p>
     <div class="grid-f">
       <div class="f"><label for="winSync">Preço atual do WIN</label><input id="winSync" type="number" step="5" placeholder="ex: 175200"></div>
       <div class="f" style="display:flex;align-items:flex-end;gap:6px"><button class="btn" id="btnWinSync" type="button" style="flex:1">Sincronizar</button><button class="btn ghost" id="btnWinAuto" type="button">Auto</button></div>
       <div class="f"><label for="winUnit">Níveis do WIN estão em</label><select id="winUnit"><option value="win">Pontos do WIN</option><option value="ibov">Pontos do IBOV (projetar)</option></select></div>
-      <div class="f"><label for="di">DI1 (% a.a.) p/ ágio teórico</label><input id="di" type="number" step="0.01"></div>
+      <div class="f"><label for="di">DI1 (% a.a.) se a B3 falhar</label><input id="di" type="number" step="0.01"></div>
+      <div class="f"><label for="diCode">Contrato DI1 (vazio = auto)</label><input id="diCode" type="text" placeholder="ex: DI1F28"></div>
       <div class="f"><label for="du">Dias úteis até venc. <span id="duHint" style="text-transform:none;color:var(--accent)"></span></label><input id="du" type="number" step="1"></div>
     </div>
 
     <div class="sec"><span>3. Chaves de API (salvas só neste navegador)</span>
       <span class="links"><a href="https://brapi.dev" target="_blank" rel="noopener">↗ Token Brapi (grátis)</a><a href="https://finnhub.io/register" target="_blank" rel="noopener">↗ Chave Finnhub (grátis)</a><a href="https://console.groq.com/keys" target="_blank" rel="noopener">↗ Chave Groq (grátis)</a></span></div>
-    <p class="hint">Publicado na Vercel, o servidor próprio busca tudo no Yahoo sem chave (inclusive 6L1 da CME e velas). Sem servidor (link estático), o painel usa Brapi e Finnhub. Atenção: o plano grátis da Brapi só libera ativos de teste (PETR4, VALE3, ITUB4); IBOV, dólar e as demais ações precisam de plano pago da Brapi ou do servidor na Vercel. A Finnhub grátis traz EWZ, SPY (proxy do S&amp;P 500) e tenta o dólar.</p>
+    <p class="hint">IBOV, WIN, dólar futuro, DI1, BOVA11 e ações vêm da B3 sem chave. Publicado na Vercel, o servidor próprio também busca no Yahoo o 6L1 da CME (com velas), o S&amp;P 500 e o EWZ, sem chave. Sem servidor (link estático), o painel usa Brapi e Finnhub. Atenção: o plano grátis da Brapi só libera ativos de teste (PETR4, VALE3, ITUB4); IBOV, dólar e as demais ações precisam de plano pago da Brapi ou do servidor na Vercel. A Finnhub grátis traz EWZ, SPY (proxy do S&amp;P 500) e tenta o dólar.</p>
     <div class="grid-f">
       <div class="f"><label for="kBrapi">Token Brapi</label><input id="kBrapi" type="password" autocomplete="off"></div>
       <div class="f"><label for="kFinn">Chave Finnhub</label><input id="kFinn" type="password" autocomplete="off"></div>
@@ -201,7 +203,7 @@
 
     <div class="card">
       <div class="row between">
-        <div><span class="title">6L1 — Real Futuro CME (M5)</span><div class="sub">09:00–18:00 BRT • linha amarela = preço às 09:00</div></div>
+        <div><span class="title">Real futuro — 6L1 (M5)</span><div class="sub">CME 6L=F com servidor; sem servidor, 1 ÷ dólar futuro WDO da B3 (mesmo movimento) • 09:00–18:00 BRT • amarela = 09:00</div></div>
         <span class="src" id="c6src">--</span>
       </div>
       <canvas id="cv6"></canvas>
@@ -325,11 +327,17 @@ function vencimentoDe(tk) {
 // WIN: preço e projeção
 // ================================================================
 function razaoTeorica() {
-  const di = parseFloat($('di').value) || 0, du = parseFloat($('du').value) || 0;
+  const diB3 = S.quotes.DI1 && isFinite(S.quotes.DI1.price) ? S.quotes.DI1.price : NaN;
+  const di = isFinite(diB3) ? diB3 : (parseFloat($('di').value) || 0), du = parseFloat($('du').value) || 0;
   return Math.pow(1 + di / 100, du / 252);
 }
 function winInfo() {
-  const ib = S.quotes.IBOV;
+  const ib = S.quotes.IBOV, wb = S.quotes.WIN;
+  // 1º: WIN real da B3
+  if (wb && isFinite(wb.price)) {
+    const ratio = ib && isFinite(ib.price) ? wb.price / ib.price : razaoTeorica();
+    return { price: wb.price, ratio, base: `${wb.sym || 'WIN'} (B3)`, prev: wb.prev, time: wb.time, real: true };
+  }
   if (!ib || !isFinite(ib.price)) {
     // Sem IBOV ao vivo: usa o WIN digitado no Sync (fica parado até o próximo Sync)
     const wm = parseFloat(load('winManual', '')), wt = parseInt(load('winManualTs', ''), 10);
@@ -344,7 +352,7 @@ function winInfo() {
   return { price: Math.round(ib.price * r), ratio: r, base: 'ágio teórico DI', prev: ib.prev ? ib.prev * r : null, time: ib.time };
 }
 function precoAtivo(tk) {
-  if (tk === 'WIN') { const w = winInfo(); return w ? { price: w.price, prev: w.prev, time: w.time, src: w.manual ? 'MANUAL' : 'CALC' } : null; }
+  if (tk === 'WIN') { const w = winInfo(); return w ? { price: w.price, prev: w.prev, time: w.time, src: w.real ? 'B3' : w.manual ? 'MANUAL' : 'CALC' } : null; }
   return S.quotes[tk] || null;
 }
 function niveisAtivo(L) {
@@ -377,7 +385,60 @@ async function getJSON(url, ms = 10000) {
 }
 const B3_TICKERS = ['BOVA11', 'PETR4', 'VALE3', 'ITUB4', 'BBDC4', 'BBAS3', 'B3SA3', 'ABEV3'];
 const BRAPI_TESTE = ['PETR4', 'VALE3', 'ITUB4'];
-S.diag = {}; S.lastBrapi = 0;
+S.diag = {}; S.lastBrapi = 0; S.b3 = 'off';
+const LETRAS = 'FGHJKMNQUVXZ';
+function codigoWin() { const v = proxVencWin(); return v ? 'WIN' + LETRAS[v.getUTCMonth()] + String(v.getUTCFullYear()).slice(2) : null; }
+function codigoWdo() {
+  // WDO vence no 1º dia útil do mês do contrato: o vigente é o primeiro cujo vencimento ainda não passou
+  const h = hojeUTC();
+  for (let k = 0; k < 3; k++) {
+    const y = h.getUTCFullYear() + Math.floor((h.getUTCMonth() + k) / 12), m = (h.getUTCMonth() + k) % 12;
+    const d = new Date(Date.UTC(y, m, 1)); while (!util(d)) d.setUTCDate(d.getUTCDate() + 1);
+    if (d >= h) return 'WDO' + LETRAS[m] + String(y).slice(2);
+  }
+  return null;
+}
+function codigoDi() { const c = ($('diCode').value || '').trim().toUpperCase(); return c || 'DI1F' + String(hojeUTC().getUTCFullYear() + 2).slice(2); }
+async function fonteB3() {
+  const alvos = { IBOV: 'IBOV', WIN: codigoWin(), WDO: codigoWdo(), DI1: codigoDi() };
+  B3_TICKERS.forEach(t => alvos[t] = t);
+  const ok = [], falhas = [];
+  await Promise.all(Object.entries(alvos).map(async ([key, sym]) => {
+    if (!sym) return;
+    try {
+      const d = await getJSON(`https://cotacao.b3.com.br/mds/api/v1/instrumentQuotation/${sym}`, 12000);
+      const t = d && d.Trad && d.Trad[0] && d.Trad[0].scty, q = t && t.SctyQtn;
+      if (!q || !isFinite(q.curPrc)) { falhas.push(sym + (d && d.BizSts && d.BizSts.desc ? ` (${d.BizSts.desc})` : '')); return; }
+      const time = d.Msg && d.Msg.dtTm ? Date.parse(d.Msg.dtTm.replace(' ', 'T') + '-03:00') : Date.now();
+      const prev = isFinite(q.prcFlcn) ? q.curPrc / (1 + q.prcFlcn / 100) : null;
+      S.quotes[key] = { price: q.curPrc, prev, open: q.opngPric, high: q.maxPric, low: q.minPric, time, src: 'B3', sym };
+      ok.push(sym);
+    } catch (e) { falhas.push(`${sym} (${e.message})`); }
+  }));
+  // Histórico minuto a minuto do WDO -> velas M5 do real futuro (1 ÷ WDO), equivalente ao 6L1
+  if (alvos.WDO) {
+    try {
+      const h = await getJSON(`https://cotacao.b3.com.br/mds/api/v1/DailyFluctuationHistory/${alvos.WDO}`, 12000);
+      const tf = h && h.TradgFlr, lst = tf && tf.scty && tf.scty.lstQtn;
+      if (Array.isArray(lst) && lst.length) {
+        const buckets = new Map();
+        lst.forEach(x => {
+          if (!isFinite(x.closPric) || !x.dtTm) return;
+          const t = Date.parse(`${tf.date}T${x.dtTm}-03:00`), v = 1000 / x.closPric;
+          const k = Math.floor(t / 300000) * 300000;
+          const c = buckets.get(k);
+          if (!c) buckets.set(k, { t: k, o: v, h: v, l: v, c: v });
+          else { c.h = Math.max(c.h, v); c.l = Math.min(c.l, v); c.c = v; }
+        });
+        S.candlesB3 = [...buckets.values()].sort((a, b) => a.t - b.t);
+        ok.push(alvos.WDO + ' (histórico do dia)');
+      }
+    } catch (e) { falhas.push(`histórico ${alvos.WDO} (${e.message})`); }
+  }
+  S.b3 = !ok.length ? 'err' : falhas.length ? 'warn' : 'ok';
+  S.diag.b3 = `${ok.length ? '✔ ' + ok.join(', ') : 'nada recebido'}${falhas.length ? ' · ⚠ ' + falhas.join(', ') : ''}`;
+  return ok;
+}
 
 async function fonteServidor() {
   try {
@@ -461,8 +522,12 @@ async function atualizar() {
   if (S.busy) return; S.busy = true;
   try {
     const srv = await fonteServidor();
-    if (!srv) { await fonteBrapi(); await fonteFinnhub(); }
-    else { S.brapi = 'off'; S.finn = 'off'; S.diag.brapi = 'não usada (servidor ativo)'; S.diag.finn = 'não usada (servidor ativo)'; }
+    const b3ok = await fonteB3();
+    const faltam = B3_TICKERS.concat(['IBOV']).filter(t => !b3ok.includes(t === 'IBOV' ? 'IBOV' : t));
+    if (faltam.length && !srv) await fonteBrapi();
+    else { S.brapi = 'off'; S.diag.brapi = 'não precisou (B3 trouxe tudo)'; }
+    if (!srv) await fonteFinnhub();
+    else { S.finn = 'off'; S.diag.finn = 'não usada (servidor ativo)'; }
     $('lastUpd').textContent = 'atualizado ' + new Date().toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo' });
   } finally { S.busy = false; render(); }
 }
@@ -480,29 +545,39 @@ function kpi(label, tk, valor, dec, prev, src, time, nota) {
   const cls = src === 'none' ? 'none' : (src === 'DERIVADO' || src === 'CALC' || src === 'PROXY SPY' || src === 'MANUAL') ? 'derived' : 'live';
   return `<div class="card kpi"><div class="lbl"><span>${label}</span><span class="${isFinite(p) ? (p >= 0 ? 'up' : 'down') : 'mut'}">${isFinite(p) ? sign(p) + p.toFixed(2) + '%' : '—'}</span></div>
     <div class="val">${fmtN(valor, dec)}</div>
-    <div class="meta"><span class="src ${cls}">${src === 'none' ? 'SEM DADO' : esc(src)}</span><span>${[nota, ago(time)].filter(Boolean).join(' · ')}</span></div></div>`;
+    <div class="meta"><span class="src ${cls}">${src === 'none' ? 'SEM DADO' : esc(src)}</span><span>${[nota, ago(time), time && Date.now() - time > 6 * 3600e3 ? 'mercado fechado' : ''].filter(Boolean).join(' · ')}</span></div></div>`;
+}
+function kpiDi(di) {
+  if (!di) return kpi('DI1', 'DI1', NaN, 2, NaN, 'none', null, 'sem dado');
+  const bps = di.prev ? Math.round((di.price - di.prev) * 100) : NaN;
+  return `<div class="card kpi"><div class="lbl"><span>DI1 ${esc(di.sym || '')}</span><span class="${isFinite(bps) ? (bps <= 0 ? 'up' : 'down') : 'mut'}">${isFinite(bps) ? sign(bps) + bps + ' bps' : '—'}</span></div>
+    <div class="val">${fmtN(di.price, 2)}%</div>
+    <div class="meta"><span class="src live">B3</span><span>${isFinite(bps) ? (bps <= 0 ? 'fechando (alívio)' : 'abrindo (estresse)') + ' · ' : ''}${ago(di.time)}</span></div></div>`;
 }
 function macroVals() {
   const q = S.quotes;
-  const usd = q.USDBRL;
+  let usd = q.USDBRL && q.USDBRL.src !== 'FINNHUB' ? q.USDBRL : null;
+  if (!usd && q.WDO) usd = { price: q.WDO.price / 1000, prev: q.WDO.prev ? q.WDO.prev / 1000 : null, time: q.WDO.time, src: 'B3 ' + q.WDO.sym };
+  if (!usd && q.USDBRL) usd = q.USDBRL;
   let l6 = null;
   if (q['6L']) l6 = { ...q['6L'], src: 'CME' };
-  else if (usd) l6 = { price: 1 / usd.price, prev: usd.prev ? 1 / usd.prev : null, time: usd.time, src: 'DERIVADO' };
+  else if (usd) l6 = { price: 1 / usd.price, prev: usd.prev ? 1 / usd.prev : null, time: usd.time, src: 'DERIVADO', de: usd.src };
   let spx = null;
   if (q.SPX) spx = { ...q.SPX, src: 'YAHOO' };
   else if (q.SPY) spx = { ...q.SPY, src: 'PROXY SPY' };
-  return { usd, l6, ewz: q.EWZ, spx, es: q.ES };
+  return { usd, l6, ewz: q.EWZ, spx, es: q.ES, di: q.DI1 };
 }
 function renderMacro() {
   const q = S.quotes, w = winInfo(), m = macroVals();
   const ib = q.IBOV;
   $('macro').innerHTML =
     kpi('IBOV', 'IBOV', ib?.price, 0, ib?.prev, ib ? ib.src : 'none', ib?.time) +
-    kpi('WIN', 'WIN', w?.price, 0, w?.prev, w ? (w.manual ? 'MANUAL' : 'CALC') : 'none', w?.time, w ? w.base : 'sem IBOV: digite o WIN em ⚙') +
-    kpi('Dólar (USD/BRL)', 'USDBRL', m.usd?.price, 4, m.usd?.prev, m.usd ? m.usd.src : 'none', m.usd?.time) +
-    kpi('6L1 (Real CME)', '6L', m.l6?.price, 5, m.l6?.prev, m.l6 ? m.l6.src : 'none', m.l6?.time, m.l6 && m.l6.src === 'DERIVADO' ? '1 ÷ dólar à vista' : '') +
+    kpi('WIN' + (w && w.real ? ' ' + esc(S.quotes.WIN.sym || '') : ''), 'WIN', w?.price, 0, w?.prev, w ? (w.real ? 'B3' : w.manual ? 'MANUAL' : 'CALC') : 'none', w?.time, w ? (w.real ? '' : w.base) : 'sem dado') +
+    kpi(m.usd && /WDO/.test(m.usd.src) ? 'Dólar futuro (WDO)' : 'Dólar (USD/BRL)', 'USDBRL', m.usd?.price, 4, m.usd?.prev, m.usd ? m.usd.src : 'none', m.usd?.time) +
+    kpiDi(m.di) +
+    kpi('6L1 (Real CME)', '6L', m.l6?.price, 5, m.l6?.prev, m.l6 ? m.l6.src : 'none', m.l6?.time, m.l6 && m.l6.src === 'DERIVADO' ? '1 ÷ dólar' : '') +
     kpi('EWZ', 'EWZ', m.ewz?.price, 2, m.ewz?.prev, m.ewz ? m.ewz.src : 'none', m.ewz?.time) +
-    kpi('S&P 500', 'SPX', m.spx?.price, m.spx && m.spx.src === 'PROXY SPY' ? 2 : 0, m.spx?.prev, m.spx ? m.spx.src : 'none', m.spx?.time, m.es ? `ES ${fmtN(m.es.price, 0)} (${sign(pct(m.es.price, m.es.prev))}${pct(m.es.price, m.es.prev).toFixed(2)}%)` : '');
+    kpi(m.spx && m.spx.src === 'PROXY SPY' ? 'S&P 500 (ETF SPY)' : 'S&P 500', 'SPX', m.spx?.price, m.spx && m.spx.src === 'PROXY SPY' ? 2 : 0, m.spx?.prev, m.spx ? m.spx.src : 'none', m.spx?.time, m.es ? `ES ${fmtN(m.es.price, 0)} (${sign(pct(m.es.price, m.es.prev))}${pct(m.es.price, m.es.prev).toFixed(2)}%)` : '');
 }
 function analisar(L0) {
   const L = niveisAtivo(L0);
@@ -628,21 +703,24 @@ function draw6L() {
   if (cv.width !== Math.round(W * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
   const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
   // Último pregão (09:00–18:00 BRT) que tem velas: em feriado nos EUA a CME para e hoje pode não ter nenhuma
-  const sess = S.candles6L.map(c => ({ ...c, b: brt(new Date(c.t)) })).filter(c => c.b.hm >= 540 && c.b.hm < 1080);
+  const usaCme = S.candles6L && S.candles6L.length;
+  const base = usaCme ? S.candles6L : (S.candlesB3 || []);
+  const sess = base.map(c => ({ ...c, b: brt(new Date(c.t)) })).filter(c => c.b.hm >= 540 && c.b.hm < 1080);
   const day = sess.length ? sess[sess.length - 1].b.key : null;
   const cs = sess.filter(c => c.b.key === day).map(c => ({ ...c, slot: Math.floor((c.b.hm - 540) / 5) }));
   const srcEl = $('c6src');
   ctx.fillStyle = '#94a3b8'; ctx.font = '12px system-ui';
   if (!cs.length) {
     srcEl.textContent = 'SEM VELAS'; srcEl.className = 'src none';
-    ctx.fillText('Velas reais do 6L1 só com o servidor (publicado na Vercel).', 14, H / 2 - 6);
-    ctx.fillText('No link estático o 6L1 aparece no card acima (derivado do dólar).', 14, H / 2 + 14);
+    ctx.fillText('Sem velas: a B3 e o servidor não responderam.', 14, H / 2 - 6);
+    ctx.fillText('Clique em ↻ Atualizar ou confira o diagnóstico no topo.', 14, H / 2 + 14);
     ['c6o', 'c6h', 'c6l', 'c6c'].forEach(id => $(id).textContent = '--');
     return;
   }
   const hojeK = brt().key;
-  if (day === hojeK) { srcEl.textContent = 'CME AO VIVO (YAHOO)'; srcEl.className = 'src live'; }
-  else { srcEl.textContent = `ÚLTIMO PREGÃO ${day.slice(8, 10)}/${day.slice(5, 7)} (CME SEM NEGÓCIO HOJE)`; srcEl.className = 'src derived'; }
+  const nomeFonte = usaCme ? 'CME 6L=F (YAHOO)' : `1 ÷ ${S.quotes.WDO ? S.quotes.WDO.sym : 'WDO'} (B3)`;
+  if (day === hojeK) { srcEl.textContent = nomeFonte + ' · AO VIVO'; srcEl.className = 'src live'; }
+  else { srcEl.textContent = `${nomeFonte} · ÚLTIMO PREGÃO ${day.slice(8, 10)}/${day.slice(5, 7)}`; srcEl.className = 'src derived'; }
   const open = cs[0].o; let lo = Math.min(open, ...cs.map(c => c.l)), hi = Math.max(open, ...cs.map(c => c.h));
   const pad = (hi - lo) * 0.12 || 0.0005; lo -= pad; hi += pad;
   const pl = 10, pr = 64, pt = 14, pb = 22, pw = W - pl - pr, ph = H - pt - pb;
@@ -666,10 +744,11 @@ function draw6L() {
 }
 function render() {
   const dg = S.diag || {};
-  $('diag').innerHTML = `<div><b>Servidor Yahoo:</b> ${esc(dg.srv || '—')}</div><div><b>Brapi:</b> ${esc(dg.brapi || '—')}</div><div><b>Finnhub:</b> ${esc(dg.finn || '—')}</div>`;
+  $('diag').innerHTML = `<div><b>B3 (IBOV, WIN, WDO, DI1, ações):</b> ${esc(dg.b3 || '—')}</div><div><b>Servidor Yahoo:</b> ${esc(dg.srv || '—')}</div><div><b>Brapi:</b> ${esc(dg.brapi || '—')}</div><div><b>Finnhub:</b> ${esc(dg.finn || '—')}</div>`;
   setPill('pSrv', S.srv, 'SERVIDOR YAHOO');
   setPill('pBrapi', S.brapi, 'BRAPI');
   setPill('pFinn', S.finn, 'FINNHUB');
+  setPill('pB3', S.b3, 'B3');
   renderMacro();
   const list = S.levels.map(analisar);
   renderAssets(list);
@@ -736,7 +815,7 @@ async function perguntar(q) {
 // ================================================================
 // INICIALIZAÇÃO
 // ================================================================
-const CAMPOS = { payload: DEFAULT_PAYLOAD, lvlDate: '2026-11-19T09:00', expB3: '2026-11-19', expIbov: '2026-12-16', expEwz: '2026-11-20', tol: '10', winUnit: 'win', di: '13.85', kBrapi: '', kFinn: '', kGroq: '', mGroq: 'llama-3.3-70b-versatile', every: '30', everyBrapi: '300' };
+const CAMPOS = { diCode: '', payload: DEFAULT_PAYLOAD, lvlDate: '2026-11-19T09:00', expB3: '2026-11-19', expIbov: '2026-12-16', expEwz: '2026-11-20', tol: '10', winUnit: 'win', di: '13.85', kBrapi: '', kFinn: '', kGroq: '', mGroq: 'llama-3.3-70b-versatile', every: '30', everyBrapi: '300' };
 function aplicarNiveis() {
   S.levels = parsePayload($('payload').value);
   if (S.levels.length && !S.levels.find(l => l.tk === S.sel)) S.sel = S.levels[0].tk;
