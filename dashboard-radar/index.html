@@ -46,6 +46,7 @@
   .links { display: flex; gap: 12px; flex-wrap: wrap; text-transform: none; }
   .links a { color: var(--accent); text-decoration: none; font-weight: 700; }
   .links a:hover { text-decoration: underline; }
+  .vh { color: var(--accent); text-transform: none; }
   .hint { font-size: .72rem; color: var(--muted); margin: 0 0 8px; line-height: 1.45; }
 
   /* Faixa macro */
@@ -130,13 +131,15 @@
   <div class="card drawer" id="drawer">
     <div class="sec"><span>1. Níveis GEX (mesmo formato do indicador Pine)</span>
       <span class="links"><a href="https://investorama.com.br" target="_blank" rel="noopener">↗ Investorama</a><a href="https://b3lab.com.br" target="_blank" rel="noopener">↗ B3Lab</a><a href="https://www.barchart.com/etfs-funds/quotes/EWZ/gamma-exposure" target="_blank" rel="noopener">↗ Barchart (EWZ)</a></span></div>
-    <p class="hint">Uma linha por ativo, separadas por ponto e vírgula: <b>TICKER|REGIME|FLIP|EM_MIN|EM_MAX|PW1|CW1|BLOCO|SIGMA1_MIN</b>. Investorama e B3Lab não têm API e ficam atrás de login, por isso os níveis são colados aqui (o mesmo texto que vai no TradingView). Ficam salvos só neste navegador.</p>
+    <p class="hint">Os vencimentos são calculados sozinhos a partir da data dos níveis (ações/BOVA11: 3ª sexta da B3; IBOV/WIN: quarta mais próxima do dia 15 dos meses pares; EWZ: 3ª sexta nos EUA). Só preencha as datas para forçar outro vencimento. Para o dólar use o ticker WDO (ou DOL), com níveis em pontos (5740) ou reais (5,74). Uma linha por ativo, separadas por ponto e vírgula: <b>TICKER|REGIME|FLIP|EM_MIN|EM_MAX|PW1|CW1|BLOCO|SIGMA1_MIN</b>. Investorama e B3Lab não têm API e ficam atrás de login, por isso os níveis são colados aqui (o mesmo texto que vai no TradingView). Ficam salvos só neste navegador.</p>
     <textarea id="payload" rows="6"></textarea>
     <div class="grid-f" style="margin-top:10px">
       <div class="f"><label for="lvlDate">Níveis gerados em</label><input id="lvlDate" type="datetime-local"></div>
-      <div class="f"><label for="expB3">Venc. opções de ações B3</label><input id="expB3" type="date"></div>
-      <div class="f"><label for="expIbov">Venc. opções IBOV (WIN)</label><input id="expIbov" type="date"></div>
-      <div class="f"><label for="expEwz">Venc. opções EWZ</label><input id="expEwz" type="date"></div>
+      <div class="f"><label for="expB3">Venc. ações/BOVA11 <span class="vh" id="expB3Hint"></span></label><input id="expB3" type="date"></div>
+      <div class="f"><label for="expIbov">Venc. IBOV (WIN) <span class="vh" id="expIbovHint"></span></label><input id="expIbov" type="date"></div>
+      <div class="f"><label for="expEwz">Venc. EWZ <span class="vh" id="expEwzHint"></span></label><input id="expEwz" type="date"></div>
+      <div class="f"><label for="expWdo">Venc. dólar (WDO) <span class="vh" id="expWdoHint"></span></label><input id="expWdo" type="date"></div>
+      <div class="f" style="display:flex;align-items:flex-end"><button class="btn ghost" id="btnVencAuto" type="button" style="width:100%">Vencimentos automáticos</button></div>
       <div class="f"><label for="tol">Tolerância da checagem (%)</label><input id="tol" type="number" min="1" step="1"></div>
       <div class="f" style="display:flex;align-items:flex-end"><button class="btn" id="btnApply" type="button" style="width:100%">Aplicar níveis</button></div>
     </div>
@@ -239,7 +242,7 @@ function fmtN(v, dec) {
   if (v === null || v === undefined || !isFinite(v)) return '—';
   return Number(v).toLocaleString('pt-BR', { minimumFractionDigits: dec, maximumFractionDigits: dec });
 }
-const decOf = (tk) => (tk === 'WIN' || tk === 'IBOV' || tk === 'SPX' || tk === 'ES') ? 0 : (tk === '6L' ? 5 : (tk === 'USDBRL' ? 4 : 2));
+const decOf = (tk) => (tk === 'WIN' || tk === 'IBOV' || tk === 'SPX' || tk === 'ES') ? 0 : tk === 'WDO' ? 1 : (tk === '6L' ? 5 : (tk === 'USDBRL' ? 4 : 2));
 const pct = (a, b) => (isFinite(a) && isFinite(b) && b) ? (a / b - 1) * 100 : NaN;
 
 function brt(date = new Date()) {
@@ -299,11 +302,22 @@ function parsePayload(txt) {
     const c = row.trim().split('|').map(x => x.trim());
     if (c.length < 9 || !c[0]) return;
     const n = (i) => { const v = parseFloat(c[i].replace(',', '.')); return isFinite(v) ? v : NaN; };
-    out.push({ tk: c[0].toUpperCase(), regime: c[1].toUpperCase(), flip: n(2), emMin: n(3), emMax: n(4), pw1: n(5), cw1: n(6), block: n(7), sig1: n(8) });
+    let tk = c[0].toUpperCase();
+    if (/^(WDO|DOL)/.test(tk)) tk = 'WDO';
+    const L = { tk, regime: c[1].toUpperCase(), flip: n(2), emMin: n(3), emMax: n(4), pw1: n(5), cw1: n(6), block: n(7), sig1: n(8) };
+    // WDO: aceita níveis em reais (5,74) ou em pontos (5740)
+    if (tk === 'WDO') ['flip', 'emMin', 'emMax', 'pw1', 'cw1', 'block', 'sig1'].forEach(k => { if (isFinite(L[k]) && L[k] < 100) L[k] = Math.round(L[k] * 1000 * 10) / 10; });
+    out.push(L);
   });
+  // O card do WDO aparece sempre (com a cotação da B3), mesmo antes de você colar os níveis dele
+  if (!out.find(l => l.tk === 'WDO')) {
+    const i = out.findIndex(l => l.tk === 'WIN');
+    out.splice(i >= 0 ? i + 1 : 0, 0, { tk: 'WDO', regime: '—', flip: NaN, emMin: NaN, emMax: NaN, pw1: NaN, cw1: NaN, block: NaN, sig1: NaN, placeholder: true });
+  }
   return out;
 }
 function validar(L) {
+  if (L.placeholder) return [];
   const w = [], tol = (parseFloat($('tol').value) || 10) / 100;
   if (L.regime !== 'AMP' && L.regime !== 'AMO') w.push(`regime "${L.regime}" inválido`);
   if (isFinite(L.emMin) && isFinite(L.emMax)) {
@@ -318,9 +332,57 @@ function validar(L) {
   if (!isFinite(L.flip)) w.push('Flip vazio');
   return w;
 }
+// ---------- Vencimentos automáticos ----------
+const D = (y, m, d) => new Date(Date.UTC(y, m, d));
+function terceiraSexta(y, m) { const w = D(y, m, 1).getUTCDay(); return D(y, m, 1 + ((5 - w + 7) % 7) + 14); }
+function feriadoEUA(d) {
+  const y = d.getUTCFullYear(), iso = d.toISOString().slice(0, 10);
+  const obs = (mm, dd) => { const x = D(y, mm, dd), w = x.getUTCDay(); if (w === 6) x.setUTCDate(dd - 1); if (w === 0) x.setUTCDate(dd + 1); return x.toISOString().slice(0, 10); };
+  const fixos = [obs(0, 1), obs(5, 19), obs(6, 4), obs(11, 25)];
+  const sextaSanta = new Date(easter(y).getTime() - 2 * 864e5).toISOString().slice(0, 10);
+  return fixos.includes(iso) || iso === sextaSanta;
+}
+// Opções de ações/ETF na B3: 3ª sexta-feira; em feriado, dia útil anterior
+function vencAcoesB3(y, m) { const d = terceiraSexta(y, m); while (!util(d)) d.setUTCDate(d.getUTCDate() - 1); return d; }
+// Opções de IBOV: quarta-feira mais próxima do dia 15 dos meses pares; em feriado, próximo dia útil
+function vencIbov(y, m) {
+  if (m % 2 !== 1) return null;
+  const d15 = D(y, m, 15); let off = 3 - d15.getUTCDay(); if (off > 3) off -= 7; if (off < -3) off += 7;
+  const v = new Date(d15.getTime() + off * 864e5); while (!util(v)) v.setUTCDate(v.getUTCDate() + 1); return v;
+}
+// Opções de EWZ (EUA): 3ª sexta-feira; em feriado americano, dia útil anterior
+function vencEwz(y, m) { const d = terceiraSexta(y, m); while (feriadoEUA(d) || d.getUTCDay() === 0 || d.getUTCDay() === 6) d.setUTCDate(d.getUTCDate() - 1); return d; }
+// Opções de dólar (DOL/WDO): vencem junto com o futuro, no 1º dia útil do mês
+function vencDolar(y, m) { const d = D(y, m, 1); while (!util(d)) d.setUTCDate(d.getUTCDate() + 1); return d; }
+function tipoVenc(tk) { return tk === 'EWZ' ? 'ewz' : tk === 'WIN' ? 'ibov' : tk === 'WDO' ? 'wdo' : 'b3'; }
+const REGRA = { b3: vencAcoesB3, ibov: vencIbov, ewz: vencEwz, wdo: vencDolar };
+const HORA_VENC = { b3: '18:00:00-03:00', ibov: '18:00:00-03:00', ewz: '17:00:00-05:00', wdo: '18:00:00-03:00' };
+function proximoVenc(tipo, desde) {
+  const y0 = desde.getUTCFullYear(), m0 = desde.getUTCMonth();
+  for (let k = 0; k < 15; k++) {
+    const y = y0 + Math.floor((m0 + k) / 12), m = (m0 + k) % 12;
+    const d = REGRA[tipo](y, m); if (!d) continue;
+    const t = new Date(d.toISOString().slice(0, 10) + 'T' + HORA_VENC[tipo]);
+    if (t.getTime() >= desde.getTime()) return t;
+  }
+  return null;
+}
+function dataNiveis() { const v = $('lvlDate').value; const d = v ? new Date(v + ':00-03:00') : null; return d && isFinite(d) ? d : new Date(); }
+const CAMPO_VENC = { b3: 'expB3', ibov: 'expIbov', ewz: 'expEwz', wdo: 'expWdo' };
+// Vencimento de referência = o primeiro vencimento a partir da data em que os níveis foram gerados (ou o que você digitar)
 function vencimentoDe(tk) {
-  const v = tk === 'EWZ' ? $('expEwz').value : tk === 'WIN' ? $('expIbov').value : $('expB3').value;
-  return v ? new Date(v + 'T18:00:00-03:00') : null;
+  const tipo = tipoVenc(tk), manual = $(CAMPO_VENC[tipo]).value;
+  const ref = manual ? new Date(manual + 'T' + HORA_VENC[tipo]) : proximoVenc(tipo, dataNiveis());
+  const prox = proximoVenc(tipo, new Date());
+  return ref ? { ref, prox, auto: !manual } : null;
+}
+const ddmm = (d) => d ? d.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo', day: '2-digit', month: '2-digit' }) : '--';
+function mostrarVencAuto() {
+  const desde = dataNiveis();
+  Object.entries(CAMPO_VENC).forEach(([tipo, id]) => {
+    const v = proximoVenc(tipo, desde), el = $(id + 'Hint');
+    if (el) el.textContent = $(id).value ? '(manual)' : `(auto: ${ddmm(v)})`;
+  });
 }
 
 // ================================================================
@@ -584,13 +646,13 @@ function analisar(L0) {
   const q = precoAtivo(L.tk);
   const price = q ? q.price : NaN;
   const warns = validar(L0);
-  const venc = vencimentoDe(L.tk);
-  const vencido = venc && Date.now() > venc.getTime();
+  const venc = L.placeholder ? null : vencimentoDe(L.tk);
+  const vencido = !!(venc && Date.now() > venc.ref.getTime());
   let regLive = null;
   if (isFinite(price) && isFinite(L.flip)) regLive = price >= L.flip ? 'long' : 'short';
   const repLong = L.regime === 'AMO';
   const divergente = regLive && (L.regime === 'AMP' || L.regime === 'AMO') && (regLive === 'long') !== repLong;
-  return { L, q, price, warns, vencido, regLive, divergente, distFlip: pct(L.flip, price) };
+  return { L, q, price, warns, venc, vencido, regLive, divergente, distFlip: pct(L.flip, price) };
 }
 function miniRuler(a) {
   const L = a.L, P = a.price;
@@ -608,8 +670,16 @@ function renderAssets(list) {
     const L = a.L, d = decOf(L.tk);
     const p = a.q ? pct(a.price, a.q.prev) : NaN;
     const reg = a.regLive ? `<span class="reg ${a.regLive}">${a.regLive === 'long' ? 'LONG GAMMA' : 'SHORT GAMMA'}</span>` : '<span class="reg na">SEM PREÇO</span>';
+    if (L.placeholder) {
+      return `<div class="asset ${S.sel === L.tk ? 'sel' : ''}" data-tk="${esc(L.tk)}" tabindex="0" role="button" aria-label="Ver detalhe de ${esc(L.tk)}">
+      <div class="top"><span class="tk">WDO${a.q && a.q.sym ? ' <span class="sub">' + esc(a.q.sym) + '</span>' : ''}</span><span class="px">${fmtN(a.price, d)} <span class="${isFinite(p) ? (p >= 0 ? 'up' : 'down') : 'mut'}" style="font-size:.72rem">${isFinite(p) ? sign(p) + p.toFixed(2) + '%' : ''}</span></span></div>
+      <div class="ln"><span class="reg na">SEM NÍVEIS GEX</span><span>dólar futuro</span></div>
+      <div class="hint" style="margin:12px 0 6px">Cole em ⚙ a linha <b>WDO|REGIME|FLIP|EM_MIN|EM_MAX|PW1|CW1|BLOCO|SIGMA1_MIN</b>, em pontos (5740) ou em reais (5,74).</div>
+      <div class="ln"><span class="src ${a.q ? 'live' : 'none'}">${a.q ? esc(a.q.src) : 'SEM COTAÇÃO'}</span><span>${a.q ? ago(a.q.time) : ''}</span></div>
+    </div>`;
+    }
     const extras = [];
-    if (a.vencido) extras.push('VENCIDO');
+    if (a.vencido) extras.push(`VENCIDO em ${ddmm(a.venc.ref)} · próx. ${ddmm(a.venc.prox)}`);
     if (a.divergente) extras.push('cruzou o Flip desde o relatório');
     return `<div class="asset ${S.sel === L.tk ? 'sel' : ''}" data-tk="${esc(L.tk)}" tabindex="0" role="button" aria-label="Ver detalhe de ${esc(L.tk)}">
       <div class="top"><span class="tk">${esc(L.tk)}</span><span class="px">${fmtN(a.price, d)} <span class="${isFinite(p) ? (p >= 0 ? 'up' : 'down') : 'mut'}" style="font-size:.72rem">${isFinite(p) ? sign(p) + p.toFixed(2) + '%' : ''}</span></span></div>
@@ -683,6 +753,7 @@ function renderDetalhe(list) {
 }
 function tese(a) {
   const L = a.L, d = decOf(L.tk), P = a.price;
+  if (L.placeholder) return `<b>WDO</b> ${isFinite(P) ? 'em <b>' + fmtN(P, d) + '</b>' : 'sem cotação'}. Ainda sem níveis GEX do dólar: cole a linha <b>WDO|…</b> (Investorama / B3Lab) em ⚙ Configurar → Aplicar níveis. Valores em reais (5,74) são convertidos para pontos (5740).`;
   if (!isFinite(P)) return `Sem cotação para <b>${esc(L.tk)}</b>. Configure as fontes em ⚙ ou publique na Vercel.`;
   const partes = [];
   if (a.regLive === 'long') {
@@ -694,7 +765,8 @@ function tese(a) {
   }
   if (isFinite(L.emMin) && isFinite(L.emMax)) partes.push(P > L.emMax ? 'O preço está <b>acima do Expected Move</b>: movimento esticado.' : P < L.emMin ? 'O preço está <b>abaixo do Expected Move</b>: movimento esticado.' : `Dentro do Expected Move (${fmtN(L.emMin, d)}–${fmtN(L.emMax, d)}).`);
   if (a.divergente) partes.push('⚠ O regime mudou desde o relatório (o preço cruzou o Flip).');
-  if (a.vencido) partes.push('⚠ <b>Vencimento de referência já passou</b>: atualize os níveis.');
+  if (a.vencido) partes.push(`⚠ <b>Os níveis são do vencimento de ${ddmm(a.venc.ref)}, que já passou</b>. O próximo é ${ddmm(a.venc.prox)}: atualize os níveis.`);
+  else if (a.venc) partes.push(`Vencimento de referência: ${ddmm(a.venc.ref)}.`);
   if (a.warns.length) partes.push(`⚠ Níveis suspeitos: ${esc(a.warns.join(', '))}.`);
   return partes.join(' ');
 }
@@ -743,6 +815,7 @@ function draw6L() {
   $('c6c').textContent = 'Atual: ' + last.c.toFixed(5);
 }
 function render() {
+  mostrarVencAuto();
   const dg = S.diag || {};
   $('diag').innerHTML = `<div><b>B3 (IBOV, WIN, WDO, DI1, ações):</b> ${esc(dg.b3 || '—')}</div><div><b>Servidor Yahoo:</b> ${esc(dg.srv || '—')}</div><div><b>Brapi:</b> ${esc(dg.brapi || '—')}</div><div><b>Finnhub:</b> ${esc(dg.finn || '—')}</div>`;
   setPill('pSrv', S.srv, 'SERVIDOR YAHOO');
@@ -766,7 +839,7 @@ function contexto() {
   const m = macroVals(), w = winInfo();
   const linhas = S.levels.map(analisar).map(a => {
     const L = a.L;
-    return `${L.tk}: preço ${isFinite(a.price) ? a.price : 'n/d'} | regime ao vivo ${a.regLive || 'n/d'} (relatório ${L.regime}) | Flip ${L.flip} | PW1 ${L.pw1} | CW1 ${L.cw1} | EM ${L.emMin}-${L.emMax} | Bloco ${L.block} | 1σ- ${L.sig1}${a.vencido ? ' | VENCIDO' : ''}${a.warns.length ? ' | avisos: ' + a.warns.join(', ') : ''}`;
+    return `${L.tk}: preço ${isFinite(a.price) ? a.price : 'n/d'} | regime ao vivo ${a.regLive || 'n/d'} (relatório ${L.regime}) | Flip ${L.flip} | PW1 ${L.pw1} | CW1 ${L.cw1} | EM ${L.emMin}-${L.emMax} | Bloco ${L.block} | 1σ- ${L.sig1}${a.vencido ? ` | VENCIDO em ${ddmm(a.venc.ref)} (próximo ${ddmm(a.venc.prox)})` : a.venc ? ` | vencimento ${ddmm(a.venc.ref)}` : ''}${a.warns.length ? ' | avisos: ' + a.warns.join(', ') : ''}`;
   }).join('\n');
   const f = (n, v, d) => v ? `${n} ${Number(v.price).toFixed(d)} (${sign(pct(v.price, v.prev))}${pct(v.price, v.prev).toFixed(2)}%, fonte ${v.src})` : `${n} n/d`;
   return `HORA: ${new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })} BRT
@@ -815,7 +888,7 @@ async function perguntar(q) {
 // ================================================================
 // INICIALIZAÇÃO
 // ================================================================
-const CAMPOS = { diCode: '', payload: DEFAULT_PAYLOAD, lvlDate: '2026-11-19T09:00', expB3: '2026-11-19', expIbov: '2026-12-16', expEwz: '2026-11-20', tol: '10', winUnit: 'win', di: '13.85', kBrapi: '', kFinn: '', kGroq: '', mGroq: 'llama-3.3-70b-versatile', every: '30', everyBrapi: '300' };
+const CAMPOS = { diCode: '', payload: DEFAULT_PAYLOAD, lvlDate: '2026-11-19T09:00', expB3: '', expIbov: '', expEwz: '', expWdo: '', tol: '10', winUnit: 'win', di: '13.85', kBrapi: '', kFinn: '', kGroq: '', mGroq: 'llama-3.3-70b-versatile', every: '30', everyBrapi: '300' };
 function aplicarNiveis() {
   S.levels = parsePayload($('payload').value);
   if (S.levels.length && !S.levels.find(l => l.tk === S.sel)) S.sel = S.levels[0].tk;
@@ -828,6 +901,8 @@ function agendar() {
   S.timer = setInterval(atualizar, s * 1000);
 }
 window.addEventListener('DOMContentLoaded', () => {
+  // Migração: datas fixas antigas (padrão das versões anteriores) passam a ser automáticas
+  [['expB3', '2026-11-19'], ['expIbov', '2026-12-16'], ['expEwz', '2026-11-20']].forEach(([id, velho]) => { if (load(id, '') === velho) save(id, ''); });
   Object.entries(CAMPOS).forEach(([id, def]) => {
     $(id).value = load(id, def);
     $(id).addEventListener('change', () => { save(id, $(id).value); if (id === 'every') agendar(); if (id !== 'payload') render(); });
@@ -838,6 +913,7 @@ window.addEventListener('DOMContentLoaded', () => {
   $('btnCfg').onclick = () => $('drawer').classList.toggle('open');
   $('btnRefresh').onclick = () => { S.lastBrapi = 0; atualizar(); };
   $('btnApply').onclick = aplicarNiveis;
+  $('btnVencAuto').onclick = () => { ['expB3', 'expIbov', 'expEwz', 'expWdo'].forEach(id => { $(id).value = ''; save(id, ''); }); render(); };
   $('btnWinSync').onclick = () => {
     const w = parseFloat($('winSync').value), ib = S.quotes.IBOV;
     if (!(w > 50000)) { $('winSync').setCustomValidity('Digite o preço atual do WIN (ex: 175200)'); $('winSync').reportValidity(); return; }

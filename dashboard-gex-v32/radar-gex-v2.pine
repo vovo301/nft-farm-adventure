@@ -46,12 +46,15 @@ f_normalize_ticker(string raw_ticker) =>
     string t = str.upper(raw_ticker)
     if str.startswith(t, "WIN")
         "WIN"
+    else if str.startswith(t, "WDO") or str.startswith(t, "DOL")
+        "WDO"
     else
         str.endswith(t, "F") and str.length(t) > 5 ? str.substring(t, 0, str.length(t) - 1) : t
 
 string current_asset = f_normalize_ticker(syminfo.ticker)
 bool   is_win        = current_asset == "WIN"
 bool   is_ewz        = current_asset == "EWZ"
+bool   is_wdo        = current_asset == "WDO"
 
 // ============================================================================
 // 3. LEITURA DO PAYLOAD (uma vez, na primeira barra: valores ficam em todas as barras)
@@ -90,7 +93,8 @@ bool  use_basis  = is_win and win_unit == "IBOV (projetar pela base ao vivo)" an
 float ratio      = use_basis ? close / ibov_close : 1.0
 
 f_proj(float x) =>
-    na(x) ? na : math.round_to_mintick(x * ratio)
+    float v = is_wdo and not na(x) and x < 100 ? x * 1000 : x   // WDO: aceita níveis em reais (5,74) ou pontos (5740)
+    na(v) ? na : math.round_to_mintick(v * ratio)
 
 float flip   = f_proj(r_flip)
 float em_min = f_proj(r_em_min)
