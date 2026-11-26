@@ -1,0 +1,146 @@
+// ============================================================================
+// Radar Institucional GEX v2 — NTSL (Profit / Nelogica)
+// Conversão do indicador Pine "Radar Institucional GEX v2".
+//
+// Como usar: um conjunto de níveis por gráfico. Abra o gráfico do ativo
+// (ex.: WINFUT, BOVA11, PETR4), adicione o indicador e preencha os níveis
+// do dia nas propriedades. Salve um template por ativo para reaproveitar.
+//
+// Datas no formato do Profit: 1AAMMDD  ->  1261119 = 19/11/2026
+// ============================================================================
+input
+  GammaFlip(173360.0);
+  CallWall1(175000.0);
+  PutWall1(173000.0);
+  EMMin(171405.0);           // Expected Move mínimo (do relatório)
+  EMMax(177005.0);           // Expected Move máximo (do relatório)
+  MaiorBloco(174000.0);
+  Suporte1Sigma(170140.0);
+  NiveisEmIBOV(false);       // true = níveis em pontos do IBOV; soma o ágio abaixo
+  AgioPontos(0.0);           // ágio atual WIN - IBOV (use quando NiveisEmIBOV = true)
+  DataNiveis(1261119);       // data em que os níveis foram gerados (1AAMMDD)
+  DataVencimento(1261216);   // vencimento das opções de referência (1AAMMDD)
+  Tolerancia(10.0);          // % de folga para a checagem de consistência
+  MostrarEMVivo(true);       // Expected Move ao vivo pela volatilidade realizada
+  JanelaVol(20);             // dias usados na volatilidade
+  PintarCandles(true);       // verde = acima do Flip (Long Gamma), vermelho = abaixo (Short Gamma)
+var
+  aj, vFlip, vCW1, vPW1, vEMMin, vEMMax, vBloco, vSig1 : Float;
+  soma, soma2, ret, media, desvio, emUp, emDn, tol : Float;
+  i, n : Integer;
+  dadosOK, vencido, ativo : Boolean;
+begin
+  // ---------- Projeção (IBOV -> WIN pelo ágio informado) ----------
+  if NiveisEmIBOV then
+    aj := AgioPontos
+  else
+    aj := 0;
+
+  vFlip  := GammaFlip + aj;
+  vCW1   := CallWall1 + aj;
+  vPW1   := PutWall1 + aj;
+  vEMMin := EMMin + aj;
+  vEMMax := EMMax + aj;
+  vBloco := MaiorBloco + aj;
+  vSig1  := Suporte1Sigma + aj;
+
+  // ---------- Checagem de consistência dos dados ----------
+  tol := Tolerancia / 100;
+  dadosOK := true;
+  if (EMMin >= EMMax) then
+    dadosOK := false;
+  if (GammaFlip < EMMin * (1 - tol)) or (GammaFlip > EMMax * (1 + tol)) then
+    dadosOK := false;
+  if (PutWall1 >= CallWall1) then
+    dadosOK := false;
+  if (CallWall1 > EMMax * (1 + 2 * tol)) or (CallWall1 < EMMin * (1 - 2 * tol)) then
+    dadosOK := false;
+  if (PutWall1 > EMMax * (1 + 2 * tol)) or (PutWall1 < EMMin * (1 - 2 * tol)) then
+    dadosOK := false;
+
+  // ---------- Frescor: só desenha a partir da data dos níveis ----------
+  vencido := Date > DataVencimento;
+  ativo := Date >= DataNiveis;
+
+  if ativo then
+  begin
+    Plot(vFlip);
+    Plot2(vCW1);
+    Plot3(vPW1);
+    Plot4(vEMMax);
+    Plot5(vEMMin);
+    if (MaiorBloco <> CallWall1) and (MaiorBloco <> PutWall1) then
+      Plot6(vBloco);
+    Plot7(vSig1);
+
+    if vencido or (not dadosOK) then
+    begin
+      // Cinza = níveis vencidos ou inconsistentes: confira antes de operar
+      SetPlotColor(1, clGray);
+      SetPlotColor(2, clGray);
+      SetPlotColor(3, clGray);
+      SetPlotColor(4, clGray);
+      SetPlotColor(5, clGray);
+      SetPlotColor(6, clGray);
+      SetPlotColor(7, clGray);
+    end
+    else
+    begin
+      SetPlotColor(1, clYellow);   // Gamma Flip
+      SetPlotColor(2, clLime);     // Call Wall
+      SetPlotColor(3, clRed);      // Put Wall
+      SetPlotColor(4, clAqua);     // EM+
+      SetPlotColor(5, clAqua);     // EM-
+      SetPlotColor(6, clFuchsia);  // Maior Bloco
+      SetPlotColor(7, RGB(255, 171, 64)); // Suporte 1 sigma
+    end;
+
+    SetPlotWidth(1, 2);
+    SetPlotWidth(2, 2);
+    SetPlotWidth(3, 2);
+    SetPlotStyle(4, psDash);
+    SetPlotStyle(5, psDash);
+    SetPlotStyle(6, psDot);
+    SetPlotStyle(7, psDot);
+
+    // ---------- Regime ao vivo: preço x Gamma Flip ----------
+    if PintarCandles then
+    begin
+      if Close >= vFlip then
+        PaintBar(clGreen)
+      else
+        PaintBar(clRed);
+    end;
+  end;
+
+  // ---------- Expected Move ao vivo (abertura do dia +- 1 desvio diário) ----------
+  if MostrarEMVivo then
+  begin
+    soma := 0;
+    soma2 := 0;
+    n := 0;
+    for i := 1 to JanelaVol do
+    begin
+      if (CloseD(i + 1) > 0) then
+      begin
+        ret := CloseD(i) / CloseD(i + 1) - 1;
+        soma := soma + ret;
+        soma2 := soma2 + ret * ret;
+        n := n + 1;
+      end;
+    end;
+    if (n > 1) and (OpenD(0) > 0) then
+    begin
+      media := soma / n;
+      desvio := Sqrt((soma2 - n * media * media) / (n - 1));
+      emUp := OpenD(0) * (1 + desvio);
+      emDn := OpenD(0) * (1 - desvio);
+      Plot8(emUp);
+      Plot9(emDn);
+      SetPlotColor(8, clSilver);
+      SetPlotColor(9, clSilver);
+      SetPlotStyle(8, psDash);
+      SetPlotStyle(9, psDash);
+    end;
+  end;
+end;
