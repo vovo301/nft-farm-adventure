@@ -30,6 +30,14 @@
   .pill.warn { color: #fde047; border-color: var(--yellow); } .pill.warn .dot { background: var(--yellow); }
   @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(16,185,129,.8); } 70% { box-shadow: 0 0 0 7px rgba(16,185,129,0); } 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); } }
   @media (prefers-reduced-motion: reduce) { .pill.ok .dot { animation: none; } }
+  .gexbox { background: var(--panel2); border: 1px solid var(--line); border-radius: 8px; padding: 12px; margin: 10px 0; }
+  .gauge { position: relative; height: 18px; border-radius: 9px; margin: 10px 0 6px; background: linear-gradient(90deg, #dc2626 0%, #f97316 30%, #475569 50%, #22c55e 70%, #10b981 100%); }
+  .gauge i { position: absolute; top: -5px; width: 6px; height: 28px; background: #fff; border-radius: 3px; box-shadow: 0 0 8px #fff; transform: translateX(-50%); transition: left .4s ease; }
+  .gauge-l { display: flex; justify-content: space-between; font-size: .66rem; color: var(--muted); font-weight: 700; }
+  .gstats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px; }
+  @media (max-width: 600px) { .gstats { grid-template-columns: repeat(2, 1fr); } }
+  .gstats div { font-size: .68rem; color: var(--muted); } .gstats b { display: block; font-size: .9rem; color: var(--text); }
+  #cvGex { height: 220px; }
   .diag { width: 100%; display: grid; gap: 3px; font-size: .7rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 8px; }
   .diag b { color: #cbd5e1; }
   .clock { font-variant-numeric: tabular-nums; font-weight: 800; font-size: .95rem; }
@@ -120,6 +128,7 @@
       <span class="pill off" id="pBrapi"><span class="dot"></span>BRAPI</span>
       <span class="pill off" id="pFinn"><span class="dot"></span>FINNHUB</span>
       <span class="pill off" id="pB3"><span class="dot"></span>B3</span>
+      <span class="pill off" id="pGex"><span class="dot"></span>GEX</span>
       <div style="text-align:right"><div class="clock" id="clock">--:--:-- BRT</div><div class="sub" id="lastUpd">aguardando dados…</div></div>
       <button class="btn ghost" id="btnRefresh" type="button">↻ Atualizar</button>
       <button class="btn" id="btnCfg" type="button">⚙ Configurar</button>
@@ -132,6 +141,9 @@
     <div class="sec"><span>1. Níveis GEX (mesmo formato do indicador Pine)</span>
       <span class="links"><a href="https://investorama.com.br" target="_blank" rel="noopener">↗ Investorama</a><a href="https://b3lab.com.br" target="_blank" rel="noopener">↗ B3Lab</a><a href="https://www.barchart.com/etfs-funds/quotes/EWZ/gamma-exposure" target="_blank" rel="noopener">↗ Barchart (EWZ)</a></span></div>
     <p class="hint">Os vencimentos são calculados sozinhos a partir da data dos níveis (ações/BOVA11: 3ª sexta da B3; IBOV/WIN: quarta mais próxima do dia 15 dos meses pares; EWZ: 3ª sexta nos EUA). Só preencha as datas para forçar outro vencimento. Para o dólar use o ticker WDO (ou DOL), com níveis em pontos (5740) ou reais (5,74). Uma linha por ativo, separadas por ponto e vírgula: <b>TICKER|REGIME|FLIP|EM_MIN|EM_MAX|PW1|CW1|BLOCO|SIGMA1_MIN</b>. Investorama e B3Lab não têm API e ficam atrás de login, por isso os níveis são colados aqui (o mesmo texto que vai no TradingView). Ficam salvos só neste navegador.</p>
+    <div class="grid-f" style="margin-bottom:8px">
+      <div class="f"><label for="lvlMode">Fonte dos níveis GEX</label><select id="lvlMode"><option value="auto">Calculados com dados da B3 (recomendado)</option><option value="manual">Só os colados abaixo</option></select></div>
+    </div>
     <textarea id="payload" rows="6"></textarea>
     <div class="grid-f" style="margin-top:10px">
       <div class="f"><label for="lvlDate">Níveis gerados em</label><input id="lvlDate" type="datetime-local"></div>
@@ -190,6 +202,19 @@
     <div class="card">
       <div class="row between"><span class="title" id="dTitle">Detalhe</span><span class="reg na" id="dReg">--</span></div>
       <div class="thesis" id="dThesis">Selecione um ativo na grade.</div>
+      <div class="gexbox" id="gexBox">
+        <div class="row between"><span class="title" id="gTitle">Termômetro do Gamma</span><span class="src" id="gSrc">--</span></div>
+        <div class="gauge" aria-hidden="true"><i id="gNeedle" style="left:50%"></i></div>
+        <div class="gauge-l"><span>SHORT GAMMA · acelera</span><span>neutro</span><span>LONG GAMMA · amortece</span></div>
+        <div class="gstats">
+          <div>GEX líquido no preço atual<b id="gNet">--</b></div>
+          <div>Gamma Flip<b id="gFlip">--</b></div>
+          <div>Vol. implícita ATM<b id="gIv">--</b></div>
+          <div>Base do cálculo<b id="gBase">--</b></div>
+        </div>
+        <canvas id="cvGex" aria-label="GEX por strike"></canvas>
+        <div class="sub" style="margin-top:4px">Barras: GEX por strike (verde = calls, vermelho = puts) · linha azul: GEX total em cada preço · tracejados: preço atual (azul) e Gamma Flip (amarelo)</div>
+      </div>
       <div class="tablewrap"><table><thead><tr><th>Nível</th><th>Preço</th><th>Distância</th><th>Leitura</th></tr></thead><tbody id="dTable"></tbody></table></div>
 
       <div style="margin-top:14px">
@@ -318,6 +343,7 @@ function parsePayload(txt) {
 }
 function validar(L) {
   if (L.placeholder) return [];
+  if (L.auto) return isFinite(L.flip) ? [] : ['sem Gamma Flip na faixa de ±12% (gamma de um lado só)'];
   const w = [], tol = (parseFloat($('tol').value) || 10) / 100;
   if (L.regime !== 'AMP' && L.regime !== 'AMO') w.push(`regime "${L.regime}" inválido`);
   if (isFinite(L.emMin) && isFinite(L.emMax)) {
@@ -418,7 +444,7 @@ function precoAtivo(tk) {
   return S.quotes[tk] || null;
 }
 function niveisAtivo(L) {
-  if (L.tk === 'WIN' && $('winUnit').value === 'ibov') {
+  if (L.tk === 'WIN' && (L.unit === 'ibov' || (!L.auto && $('winUnit').value === 'ibov'))) {
     const w = winInfo(); const r = w ? w.ratio : razaoTeorica();
     const p = (v) => isFinite(v) ? Math.round(v * r) : NaN;
     return { ...L, flip: p(L.flip), emMin: p(L.emMin), emMax: p(L.emMax), pw1: p(L.pw1), cw1: p(L.cw1), block: p(L.block), sig1: p(L.sig1) };
@@ -566,7 +592,7 @@ async function fonteFinnhub() {
     } catch (e) { falhas.push(`${sym} (${e.message})`); }
   }
   // Dólar pela Finnhub quando nenhuma outra fonte trouxe (variação do dia não vem nesse endpoint)
-  if (!S.quotes.USDBRL || S.quotes.USDBRL.src === 'FINNHUB') {
+  if (!S.quotes.WDO && (!S.quotes.USDBRL || S.quotes.USDBRL.src === 'FINNHUB')) {
     try {
       const d = await getJSON(`https://finnhub.io/api/v1/forex/rates?base=USD&token=${encodeURIComponent(k)}`);
       const brl = d && d.quote && parseFloat(d.quote.BRL);
@@ -587,7 +613,7 @@ async function atualizar() {
     const b3ok = await fonteB3();
     const faltam = B3_TICKERS.concat(['IBOV']).filter(t => !b3ok.includes(t === 'IBOV' ? 'IBOV' : t));
     if (faltam.length && !srv) await fonteBrapi();
-    else { S.brapi = 'off'; S.diag.brapi = 'não precisou (B3 trouxe tudo)'; }
+    else { S.brapi = 'off'; S.diag.brapi = 'reserva: não precisou, a B3 trouxe tudo'; }
     if (!srv) await fonteFinnhub();
     else { S.finn = 'off'; S.diag.finn = 'não usada (servidor ativo)'; }
     $('lastUpd').textContent = 'atualizado ' + new Date().toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo' });
@@ -597,9 +623,9 @@ async function atualizar() {
 // ================================================================
 // RENDER
 // ================================================================
-function setPill(id, st, txt) {
+function setPill(id, st, txt, offTxt) {
   const el = $(id); el.className = 'pill ' + st;
-  const lab = { ok: 'AO VIVO', err: 'ERRO', off: 'DESLIGADO', warn: 'PARCIAL' }[st];
+  const lab = { ok: 'AO VIVO', err: 'ERRO', off: offTxt || 'DESLIGADO', warn: 'PARCIAL' }[st];
   el.innerHTML = `<span class="dot"></span>${txt}: ${lab}`;
 }
 function kpi(label, tk, valor, dec, prev, src, time, nota) {
@@ -646,13 +672,14 @@ function analisar(L0) {
   const q = precoAtivo(L.tk);
   const price = q ? q.price : NaN;
   const warns = validar(L0);
-  const venc = L.placeholder ? null : vencimentoDe(L.tk);
+  const venc = L.placeholder || L0.auto ? null : vencimentoDe(L.tk);
   const vencido = !!(venc && Date.now() > venc.ref.getTime());
   let regLive = null;
   if (isFinite(price) && isFinite(L.flip)) regLive = price >= L.flip ? 'long' : 'short';
+  else if (isFinite(price) && L0.auto) regLive = L.regime === 'AMO' ? 'long' : 'short'; // sem Flip na faixa: gamma de um lado só
   const repLong = L.regime === 'AMO';
-  const divergente = regLive && (L.regime === 'AMP' || L.regime === 'AMO') && (regLive === 'long') !== repLong;
-  return { L, q, price, warns, venc, vencido, regLive, divergente, distFlip: pct(L.flip, price) };
+  const divergente = !L0.auto && regLive && (L.regime === 'AMP' || L.regime === 'AMO') && (regLive === 'long') !== repLong;
+  return { L, q, price, warns, venc, vencido, regLive, divergente, distFlip: isFinite(L.flip) ? pct(L.flip, price) : NaN };
 }
 function miniRuler(a) {
   const L = a.L, P = a.price;
@@ -665,6 +692,7 @@ function miniRuler(a) {
   const pin = isFinite(P) ? `<div class="pin" style="left:${x(P)}%"><span>${fmtN(P, decOf(L.tk))}</span></div>` : '';
   return `<div class="mini">${em}${mk(L.pw1, 'var(--red)', 'PW')}${mk(L.flip, 'var(--yellow)', 'FLIP')}${mk(L.cw1, 'var(--green)', 'CW')}${pin}</div>`;
 }
+const L0auto = (a) => !!(a.L && a.L.auto);
 function renderAssets(list) {
   $('assets').innerHTML = list.map(a => {
     const L = a.L, d = decOf(L.tk);
@@ -686,7 +714,7 @@ function renderAssets(list) {
       <div class="ln"><span>${reg}</span><span>Flip ${fmtN(L.flip, d)} <b class="${isFinite(a.distFlip) ? (a.distFlip >= 0 ? 'down' : 'up') : 'mut'}">${isFinite(a.distFlip) ? '(' + sign(a.distFlip) + a.distFlip.toFixed(2) + '%)' : ''}</b></span></div>
       ${miniRuler(a)}
       <div class="ln"><span>PW ${fmtN(L.pw1, d)}</span><span>EM ${fmtN(L.emMin, d)}–${fmtN(L.emMax, d)}</span><span>CW ${fmtN(L.cw1, d)}</span></div>
-      <div class="ln"><span class="src ${a.q ? (a.q.src === 'CALC' || a.q.src === 'MANUAL' ? 'derived' : 'live') : 'none'}">${a.q ? esc(a.q.src) : 'SEM COTAÇÃO'}</span><span>${a.q ? ago(a.q.time) : ''}</span></div>
+      <div class="ln"><span class="src ${a.q ? (a.q.src === 'CALC' || a.q.src === 'MANUAL' ? 'derived' : 'live') : 'none'}">${a.q ? esc(a.q.src) : 'SEM COTAÇÃO'}</span><span>${L0auto(a) ? '<span class="src live">GEX B3</span> ' : '<span class="src derived">GEX COLADO</span> '}${a.q ? ago(a.q.time) : ''}</span></div>
       ${a.warns.length || extras.length ? `<div class="warnline">⚠ ${esc([...extras, ...a.warns].join(' · '))}</div>` : ''}
     </div>`;
   }).join('');
@@ -714,7 +742,15 @@ function renderResumo(list) {
   $('sCheck').className = ruins.length || venc.length ? 'warnc' : 'up';
   $('sCheckDet').textContent = [ruins.length ? ruins.map(a => a.L.tk).join(', ') : '', venc.length ? `${venc.length} com vencimento passado` : ''].filter(Boolean).join(' · ') || 'níveis dentro do esperado';
 
-  const t = parseInt(load('lvlStamp', ''), 10), el = $('lvlStamp');
+  const el = $('lvlStamp');
+  if (S.gex && $('lvlMode').value === 'auto') {
+    const dt = S.gex.dataArquivos, ontem = (() => { const d = hojeUTC(); do { d.setUTCDate(d.getUTCDate() - 1); } while (!util(d)); return d.toISOString().slice(0, 10); })();
+    const fresco = dt >= ontem;
+    el.textContent = `${fresco ? '' : '⚠ '}GEX calculado: fechamento B3 de ${dt.split('-').reverse().slice(0, 2).join('/')}${fresco ? '' : ' (atualize)'}`;
+    el.className = 'pill ' + (fresco ? 'ok' : 'warn');
+    return;
+  }
+  const t = parseInt(load('lvlStamp', ''), 10);
   const ld = $('lvlDate').value ? new Date($('lvlDate').value + ':00-03:00') : null;
   const ref = ld && isFinite(ld) ? ld.getTime() : t;
   if (!ref) { el.textContent = '⚠ Níveis de exemplo: cole os seus em ⚙'; el.className = 'pill warn'; }
@@ -750,6 +786,56 @@ function renderDetalhe(list) {
   if (!pinned && isFinite(P)) html.push(`<tr style="background:rgba(56,189,248,.08)"><td><b style="color:var(--accent)">▶ Preço atual</b></td><td><b>${fmtN(P, d)}</b></td><td></td><td></td></tr>`);
   $('dTable').innerHTML = html.join('');
   $('dThesis').innerHTML = tese(a);
+  renderGamma(a);
+}
+function renderGamma(a) {
+  const box = $('gexBox'), L = a.L, g = L.g;
+  if (!g) { box.hidden = false; $('gTitle').textContent = `Termômetro do Gamma — ${L.tk}`; $('gSrc').textContent = 'SEM DADOS DE OPÇÕES'; $('gSrc').className = 'src none';
+    ['gNet', 'gFlip', 'gIv', 'gBase'].forEach(id => $(id).textContent = '--'); $('gNeedle').style.left = '50%';
+    const cv = $('cvGex'), ctx = cv.getContext('2d'); ctx.clearRect(0, 0, cv.width, cv.height);
+    $('gBase').textContent = L.tk === 'EWZ' ? 'EWZ: opções nos EUA (só níveis colados)' : 'níveis colados'; return; }
+  box.hidden = false;
+  const r = L.tk === 'WIN' ? ((winInfo() || {}).ratio || 1) : 1;      // WIN: perfil do IBOV projetado
+  const P = a.price, d = decOf(L.tk);
+  const prof = g.perfil.map(p => ({ s: p.s * r, g: p.g }));
+  // GEX líquido no preço ao vivo (interpolado no perfil)
+  let net = g.netGex;
+  if (isFinite(P)) { for (let i = 1; i < prof.length; i++) { if (P >= prof[i - 1].s && P <= prof[i].s) { const t = (P - prof[i - 1].s) / (prof[i].s - prof[i - 1].s); net = prof[i - 1].g + t * (prof[i].g - prof[i - 1].g); break; } } }
+  const maxAbs = Math.max(...prof.map(p => Math.abs(p.g))) || 1;
+  $('gNeedle').style.left = Math.max(2, Math.min(98, 50 + net / maxAbs * 48)) + '%';
+  $('gTitle').textContent = `Termômetro do Gamma — ${L.tk}`;
+  $('gSrc').textContent = `B3 ${S.gex.dataArquivos.split('-').reverse().slice(0, 2).join('/')} · ${g.nOpcoes} opções`; $('gSrc').className = 'src live';
+  const mi = (v) => `${v >= 0 ? '+' : '−'}R$ ${fmtN(Math.abs(v) / 1e6, Math.abs(v) >= 1e9 ? 0 : 1)} mi`;
+  $('gNet').textContent = `${mi(net)} / 1%`; $('gNet').className = net >= 0 ? 'up' : 'down';
+  $('gFlip').textContent = isFinite(L.flip) ? `${fmtN(L.flip, d)} (${sign(pct(L.flip, P))}${pct(L.flip, P).toFixed(2)}%)` : 'fora da faixa ±12%';
+  $('gIv').textContent = isFinite(g.ivAtm) ? (g.ivAtm * 100).toFixed(1) + '% a.a.' : '--';
+  $('gBase').textContent = L.tk === 'WIN' ? 'opções de IBOV → WIN' : L.tk === 'WDO' ? 'opções de DOL + WDO' : 'opções da B3';
+  drawGex(g, r, P, L, d);
+}
+function drawGex(g, r, P, L, dec) {
+  const cv = $('cvGex'), dpr = window.devicePixelRatio || 1, W = cv.clientWidth || 600, H = cv.clientHeight || 220;
+  if (cv.width !== Math.round(W * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+  const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+  const ks = g.strikes.map(e => ({ k: e.k * r, call: e.call, put: e.put }));
+  const prof = g.perfil.map(p => ({ s: p.s * r, g: p.g }));
+  const lo = Math.min(prof[0].s, ...ks.map(e => e.k)), hi = Math.max(prof[prof.length - 1].s, ...ks.map(e => e.k));
+  const pl = 8, pr = 8, pt = 10, pb = 20, pw = W - pl - pr, ph = H - pt - pb, mid = pt + ph / 2;
+  const x = (v) => pl + (v - lo) / (hi - lo) * pw;
+  const maxB = Math.max(1, ...ks.map(e => Math.max(e.call, -e.put)));
+  const maxP = Math.max(1, ...prof.map(p => Math.abs(p.g)));
+  ctx.strokeStyle = '#1e293b'; ctx.beginPath(); ctx.moveTo(pl, mid); ctx.lineTo(W - pr, mid); ctx.stroke();
+  const bw = Math.max(2, Math.min(10, pw / Math.max(ks.length, 1) * 0.6));
+  ks.forEach(e => {
+    const xx = x(e.k);
+    ctx.fillStyle = 'rgba(16,185,129,.85)'; const hc = e.call / maxB * (ph / 2 - 4); ctx.fillRect(xx - bw / 2, mid - hc, bw, hc);
+    ctx.fillStyle = 'rgba(239,68,68,.85)'; const hp = -e.put / maxB * (ph / 2 - 4); ctx.fillRect(xx - bw / 2, mid, bw, hp);
+  });
+  ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2; ctx.beginPath();
+  prof.forEach((p, i) => { const yy = mid - p.g / maxP * (ph / 2 - 4); if (i) ctx.lineTo(x(p.s), yy); else ctx.moveTo(x(p.s), yy); }); ctx.stroke(); ctx.lineWidth = 1;
+  const vline = (v, col, lab, dy) => { if (!isFinite(v) || v < lo || v > hi) return; ctx.save(); ctx.setLineDash([4, 3]); ctx.strokeStyle = col; ctx.beginPath(); ctx.moveTo(x(v), pt); ctx.lineTo(x(v), H - pb); ctx.stroke(); ctx.restore(); ctx.fillStyle = col; ctx.font = 'bold 10px system-ui'; ctx.fillText(lab, Math.min(W - 60, x(v) + 3), pt + 10 + dy); };
+  vline(L.flip, '#facc15', 'FLIP', 14); vline(P, '#38bdf8', 'PREÇO', 0);
+  ctx.fillStyle = '#64748b'; ctx.font = '10px system-ui';
+  [lo, (lo + hi) / 2, hi].forEach((v, i) => ctx.fillText(fmtN(v, dec), i === 0 ? pl : i === 1 ? W / 2 - 20 : W - pr - 50, H - 5));
 }
 function tese(a) {
   const L = a.L, d = decOf(L.tk), P = a.price;
@@ -765,6 +851,7 @@ function tese(a) {
   }
   if (isFinite(L.emMin) && isFinite(L.emMax)) partes.push(P > L.emMax ? 'O preço está <b>acima do Expected Move</b>: movimento esticado.' : P < L.emMin ? 'O preço está <b>abaixo do Expected Move</b>: movimento esticado.' : `Dentro do Expected Move (${fmtN(L.emMin, d)}–${fmtN(L.emMax, d)}).`);
   if (a.divergente) partes.push('⚠ O regime mudou desde o relatório (o preço cruzou o Flip).');
+  if (L.auto && L.g) partes.push(`Níveis calculados com ${L.g.nOpcoes} opções da B3 (fechamento de ${S.gex.dataArquivos.split('-').reverse().slice(0, 2).join('/')}).`);
   if (a.vencido) partes.push(`⚠ <b>Os níveis são do vencimento de ${ddmm(a.venc.ref)}, que já passou</b>. O próximo é ${ddmm(a.venc.prox)}: atualize os níveis.`);
   else if (a.venc) partes.push(`Vencimento de referência: ${ddmm(a.venc.ref)}.`);
   if (a.warns.length) partes.push(`⚠ Níveis suspeitos: ${esc(a.warns.join(', '))}.`);
@@ -817,10 +904,11 @@ function draw6L() {
 function render() {
   mostrarVencAuto();
   const dg = S.diag || {};
-  $('diag').innerHTML = `<div><b>B3 (IBOV, WIN, WDO, DI1, ações):</b> ${esc(dg.b3 || '—')}</div><div><b>Servidor Yahoo:</b> ${esc(dg.srv || '—')}</div><div><b>Brapi:</b> ${esc(dg.brapi || '—')}</div><div><b>Finnhub:</b> ${esc(dg.finn || '—')}</div>`;
-  setPill('pSrv', S.srv, 'SERVIDOR YAHOO');
-  setPill('pBrapi', S.brapi, 'BRAPI');
-  setPill('pFinn', S.finn, 'FINNHUB');
+  $('diag').innerHTML = `<div><b>GEX (níveis):</b> ${esc(dg.gex || 'carregando…')}</div><div><b>B3 (IBOV, WIN, WDO, DI1, ações):</b> ${esc(dg.b3 || '—')}</div><div><b>Servidor Yahoo:</b> ${esc(dg.srv || '—')}</div><div><b>Brapi:</b> ${esc(dg.brapi || '—')}</div><div><b>Finnhub:</b> ${esc(dg.finn || '—')}</div>`;
+  setPill('pSrv', S.srv, 'SERVIDOR YAHOO', 'SÓ NA VERCEL');
+  setPill('pBrapi', S.brapi, 'BRAPI', 'RESERVA');
+  setPill('pFinn', S.finn, 'FINNHUB', $('kFinn').value.trim() ? 'RESERVA' : 'SEM CHAVE');
+  const gp = $('pGex'); if (S.gex) { gp.className = 'pill ok'; gp.innerHTML = `<span class="dot"></span>GEX B3: ${S.gex.dataArquivos.split('-').reverse().slice(0, 2).join('/')}`; } else { gp.className = 'pill warn'; gp.innerHTML = '<span class="dot"></span>GEX: COLADO'; }
   setPill('pB3', S.b3, 'B3');
   renderMacro();
   const list = S.levels.map(analisar);
@@ -845,7 +933,7 @@ function contexto() {
   return `HORA: ${new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })} BRT
 MACRO: ${f('IBOV', S.quotes.IBOV, 0)} | WIN calculado ${w ? w.price + ' (' + w.base + ')' : 'n/d'} | ${f('Dólar', m.usd, 4)} | ${f('6L1', m.l6, 5)} | ${f('EWZ', m.ewz, 2)} | ${f('S&P', m.spx, 2)}
 ATIVO SELECIONADO: ${S.sel}
-NÍVEIS GEX (do relatório do usuário):
+NÍVEIS GEX (${S.gex && $('lvlMode').value === 'auto' ? 'calculados com posição em aberto e preços de referência das opções na B3, fechamento ' + S.gex.dataArquivos + '; os demais colados pelo usuário' : 'colados pelo usuário'}):
 ${linhas}`;
 }
 function respostaLocal() {
@@ -888,12 +976,36 @@ async function perguntar(q) {
 // ================================================================
 // INICIALIZAÇÃO
 // ================================================================
-const CAMPOS = { diCode: '', payload: DEFAULT_PAYLOAD, lvlDate: '2026-11-19T09:00', expB3: '', expIbov: '', expEwz: '', expWdo: '', tol: '10', winUnit: 'win', di: '13.85', kBrapi: '', kFinn: '', kGroq: '', mGroq: 'llama-3.3-70b-versatile', every: '30', everyBrapi: '300' };
+const CAMPOS = { lvlMode: 'auto', diCode: '', payload: DEFAULT_PAYLOAD, lvlDate: '2026-11-19T09:00', expB3: '', expIbov: '', expEwz: '', expWdo: '', tol: '10', winUnit: 'win', di: '13.85', kBrapi: '', kFinn: '', kGroq: '', mGroq: 'llama-3.3-70b-versatile', every: '30', everyBrapi: '300' };
+function montarNiveis() {
+  let base = parsePayload($('payload').value);
+  const g = S.gex && S.gex.ativos;
+  if ($('lvlMode').value === 'auto' && g) {
+    const nv = (v) => (typeof v === 'number' && isFinite(v)) ? v : NaN;
+    const auto = Object.entries(g).map(([tk, a]) => ({ tk, regime: a.regime, flip: nv(a.flip), emMin: nv(a.emMin), emMax: nv(a.emMax), pw1: nv(a.pw1), cw1: nv(a.cw1), block: nv(a.block), sig1: nv(a.sig1), auto: true, unit: tk === 'WIN' ? 'ibov' : 'nat', g: a }));
+    base = base.filter(l => !g[l.tk]);
+    const ordem = ['WIN', 'WDO', 'BOVA11', 'EWZ', 'PETR4', 'VALE3', 'ITUB4', 'BBDC4', 'BBAS3', 'B3SA3', 'ABEV3'];
+    base = auto.concat(base).sort((a, b) => (ordem.indexOf(a.tk) + 1 || 99) - (ordem.indexOf(b.tk) + 1 || 99));
+  }
+  return base;
+}
 function aplicarNiveis() {
-  S.levels = parsePayload($('payload').value);
+  S.levels = montarNiveis();
   if (S.levels.length && !S.levels.find(l => l.tk === S.sel)) S.sel = S.levels[0].tk;
   save('lvlStamp', String(Date.now()));
   render();
+}
+async function carregarGex() {
+  const estatico = location.protocol === 'file:' || /githack|github/.test(location.host);
+  const fontes = estatico ? ['gex.json'] : ['/api/gex', 'gex.json'];
+  for (const u of fontes) {
+    try {
+      const d = await getJSON(u + (u.endsWith('.json') ? '?t=' + Math.floor(Date.now() / 3600e3) : ''), 70000);
+      if (d && d.ativos && Object.keys(d.ativos).length) { S.gex = d; S.gexFonte = u.endsWith('.json') ? 'arquivo diário' : 'servidor'; break; }
+    } catch (e) { S.diag.gex = `⚠ ${u}: ${e.message}`; }
+  }
+  if (S.gex) S.diag.gex = `✔ ${Object.keys(S.gex.ativos).join(', ')} · fechamento B3 de ${S.gex.dataArquivos.split('-').reverse().slice(0, 2).join('/')} (${S.gexFonte})`;
+  S.levels = montarNiveis(); render();
 }
 function agendar() {
   clearInterval(S.timer);
@@ -929,9 +1041,10 @@ window.addEventListener('DOMContentLoaded', () => {
   $('chatIn').addEventListener('keydown', e => { if (e.key === 'Enter') perguntar(); });
   document.querySelectorAll('.qp').forEach(b => b.onclick = () => perguntar(b.dataset.q));
   setInterval(() => { $('clock').textContent = new Date().toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo' }) + ' BRT'; }, 1000);
-  window.addEventListener('resize', draw6L);
-  S.levels = parsePayload($('payload').value);
-  if (!load('payload', null)) $('drawer').classList.add('open');
+  window.addEventListener('resize', () => { draw6L(); render(); });
+  S.levels = montarNiveis();
+  $('lvlMode').addEventListener('change', () => { S.levels = montarNiveis(); render(); });
+  carregarGex();
   render();
   atualizar();
   agendar();
