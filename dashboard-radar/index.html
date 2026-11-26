@@ -30,6 +30,8 @@
   .pill.warn { color: #fde047; border-color: var(--yellow); } .pill.warn .dot { background: var(--yellow); }
   @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(16,185,129,.8); } 70% { box-shadow: 0 0 0 7px rgba(16,185,129,0); } 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); } }
   @media (prefers-reduced-motion: reduce) { .pill.ok .dot { animation: none; } }
+  .diag { width: 100%; display: grid; gap: 3px; font-size: .7rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 8px; }
+  .diag b { color: #cbd5e1; }
   .clock { font-variant-numeric: tabular-nums; font-weight: 800; font-size: .95rem; }
   .up { color: var(--green); } .down { color: var(--red); } .warnc { color: var(--yellow); } .mut { color: var(--muted); }
 
@@ -120,6 +122,7 @@
       <button class="btn ghost" id="btnRefresh" type="button">↻ Atualizar</button>
       <button class="btn" id="btnCfg" type="button">⚙ Configurar</button>
     </div>
+    <div id="diag" class="diag"></div>
   </div>
 
   <!-- CONFIGURAÇÕES -->
@@ -149,13 +152,14 @@
 
     <div class="sec"><span>3. Chaves de API (salvas só neste navegador)</span>
       <span class="links"><a href="https://brapi.dev" target="_blank" rel="noopener">↗ Token Brapi (grátis)</a><a href="https://finnhub.io/register" target="_blank" rel="noopener">↗ Chave Finnhub (grátis)</a><a href="https://console.groq.com/keys" target="_blank" rel="noopener">↗ Chave Groq (grátis)</a></span></div>
-    <p class="hint">Publicado na Vercel, o servidor próprio busca tudo no Yahoo sem chave (inclusive 6L1 da CME e velas). Sem servidor (link estático), o painel usa Brapi (IBOV, ações, BOVA11, dólar) e Finnhub (EWZ e SPY como proxy do S&amp;P 500).</p>
+    <p class="hint">Publicado na Vercel, o servidor próprio busca tudo no Yahoo sem chave (inclusive 6L1 da CME e velas). Sem servidor (link estático), o painel usa Brapi e Finnhub. Atenção: o plano grátis da Brapi só libera ativos de teste (PETR4, VALE3, ITUB4); IBOV, dólar e as demais ações precisam de plano pago da Brapi ou do servidor na Vercel. A Finnhub grátis traz EWZ, SPY (proxy do S&amp;P 500) e tenta o dólar.</p>
     <div class="grid-f">
       <div class="f"><label for="kBrapi">Token Brapi</label><input id="kBrapi" type="password" autocomplete="off"></div>
       <div class="f"><label for="kFinn">Chave Finnhub</label><input id="kFinn" type="password" autocomplete="off"></div>
       <div class="f"><label for="kGroq">Chave Groq (gsk_…)</label><input id="kGroq" type="password" autocomplete="off"></div>
       <div class="f"><label for="mGroq">Modelo Groq</label><input id="mGroq" list="groqList"><datalist id="groqList"><option value="llama-3.3-70b-versatile"></option><option value="llama-3.1-8b-instant"></option></datalist></div>
       <div class="f"><label for="every">Atualizar a cada (s)</label><input id="every" type="number" min="10" step="5"></div>
+      <div class="f"><label for="everyBrapi">Brapi a cada (s) — poupa a cota</label><input id="everyBrapi" type="number" min="60" step="30"></div>
     </div>
   </div>
 
@@ -320,24 +324,32 @@ function vencimentoDe(tk) {
 // ================================================================
 // WIN: preço e projeção
 // ================================================================
+function razaoTeorica() {
+  const di = parseFloat($('di').value) || 0, du = parseFloat($('du').value) || 0;
+  return Math.pow(1 + di / 100, du / 252);
+}
 function winInfo() {
   const ib = S.quotes.IBOV;
-  if (!ib || !isFinite(ib.price)) return null;
+  if (!ib || !isFinite(ib.price)) {
+    // Sem IBOV ao vivo: usa o WIN digitado no Sync (fica parado até o próximo Sync)
+    const wm = parseFloat(load('winManual', '')), wt = parseInt(load('winManualTs', ''), 10);
+    if (isFinite(wm) && wm > 50000) return { price: wm, ratio: razaoTeorica(), base: 'digitado (sem IBOV ao vivo)', prev: null, time: wt || null, manual: true };
+    return null;
+  }
   const ratio = parseFloat(load('winRatio', ''));
   if (isFinite(ratio) && ratio > 0.9 && ratio < 1.2) {
-    return { price: Math.round(ib.price * ratio), ratio, base: 'ágio real (sync)', prev: ib.prev ? ib.prev * ratio : null };
+    return { price: Math.round(ib.price * ratio), ratio, base: 'ágio real (sync)', prev: ib.prev ? ib.prev * ratio : null, time: ib.time };
   }
-  const di = parseFloat($('di').value) || 0, du = parseFloat($('du').value) || 0;
-  const r = Math.pow(1 + di / 100, du / 252);
-  return { price: Math.round(ib.price * r), ratio: r, base: 'ágio teórico DI', prev: ib.prev ? ib.prev * r : null };
+  const r = razaoTeorica();
+  return { price: Math.round(ib.price * r), ratio: r, base: 'ágio teórico DI', prev: ib.prev ? ib.prev * r : null, time: ib.time };
 }
 function precoAtivo(tk) {
-  if (tk === 'WIN') { const w = winInfo(); return w ? { price: w.price, prev: w.prev, time: S.quotes.IBOV.time, src: 'CALC' } : null; }
+  if (tk === 'WIN') { const w = winInfo(); return w ? { price: w.price, prev: w.prev, time: w.time, src: w.manual ? 'MANUAL' : 'CALC' } : null; }
   return S.quotes[tk] || null;
 }
 function niveisAtivo(L) {
   if (L.tk === 'WIN' && $('winUnit').value === 'ibov') {
-    const w = winInfo(); const r = w ? w.ratio : 1;
+    const w = winInfo(); const r = w ? w.ratio : razaoTeorica();
     const p = (v) => isFinite(v) ? Math.round(v * r) : NaN;
     return { ...L, flip: p(L.flip), emMin: p(L.emMin), emMax: p(L.emMax), pw1: p(L.pw1), cw1: p(L.cw1), block: p(L.block), sig1: p(L.sig1) };
   }
@@ -349,10 +361,23 @@ function niveisAtivo(L) {
 // ================================================================
 async function getJSON(url, ms = 10000) {
   const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), ms);
-  try { const r = await fetch(url, { signal: ctl.signal, cache: 'no-store' }); if (!r.ok) throw new Error('HTTP ' + r.status); return await r.json(); }
-  finally { clearTimeout(t); }
+  try {
+    const r = await fetch(url, { signal: ctl.signal, cache: 'no-store' });
+    if (!r.ok) {
+      let msg = '';
+      try { const j = await r.json(); msg = j.message || j.error || ''; } catch (_) {}
+      throw new Error(`HTTP ${r.status}${msg ? ' — ' + msg : ''}`);
+    }
+    return await r.json();
+  } catch (e) {
+    if (e.name === 'AbortError') throw new Error('sem resposta (tempo esgotado)');
+    if (e instanceof TypeError) throw new Error('bloqueado ou sem rede');
+    throw e;
+  } finally { clearTimeout(t); }
 }
 const B3_TICKERS = ['BOVA11', 'PETR4', 'VALE3', 'ITUB4', 'BBDC4', 'BBAS3', 'B3SA3', 'ABEV3'];
+const BRAPI_TESTE = ['PETR4', 'VALE3', 'ITUB4'];
+S.diag = {}; S.lastBrapi = 0;
 
 async function fonteServidor() {
   try {
@@ -360,63 +385,84 @@ async function fonteServidor() {
     if (!d || !d.quotes || !Object.keys(d.quotes).length) throw new Error('vazio');
     Object.assign(S.quotes, d.quotes);
     if (Array.isArray(d.candles6L)) S.candles6L = d.candles6L;
-    S.srv = 'ok'; return true;
-  } catch (e) { S.srv = location.protocol === 'file:' || /githack|github/.test(location.host) ? 'off' : 'err'; return false; }
+    S.srv = 'ok';
+    S.diag.srv = `✔ ${Object.keys(d.quotes).length} cotações do Yahoo` + (d.errors && d.errors.length ? ` · falhas: ${d.errors.length}` : '');
+    return true;
+  } catch (e) {
+    const estatico = location.protocol === 'file:' || /githack|github/.test(location.host);
+    S.srv = estatico ? 'off' : 'err';
+    S.diag.srv = estatico ? 'não existe neste link (só na Vercel)' : `⚠ ${e.message}`;
+    return false;
+  }
 }
+const brapiQ = (r) => ({ price: r.regularMarketPrice, prev: r.regularMarketPreviousClose, open: r.regularMarketOpen, high: r.regularMarketDayHigh, low: r.regularMarketDayLow, time: Date.parse(r.regularMarketTime) || Date.now(), src: 'BRAPI' });
 async function fonteBrapi() {
   const tk = $('kBrapi').value.trim();
+  const intervalo = Math.max(60, parseInt($('everyBrapi').value, 10) || 300) * 1000;
+  if (Date.now() - S.lastBrapi < intervalo) return; // poupa a cota mensal
+  S.lastBrapi = Date.now();
   const q = tk ? `?token=${encodeURIComponent(tk)}` : '';
-  let ok = false;
-  // Ações e BOVA11. Sem token a Brapi libera só os ativos de teste (PETR4, VALE3, ITUB4).
-  const lista = tk ? B3_TICKERS : ['PETR4', 'VALE3', 'ITUB4'];
-  const guardar = (r) => {
-    if (!r || !isFinite(r.regularMarketPrice)) return;
-    S.quotes[r.symbol] = { price: r.regularMarketPrice, prev: r.regularMarketPreviousClose, open: r.regularMarketOpen, high: r.regularMarketDayHigh, low: r.regularMarketDayLow, time: Date.parse(r.regularMarketTime) || Date.now(), src: 'BRAPI' };
-    ok = true;
-  };
-  const recebidos = new Set();
+  const ok = [], negados = [], msgs = new Set();
+  const guardar = (r) => { if (r && isFinite(r.regularMarketPrice)) { S.quotes[r.symbol] = brapiQ(r); ok.push(r.symbol); } };
+  const lista = tk ? B3_TICKERS : BRAPI_TESTE;
   try {
     const d = await getJSON(`https://brapi.dev/api/quote/${lista.join(',')}${q}`);
-    (d.results || []).forEach(r => { guardar(r); recebidos.add(r.symbol); });
-  } catch (e) {}
-  // Plano que não aceita lote: busca um por um o que faltou
-  for (const t of lista.filter(t => !recebidos.has(t))) {
-    try { const d = await getJSON(`https://brapi.dev/api/quote/${t}${q}`); guardar(d.results && d.results[0]); } catch (e) {}
+    (d.results || []).forEach(guardar);
+  } catch (e) { msgs.add(e.message); }
+  // O plano pode não aceitar lote: tenta um por um o que faltou
+  for (const t of lista.filter(t => !ok.includes(t))) {
+    try { const d = await getJSON(`https://brapi.dev/api/quote/${t}${q}`); guardar(d.results && d.results[0]); if (!ok.includes(t)) negados.push(t); }
+    catch (e) { negados.push(t); msgs.add(e.message); }
   }
   if (tk) {
+    try { const d = await getJSON(`https://brapi.dev/api/quote/%5EBVSP${q}`); const r = d.results && d.results[0]; if (r && isFinite(r.regularMarketPrice)) { S.quotes.IBOV = brapiQ(r); ok.push('IBOV'); } else negados.push('IBOV'); }
+    catch (e) { negados.push('IBOV'); msgs.add(e.message); }
     try {
-      const d = await getJSON(`https://brapi.dev/api/quote/%5EBVSP${q}`);
-      const r = d.results && d.results[0];
-      if (r && isFinite(r.regularMarketPrice)) { S.quotes.IBOV = { price: r.regularMarketPrice, prev: r.regularMarketPreviousClose, open: r.regularMarketOpen, high: r.regularMarketDayHigh, low: r.regularMarketDayLow, time: Date.parse(r.regularMarketTime) || Date.now(), src: 'BRAPI' }; ok = true; }
-    } catch (e) {}
-    try {
-      const d = await getJSON(`https://brapi.dev/api/v2/currency?currency=USD-BRL${q.replace('?', '&')}`);
+      const d = await getJSON(`https://brapi.dev/api/v2/currency?currency=USD-BRL&token=${encodeURIComponent(tk)}`);
       const c = d.currency && d.currency[0]; const bid = c && parseFloat(c.bidPrice);
-      if (bid > 0) { const p = parseFloat(c.percentageChange) || 0; S.quotes.USDBRL = { price: bid, prev: bid / (1 + p / 100), time: (parseInt(c.updatedAtTimestamp, 10) * 1000) || Date.now(), src: 'BRAPI' }; ok = true; }
-    } catch (e) {}
+      if (bid > 0) { const pc = parseFloat(c.percentageChange) || 0; S.quotes.USDBRL = { price: bid, prev: bid / (1 + pc / 100), time: (parseInt(c.updatedAtTimestamp, 10) * 1000) || Date.now(), src: 'BRAPI' }; ok.push('Dólar'); }
+      else negados.push('Dólar');
+    } catch (e) { negados.push('Dólar'); msgs.add(e.message); }
   }
-  S.brapi = !tk ? (ok ? 'warn' : 'err') : (ok ? 'ok' : 'err');
-  return ok;
+  S.brapi = !ok.length ? 'err' : (negados.length || !tk) ? 'warn' : 'ok';
+  const tokenRuim = [...msgs].some(m => /inválido|inativo|INVALID/i.test(m));
+  const plano = tokenRuim ? ' — token inválido ou inativo: confira o token copiado da brapi.dev'
+    : negados.length && ok.length && ok.every(t => BRAPI_TESTE.includes(t))
+    ? ' — o plano grátis da Brapi só libera ativos de teste; IBOV, dólar e demais ações exigem plano pago'
+    : '';
+  S.diag.brapi = `${ok.length ? '✔ ' + ok.join(', ') : 'nada recebido'}${negados.length ? ' · ⚠ sem acesso: ' + negados.join(', ') : ''}${plano}${!plano && msgs.size ? ' · ' + [...msgs][0] : ''}${!tk ? ' · sem token (só ativos de teste)' : ''}`;
 }
 async function fonteFinnhub() {
   const k = $('kFinn').value.trim();
-  if (!k) { S.finn = 'off'; return false; }
-  let ok = false;
+  if (!k) { S.finn = 'off'; S.diag.finn = 'sem chave'; return; }
+  const ok = [], falhas = [];
   for (const [key, sym] of [['EWZ', 'EWZ'], ['SPY', 'SPY']]) {
     try {
       const d = await getJSON(`https://finnhub.io/api/v1/quote?symbol=${sym}&token=${encodeURIComponent(k)}`);
-      if (d && d.c) { S.quotes[key] = { price: d.c, prev: d.pc, open: d.o, high: d.h, low: d.l, time: d.t * 1000, src: 'FINNHUB' }; ok = true; }
-    } catch (e) {}
+      if (d && d.c) { S.quotes[key] = { price: d.c, prev: d.pc, open: d.o, high: d.h, low: d.l, time: d.t * 1000, src: 'FINNHUB' }; ok.push(sym); } else falhas.push(sym);
+    } catch (e) { falhas.push(`${sym} (${e.message})`); }
   }
-  S.finn = ok ? 'ok' : 'err';
-  return ok;
+  // Dólar pela Finnhub quando nenhuma outra fonte trouxe (variação do dia não vem nesse endpoint)
+  if (!S.quotes.USDBRL || S.quotes.USDBRL.src === 'FINNHUB') {
+    try {
+      const d = await getJSON(`https://finnhub.io/api/v1/forex/rates?base=USD&token=${encodeURIComponent(k)}`);
+      const brl = d && d.quote && parseFloat(d.quote.BRL);
+      if (brl > 0) {
+        const prev = S.quotes.USDBRL && S.quotes.USDBRL.src === 'FINNHUB' ? S.quotes.USDBRL.prev : null;
+        S.quotes.USDBRL = { price: brl, prev: prev || parseFloat(load('usdPrevFinn', '')) || null, time: Date.now(), src: 'FINNHUB' };
+        ok.push('Dólar');
+      } else falhas.push('Dólar');
+    } catch (e) { falhas.push(`Dólar (${e.message})`); }
+  }
+  S.finn = !ok.length ? 'err' : falhas.length ? 'warn' : 'ok';
+  S.diag.finn = `${ok.length ? '✔ ' + ok.join(', ') : 'nada recebido'}${falhas.length ? ' · ⚠ ' + falhas.join(', ') : ''}`;
 }
 async function atualizar() {
   if (S.busy) return; S.busy = true;
   try {
     const srv = await fonteServidor();
     if (!srv) { await fonteBrapi(); await fonteFinnhub(); }
-    else { S.brapi = 'off'; S.finn = 'off'; }
+    else { S.brapi = 'off'; S.finn = 'off'; S.diag.brapi = 'não usada (servidor ativo)'; S.diag.finn = 'não usada (servidor ativo)'; }
     $('lastUpd').textContent = 'atualizado ' + new Date().toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo' });
   } finally { S.busy = false; render(); }
 }
@@ -426,15 +472,15 @@ async function atualizar() {
 // ================================================================
 function setPill(id, st, txt) {
   const el = $(id); el.className = 'pill ' + st;
-  const lab = { ok: 'AO VIVO', err: 'ERRO', off: 'DESLIGADO', warn: 'PARCIAL (SEM TOKEN)' }[st];
+  const lab = { ok: 'AO VIVO', err: 'ERRO', off: 'DESLIGADO', warn: 'PARCIAL' }[st];
   el.innerHTML = `<span class="dot"></span>${txt}: ${lab}`;
 }
 function kpi(label, tk, valor, dec, prev, src, time, nota) {
   const p = pct(valor, prev);
-  const cls = src === 'none' ? 'none' : (src === 'DERIVADO' || src === 'CALC' || src === 'PROXY SPY') ? 'derived' : 'live';
+  const cls = src === 'none' ? 'none' : (src === 'DERIVADO' || src === 'CALC' || src === 'PROXY SPY' || src === 'MANUAL') ? 'derived' : 'live';
   return `<div class="card kpi"><div class="lbl"><span>${label}</span><span class="${isFinite(p) ? (p >= 0 ? 'up' : 'down') : 'mut'}">${isFinite(p) ? sign(p) + p.toFixed(2) + '%' : '—'}</span></div>
     <div class="val">${fmtN(valor, dec)}</div>
-    <div class="meta"><span class="src ${cls}">${src === 'none' ? 'SEM DADO' : esc(src)}</span><span>${nota || ago(time)}</span></div></div>`;
+    <div class="meta"><span class="src ${cls}">${src === 'none' ? 'SEM DADO' : esc(src)}</span><span>${[nota, ago(time)].filter(Boolean).join(' · ')}</span></div></div>`;
 }
 function macroVals() {
   const q = S.quotes;
@@ -452,7 +498,7 @@ function renderMacro() {
   const ib = q.IBOV;
   $('macro').innerHTML =
     kpi('IBOV', 'IBOV', ib?.price, 0, ib?.prev, ib ? ib.src : 'none', ib?.time) +
-    kpi('WIN (calculado)', 'WIN', w?.price, 0, w?.prev, w ? 'CALC' : 'none', null, w ? w.base : 'precisa do IBOV') +
+    kpi('WIN', 'WIN', w?.price, 0, w?.prev, w ? (w.manual ? 'MANUAL' : 'CALC') : 'none', w?.time, w ? w.base : 'sem IBOV: digite o WIN em ⚙') +
     kpi('Dólar (USD/BRL)', 'USDBRL', m.usd?.price, 4, m.usd?.prev, m.usd ? m.usd.src : 'none', m.usd?.time) +
     kpi('6L1 (Real CME)', '6L', m.l6?.price, 5, m.l6?.prev, m.l6 ? m.l6.src : 'none', m.l6?.time, m.l6 && m.l6.src === 'DERIVADO' ? '1 ÷ dólar à vista' : '') +
     kpi('EWZ', 'EWZ', m.ewz?.price, 2, m.ewz?.prev, m.ewz ? m.ewz.src : 'none', m.ewz?.time) +
@@ -495,7 +541,7 @@ function renderAssets(list) {
       <div class="ln"><span>${reg}</span><span>Flip ${fmtN(L.flip, d)} <b class="${isFinite(a.distFlip) ? (a.distFlip >= 0 ? 'down' : 'up') : 'mut'}">${isFinite(a.distFlip) ? '(' + sign(a.distFlip) + a.distFlip.toFixed(2) + '%)' : ''}</b></span></div>
       ${miniRuler(a)}
       <div class="ln"><span>PW ${fmtN(L.pw1, d)}</span><span>EM ${fmtN(L.emMin, d)}–${fmtN(L.emMax, d)}</span><span>CW ${fmtN(L.cw1, d)}</span></div>
-      <div class="ln"><span class="src ${a.q ? (a.q.src === 'CALC' ? 'derived' : 'live') : 'none'}">${a.q ? esc(a.q.src) : 'SEM COTAÇÃO'}</span><span>${a.q ? ago(a.q.time) : ''}</span></div>
+      <div class="ln"><span class="src ${a.q ? (a.q.src === 'CALC' || a.q.src === 'MANUAL' ? 'derived' : 'live') : 'none'}">${a.q ? esc(a.q.src) : 'SEM COTAÇÃO'}</span><span>${a.q ? ago(a.q.time) : ''}</span></div>
       ${a.warns.length || extras.length ? `<div class="warnline">⚠ ${esc([...extras, ...a.warns].join(' · '))}</div>` : ''}
     </div>`;
   }).join('');
@@ -619,6 +665,8 @@ function draw6L() {
   $('c6c').textContent = 'Atual: ' + last.c.toFixed(5);
 }
 function render() {
+  const dg = S.diag || {};
+  $('diag').innerHTML = `<div><b>Servidor Yahoo:</b> ${esc(dg.srv || '—')}</div><div><b>Brapi:</b> ${esc(dg.brapi || '—')}</div><div><b>Finnhub:</b> ${esc(dg.finn || '—')}</div>`;
   setPill('pSrv', S.srv, 'SERVIDOR YAHOO');
   setPill('pBrapi', S.brapi, 'BRAPI');
   setPill('pFinn', S.finn, 'FINNHUB');
@@ -688,7 +736,7 @@ async function perguntar(q) {
 // ================================================================
 // INICIALIZAÇÃO
 // ================================================================
-const CAMPOS = { payload: DEFAULT_PAYLOAD, lvlDate: '2026-11-19T09:00', expB3: '2026-11-19', expIbov: '2026-12-16', expEwz: '2026-11-20', tol: '10', winUnit: 'win', di: '13.85', kBrapi: '', kFinn: '', kGroq: '', mGroq: 'llama-3.3-70b-versatile', every: '30' };
+const CAMPOS = { payload: DEFAULT_PAYLOAD, lvlDate: '2026-11-19T09:00', expB3: '2026-11-19', expIbov: '2026-12-16', expEwz: '2026-11-20', tol: '10', winUnit: 'win', di: '13.85', kBrapi: '', kFinn: '', kGroq: '', mGroq: 'llama-3.3-70b-versatile', every: '30', everyBrapi: '300' };
 function aplicarNiveis() {
   S.levels = parsePayload($('payload').value);
   if (S.levels.length && !S.levels.find(l => l.tk === S.sel)) S.sel = S.levels[0].tk;
@@ -709,15 +757,17 @@ window.addEventListener('DOMContentLoaded', () => {
   if (v) { $('du').value = duAte(v); $('duHint').textContent = `(auto: venc. ${v.toISOString().slice(8, 10)}/${v.toISOString().slice(5, 7)})`; }
   $('du').addEventListener('input', render);
   $('btnCfg').onclick = () => $('drawer').classList.toggle('open');
-  $('btnRefresh').onclick = atualizar;
+  $('btnRefresh').onclick = () => { S.lastBrapi = 0; atualizar(); };
   $('btnApply').onclick = aplicarNiveis;
   $('btnWinSync').onclick = () => {
     const w = parseFloat($('winSync').value), ib = S.quotes.IBOV;
-    if (!(w > 50000) || !ib) { $('winSync').setCustomValidity('Precisa do preço do WIN e do IBOV ao vivo'); $('winSync').reportValidity(); return; }
+    if (!(w > 50000)) { $('winSync').setCustomValidity('Digite o preço atual do WIN (ex: 175200)'); $('winSync').reportValidity(); return; }
     $('winSync').setCustomValidity('');
-    save('winRatio', String(w / ib.price)); render();
+    save('winManual', String(w)); save('winManualTs', String(Date.now()));
+    if (ib && isFinite(ib.price)) save('winRatio', String(w / ib.price));
+    render();
   };
-  $('btnWinAuto').onclick = () => { save('winRatio', ''); $('winSync').value = ''; render(); };
+  $('btnWinAuto').onclick = () => { save('winRatio', ''); save('winManual', ''); $('winSync').value = ''; render(); };
   $('assets').addEventListener('click', e => { const c = e.target.closest('.asset'); if (c) { S.sel = c.dataset.tk; render(); } });
   $('assets').addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('asset')) { e.preventDefault(); S.sel = e.target.dataset.tk; render(); } });
   $('btnAsk').onclick = () => perguntar();
