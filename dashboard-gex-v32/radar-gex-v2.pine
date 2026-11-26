@@ -1,0 +1,240 @@
+//@version=6
+indicator("Radar Institucional GEX v2 [9 Ativos B3 + EWZ]", overlay=true, max_labels_count=60)
+
+// ============================================================================
+// 1. ENTRADAS
+// Formato por ativo: TICKER|REGIME|FLIP|EM_MIN|EM_MAX|PW1|CW1|BLOCO|SIGMA1_MIN
+// ============================================================================
+string grp_data = "📡 Payload Institucional GEX"
+string default_payload = "WIN|AMP|173360|171405|177005|173000|175000|174000|170140;" +
+                         "BOVA11|AMP|168.40|164.75|171.25|165.00|170.00|168.00|163.50;" +
+                         "EWZ|AMP|35.10|30.35|31.65|30.00|43.00|31.00|28.00;" +
+                         "PETR4|AMP|45.65|44.13|46.47|44.91|46.41|46.41|43.41;" +
+                         "VALE3|AMP|63.89|62.03|65.37|62.39|64.39|64.39|60.89;" +
+                         "ITUB4|AMO|42.45|41.05|43.55|41.50|43.00|42.50|40.50;" +
+                         "BBDC4|AMO|14.80|14.13|15.17|14.45|15.20|14.95|13.70;" +
+                         "BBAS3|AMP|22.79|14.58|15.62|15.04|16.04|15.04|14.04;" +
+                         "B3SA3|AMP|23.41|14.42|15.36|14.02|15.02|15.52|13.77;" +
+                         "ABEV3|AMO|15.68|15.51|16.07|15.57|15.82|15.82|15.07"
+
+string payload   = input.text_area(default_payload, "String de Dados GEX", group=grp_data, tooltip="TICKER|REGIME|FLIP|EM_MIN|EM_MAX|PW1|CW1|BLOCO|SIGMA1_MIN — um ativo por bloco, separados por ponto e vírgula. REGIME = AMP (short gamma) ou AMO (long gamma).")
+int    lvl_date  = input.time(timestamp("2026-11-19T09:00:00-03:00"), "Data/hora em que os níveis foram gerados", group=grp_data)
+int    exp_b3    = input.time(timestamp("2026-11-19T18:00:00-03:00"), "Vencimento opções de ações B3", group=grp_data)
+int    exp_ibov  = input.time(timestamp("2026-12-16T18:00:00-03:00"), "Vencimento opções de IBOV (níveis do WIN)", group=grp_data)
+int    exp_ewz   = input.time(timestamp("2026-11-20T17:00:00-03:00"), "Vencimento opções EWZ", group=grp_data)
+int    max_age_h = input.int(24, "Níveis desatualizados após (horas)", minval=1, group=grp_data)
+float  tol_pct   = input.float(10.0, "Tolerância da validação (%)", minval=1, group=grp_data, tooltip="Avisa quando o Flip sai do Expected Move além desta folga, ou quando Walls/Bloco saem além do dobro dela.")
+
+string grp_win  = "📐 Projeção WIN"
+string win_unit = input.string("WIN (já projetado)", "Níveis do WIN estão em", options=["WIN (já projetado)", "IBOV (projetar pela base ao vivo)"], group=grp_win, tooltip="Se o relatório traz os níveis em pontos do IBOV, o indicador projeta para o WIN pela razão WIN/IBOV de cada barra (ágio real, ao vivo).")
+string ibov_sym = input.symbol("BMFBOVESPA:IBOV", "Símbolo do IBOV", group=grp_win)
+
+string grp_em   = "📏 Expected Move ao vivo"
+bool   show_eml = input.bool(true, "Plotar EM ao vivo (volatilidade realizada)", group=grp_em)
+int    vol_len  = input.int(20, "Janela da volatilidade (dias)", minval=5, group=grp_em)
+
+string grp_vis     = "🎨 Configurações Visuais"
+bool   show_levels = input.bool(true, "Plotar níveis no gráfico", group=grp_vis)
+bool   show_labels = input.bool(true, "Exibir rótulos de preço", group=grp_vis)
+bool   show_table  = input.bool(true, "Exibir painel institucional", group=grp_vis)
+string tbl_pos     = input.string("top_right", "Posição do painel", options=["top_right", "bottom_right", "top_left", "bottom_left"], group=grp_vis)
+
+// ============================================================================
+// 2. TICKER ATUAL (WIN contínuo/vencimentos, fracionário B3 e EWZ)
+// ============================================================================
+f_normalize_ticker(string raw_ticker) =>
+    string t = str.upper(raw_ticker)
+    if str.startswith(t, "WIN")
+        "WIN"
+    else
+        str.endswith(t, "F") and str.length(t) > 5 ? str.substring(t, 0, str.length(t) - 1) : t
+
+string current_asset = f_normalize_ticker(syminfo.ticker)
+bool   is_win        = current_asset == "WIN"
+bool   is_ewz        = current_asset == "EWZ"
+
+// ============================================================================
+// 3. LEITURA DO PAYLOAD (uma vez, na primeira barra: valores ficam em todas as barras)
+// ============================================================================
+var string rep_regime = "N/A"
+var float  r_flip     = na
+var float  r_em_min   = na
+var float  r_em_max   = na
+var float  r_pw1      = na
+var float  r_cw1      = na
+var float  r_block    = na
+var float  r_sig1     = na
+var bool   found      = false
+
+if barstate.isfirst
+    for row in str.split(payload, ";")
+        array<string> cols = str.split(str.trim(row), "|")
+        if array.size(cols) >= 9
+            if str.upper(str.trim(array.get(cols, 0))) == current_asset
+                rep_regime := str.upper(str.trim(array.get(cols, 1)))
+                r_flip     := str.tonumber(str.trim(array.get(cols, 2)))
+                r_em_min   := str.tonumber(str.trim(array.get(cols, 3)))
+                r_em_max   := str.tonumber(str.trim(array.get(cols, 4)))
+                r_pw1      := str.tonumber(str.trim(array.get(cols, 5)))
+                r_cw1      := str.tonumber(str.trim(array.get(cols, 6)))
+                r_block    := str.tonumber(str.trim(array.get(cols, 7)))
+                r_sig1     := str.tonumber(str.trim(array.get(cols, 8)))
+                found      := true
+                break
+
+// ============================================================================
+// 4. DADOS AO VIVO: base WIN/IBOV e Expected Move por volatilidade realizada
+// ============================================================================
+float ibov_close = request.security(ibov_sym, timeframe.period, close, ignore_invalid_symbol=true)
+bool  use_basis  = is_win and win_unit == "IBOV (projetar pela base ao vivo)" and not na(ibov_close) and ibov_close > 0
+float ratio      = use_basis ? close / ibov_close : 1.0
+
+f_proj(float x) =>
+    na(x) ? na : math.round_to_mintick(x * ratio)
+
+float flip   = f_proj(r_flip)
+float em_min = f_proj(r_em_min)
+float em_max = f_proj(r_em_max)
+float pw1    = f_proj(r_pw1)
+float cw1    = f_proj(r_cw1)
+float block  = f_proj(r_block)
+float sig1   = f_proj(r_sig1)
+
+// Abertura do dia e desvio-padrão diário dos retornos (até ontem, sem repintar)
+float d_open = request.security(syminfo.tickerid, "D", open, lookahead=barmerge.lookahead_on)
+float d_sig  = request.security(syminfo.tickerid, "D", ta.stdev(math.log(close / close[1]), vol_len)[1], lookahead=barmerge.lookahead_on)
+float eml_up = na(d_sig) ? na : d_open * math.exp(d_sig)
+float eml_dn = na(d_sig) ? na : d_open * math.exp(-d_sig)
+
+// ============================================================================
+// 5. VALIDAÇÃO E FRESCOR DOS DADOS
+// ============================================================================
+f_validate() =>
+    string w = ""
+    float tol = tol_pct / 100
+    if rep_regime != "AMP" and rep_regime != "AMO"
+        w += "Regime inválido ('" + rep_regime + "'). "
+    if not na(r_em_min) and not na(r_em_max)
+        if r_em_min >= r_em_max
+            w += "EM_MIN ≥ EM_MAX. "
+        if not na(r_flip) and (r_flip < r_em_min * (1 - tol) or r_flip > r_em_max * (1 + tol))
+            w += "Flip fora do Expected Move. "
+        if not na(r_cw1) and (r_cw1 < r_em_min * (1 - 2 * tol) or r_cw1 > r_em_max * (1 + 2 * tol))
+            w += "Call Wall muito distante. "
+        if not na(r_pw1) and (r_pw1 < r_em_min * (1 - 2 * tol) or r_pw1 > r_em_max * (1 + 2 * tol))
+            w += "Put Wall muito distante. "
+        if not na(r_block) and (r_block < r_em_min * (1 - 2 * tol) or r_block > r_em_max * (1 + 2 * tol))
+            w += "Bloco muito distante. "
+    if not na(r_pw1) and not na(r_cw1) and r_pw1 >= r_cw1
+        w += "Put Wall ≥ Call Wall. "
+    if na(r_flip)
+        w += "Flip vazio. "
+    w
+
+int  exp_ref   = is_ewz ? exp_ewz : is_win ? exp_ibov : exp_b3
+bool expired   = timenow > exp_ref
+bool stale     = (timenow - lvl_date) > max_age_h * 3600000
+bool in_window = time >= lvl_date   // só desenha os níveis a partir da data em que foram gerados
+
+// Regime ao vivo pelo preço x Flip (o do relatório é só referência)
+bool   live_long   = not na(flip) and close >= flip
+string live_reg    = na(flip) ? "—" : live_long ? "🟢 AMORTECIDO (Long Gamma)" : "🔴 AMPLIFICADO (Short Gamma)"
+bool   rep_long    = rep_regime == "AMO"
+bool   reg_changed = found and not na(flip) and (rep_regime == "AMP" or rep_regime == "AMO") and rep_long != live_long
+
+// ============================================================================
+// 6. PLOTAGEM (séries por barra: acompanham a base ao vivo e permitem alertas)
+// ============================================================================
+bool on = show_levels and found and in_window
+plot(on ? flip   : na, "Gamma Flip",          color=color.new(#FFD700, 0),  linewidth=2, style=plot.style_stepline)
+plot(on ? cw1    : na, "Call Wall (CW1)",     color=color.new(#00E676, 10), linewidth=2, style=plot.style_stepline)
+plot(on ? pw1    : na, "Put Wall (PW1)",      color=color.new(#FF5252, 10), linewidth=2, style=plot.style_stepline)
+plot(on ? em_max : na, "EM+ (relatório)",     color=color.new(#40C4FF, 30), linewidth=1, style=plot.style_stepline)
+plot(on ? em_min : na, "EM- (relatório)",     color=color.new(#40C4FF, 30), linewidth=1, style=plot.style_stepline)
+plot(on and block != cw1 and block != pw1 ? block : na, "Maior Bloco", color=color.new(#E040FB, 25), linewidth=1, style=plot.style_circles)
+plot(on ? sig1   : na, "Suporte 1σ-",         color=color.new(#FFAB40, 25), linewidth=1, style=plot.style_circles)
+plot(show_eml ? eml_up : na, "EM+ ao vivo (vol realizada)", color=color.new(#B0BEC5, 40), linewidth=1, style=plot.style_stepline)
+plot(show_eml ? eml_dn : na, "EM- ao vivo (vol realizada)", color=color.new(#B0BEC5, 40), linewidth=1, style=plot.style_stepline)
+
+// Rótulos na última barra
+var array<label> lbls = array.new<label>()
+
+f_label(float y, color c, string txt, string sz) =>
+    if not na(y)
+        array.push(lbls, label.new(bar_index + 6, y, txt + ": " + str.tostring(y, format.mintick), color=color.new(c, 85), textcolor=c, style=label.style_label_left, size=sz))
+
+if barstate.islast
+    while array.size(lbls) > 0
+        label.delete(array.pop(lbls))
+    if on and show_labels
+        f_label(flip,   #FFD700, "GAMMA FLIP",      size.small)
+        f_label(cw1,    #00E676, "CALL WALL (CW1)", size.small)
+        f_label(pw1,    #FF5252, "PUT WALL (PW1)",  size.small)
+        f_label(em_max, #40C4FF, "EM+",             size.tiny)
+        f_label(em_min, #40C4FF, "EM-",             size.tiny)
+        if block != cw1 and block != pw1
+            f_label(block, #E040FB, "MAIOR BLOCO",  size.tiny)
+        f_label(sig1,   #FFAB40, "SUPORTE 1σ-",     size.tiny)
+    if show_eml and show_labels
+        f_label(eml_up, #B0BEC5, "EM+ VIVO",        size.tiny)
+        f_label(eml_dn, #B0BEC5, "EM- VIVO",        size.tiny)
+
+// ============================================================================
+// 7. PAINEL INSTITUCIONAL (HUD)
+// ============================================================================
+get_pos(string p) =>
+    switch p
+        "top_right"    => position.top_right
+        "bottom_right" => position.bottom_right
+        "top_left"     => position.top_left
+        => position.bottom_left
+
+f_fmt(float x) =>
+    na(x) ? "—" : str.tostring(x, format.mintick)
+
+f_dist(float lvl) =>
+    na(lvl) ? "—" : str.tostring(lvl, format.mintick) + "  (" + (lvl >= close ? "+" : "") + str.tostring((lvl / close - 1) * 100, "#.##") + "%)"
+
+f_row(table t, int r, string k, string v, color c) =>
+    table.cell(t, 0, r, k, text_color=color.silver, text_size=size.tiny, text_halign=text.align_left)
+    table.cell(t, 1, r, v, text_color=c, text_size=size.tiny, text_halign=text.align_right)
+
+var table hud = table.new(get_pos(tbl_pos), 2, 13, bgcolor=color.new(#12161F, 12), border_color=color.new(#2A3244, 0), border_width=1, frame_color=color.new(#3B465E, 0), frame_width=1)
+
+if barstate.islast and show_table
+    table.clear(hud, 0, 0, 1, 12)
+    table.cell(hud, 0, 0, "RADAR GEX v2 • " + current_asset, text_color=color.white, bgcolor=color.new(#1E2638, 0), text_size=size.small, text_halign=text.align_left)
+    table.cell(hud, 1, 0, "Venc: " + str.format_time(exp_ref, "dd/MM", "America/Sao_Paulo") + (expired ? " (VENCIDO)" : ""), text_color=expired ? #FF5252 : color.new(#90A4AE, 0), bgcolor=color.new(#1E2638, 0), text_size=size.tiny, text_halign=text.align_right)
+    if found
+        string warns = f_validate()
+        f_row(hud, 1,  "Regime ao vivo",  live_reg, live_long ? #00E676 : #FF5252)
+        f_row(hud, 2,  "Regime relatório", rep_regime + (reg_changed ? "  ⚠ preço cruzou o Flip" : ""), reg_changed ? #FFD700 : color.silver)
+        f_row(hud, 3,  "Gamma Flip",      f_dist(flip), #FFD700)
+        f_row(hud, 4,  "Call Wall (CW1)", f_dist(cw1),  #00E676)
+        f_row(hud, 5,  "Put Wall (PW1)",  f_dist(pw1),  #FF5252)
+        f_row(hud, 6,  "EM relatório",    f_fmt(em_min) + " – " + f_fmt(em_max), #40C4FF)
+        f_row(hud, 7,  "EM ao vivo (" + str.tostring(vol_len) + "d)", f_fmt(eml_dn) + " – " + f_fmt(eml_up), #B0BEC5)
+        f_row(hud, 8,  "Maior Bloco",     f_dist(block), #E040FB)
+        f_row(hud, 9,  "Suporte 1σ-",     f_dist(sig1),  #FFAB40)
+        f_row(hud, 10, "Base de projeção", use_basis ? "WIN/IBOV ao vivo ×" + str.tostring(ratio, "#.####") : "níveis usados como estão", color.silver)
+        f_row(hud, 11, "Níveis gerados em", str.format_time(lvl_date, "dd/MM HH:mm", "America/Sao_Paulo") + (stale ? "  ⚠ DESATUALIZADO" : ""), stale ? #FFD700 : #00E676)
+        f_row(hud, 12, "Checagem dos dados", warns == "" ? "✔ OK" : "⚠ " + warns, warns == "" ? #00E676 : #FFD700)
+    else
+        f_row(hud, 1, "Ativo fora da grade GEX", "9 B3 + EWZ", color.gray)
+
+// ============================================================================
+// 8. ALERTAS (crie em: Alerta > Condição > Radar Institucional GEX v2)
+// ============================================================================
+// ta.* calculados fora de "and" (no v6 o "and" é preguiçoso e pularia o cálculo em algumas barras)
+bool x_flip_up = ta.crossover(close, flip)
+bool x_flip_dn = ta.crossunder(close, flip)
+bool x_cw1     = ta.cross(close, cw1)
+bool x_pw1     = ta.cross(close, pw1)
+bool x_em_up   = ta.crossover(close, eml_up)
+bool x_em_dn   = ta.crossunder(close, eml_dn)
+
+alertcondition(found and x_flip_up, "Cruzou ACIMA do Gamma Flip",  "{{ticker}} cruzou ACIMA do Gamma Flip (entrou em Long Gamma) em {{close}}")
+alertcondition(found and x_flip_dn, "Cruzou ABAIXO do Gamma Flip", "{{ticker}} cruzou ABAIXO do Gamma Flip (entrou em Short Gamma) em {{close}}")
+alertcondition(found and x_cw1,     "Tocou a Call Wall",           "{{ticker}} cruzou a Call Wall (CW1) em {{close}}")
+alertcondition(found and x_pw1,     "Tocou a Put Wall",            "{{ticker}} cruzou a Put Wall (PW1) em {{close}}")
+alertcondition(x_em_up or x_em_dn,  "Rompeu o Expected Move ao vivo", "{{ticker}} rompeu o Expected Move do dia em {{close}}")
