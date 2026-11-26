@@ -37,7 +37,36 @@
   .gstats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px; }
   @media (max-width: 600px) { .gstats { grid-template-columns: repeat(2, 1fr); } }
   .gstats div { font-size: .68rem; color: var(--muted); } .gstats b { display: block; font-size: .9rem; color: var(--text); }
-  #cvGex { height: 220px; }
+  #cvGex { height: 300px; } #cvGexM { height: 380px; }
+  .gauge { height: 26px; border-radius: 13px; cursor: crosshair; }
+  .gauge i { top: -6px; height: 38px; width: 8px; }
+  .gauge-s { display: flex; justify-content: space-between; font-size: .68rem; color: var(--muted); margin-top: 2px; font-variant-numeric: tabular-nums; }
+  .greg { font-weight: 900; font-size: .9rem; }
+  .chartwrap { position: relative; }
+  .xh { position: absolute; top: 8px; bottom: 20px; width: 1px; background: rgba(255,255,255,.55); pointer-events: none; display: none; }
+  .tip { position: fixed; z-index: 60; pointer-events: none; background: #0b1220; border: 1px solid var(--accent); color: var(--text); font-size: .74rem; line-height: 1.45; padding: 7px 9px; border-radius: 6px; box-shadow: 0 6px 20px rgba(0,0,0,.5); display: none; max-width: 280px; font-variant-numeric: tabular-nums; }
+  /* Mapa espacial nos cards */
+  .sp { position: relative; height: 30px; margin: 26px 2px 30px; background: #1e293b; border: 1px solid #475569; border-radius: 6px; }
+  .sp .zs { position: absolute; left: 0; top: 0; bottom: 0; background: rgba(239,68,68,.16); border-right: 2px dashed var(--yellow); border-radius: 5px 0 0 5px; }
+  .sp .zl { position: absolute; right: 0; top: 0; bottom: 0; background: rgba(16,185,129,.16); border-radius: 0 5px 5px 0; }
+  .sp .em { position: absolute; top: 3px; bottom: 3px; border-left: 1px dashed var(--cyan); border-right: 1px dashed var(--cyan); background: rgba(64,196,255,.08); }
+  .sp .mk { position: absolute; top: 0; bottom: 0; width: 2px; transform: translateX(-50%); }
+  .sp .lb { position: absolute; transform: translateX(-50%); font-size: .6rem; font-weight: 800; white-space: nowrap; }
+  .sp .pin { position: absolute; top: -9px; bottom: -9px; width: 4px; background: var(--accent); box-shadow: 0 0 10px var(--accent); transform: translateX(-50%); z-index: 3; }
+  .sp .pin span { position: absolute; top: -17px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #06101d; font-size: .62rem; font-weight: 900; padding: 1px 5px; border-radius: 3px; white-space: nowrap; }
+  .sp.big { height: 44px; margin: 34px 4px 44px; } .sp.big .lb { font-size: .72rem; } .sp.big .pin span { font-size: .74rem; top: -21px; }
+  .asset .open { font-size: .64rem; color: var(--accent); font-weight: 800; }
+  /* Painel ampliado */
+  .modal { position: fixed; inset: 0; z-index: 50; background: rgba(2,6,14,.78); display: flex; align-items: flex-start; justify-content: center; overflow-y: auto; padding: max(16px, env(safe-area-inset-top, 0px)) max(12px, env(safe-area-inset-right, 0px)) 24px max(12px, env(safe-area-inset-left, 0px)); }
+  .modal[hidden] { display: none !important; }
+  .mbox { width: min(1180px, 100%); background: var(--panel); border: 1px solid var(--accent); border-radius: 12px; padding: 16px 18px; box-shadow: 0 20px 60px rgba(0,0,0,.6); }
+  .mhead { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; border-bottom: 1px solid var(--line); padding-bottom: 10px; }
+  .mhead .tk { font-size: 1.3rem; font-weight: 900; }
+  .mclose { background: var(--line); color: #fff; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; font-weight: 800; padding: 4px 12px; cursor: pointer; }
+  .mgrid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 14px; margin-top: 12px; }
+  @media (max-width: 900px) { .mgrid { grid-template-columns: 1fr; } }
+  .strk td.hl { font-weight: 800; }
+  .strk tr.px td { background: rgba(56,189,248,.1); color: var(--accent); font-weight: 800; }
   .diag { width: 100%; display: grid; gap: 3px; font-size: .7rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 8px; }
   .diag b { color: #cbd5e1; }
   .clock { font-variant-numeric: tabular-nums; font-weight: 800; font-size: .95rem; }
@@ -202,19 +231,7 @@
     <div class="card">
       <div class="row between"><span class="title" id="dTitle">Detalhe</span><span class="reg na" id="dReg">--</span></div>
       <div class="thesis" id="dThesis">Selecione um ativo na grade.</div>
-      <div class="gexbox" id="gexBox">
-        <div class="row between"><span class="title" id="gTitle">Termômetro do Gamma</span><span class="src" id="gSrc">--</span></div>
-        <div class="gauge" aria-hidden="true"><i id="gNeedle" style="left:50%"></i></div>
-        <div class="gauge-l"><span>SHORT GAMMA · acelera</span><span>neutro</span><span>LONG GAMMA · amortece</span></div>
-        <div class="gstats">
-          <div>GEX líquido no preço atual<b id="gNet">--</b></div>
-          <div>Gamma Flip<b id="gFlip">--</b></div>
-          <div>Vol. implícita ATM<b id="gIv">--</b></div>
-          <div>Base do cálculo<b id="gBase">--</b></div>
-        </div>
-        <canvas id="cvGex" aria-label="GEX por strike"></canvas>
-        <div class="sub" style="margin-top:4px">Barras: GEX por strike (verde = calls, vermelho = puts) · linha azul: GEX total em cada preço · tracejados: preço atual (azul) e Gamma Flip (amarelo)</div>
-      </div>
+      <div class="gexbox" id="gexBox"></div>
       <div class="tablewrap"><table><thead><tr><th>Nível</th><th>Preço</th><th>Distância</th><th>Leitura</th></tr></thead><tbody id="dTable"></tbody></table></div>
 
       <div style="margin-top:14px">
@@ -238,6 +255,25 @@
       <div class="row between sub" style="margin-top:6px"><span id="c6o">Abert: --</span><span id="c6h">Máx: --</span><span id="c6l">Mín: --</span><span id="c6c">Atual: --</span></div>
     </div>
   </div>
+
+  <div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="mTk">
+    <div class="mbox">
+      <div class="mhead">
+        <div class="row"><span class="tk" id="mTk">--</span><span class="px" id="mPx" style="font-size:1.15rem;font-weight:800"></span><span class="reg na" id="mRegPill">--</span></div>
+        <div class="row"><span class="src" id="mSrc">--</span><button class="mclose" id="mClose" type="button" aria-label="Fechar">✕ Fechar</button></div>
+      </div>
+      <div id="mRuler"></div>
+      <div class="mgrid">
+        <div><div class="gexbox" id="gexBoxM"></div></div>
+        <div>
+          <div class="thesis" id="mThesis"></div>
+          <div class="title" style="margin:8px 0 6px">Strikes perto do preço</div>
+          <div class="tablewrap" style="max-height:430px;overflow-y:auto"><table class="strk"><thead><tr><th>Strike</th><th>Calls</th><th>Puts</th><th>Líquido</th><th>Dist.</th></tr></thead><tbody id="mStrikes"></tbody></table></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tip" id="tip"></div>
 
   <p class="foot">Ferramenta de estudo, não é recomendação de investimento. Cotações do Yahoo e da Brapi podem ter atraso (o horário de cada cotação aparece no card). WIN é calculado a partir do IBOV. Níveis GEX são os do seu relatório.</p>
 </div>
@@ -681,16 +717,47 @@ function analisar(L0) {
   const divergente = !L0.auto && regLive && (L.regime === 'AMP' || L.regime === 'AMO') && (regLive === 'long') !== repLong;
   return { L, q, price, warns, venc, vencido, regLive, divergente, distFlip: isFinite(L.flip) ? pct(L.flip, price) : NaN };
 }
-function miniRuler(a) {
-  const L = a.L, P = a.price;
-  const vals = [L.pw1, L.flip, L.cw1, L.emMin, L.emMax, L.sig1, L.block, P].filter(isFinite);
-  if (vals.length < 2) return '<div class="mini"></div>';
-  let lo = Math.min(...vals), hi = Math.max(...vals); const pad = (hi - lo) * 0.08 || 1; lo -= pad; hi += pad;
+function fmtCurto(v, tk) {
+  if (!isFinite(v)) return '—';
+  if (tk === 'WIN' || tk === 'IBOV') return (v / 1000).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + 'k';
+  if (tk === 'WDO') return fmtN(v, 0);
+  return fmtN(v, 2);
+}
+// Mapa espacial GEX (zona short à esquerda do Flip, long à direita), com os níveis e o preço
+function mapaEspacial(a, grande) {
+  const L = a.L, P = a.price, tk = L.tk;
+  const vals = [L.pw1, L.flip, L.cw1, L.emMin, L.emMax, L.block, grande ? L.sig1 : NaN, P].filter(isFinite);
+  if (vals.length < 2) return `<div class="sp${grande ? ' big' : ''}"></div>`;
+  let lo = Math.min(...vals), hi = Math.max(...vals); const pad = (hi - lo) * 0.06 || 1; lo -= pad; hi += pad;
   const x = (v) => Math.max(1, Math.min(99, (v - lo) / (hi - lo) * 100));
-  const mk = (v, col, t) => isFinite(v) ? `<div class="mk" style="left:${x(v)}%;background:${col}"><span style="color:${col}">${t}</span></div>` : '';
-  const em = isFinite(L.emMin) && isFinite(L.emMax) ? `<div class="em" style="left:${x(L.emMin)}%;width:${x(L.emMax) - x(L.emMin)}%"></div>` : '';
-  const pin = isFinite(P) ? `<div class="pin" style="left:${x(P)}%"><span>${fmtN(P, decOf(L.tk))}</span></div>` : '';
-  return `<div class="mini">${em}${mk(L.pw1, 'var(--red)', 'PW')}${mk(L.flip, 'var(--yellow)', 'FLIP')}${mk(L.cw1, 'var(--green)', 'CW')}${pin}</div>`;
+  const fx = isFinite(L.flip) ? x(L.flip) : (L.regime === 'AMO' ? 0 : 100);
+  const marcas = [
+    [L.pw1, 'var(--red2)', 'PW'], [L.flip, 'var(--yellow)', 'FLIP'], [L.cw1, 'var(--green2)', 'CW'], [L.block, 'var(--purple)', 'BLOCO']
+  ].concat(grande ? [[L.sig1, 'var(--orange)', '1σ-']] : []).filter(m => isFinite(m[0]) && !(m[2] === 'BLOCO' && (m[0] === L.cw1 || m[0] === L.pw1)));
+  marcas.sort((m1, m2) => m1[0] - m2[0]);
+  // Níveis no mesmo preço viram um rótulo só; os demais vão para a primeira linha livre (até 3 linhas)
+  const grupos = [];
+  marcas.forEach(m => { const gq = grupos.find(g => Math.abs(x(g.v) - x(m[0])) < 0.6); if (gq) gq.itens.push(m); else grupos.push({ v: m[0], itens: [m] }); });
+  const larguraPx = grande ? 1100 : 230, charPx = grande ? 6.6 : 5.6;
+  const fimLinha = [-1e9, -1e9, -1e9];
+  const htmlMarcas = grupos.map(gq => {
+    const xx = x(gq.v), txt = gq.itens.map(m => m[2]).join('/') + ' ' + fmtCurto(gq.v, tk);
+    const w = txt.length * charPx / larguraPx * 100;
+    // alinhamento nas bordas para o texto não ser cortado
+    let ini = xx - w / 2, tr = '-50%';
+    if (ini < 0) { ini = Math.max(0, xx - 1); tr = '0'; } else if (xx + w / 2 > 100) { ini = xx - w; tr = '-100%'; }
+    let linha = fimLinha.findIndex(f => f + 1 < ini); if (linha < 0) linha = fimLinha.indexOf(Math.min(...fimLinha));
+    fimLinha[linha] = ini + w;
+    const col = gq.itens[0][1];
+    const top = (grande ? 48 : 33) + linha * (grande ? 15 : 12);
+    return gq.itens.map(m => `<div class="mk" style="left:${xx}%;background:${m[1]}"></div>`).join('') +
+      `<div class="lb" style="left:${xx}%;top:${top}px;color:${col};transform:translateX(${tr})">${txt}</div>`;
+  }).join('');
+  const linhasUsadas = fimLinha.filter(f => f > -1e9).length;
+  const em = isFinite(L.emMin) && isFinite(L.emMax) ? `<div class="em" style="left:${x(L.emMin)}%;width:${x(L.emMax) - x(L.emMin)}%" title="Expected Move ${fmtN(L.emMin, decOf(tk))} – ${fmtN(L.emMax, decOf(tk))}"></div>` : '';
+  const pin = isFinite(P) ? `<div class="pin" style="left:${x(P)}%"><span>${tk} ${fmtN(P, decOf(tk))}</span></div>` : '';
+  const mb = (grande ? 44 : 30) + Math.max(0, linhasUsadas - 2) * (grande ? 15 : 12);
+  return `<div class="sp${grande ? ' big' : ''}" style="margin-bottom:${mb}px"><div class="zs" style="width:${fx}%"></div><div class="zl" style="width:${100 - fx}%"></div>${em}${htmlMarcas}${pin}</div>`;
 }
 const L0auto = (a) => !!(a.L && a.L.auto);
 function renderAssets(list) {
@@ -712,9 +779,10 @@ function renderAssets(list) {
     return `<div class="asset ${S.sel === L.tk ? 'sel' : ''}" data-tk="${esc(L.tk)}" tabindex="0" role="button" aria-label="Ver detalhe de ${esc(L.tk)}">
       <div class="top"><span class="tk">${esc(L.tk)}</span><span class="px">${fmtN(a.price, d)} <span class="${isFinite(p) ? (p >= 0 ? 'up' : 'down') : 'mut'}" style="font-size:.72rem">${isFinite(p) ? sign(p) + p.toFixed(2) + '%' : ''}</span></span></div>
       <div class="ln"><span>${reg}</span><span>Flip ${fmtN(L.flip, d)} <b class="${isFinite(a.distFlip) ? (a.distFlip >= 0 ? 'down' : 'up') : 'mut'}">${isFinite(a.distFlip) ? '(' + sign(a.distFlip) + a.distFlip.toFixed(2) + '%)' : ''}</b></span></div>
-      ${miniRuler(a)}
+      ${mapaEspacial(a, false)}
       <div class="ln"><span>PW ${fmtN(L.pw1, d)}</span><span>EM ${fmtN(L.emMin, d)}–${fmtN(L.emMax, d)}</span><span>CW ${fmtN(L.cw1, d)}</span></div>
       <div class="ln"><span class="src ${a.q ? (a.q.src === 'CALC' || a.q.src === 'MANUAL' ? 'derived' : 'live') : 'none'}">${a.q ? esc(a.q.src) : 'SEM COTAÇÃO'}</span><span>${L0auto(a) ? '<span class="src live">GEX B3</span> ' : '<span class="src derived">GEX COLADO</span> '}${a.q ? ago(a.q.time) : ''}</span></div>
+      <div class="ln"><span></span><span class="open">⤢ abrir painel com strikes</span></div>
       ${a.warns.length || extras.length ? `<div class="warnline">⚠ ${esc([...extras, ...a.warns].join(' · '))}</div>` : ''}
     </div>`;
   }).join('');
@@ -786,45 +854,84 @@ function renderDetalhe(list) {
   if (!pinned && isFinite(P)) html.push(`<tr style="background:rgba(56,189,248,.08)"><td><b style="color:var(--accent)">▶ Preço atual</b></td><td><b>${fmtN(P, d)}</b></td><td></td><td></td></tr>`);
   $('dTable').innerHTML = html.join('');
   $('dThesis').innerHTML = tese(a);
-  renderGamma(a);
+  renderGamma(a, 'g');
 }
-function renderGamma(a) {
-  const box = $('gexBox'), L = a.L, g = L.g;
-  if (!g) { box.hidden = false; $('gTitle').textContent = `Termômetro do Gamma — ${L.tk}`; $('gSrc').textContent = 'SEM DADOS DE OPÇÕES'; $('gSrc').className = 'src none';
-    ['gNet', 'gFlip', 'gIv', 'gBase'].forEach(id => $(id).textContent = '--'); $('gNeedle').style.left = '50%';
-    const cv = $('cvGex'), ctx = cv.getContext('2d'); ctx.clearRect(0, 0, cv.width, cv.height);
-    $('gBase').textContent = L.tk === 'EWZ' ? 'EWZ: opções nos EUA (só níveis colados)' : 'níveis colados'; return; }
-  box.hidden = false;
+// ---------- Termômetro do Gamma (usado no detalhe e no painel ampliado) ----------
+function gexWidgetHTML(p) {
+  return `<div class="row between"><span class="title" id="${p}Title">Termômetro do Gamma</span><span class="src" id="${p}Src">--</span></div>
+    <div class="row between" style="margin-top:8px"><span class="greg" id="${p}Reg">--</span><span class="sub">passe o mouse na barra e no gráfico para ver os valores</span></div>
+    <div class="gauge" id="${p}Gauge"><i id="${p}Needle" style="left:50%"></i></div>
+    <div class="gauge-s"><span id="${p}SMin">--</span><span>0</span><span id="${p}SMax">--</span></div>
+    <div class="gauge-l"><span>SHORT GAMMA · acelera</span><span>neutro (Flip)</span><span>LONG GAMMA · amortece</span></div>
+    <div class="gstats">
+      <div>GEX líquido no preço atual<b id="${p}Net">--</b></div>
+      <div>Gamma Flip<b id="${p}Flip">--</b></div>
+      <div>Vol. implícita ATM<b id="${p}Iv">--</b></div>
+      <div>Base do cálculo<b id="${p}Base">--</b></div>
+    </div>
+    <div class="chartwrap"><canvas id="${p}Cv"></canvas><div class="xh" id="${p}Xh"></div></div>
+    <div class="sub" style="margin-top:4px">Barras: GEX por strike (verde = calls, vermelho = puts) · linha azul: GEX total se o preço fosse até ali · tracejados: preço atual (azul) e Gamma Flip (amarelo)</div>`;
+}
+const miBi = (v) => { const a = Math.abs(v); return `${v >= 0 ? '+' : '−'}R$ ${a >= 1e9 ? fmtN(a / 1e9, 2) + ' bi' : fmtN(a / 1e6, 1) + ' mi'}`; };
+function perfilAt(prof, S) {
+  if (!prof.length || !isFinite(S)) return NaN;
+  if (S <= prof[0].s) return prof[0].g; if (S >= prof[prof.length - 1].s) return prof[prof.length - 1].g;
+  for (let i = 1; i < prof.length; i++) if (S <= prof[i].s) { const t = (S - prof[i - 1].s) / (prof[i].s - prof[i - 1].s); return prof[i - 1].g + t * (prof[i].g - prof[i - 1].g); }
+  return NaN;
+}
+function gexDados(a) {
+  const L = a.L, g = L.g; if (!g) return null;
   const r = L.tk === 'WIN' ? ((winInfo() || {}).ratio || 1) : 1;      // WIN: perfil do IBOV projetado
-  const P = a.price, d = decOf(L.tk);
+  const P = a.price;
   const prof = g.perfil.map(p => ({ s: p.s * r, g: p.g }));
-  // GEX líquido no preço ao vivo (interpolado no perfil)
-  let net = g.netGex;
-  if (isFinite(P)) { for (let i = 1; i < prof.length; i++) { if (P >= prof[i - 1].s && P <= prof[i].s) { const t = (P - prof[i - 1].s) / (prof[i].s - prof[i - 1].s); net = prof[i - 1].g + t * (prof[i].g - prof[i - 1].g); break; } } }
-  const maxAbs = Math.max(...prof.map(p => Math.abs(p.g))) || 1;
-  $('gNeedle').style.left = Math.max(2, Math.min(98, 50 + net / maxAbs * 48)) + '%';
-  $('gTitle').textContent = `Termômetro do Gamma — ${L.tk}`;
-  $('gSrc').textContent = `B3 ${S.gex.dataArquivos.split('-').reverse().slice(0, 2).join('/')} · ${g.nOpcoes} opções`; $('gSrc').className = 'src live';
-  const mi = (v) => `${v >= 0 ? '+' : '−'}R$ ${fmtN(Math.abs(v) / 1e6, Math.abs(v) >= 1e9 ? 0 : 1)} mi`;
-  $('gNet').textContent = `${mi(net)} / 1%`; $('gNet').className = net >= 0 ? 'up' : 'down';
-  $('gFlip').textContent = isFinite(L.flip) ? `${fmtN(L.flip, d)} (${sign(pct(L.flip, P))}${pct(L.flip, P).toFixed(2)}%)` : 'fora da faixa ±12%';
-  $('gIv').textContent = isFinite(g.ivAtm) ? (g.ivAtm * 100).toFixed(1) + '% a.a.' : '--';
-  $('gBase').textContent = L.tk === 'WIN' ? 'opções de IBOV → WIN' : L.tk === 'WDO' ? 'opções de DOL + WDO' : 'opções da B3';
-  drawGex(g, r, P, L, d);
-}
-function drawGex(g, r, P, L, dec) {
-  const cv = $('cvGex'), dpr = window.devicePixelRatio || 1, W = cv.clientWidth || 600, H = cv.clientHeight || 220;
-  if (cv.width !== Math.round(W * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
-  const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
   const ks = g.strikes.map(e => ({ k: e.k * r, call: e.call, put: e.put }));
-  const prof = g.perfil.map(p => ({ s: p.s * r, g: p.g }));
+  const net = isFinite(P) ? perfilAt(prof, P) : g.netGex;
+  // Escala da agulha: maior |GEX| perto do preço (±Expected Move, mínimo 3%), com raiz para não "achatar" valores médios
+  const faixa = Math.max(isFinite(L.emMax) && isFinite(P) ? Math.abs(L.emMax - P) : 0, 0.03 * (P || prof[Math.floor(prof.length / 2)].s));
+  const perto = prof.filter(p => Math.abs(p.s - P) <= faixa);
+  const ref = Math.max(...(perto.length ? perto : prof).map(p => Math.abs(p.g))) || 1;
+  return { r, P, prof, ks, net, ref, g };
+}
+const posAgulha = (v, ref) => 50 + Math.sign(v) * Math.sqrt(Math.min(1, Math.abs(v) / ref)) * 48;
+function intensidade(v, ref) { const f = Math.abs(v) / ref; return f < 0.15 ? 'fraco' : f < 0.5 ? 'moderado' : 'forte'; }
+function renderGamma(a, p) {
+  const box = $(p === 'g' ? 'gexBox' : 'gexBoxM');
+  if (!box.dataset.ok) { box.innerHTML = gexWidgetHTML(p); box.dataset.ok = '1'; ligarHover(p); }
+  const L = a.L, d = decOf(L.tk), D = gexDados(a);
+  $(p + 'Title').textContent = `Termômetro do Gamma — ${L.tk}`;
+  if (!D) {
+    $(p + 'Src').textContent = 'SEM DADOS DE OPÇÕES'; $(p + 'Src').className = 'src none';
+    ['Net', 'Flip', 'Iv', 'SMin', 'SMax'].forEach(id => $(p + id).textContent = '--'); $(p + 'Needle').style.left = '50%';
+    $(p + 'Reg').textContent = L.tk === 'EWZ' ? 'EWZ: opções negociadas nos EUA, sem dados na B3' : 'níveis colados (sem curva de gamma)'; $(p + 'Reg').className = 'greg mut';
+    $(p + 'Base').textContent = '--'; const cv = $(p + 'Cv'); cv.getContext('2d').clearRect(0, 0, cv.width, cv.height); cv._geo = null; $(p + 'Gauge')._ref = null;
+    return;
+  }
+  const { P, net, ref, g } = D;
+  $(p + 'Needle').style.left = Math.max(2, Math.min(98, posAgulha(net, ref))) + '%';
+  $(p + 'Gauge')._ref = ref;
+  $(p + 'SMin').textContent = miBi(-ref); $(p + 'SMax').textContent = miBi(ref);
+  $(p + 'Reg').textContent = `${net >= 0 ? 'LONG' : 'SHORT'} GAMMA ${intensidade(net, ref)}`; $(p + 'Reg').className = 'greg ' + (net >= 0 ? 'up' : 'down');
+  $(p + 'Src').textContent = `B3 ${S.gex.dataArquivos.split('-').reverse().slice(0, 2).join('/')} · ${g.nOpcoes} opções`; $(p + 'Src').className = 'src live';
+  $(p + 'Net').textContent = `${miBi(net)} / 1%`; $(p + 'Net').className = net >= 0 ? 'up' : 'down';
+  $(p + 'Flip').textContent = isFinite(L.flip) ? `${fmtN(L.flip, d)} (${sign(pct(L.flip, P))}${pct(L.flip, P).toFixed(2)}%)` : 'fora da faixa ±12%';
+  $(p + 'Iv').textContent = isFinite(g.ivAtm) ? (g.ivAtm * 100).toFixed(1) + '% a.a.' : '--';
+  $(p + 'Base').textContent = L.tk === 'WIN' ? 'opções de IBOV → WIN' : L.tk === 'WDO' ? 'opções de DOL + WDO' : 'opções da B3';
+  drawGex($(p + 'Cv'), D, L, d);
+}
+function drawGex(cv, D, L, dec) {
+  const dpr = window.devicePixelRatio || 1, W = cv.clientWidth || 600, H = cv.clientHeight || 300;
+  if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+  const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+  const { ks, prof, P } = D;
   const lo = Math.min(prof[0].s, ...ks.map(e => e.k)), hi = Math.max(prof[prof.length - 1].s, ...ks.map(e => e.k));
   const pl = 8, pr = 8, pt = 10, pb = 20, pw = W - pl - pr, ph = H - pt - pb, mid = pt + ph / 2;
   const x = (v) => pl + (v - lo) / (hi - lo) * pw;
   const maxB = Math.max(1, ...ks.map(e => Math.max(e.call, -e.put)));
   const maxP = Math.max(1, ...prof.map(p => Math.abs(p.g)));
-  ctx.strokeStyle = '#1e293b'; ctx.beginPath(); ctx.moveTo(pl, mid); ctx.lineTo(W - pr, mid); ctx.stroke();
-  const bw = Math.max(2, Math.min(10, pw / Math.max(ks.length, 1) * 0.6));
+  // fundo: zona short (abaixo do Flip) e long (acima)
+  if (isFinite(L.flip)) { ctx.fillStyle = 'rgba(239,68,68,.06)'; ctx.fillRect(pl, pt, Math.max(0, x(L.flip) - pl), ph); ctx.fillStyle = 'rgba(16,185,129,.06)'; ctx.fillRect(x(L.flip), pt, Math.max(0, W - pr - x(L.flip)), ph); }
+  ctx.strokeStyle = '#334155'; ctx.beginPath(); ctx.moveTo(pl, mid); ctx.lineTo(W - pr, mid); ctx.stroke();
+  const bw = Math.max(2, Math.min(14, pw / Math.max(ks.length, 1) * 0.6));
   ks.forEach(e => {
     const xx = x(e.k);
     ctx.fillStyle = 'rgba(16,185,129,.85)'; const hc = e.call / maxB * (ph / 2 - 4); ctx.fillRect(xx - bw / 2, mid - hc, bw, hc);
@@ -835,7 +942,65 @@ function drawGex(g, r, P, L, dec) {
   const vline = (v, col, lab, dy) => { if (!isFinite(v) || v < lo || v > hi) return; ctx.save(); ctx.setLineDash([4, 3]); ctx.strokeStyle = col; ctx.beginPath(); ctx.moveTo(x(v), pt); ctx.lineTo(x(v), H - pb); ctx.stroke(); ctx.restore(); ctx.fillStyle = col; ctx.font = 'bold 10px system-ui'; ctx.fillText(lab, Math.min(W - 60, x(v) + 3), pt + 10 + dy); };
   vline(L.flip, '#facc15', 'FLIP', 14); vline(P, '#38bdf8', 'PREÇO', 0);
   ctx.fillStyle = '#64748b'; ctx.font = '10px system-ui';
-  [lo, (lo + hi) / 2, hi].forEach((v, i) => ctx.fillText(fmtN(v, dec), i === 0 ? pl : i === 1 ? W / 2 - 20 : W - pr - 50, H - 5));
+  for (let i = 0; i <= 4; i++) { const v = lo + (hi - lo) * i / 4; const tx = fmtN(v, dec); ctx.fillText(tx, Math.max(pl, Math.min(W - pr - ctx.measureText(tx).width, x(v) - ctx.measureText(tx).width / 2)), H - 5); }
+  cv._geo = { lo, hi, pl, pw, D, L, dec };
+}
+// Valores ao passar o mouse (gráfico e barra do termômetro)
+function mostrarTip(e, html) { const t = $('tip'); t.innerHTML = html; t.style.display = 'block'; const w = t.offsetWidth, h = t.offsetHeight; t.style.left = Math.min(window.innerWidth - w - 8, e.clientX + 14) + 'px'; t.style.top = Math.max(8, Math.min(window.innerHeight - h - 8, e.clientY - h - 10)) + 'px'; }
+function esconderTip() { $('tip').style.display = 'none'; }
+function ligarHover(p) {
+  const cv = $(p + 'Cv'), xh = $(p + 'Xh'), gauge = $(p + 'Gauge');
+  const mover = (e) => {
+    const G = cv._geo; if (!G) return;
+    const rect = cv.getBoundingClientRect(), mx = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+    const S = G.lo + (mx - G.pl) / G.pw * (G.hi - G.lo); if (S < G.lo || S > G.hi) { esconderTip(); xh.style.display = 'none'; return; }
+    xh.style.display = 'block'; xh.style.left = mx + 'px';
+    const tot = perfilAt(G.D.prof, S);
+    const k = G.D.ks.reduce((m, e) => Math.abs(e.k - S) < Math.abs(m.k - S) ? e : m, G.D.ks[0]);
+    const dist = pct(S, G.D.P);
+    mostrarTip(e.touches ? e.touches[0] : e, `<b>Preço ${fmtN(S, G.dec)}</b> <span class="mut">(${sign(dist)}${dist.toFixed(2)}% do atual)</span><br>GEX total nesse preço: <b class="${tot >= 0 ? 'up' : 'down'}">${miBi(tot)} / 1%</b> → ${tot >= 0 ? 'long gamma (amortece)' : 'short gamma (acelera)'}<br>Strike mais próximo <b>${fmtN(k.k, G.dec)}</b>: calls <span class="up">${miBi(k.call)}</span> · puts <span class="down">${miBi(k.put)}</span> · líquido <b>${miBi(k.call + k.put)}</b>`);
+  };
+  ['mousemove', 'touchmove'].forEach(ev => cv.addEventListener(ev, mover, { passive: true }));
+  ['mouseleave', 'touchend'].forEach(ev => cv.addEventListener(ev, () => { esconderTip(); xh.style.display = 'none'; }));
+  gauge.addEventListener('mousemove', (e) => {
+    const ref = gauge._ref; if (!ref) return;
+    const rect = gauge.getBoundingClientRect(), f = ((e.clientX - rect.left) / rect.width * 100 - 50) / 48;
+    const v = Math.sign(f) * Math.min(1, f * f) * ref;
+    mostrarTip(e, `Ponto da escala: <b class="${v >= 0 ? 'up' : 'down'}">${miBi(v)} / 1%</b><br>${v >= 0 ? 'Long gamma' : 'Short gamma'} ${intensidade(v, ref)} · escala até ${miBi(ref).replace('+', '±')}`);
+  });
+  gauge.addEventListener('mouseleave', esconderTip);
+}
+// ---------- Painel ampliado ----------
+function abrirPainel(tk) { S.sel = tk; S.modal = true; $('modal').hidden = false; document.body.style.overflow = 'hidden'; render(); $('mClose').focus(); }
+function fecharPainel() { S.modal = false; $('modal').hidden = true; document.body.style.overflow = ''; esconderTip(); const c = document.querySelector(`.asset[data-tk="${S.sel}"]`); if (c) c.focus(); }
+function renderPainel(list) {
+  if (!S.modal) return;
+  const a = list.find(x => x.L.tk === S.sel); if (!a) return fecharPainel();
+  const L = a.L, d = decOf(L.tk), P = a.price, p = a.q ? pct(P, a.q.prev) : NaN;
+  $('mTk').textContent = L.tk + (a.q && a.q.sym && a.q.sym !== L.tk ? ' · ' + a.q.sym : '');
+  $('mPx').innerHTML = `${fmtN(P, d)} <span class="${isFinite(p) ? (p >= 0 ? 'up' : 'down') : 'mut'}" style="font-size:.85rem">${isFinite(p) ? sign(p) + p.toFixed(2) + '%' : ''}</span>`;
+  const rg = $('mRegPill'); rg.className = 'reg ' + (a.regLive || 'na'); rg.textContent = a.regLive ? (a.regLive === 'long' ? 'LONG GAMMA (amortecido)' : 'SHORT GAMMA (amplificado)') : 'SEM PREÇO';
+  $('mSrc').textContent = a.q ? `${a.q.src} ${ago(a.q.time)}` : 'SEM COTAÇÃO'; $('mSrc').className = 'src ' + (a.q ? 'live' : 'none');
+  $('mRuler').innerHTML = mapaEspacial(a, true);
+  $('mThesis').innerHTML = tese(a);
+  renderGamma(a, 'm');
+  const D = gexDados(a);
+  if (!D) { $('mStrikes').innerHTML = `<tr><td colspan="5" class="mut">Sem dados de strikes para ${esc(L.tk)}${L.tk === 'EWZ' ? ' (opções nos EUA)' : ''}. Os níveis do mapa vêm do texto colado.</td></tr>`; return; }
+  const linhas = D.ks.filter(e => Math.abs(pct(e.k, P)) <= 8).sort((x, y) => y.k - x.k);
+  const maxL = Math.max(1, ...linhas.map(e => Math.abs(e.call + e.put)));
+  let pos = false; const html = [];
+  linhas.forEach(e => {
+    if (!pos && isFinite(P) && P >= e.k) { html.push(`<tr class="px"><td>▶ ${fmtN(P, d)}</td><td colspan="4">preço atual</td></tr>`); pos = true; }
+    const liq = e.call + e.put, tags = [];
+    const eq = (v) => isFinite(v) && Math.abs(v - e.k) < 1e-6 * Math.max(1, e.k);
+    if (eq(L.cw1)) tags.push('<span class="src live">CALL WALL</span>');
+    if (eq(L.pw1)) tags.push('<span class="src none">PUT WALL</span>');
+    if (eq(L.block)) tags.push('<span class="src" style="color:var(--purple)">BLOCO</span>');
+    const barra = `<span style="display:inline-block;height:6px;width:${Math.round(Math.abs(liq) / maxL * 60)}px;background:${liq >= 0 ? 'var(--green)' : 'var(--red)'};border-radius:2px;margin-left:6px;vertical-align:middle"></span>`;
+    html.push(`<tr><td class="hl">${fmtN(e.k, d)} ${tags.join(' ')}</td><td class="up">${miBi(e.call)}</td><td class="down">${miBi(e.put)}</td><td class="${liq >= 0 ? 'up' : 'down'}">${miBi(liq)}${barra}</td><td class="mut">${sign(pct(e.k, P))}${pct(e.k, P).toFixed(2)}%</td></tr>`);
+  });
+  if (!pos && isFinite(P)) html.push(`<tr class="px"><td>▶ ${fmtN(P, d)}</td><td colspan="4">preço atual</td></tr>`);
+  $('mStrikes').innerHTML = html.join('') || '<tr><td colspan="5" class="mut">Sem strikes na faixa de ±8%.</td></tr>';
 }
 function tese(a) {
   const L = a.L, d = decOf(L.tk), P = a.price;
@@ -915,6 +1080,7 @@ function render() {
   renderAssets(list);
   renderResumo(list);
   renderDetalhe(list);
+  renderPainel(list);
   draw6L();
   const k = $('kGroq').value.trim(); const t = $('aiTag');
   t.textContent = k ? 'GROQ ATIVO' : 'MODO LOCAL'; t.className = 'pill ' + (k ? 'ok' : 'off');
@@ -1035,8 +1201,11 @@ window.addEventListener('DOMContentLoaded', () => {
     render();
   };
   $('btnWinAuto').onclick = () => { save('winRatio', ''); save('winManual', ''); $('winSync').value = ''; render(); };
-  $('assets').addEventListener('click', e => { const c = e.target.closest('.asset'); if (c) { S.sel = c.dataset.tk; render(); } });
-  $('assets').addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('asset')) { e.preventDefault(); S.sel = e.target.dataset.tk; render(); } });
+  $('assets').addEventListener('click', e => { const c = e.target.closest('.asset'); if (c) abrirPainel(c.dataset.tk); });
+  $('assets').addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('asset')) { e.preventDefault(); abrirPainel(e.target.dataset.tk); } });
+  $('mClose').onclick = fecharPainel;
+  $('modal').addEventListener('click', e => { if (e.target.id === 'modal') fecharPainel(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && S.modal) fecharPainel(); });
   $('btnAsk').onclick = () => perguntar();
   $('chatIn').addEventListener('keydown', e => { if (e.key === 'Enter') perguntar(); });
   document.querySelectorAll('.qp').forEach(b => b.onclick = () => perguntar(b.dataset.q));
