@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radar GEX Multi-Ativos</title>
+<style>
+  :root {
+    --bg: #070b14; --panel: #111827; --panel2: #0f172a; --line: #1e293b; --border: #334155;
+    --text: #f8fafc; --muted: #94a3b8; --accent: #38bdf8; --green: #10b981; --green2: #4ade80;
+    --red: #ef4444; --red2: #f87171; --yellow: #facc15; --purple: #e040fb; --orange: #ffab40; --cyan: #40c4ff;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 14px; font-size: 13px; }
+  .wrap { max-width: 1440px; margin: auto; display: flex; flex-direction: column; gap: 14px; }
+  .card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; min-width: 0; }
+  .row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .between { justify-content: space-between; }
+  h1 { margin: 0; font-size: 1.15rem; color: var(--accent); letter-spacing: .3px; }
+  .sub { font-size: .74rem; color: var(--muted); }
+  .title { font-weight: 800; font-size: .82rem; letter-spacing: .4px; text-transform: uppercase; }
+  .btn { background: var(--accent); color: #06101d; border: 0; padding: 8px 13px; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: .8rem; }
+  .btn.ghost { background: var(--line); color: #e2e8f0; border: 1px solid var(--border); }
+  .btn:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 9px; border-radius: 999px; font-size: .7rem; font-weight: 800; border: 1px solid var(--border); background: var(--panel2); color: var(--muted); white-space: nowrap; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+  .pill.ok { color: #6ee7b7; border-color: var(--green); } .pill.ok .dot { background: var(--green); animation: pulse 1.6s infinite; }
+  .pill.err { color: #fca5a5; border-color: var(--red); } .pill.err .dot { background: var(--red); }
+  .pill.off { color: var(--muted); }
+  .pill.warn { color: #fde047; border-color: var(--yellow); } .pill.warn .dot { background: var(--yellow); }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(16,185,129,.8); } 70% { box-shadow: 0 0 0 7px rgba(16,185,129,0); } 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); } }
+  @media (prefers-reduced-motion: reduce) { .pill.ok .dot { animation: none; } }
+  .clock { font-variant-numeric: tabular-nums; font-weight: 800; font-size: .95rem; }
+  .up { color: var(--green); } .down { color: var(--red); } .warnc { color: var(--yellow); } .mut { color: var(--muted); }
+
+  /* Configurações */
+  .drawer { display: none; } .drawer.open { display: block; }
+  .grid-f { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; }
+  .f label { display: block; font-size: .66rem; color: var(--muted); text-transform: uppercase; margin-bottom: 4px; }
+  .f input, .f select, textarea { width: 100%; background: var(--panel2); border: 1px solid #475569; color: #fff; padding: 6px 8px; border-radius: 5px; font-size: .82rem; }
+  textarea { font-family: ui-monospace, Consolas, monospace; font-size: .74rem; resize: vertical; }
+  .sec { font-size: .72rem; color: var(--accent); font-weight: 800; text-transform: uppercase; border-bottom: 1px solid var(--line); padding-bottom: 4px; margin: 14px 0 8px; display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+  .sec:first-child { margin-top: 0; }
+  .links { display: flex; gap: 12px; flex-wrap: wrap; text-transform: none; }
+  .links a { color: var(--accent); text-decoration: none; font-weight: 700; }
+  .links a:hover { text-decoration: underline; }
+  .hint { font-size: .72rem; color: var(--muted); margin: 0 0 8px; line-height: 1.45; }
+
+  /* Faixa macro */
+  .macro { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+  @media (max-width: 1150px) { .macro { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 560px) { .macro { grid-template-columns: repeat(2, 1fr); } }
+  .kpi .lbl { font-size: .68rem; color: var(--muted); text-transform: uppercase; display: flex; justify-content: space-between; gap: 6px; }
+  .kpi .val { font-size: 1.25rem; font-weight: 800; margin: 4px 0 2px; font-variant-numeric: tabular-nums; }
+  .kpi .meta { font-size: .68rem; color: var(--muted); display: flex; justify-content: space-between; gap: 6px; flex-wrap: wrap; }
+  .src { font-size: .62rem; font-weight: 800; padding: 1px 6px; border-radius: 4px; background: var(--line); color: var(--muted); }
+  .src.live { color: #6ee7b7; } .src.derived { color: #fde047; } .src.none { color: var(--red2); }
+
+  /* Resumo */
+  .summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  @media (max-width: 900px) { .summary { grid-template-columns: repeat(2, 1fr); } }
+  .sbox { background: var(--panel2); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; }
+  .sbox b { display: block; font-size: 1.05rem; margin-top: 3px; }
+  .meter { height: 8px; border-radius: 4px; background: var(--line); overflow: hidden; margin-top: 6px; display: flex; }
+  .meter i { display: block; height: 100%; }
+
+  /* Grade de ativos */
+  .assets { display: grid; grid-template-columns: repeat(auto-fill, minmax(255px, 1fr)); gap: 10px; }
+  .asset { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 11px 12px 10px; cursor: pointer; min-width: 0; }
+  .asset:hover, .asset.sel { border-color: var(--accent); }
+  .asset .top { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; }
+  .asset .tk { font-weight: 900; font-size: .95rem; }
+  .asset .px { font-weight: 800; font-variant-numeric: tabular-nums; }
+  .asset .ln { display: flex; justify-content: space-between; gap: 6px; font-size: .7rem; color: var(--muted); margin-top: 4px; flex-wrap: wrap; }
+  .reg { font-size: .64rem; font-weight: 800; padding: 2px 7px; border-radius: 4px; }
+  .reg.long { background: rgba(16,185,129,.16); color: #6ee7b7; } .reg.short { background: rgba(239,68,68,.16); color: #fca5a5; } .reg.na { background: var(--line); color: var(--muted); }
+  .mini { position: relative; height: 26px; margin: 24px 4px 16px; background: var(--panel2); border: 1px solid var(--line); border-radius: 5px; }
+  .mini .em { position: absolute; top: 0; bottom: 0; background: rgba(64,196,255,.13); border-left: 1px dashed var(--cyan); border-right: 1px dashed var(--cyan); }
+  .mk { position: absolute; top: 0; bottom: 0; width: 2px; transform: translateX(-50%); }
+  .mk span { position: absolute; top: 28px; left: 50%; transform: translateX(-50%); font-size: .58rem; font-weight: 800; white-space: nowrap; }
+  .pin { position: absolute; top: -7px; bottom: -7px; width: 3px; background: var(--accent); box-shadow: 0 0 8px var(--accent); transform: translateX(-50%); z-index: 2; transition: left .35s ease; }
+  .pin span { position: absolute; top: -16px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #06101d; font-size: .58rem; font-weight: 900; padding: 0 4px; border-radius: 3px; white-space: nowrap; }
+  .warnline { font-size: .66rem; color: #fde047; margin-top: 2px; }
+
+  /* Detalhe */
+  .main { display: grid; grid-template-columns: 1.25fr 1fr; gap: 14px; align-items: start; }
+  @media (max-width: 1024px) { .main { grid-template-columns: 1fr; } }
+  .tablewrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; min-width: 520px; }
+  th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--line); font-size: .8rem; font-variant-numeric: tabular-nums; }
+  th { color: var(--muted); font-size: .66rem; text-transform: uppercase; background: var(--panel2); }
+  .thesis { background: var(--panel2); border-left: 4px solid var(--accent); padding: 10px 12px; border-radius: 6px; line-height: 1.55; margin: 10px 0; }
+  canvas { width: 100%; height: 260px; display: block; background: #0b111e; border: 1px solid var(--line); border-radius: 8px; margin-top: 8px; }
+
+  /* Chat */
+  .chat-log { max-height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin: 8px 0; }
+  .msg { padding: 8px 11px; border-radius: 6px; font-size: .8rem; line-height: 1.5; white-space: pre-line; }
+  .msg.user { background: var(--line); color: var(--accent); align-self: flex-end; max-width: 85%; }
+  .msg.ai { background: #111c2e; border-left: 3px solid #a855f7; }
+  .qp { background: var(--line); color: var(--muted); border: 1px solid var(--border); padding: 3px 8px; border-radius: 4px; font-size: .7rem; cursor: pointer; }
+  .qp:hover { color: #fff; border-color: var(--accent); }
+  .chat-in { display: flex; gap: 6px; } .chat-in input { flex: 1; min-width: 0; background: var(--line); border: 1px solid #475569; color: #fff; padding: 8px 10px; border-radius: 6px; }
+  .foot { font-size: .68rem; color: #64748b; text-align: center; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- CABEÇALHO -->
+  <div class="card row between">
+    <div>
+      <h1>RADAR GEX MULTI-ATIVOS — B3 + EWZ</h1>
+      <div class="sub">Cotações ao vivo (Yahoo · Brapi · Finnhub) • Níveis GEX Investorama / B3Lab • 6L1 CME • S&amp;P 500 • Analista IA Groq</div>
+    </div>
+    <div class="row">
+      <span class="pill off" id="pSrv"><span class="dot"></span>SERVIDOR YAHOO</span>
+      <span class="pill off" id="pBrapi"><span class="dot"></span>BRAPI</span>
+      <span class="pill off" id="pFinn"><span class="dot"></span>FINNHUB</span>
+      <div style="text-align:right"><div class="clock" id="clock">--:--:-- BRT</div><div class="sub" id="lastUpd">aguardando dados…</div></div>
+      <button class="btn ghost" id="btnRefresh" type="button">↻ Atualizar</button>
+      <button class="btn" id="btnCfg" type="button">⚙ Configurar</button>
+    </div>
+  </div>
+
+  <!-- CONFIGURAÇÕES -->
+  <div class="card drawer" id="drawer">
+    <div class="sec"><span>1. Níveis GEX (mesmo formato do indicador Pine)</span>
+      <span class="links"><a href="https://investorama.com.br" target="_blank" rel="noopener">↗ Investorama</a><a href="https://b3lab.com.br" target="_blank" rel="noopener">↗ B3Lab</a><a href="https://www.barchart.com/etfs-funds/quotes/EWZ/gamma-exposure" target="_blank" rel="noopener">↗ Barchart (EWZ)</a></span></div>
+    <p class="hint">Uma linha por ativo, separadas por ponto e vírgula: <b>TICKER|REGIME|FLIP|EM_MIN|EM_MAX|PW1|CW1|BLOCO|SIGMA1_MIN</b>. Investorama e B3Lab não têm API e ficam atrás de login, por isso os níveis são colados aqui (o mesmo texto que vai no TradingView). Ficam salvos só neste navegador.</p>
+    <textarea id="payload" rows="6"></textarea>
+    <div class="grid-f" style="margin-top:10px">
+      <div class="f"><label for="lvlDate">Níveis gerados em</label><input id="lvlDate" type="datetime-local"></div>
+      <div class="f"><label for="expB3">Venc. opções de ações B3</label><input id="expB3" type="date"></div>
+      <div class="f"><label for="expIbov">Venc. opções IBOV (WIN)</label><input id="expIbov" type="date"></div>
+      <div class="f"><label for="expEwz">Venc. opções EWZ</label><input id="expEwz" type="date"></div>
+      <div class="f"><label for="tol">Tolerância da checagem (%)</label><input id="tol" type="number" min="1" step="1"></div>
+      <div class="f" style="display:flex;align-items:flex-end"><button class="btn" id="btnApply" type="button" style="width:100%">Aplicar níveis</button></div>
+    </div>
+
+    <div class="sec"><span>2. WIN (o WIN não tem cotação gratuita ao vivo)</span></div>
+    <p class="hint">O WIN é calculado a partir do IBOV ao vivo. Para usar o ágio real, digite o preço do WIN da sua plataforma e clique em Sincronizar: o painel guarda a razão WIN/IBOV e o WIN passa a acompanhar o IBOV com esse ágio.</p>
+    <div class="grid-f">
+      <div class="f"><label for="winSync">Preço atual do WIN</label><input id="winSync" type="number" step="5" placeholder="ex: 175200"></div>
+      <div class="f" style="display:flex;align-items:flex-end;gap:6px"><button class="btn" id="btnWinSync" type="button" style="flex:1">Sincronizar</button><button class="btn ghost" id="btnWinAuto" type="button">Auto</button></div>
+      <div class="f"><label for="winUnit">Níveis do WIN estão em</label><select id="winUnit"><option value="win">Pontos do WIN</option><option value="ibov">Pontos do IBOV (projetar)</option></select></div>
+      <div class="f"><label for="di">DI1 (% a.a.) p/ ágio teórico</label><input id="di" type="number" step="0.01"></div>
+      <div class="f"><label for="du">Dias úteis até venc. <span id="duHint" style="text-transform:none;color:var(--accent)"></span></label><input id="du" type="number" step="1"></div>
+    </div>
+
+    <div class="sec"><span>3. Chaves de API (salvas só neste navegador)</span>
+      <span class="links"><a href="https://brapi.dev" target="_blank" rel="noopener">↗ Token Brapi (grátis)</a><a href="https://finnhub.io/register" target="_blank" rel="noopener">↗ Chave Finnhub (grátis)</a><a href="https://console.groq.com/keys" target="_blank" rel="noopener">↗ Chave Groq (grátis)</a></span></div>
+    <p class="hint">Publicado na Vercel, o servidor próprio busca tudo no Yahoo sem chave (inclusive 6L1 da CME e velas). Sem servidor (link estático), o painel usa Brapi (IBOV, ações, BOVA11, dólar) e Finnhub (EWZ e SPY como proxy do S&amp;P 500).</p>
+    <div class="grid-f">
+      <div class="f"><label for="kBrapi">Token Brapi</label><input id="kBrapi" type="password" autocomplete="off"></div>
+      <div class="f"><label for="kFinn">Chave Finnhub</label><input id="kFinn" type="password" autocomplete="off"></div>
+      <div class="f"><label for="kGroq">Chave Groq (gsk_…)</label><input id="kGroq" type="password" autocomplete="off"></div>
+      <div class="f"><label for="mGroq">Modelo Groq</label><input id="mGroq" list="groqList"><datalist id="groqList"><option value="llama-3.3-70b-versatile"></option><option value="llama-3.1-8b-instant"></option></datalist></div>
+      <div class="f"><label for="every">Atualizar a cada (s)</label><input id="every" type="number" min="10" step="5"></div>
+    </div>
+  </div>
+
+  <!-- FAIXA MACRO -->
+  <div class="macro" id="macro"></div>
+
+  <!-- RESUMO -->
+  <div class="card">
+    <div class="row between"><span class="title">Leitura agregada</span><span class="pill" id="lvlStamp">Níveis: --</span></div>
+    <div class="summary" style="margin-top:10px">
+      <div class="sbox"><span class="sub">Ativos em Long Gamma (preço ≥ Flip)</span><b id="sBreadth">--</b><div class="meter" id="sBreadthBar"></div></div>
+      <div class="sbox"><span class="sub">Fluxo externo (6L1 · EWZ · S&amp;P)</span><b id="sFlow">--</b><div class="sub" id="sFlowDet">--</div></div>
+      <div class="sbox"><span class="sub">Mais perto do Flip</span><b id="sNear">--</b><div class="sub" id="sNearDet">--</div></div>
+      <div class="sbox"><span class="sub">Checagem dos níveis</span><b id="sCheck">--</b><div class="sub" id="sCheckDet">--</div></div>
+    </div>
+  </div>
+
+  <!-- GRADE DE ATIVOS -->
+  <div class="assets" id="assets"></div>
+
+  <!-- DETALHE + 6L1 -->
+  <div class="main">
+    <div class="card">
+      <div class="row between"><span class="title" id="dTitle">Detalhe</span><span class="reg na" id="dReg">--</span></div>
+      <div class="thesis" id="dThesis">Selecione um ativo na grade.</div>
+      <div class="tablewrap"><table><thead><tr><th>Nível</th><th>Preço</th><th>Distância</th><th>Leitura</th></tr></thead><tbody id="dTable"></tbody></table></div>
+
+      <div style="margin-top:14px">
+        <div class="row between"><span class="title">💬 Analista IA (Groq)</span><span class="pill" id="aiTag">MODO LOCAL</span></div>
+        <div class="row" style="margin-top:8px">
+          <button class="qp" type="button" data-q="Faça a leitura geral do radar: quais ativos estão em short gamma, quais perto do flip e o que o fluxo externo (6L1, EWZ, S&P) indica.">Leitura geral</button>
+          <button class="qp" type="button" data-q="Para o ativo selecionado, qual o gatilho, alvos (walls) e onde fica a invalidação?">Plano do ativo</button>
+          <button class="qp" type="button" data-q="Quais níveis parecem inconsistentes ou desatualizados e por quê?">Níveis suspeitos</button>
+        </div>
+        <div class="chat-log" id="chatLog"><div class="msg ai">Sem chave Groq eu respondo com o motor local. Com a chave (⚙ Configurar), a IA recebe todos os preços ao vivo e níveis GEX do radar.</div></div>
+        <div class="chat-in"><input id="chatIn" placeholder="Pergunte sobre o radar…"><button class="btn" id="btnAsk" type="button">Perguntar</button></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="row between">
+        <div><span class="title">6L1 — Real Futuro CME (M5)</span><div class="sub">09:00–18:00 BRT • linha amarela = preço às 09:00</div></div>
+        <span class="src" id="c6src">--</span>
+      </div>
+      <canvas id="cv6"></canvas>
+      <div class="row between sub" style="margin-top:6px"><span id="c6o">Abert: --</span><span id="c6h">Máx: --</span><span id="c6l">Mín: --</span><span id="c6c">Atual: --</span></div>
+    </div>
+  </div>
+
+  <p class="foot">Ferramenta de estudo, não é recomendação de investimento. Cotações do Yahoo e da Brapi podem ter atraso (o horário de cada cotação aparece no card). WIN é calculado a partir do IBOV. Níveis GEX são os do seu relatório.</p>
+</div>
+
+<script>
+// ================================================================
+// ESTADO E UTILITÁRIOS
+// ================================================================
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const load = (k, d) => { try { const v = localStorage.getItem('radar_' + k); return v === null ? d : v; } catch (e) { return d; } };
+const save = (k, v) => { try { localStorage.setItem('radar_' + k, v); } catch (e) {} };
+const sign = (n) => (n >= 0 ? '+' : '');
+
+const DEFAULT_PAYLOAD = 'WIN|AMP|173360|171405|177005|173000|175000|174000|170140;\nBOVA11|AMP|168.40|164.75|171.25|165.00|170.00|168.00|163.50;\nEWZ|AMP|35.10|30.35|31.65|30.00|43.00|31.00|28.00;\nPETR4|AMP|45.65|44.13|46.47|44.91|46.41|46.41|43.41;\nVALE3|AMP|63.89|62.03|65.37|62.39|64.39|64.39|60.89;\nITUB4|AMO|42.45|41.05|43.55|41.50|43.00|42.50|40.50;\nBBDC4|AMO|14.80|14.13|15.17|14.45|15.20|14.95|13.70;\nBBAS3|AMP|22.79|14.58|15.62|15.04|16.04|15.04|14.04;\nB3SA3|AMP|23.41|14.42|15.36|14.02|15.02|15.52|13.77;\nABEV3|AMO|15.68|15.51|16.07|15.57|15.82|15.82|15.07';
+
+const S = {
+  quotes: {},          // KEY -> {price, prev, open, high, low, time, src}
+  candles6L: [],
+  levels: [],          // payload parseado
+  sel: 'WIN',
+  srv: 'off', brapi: 'off', finn: 'off',
+  chat: [], busy: false, timer: null
+};
+
+function fmtN(v, dec) {
+  if (v === null || v === undefined || !isFinite(v)) return '—';
+  return Number(v).toLocaleString('pt-BR', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+}
+const decOf = (tk) => (tk === 'WIN' || tk === 'IBOV' || tk === 'SPX' || tk === 'ES') ? 0 : (tk === '6L' ? 5 : (tk === 'USDBRL' ? 4 : 2));
+const pct = (a, b) => (isFinite(a) && isFinite(b) && b) ? (a / b - 1) * 100 : NaN;
+
+function brt(date = new Date()) {
+  const p = new Intl.DateTimeFormat('en-GB', { timeZone: 'America/Sao_Paulo', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }).formatToParts(date);
+  const g = (t) => p.find(x => x.type === t).value;
+  return { key: `${g('year')}-${g('month')}-${g('day')}`, hm: (parseInt(g('hour'), 10) % 24) * 60 + parseInt(g('minute'), 10) };
+}
+function ago(ms) {
+  if (!ms) return '';
+  const m = Math.round((Date.now() - ms) / 60000);
+  if (m < 1) return 'agora';
+  if (m < 60) return `há ${m} min`;
+  const h = Math.round(m / 60);
+  return h < 48 ? `há ${h} h` : `há ${Math.round(h / 24)} d`;
+}
+
+// ================================================================
+// CALENDÁRIO B3 (dias úteis até o vencimento do WIN)
+// ================================================================
+function easter(y) {
+  const a = y % 19, b = Math.floor(y / 100), c = y % 100, d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25);
+  const g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30, i = Math.floor(c / 4), k = c % 4;
+  const l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451);
+  return new Date(Date.UTC(y, Math.floor((h + l - 7 * m + 114) / 31) - 1, ((h + l - 7 * m + 114) % 31) + 1));
+}
+const _fer = {};
+function feriados(y) {
+  if (_fer[y]) return _fer[y];
+  const s = new Set(['01-01', '04-21', '05-01', '09-07', '10-12', '11-02', '11-15', '11-20', '12-24', '12-25', '12-31'].map(md => `${y}-${md}`));
+  const e = easter(y).getTime();
+  [-48, -47, -2, 60].forEach(o => s.add(new Date(e + o * 864e5).toISOString().slice(0, 10)));
+  return (_fer[y] = s);
+}
+const util = (d) => { const w = d.getUTCDay(); return w && w !== 6 && !feriados(d.getUTCFullYear()).has(d.toISOString().slice(0, 10)); };
+const hojeUTC = () => { const [y, m, d] = brt().key.split('-').map(Number); return new Date(Date.UTC(y, m - 1, d)); };
+function proxVencWin() {
+  const h = hojeUTC();
+  for (let k = 0; k < 14; k++) {
+    const y = h.getUTCFullYear() + Math.floor((h.getUTCMonth() + k) / 12), m = (h.getUTCMonth() + k) % 12;
+    if (m % 2 !== 1) continue;
+    const d15 = new Date(Date.UTC(y, m, 15));
+    let off = 3 - d15.getUTCDay(); if (off > 3) off -= 7; if (off < -3) off += 7;
+    const v = new Date(d15.getTime() + off * 864e5);
+    while (!util(v)) v.setUTCDate(v.getUTCDate() + 1);
+    if (v >= h) return v;
+  }
+  return null;
+}
+function duAte(v) { let n = 0; const d = hojeUTC(); while (d < v) { d.setUTCDate(d.getUTCDate() + 1); if (util(d)) n++; } return n; }
+
+// ================================================================
+// NÍVEIS (payload do indicador Pine)
+// ================================================================
+function parsePayload(txt) {
+  const out = [];
+  txt.split(';').forEach(row => {
+    const c = row.trim().split('|').map(x => x.trim());
+    if (c.length < 9 || !c[0]) return;
+    const n = (i) => { const v = parseFloat(c[i].replace(',', '.')); return isFinite(v) ? v : NaN; };
+    out.push({ tk: c[0].toUpperCase(), regime: c[1].toUpperCase(), flip: n(2), emMin: n(3), emMax: n(4), pw1: n(5), cw1: n(6), block: n(7), sig1: n(8) });
+  });
+  return out;
+}
+function validar(L) {
+  const w = [], tol = (parseFloat($('tol').value) || 10) / 100;
+  if (L.regime !== 'AMP' && L.regime !== 'AMO') w.push(`regime "${L.regime}" inválido`);
+  if (isFinite(L.emMin) && isFinite(L.emMax)) {
+    if (L.emMin >= L.emMax) w.push('EM mín ≥ EM máx');
+    const fora = (v, t) => isFinite(v) && (v < L.emMin * (1 - t) || v > L.emMax * (1 + t));
+    if (fora(L.flip, tol)) w.push('Flip fora do Expected Move');
+    if (fora(L.cw1, 2 * tol)) w.push('Call Wall muito distante');
+    if (fora(L.pw1, 2 * tol)) w.push('Put Wall muito distante');
+    if (fora(L.block, 2 * tol)) w.push('Bloco muito distante');
+  }
+  if (isFinite(L.pw1) && isFinite(L.cw1) && L.pw1 >= L.cw1) w.push('Put Wall ≥ Call Wall');
+  if (!isFinite(L.flip)) w.push('Flip vazio');
+  return w;
+}
+function vencimentoDe(tk) {
+  const v = tk === 'EWZ' ? $('expEwz').value : tk === 'WIN' ? $('expIbov').value : $('expB3').value;
+  return v ? new Date(v + 'T18:00:00-03:00') : null;
+}
+
+// ================================================================
+// WIN: preço e projeção
+// ================================================================
+function winInfo() {
+  const ib = S.quotes.IBOV;
+  if (!ib || !isFinite(ib.price)) return null;
+  const ratio = parseFloat(load('winRatio', ''));
+  if (isFinite(ratio) && ratio > 0.9 && ratio < 1.2) {
+    return { price: Math.round(ib.price * ratio), ratio, base: 'ágio real (sync)', prev: ib.prev ? ib.prev * ratio : null };
+  }
+  const di = parseFloat($('di').value) || 0, du = parseFloat($('du').value) || 0;
+  const r = Math.pow(1 + di / 100, du / 252);
+  return { price: Math.round(ib.price * r), ratio: r, base: 'ágio teórico DI', prev: ib.prev ? ib.prev * r : null };
+}
+function precoAtivo(tk) {
+  if (tk === 'WIN') { const w = winInfo(); return w ? { price: w.price, prev: w.prev, time: S.quotes.IBOV.time, src: 'CALC' } : null; }
+  return S.quotes[tk] || null;
+}
+function niveisAtivo(L) {
+  if (L.tk === 'WIN' && $('winUnit').value === 'ibov') {
+    const w = winInfo(); const r = w ? w.ratio : 1;
+    const p = (v) => isFinite(v) ? Math.round(v * r) : NaN;
+    return { ...L, flip: p(L.flip), emMin: p(L.emMin), emMax: p(L.emMax), pw1: p(L.pw1), cw1: p(L.cw1), block: p(L.block), sig1: p(L.sig1) };
+  }
+  return L;
+}
+
+// ================================================================
+// BUSCA DE DADOS
+// ================================================================
+async function getJSON(url, ms = 10000) {
+  const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), ms);
+  try { const r = await fetch(url, { signal: ctl.signal, cache: 'no-store' }); if (!r.ok) throw new Error('HTTP ' + r.status); return await r.json(); }
+  finally { clearTimeout(t); }
+}
+const B3_TICKERS = ['BOVA11', 'PETR4', 'VALE3', 'ITUB4', 'BBDC4', 'BBAS3', 'B3SA3', 'ABEV3'];
+
+async function fonteServidor() {
+  try {
+    const d = await getJSON('/api/quotes', 15000);
+    if (!d || !d.quotes || !Object.keys(d.quotes).length) throw new Error('vazio');
+    Object.assign(S.quotes, d.quotes);
+    if (Array.isArray(d.candles6L)) S.candles6L = d.candles6L;
+    S.srv = 'ok'; return true;
+  } catch (e) { S.srv = location.protocol === 'file:' || /githack|github/.test(location.host) ? 'off' : 'err'; return false; }
+}
+async function fonteBrapi() {
+  const tk = $('kBrapi').value.trim();
+  const q = tk ? `?token=${encodeURIComponent(tk)}` : '';
+  let ok = false;
+  // Ações e BOVA11. Sem token a Brapi libera só os ativos de teste (PETR4, VALE3, ITUB4).
+  const lista = tk ? B3_TICKERS : ['PETR4', 'VALE3', 'ITUB4'];
+  const guardar = (r) => {
+    if (!r || !isFinite(r.regularMarketPrice)) return;
+    S.quotes[r.symbol] = { price: r.regularMarketPrice, prev: r.regularMarketPreviousClose, open: r.regularMarketOpen, high: r.regularMarketDayHigh, low: r.regularMarketDayLow, time: Date.parse(r.regularMarketTime) || Date.now(), src: 'BRAPI' };
+    ok = true;
+  };
+  const recebidos = new Set();
+  try {
+    const d = await getJSON(`https://brapi.dev/api/quote/${lista.join(',')}${q}`);
+    (d.results || []).forEach(r => { guardar(r); recebidos.add(r.symbol); });
+  } catch (e) {}
+  // Plano que não aceita lote: busca um por um o que faltou
+  for (const t of lista.filter(t => !recebidos.has(t))) {
+    try { const d = await getJSON(`https://brapi.dev/api/quote/${t}${q}`); guardar(d.results && d.results[0]); } catch (e) {}
+  }
+  if (tk) {
+    try {
+      const d = await getJSON(`https://brapi.dev/api/quote/%5EBVSP${q}`);
+      const r = d.results && d.results[0];
+      if (r && isFinite(r.regularMarketPrice)) { S.quotes.IBOV = { price: r.regularMarketPrice, prev: r.regularMarketPreviousClose, open: r.regularMarketOpen, high: r.regularMarketDayHigh, low: r.regularMarketDayLow, time: Date.parse(r.regularMarketTime) || Date.now(), src: 'BRAPI' }; ok = true; }
+    } catch (e) {}
+    try {
+      const d = await getJSON(`https://brapi.dev/api/v2/currency?currency=USD-BRL${q.replace('?', '&')}`);
+      const c = d.currency && d.currency[0]; const bid = c && parseFloat(c.bidPrice);
+      if (bid > 0) { const p = parseFloat(c.percentageChange) || 0; S.quotes.USDBRL = { price: bid, prev: bid / (1 + p / 100), time: (parseInt(c.updatedAtTimestamp, 10) * 1000) || Date.now(), src: 'BRAPI' }; ok = true; }
+    } catch (e) {}
+  }
+  S.brapi = !tk ? (ok ? 'warn' : 'err') : (ok ? 'ok' : 'err');
+  return ok;
+}
+async function fonteFinnhub() {
+  const k = $('kFinn').value.trim();
+  if (!k) { S.finn = 'off'; return false; }
+  let ok = false;
+  for (const [key, sym] of [['EWZ', 'EWZ'], ['SPY', 'SPY']]) {
+    try {
+      const d = await getJSON(`https://finnhub.io/api/v1/quote?symbol=${sym}&token=${encodeURIComponent(k)}`);
+      if (d && d.c) { S.quotes[key] = { price: d.c, prev: d.pc, open: d.o, high: d.h, low: d.l, time: d.t * 1000, src: 'FINNHUB' }; ok = true; }
+    } catch (e) {}
+  }
+  S.finn = ok ? 'ok' : 'err';
+  return ok;
+}
+async function atualizar() {
+  if (S.busy) return; S.busy = true;
+  try {
+    const srv = await fonteServidor();
+    if (!srv) { await fonteBrapi(); await fonteFinnhub(); }
+    else { S.brapi = 'off'; S.finn = 'off'; }
+    $('lastUpd').textContent = 'atualizado ' + new Date().toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+  } finally { S.busy = false; render(); }
+}
+
+// ================================================================
+// RENDER
+// ================================================================
+function setPill(id, st, txt) {
+  const el = $(id); el.className = 'pill ' + st;
+  const lab = { ok: 'AO VIVO', err: 'ERRO', off: 'DESLIGADO', warn: 'PARCIAL (SEM TOKEN)' }[st];
+  el.innerHTML = `<span class="dot"></span>${txt}: ${lab}`;
+}
+function kpi(label, tk, valor, dec, prev, src, time, nota) {
+  const p = pct(valor, prev);
+  const cls = src === 'none' ? 'none' : (src === 'DERIVADO' || src === 'CALC' || src === 'PROXY SPY') ? 'derived' : 'live';
+  return `<div class="card kpi"><div class="lbl"><span>${label}</span><span class="${isFinite(p) ? (p >= 0 ? 'up' : 'down') : 'mut'}">${isFinite(p) ? sign(p) + p.toFixed(2) + '%' : '—'}</span></div>
+    <div class="val">${fmtN(valor, dec)}</div>
+    <div class="meta"><span class="src ${cls}">${src === 'none' ? 'SEM DADO' : esc(src)}</span><span>${nota || ago(time)}</span></div></div>`;
+}
+function macroVals() {
+  const q = S.quotes;
+  const usd = q.USDBRL;
+  let l6 = null;
+  if (q['6L']) l6 = { ...q['6L'], src: 'CME' };
+  else if (usd) l6 = { price: 1 / usd.price, prev: usd.prev ? 1 / usd.prev : null, time: usd.time, src: 'DERIVADO' };
+  let spx = null;
+  if (q.SPX) spx = { ...q.SPX, src: 'YAHOO' };
+  else if (q.SPY) spx = { ...q.SPY, src: 'PROXY SPY' };
+  return { usd, l6, ewz: q.EWZ, spx, es: q.ES };
+}
+function renderMacro() {
+  const q = S.quotes, w = winInfo(), m = macroVals();
+  const ib = q.IBOV;
+  $('macro').innerHTML =
+    kpi('IBOV', 'IBOV', ib?.price, 0, ib?.prev, ib ? ib.src : 'none', ib?.time) +
+    kpi('WIN (calculado)', 'WIN', w?.price, 0, w?.prev, w ? 'CALC' : 'none', null, w ? w.base : 'precisa do IBOV') +
+    kpi('Dólar (USD/BRL)', 'USDBRL', m.usd?.price, 4, m.usd?.prev, m.usd ? m.usd.src : 'none', m.usd?.time) +
+    kpi('6L1 (Real CME)', '6L', m.l6?.price, 5, m.l6?.prev, m.l6 ? m.l6.src : 'none', m.l6?.time, m.l6 && m.l6.src === 'DERIVADO' ? '1 ÷ dólar à vista' : '') +
+    kpi('EWZ', 'EWZ', m.ewz?.price, 2, m.ewz?.prev, m.ewz ? m.ewz.src : 'none', m.ewz?.time) +
+    kpi('S&P 500', 'SPX', m.spx?.price, m.spx && m.spx.src === 'PROXY SPY' ? 2 : 0, m.spx?.prev, m.spx ? m.spx.src : 'none', m.spx?.time, m.es ? `ES ${fmtN(m.es.price, 0)} (${sign(pct(m.es.price, m.es.prev))}${pct(m.es.price, m.es.prev).toFixed(2)}%)` : '');
+}
+function analisar(L0) {
+  const L = niveisAtivo(L0);
+  const q = precoAtivo(L.tk);
+  const price = q ? q.price : NaN;
+  const warns = validar(L0);
+  const venc = vencimentoDe(L.tk);
+  const vencido = venc && Date.now() > venc.getTime();
+  let regLive = null;
+  if (isFinite(price) && isFinite(L.flip)) regLive = price >= L.flip ? 'long' : 'short';
+  const repLong = L.regime === 'AMO';
+  const divergente = regLive && (L.regime === 'AMP' || L.regime === 'AMO') && (regLive === 'long') !== repLong;
+  return { L, q, price, warns, vencido, regLive, divergente, distFlip: pct(L.flip, price) };
+}
+function miniRuler(a) {
+  const L = a.L, P = a.price;
+  const vals = [L.pw1, L.flip, L.cw1, L.emMin, L.emMax, L.sig1, L.block, P].filter(isFinite);
+  if (vals.length < 2) return '<div class="mini"></div>';
+  let lo = Math.min(...vals), hi = Math.max(...vals); const pad = (hi - lo) * 0.08 || 1; lo -= pad; hi += pad;
+  const x = (v) => Math.max(1, Math.min(99, (v - lo) / (hi - lo) * 100));
+  const mk = (v, col, t) => isFinite(v) ? `<div class="mk" style="left:${x(v)}%;background:${col}"><span style="color:${col}">${t}</span></div>` : '';
+  const em = isFinite(L.emMin) && isFinite(L.emMax) ? `<div class="em" style="left:${x(L.emMin)}%;width:${x(L.emMax) - x(L.emMin)}%"></div>` : '';
+  const pin = isFinite(P) ? `<div class="pin" style="left:${x(P)}%"><span>${fmtN(P, decOf(L.tk))}</span></div>` : '';
+  return `<div class="mini">${em}${mk(L.pw1, 'var(--red)', 'PW')}${mk(L.flip, 'var(--yellow)', 'FLIP')}${mk(L.cw1, 'var(--green)', 'CW')}${pin}</div>`;
+}
+function renderAssets(list) {
+  $('assets').innerHTML = list.map(a => {
+    const L = a.L, d = decOf(L.tk);
+    const p = a.q ? pct(a.price, a.q.prev) : NaN;
+    const reg = a.regLive ? `<span class="reg ${a.regLive}">${a.regLive === 'long' ? 'LONG GAMMA' : 'SHORT GAMMA'}</span>` : '<span class="reg na">SEM PREÇO</span>';
+    const extras = [];
+    if (a.vencido) extras.push('VENCIDO');
+    if (a.divergente) extras.push('cruzou o Flip desde o relatório');
+    return `<div class="asset ${S.sel === L.tk ? 'sel' : ''}" data-tk="${esc(L.tk)}" tabindex="0" role="button" aria-label="Ver detalhe de ${esc(L.tk)}">
+      <div class="top"><span class="tk">${esc(L.tk)}</span><span class="px">${fmtN(a.price, d)} <span class="${isFinite(p) ? (p >= 0 ? 'up' : 'down') : 'mut'}" style="font-size:.72rem">${isFinite(p) ? sign(p) + p.toFixed(2) + '%' : ''}</span></span></div>
+      <div class="ln"><span>${reg}</span><span>Flip ${fmtN(L.flip, d)} <b class="${isFinite(a.distFlip) ? (a.distFlip >= 0 ? 'down' : 'up') : 'mut'}">${isFinite(a.distFlip) ? '(' + sign(a.distFlip) + a.distFlip.toFixed(2) + '%)' : ''}</b></span></div>
+      ${miniRuler(a)}
+      <div class="ln"><span>PW ${fmtN(L.pw1, d)}</span><span>EM ${fmtN(L.emMin, d)}–${fmtN(L.emMax, d)}</span><span>CW ${fmtN(L.cw1, d)}</span></div>
+      <div class="ln"><span class="src ${a.q ? (a.q.src === 'CALC' ? 'derived' : 'live') : 'none'}">${a.q ? esc(a.q.src) : 'SEM COTAÇÃO'}</span><span>${a.q ? ago(a.q.time) : ''}</span></div>
+      ${a.warns.length || extras.length ? `<div class="warnline">⚠ ${esc([...extras, ...a.warns].join(' · '))}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+function renderResumo(list) {
+  const com = list.filter(a => a.regLive);
+  const longs = com.filter(a => a.regLive === 'long').length;
+  $('sBreadth').textContent = com.length ? `${longs} de ${com.length}` : '—';
+  $('sBreadth').className = com.length ? (longs / com.length >= 0.5 ? 'up' : 'down') : 'mut';
+  $('sBreadthBar').innerHTML = com.length ? `<i style="width:${longs / com.length * 100}%;background:var(--green)"></i><i style="width:${(1 - longs / com.length) * 100}%;background:var(--red)"></i>` : '';
+
+  const m = macroVals();
+  const parts = [['6L1', m.l6], ['EWZ', m.ewz], ['S&P', m.spx]].filter(([, v]) => v && isFinite(pct(v.price, v.prev)));
+  const sc = parts.reduce((s, [, v]) => s + Math.sign(pct(v.price, v.prev)), 0);
+  $('sFlow').textContent = !parts.length ? '—' : sc >= 2 ? 'Favorável (risco on)' : sc <= -2 ? 'Desfavorável (risco off)' : 'Misto';
+  $('sFlow').className = !parts.length ? 'mut' : sc >= 2 ? 'up' : sc <= -2 ? 'down' : 'warnc';
+  $('sFlowDet').textContent = parts.map(([n, v]) => `${n} ${sign(pct(v.price, v.prev))}${pct(v.price, v.prev).toFixed(2)}%`).join(' · ') || 'sem cotações externas';
+
+  const perto = com.filter(a => isFinite(a.distFlip)).sort((x, y) => Math.abs(x.distFlip) - Math.abs(y.distFlip))[0];
+  $('sNear').textContent = perto ? perto.L.tk : '—';
+  $('sNearDet').textContent = perto ? `${sign(perto.distFlip)}${perto.distFlip.toFixed(2)}% até o Flip (${fmtN(perto.L.flip, decOf(perto.L.tk))})` : '--';
+
+  const ruins = list.filter(a => a.warns.length), venc = list.filter(a => a.vencido);
+  $('sCheck').textContent = ruins.length || venc.length ? `${ruins.length} com problema` : 'Tudo consistente';
+  $('sCheck').className = ruins.length || venc.length ? 'warnc' : 'up';
+  $('sCheckDet').textContent = [ruins.length ? ruins.map(a => a.L.tk).join(', ') : '', venc.length ? `${venc.length} com vencimento passado` : ''].filter(Boolean).join(' · ') || 'níveis dentro do esperado';
+
+  const t = parseInt(load('lvlStamp', ''), 10), el = $('lvlStamp');
+  const ld = $('lvlDate').value ? new Date($('lvlDate').value + ':00-03:00') : null;
+  const ref = ld && isFinite(ld) ? ld.getTime() : t;
+  if (!ref) { el.textContent = '⚠ Níveis de exemplo: cole os seus em ⚙'; el.className = 'pill warn'; }
+  else {
+    const hoje = brt(new Date(ref)).key === brt().key;
+    el.textContent = (hoje ? 'Níveis de hoje ' : '⚠ Níveis de ') + new Date(ref).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+    el.className = 'pill ' + (hoje ? 'ok' : 'warn');
+  }
+}
+function renderDetalhe(list) {
+  const a = list.find(x => x.L.tk === S.sel) || list[0];
+  if (!a) return;
+  S.sel = a.L.tk;
+  const L = a.L, d = decOf(L.tk), P = a.price;
+  $('dTitle').textContent = `Detalhe — ${L.tk}`;
+  const r = $('dReg'); r.className = 'reg ' + (a.regLive || 'na'); r.textContent = a.regLive ? (a.regLive === 'long' ? 'LONG GAMMA (amortecido)' : 'SHORT GAMMA (amplificado)') : 'SEM PREÇO';
+  const rows = [
+    ['Call Wall (CW1)', L.cw1, 'Resistência: dealers vendem na alta'],
+    ['EM+ (relatório)', L.emMax, 'Topo do movimento esperado'],
+    ['Maior Bloco', L.block, 'Maior concentração de gamma/OI'],
+    ['Gamma Flip', L.flip, 'Acima amortece, abaixo acelera'],
+    ['Put Wall (PW1)', L.pw1, 'Suporte: dealers compram na queda'],
+    ['EM- (relatório)', L.emMin, 'Fundo do movimento esperado'],
+    ['Suporte 1σ-', L.sig1, 'Extensão estatística']
+  ].filter(x => isFinite(x[1])).sort((x, y) => y[1] - x[1]);
+  let pinned = false;
+  const html = [];
+  rows.forEach(([n, v, t]) => {
+    if (!pinned && isFinite(P) && P >= v) { html.push(`<tr style="background:rgba(56,189,248,.08)"><td><b style="color:var(--accent)">▶ Preço atual</b></td><td><b>${fmtN(P, d)}</b></td><td></td><td class="mut">${a.q ? esc(a.q.src) + ' ' + ago(a.q.time) : ''}</td></tr>`); pinned = true; }
+    const dist = pct(v, P);
+    html.push(`<tr><td>${n}</td><td>${fmtN(v, d)}</td><td class="${isFinite(dist) ? (dist >= 0 ? 'up' : 'down') : 'mut'}">${isFinite(dist) ? sign(dist) + dist.toFixed(2) + '%' : '—'}</td><td class="mut">${t}</td></tr>`);
+  });
+  if (!pinned && isFinite(P)) html.push(`<tr style="background:rgba(56,189,248,.08)"><td><b style="color:var(--accent)">▶ Preço atual</b></td><td><b>${fmtN(P, d)}</b></td><td></td><td></td></tr>`);
+  $('dTable').innerHTML = html.join('');
+  $('dThesis').innerHTML = tese(a);
+}
+function tese(a) {
+  const L = a.L, d = decOf(L.tk), P = a.price;
+  if (!isFinite(P)) return `Sem cotação para <b>${esc(L.tk)}</b>. Configure as fontes em ⚙ ou publique na Vercel.`;
+  const partes = [];
+  if (a.regLive === 'long') {
+    partes.push(`<b>${esc(L.tk)}</b> em <b>${fmtN(P, d)}</b>, acima do Gamma Flip (${fmtN(L.flip, d)}): regime <b>amortecido</b>, os dealers tendem a vender altas e comprar quedas.`);
+    if (isFinite(L.cw1)) partes.push(`Call Wall em ${fmtN(L.cw1, d)} (${sign(pct(L.cw1, P))}${pct(L.cw1, P).toFixed(2)}%) tende a frear a alta.`);
+  } else {
+    partes.push(`<b>${esc(L.tk)}</b> em <b>${fmtN(P, d)}</b>, abaixo do Gamma Flip (${fmtN(L.flip, d)}): regime <b>amplificado</b>, o hedge dos dealers acompanha o movimento e a volatilidade aumenta.`);
+    if (isFinite(L.pw1)) partes.push(`Put Wall em ${fmtN(L.pw1, d)} (${sign(pct(L.pw1, P))}${pct(L.pw1, P).toFixed(2)}%) é o suporte de referência.`);
+  }
+  if (isFinite(L.emMin) && isFinite(L.emMax)) partes.push(P > L.emMax ? 'O preço está <b>acima do Expected Move</b>: movimento esticado.' : P < L.emMin ? 'O preço está <b>abaixo do Expected Move</b>: movimento esticado.' : `Dentro do Expected Move (${fmtN(L.emMin, d)}–${fmtN(L.emMax, d)}).`);
+  if (a.divergente) partes.push('⚠ O regime mudou desde o relatório (o preço cruzou o Flip).');
+  if (a.vencido) partes.push('⚠ <b>Vencimento de referência já passou</b>: atualize os níveis.');
+  if (a.warns.length) partes.push(`⚠ Níveis suspeitos: ${esc(a.warns.join(', '))}.`);
+  return partes.join(' ');
+}
+function draw6L() {
+  const cv = $('cv6'), dpr = window.devicePixelRatio || 1, W = cv.clientWidth || 600, H = cv.clientHeight || 260;
+  if (cv.width !== Math.round(W * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+  const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+  // Último pregão (09:00–18:00 BRT) que tem velas: em feriado nos EUA a CME para e hoje pode não ter nenhuma
+  const sess = S.candles6L.map(c => ({ ...c, b: brt(new Date(c.t)) })).filter(c => c.b.hm >= 540 && c.b.hm < 1080);
+  const day = sess.length ? sess[sess.length - 1].b.key : null;
+  const cs = sess.filter(c => c.b.key === day).map(c => ({ ...c, slot: Math.floor((c.b.hm - 540) / 5) }));
+  const srcEl = $('c6src');
+  ctx.fillStyle = '#94a3b8'; ctx.font = '12px system-ui';
+  if (!cs.length) {
+    srcEl.textContent = 'SEM VELAS'; srcEl.className = 'src none';
+    ctx.fillText('Velas reais do 6L1 só com o servidor (publicado na Vercel).', 14, H / 2 - 6);
+    ctx.fillText('No link estático o 6L1 aparece no card acima (derivado do dólar).', 14, H / 2 + 14);
+    ['c6o', 'c6h', 'c6l', 'c6c'].forEach(id => $(id).textContent = '--');
+    return;
+  }
+  const hojeK = brt().key;
+  if (day === hojeK) { srcEl.textContent = 'CME AO VIVO (YAHOO)'; srcEl.className = 'src live'; }
+  else { srcEl.textContent = `ÚLTIMO PREGÃO ${day.slice(8, 10)}/${day.slice(5, 7)} (CME SEM NEGÓCIO HOJE)`; srcEl.className = 'src derived'; }
+  const open = cs[0].o; let lo = Math.min(open, ...cs.map(c => c.l)), hi = Math.max(open, ...cs.map(c => c.h));
+  const pad = (hi - lo) * 0.12 || 0.0005; lo -= pad; hi += pad;
+  const pl = 10, pr = 64, pt = 14, pb = 22, pw = W - pl - pr, ph = H - pt - pb;
+  const y = (v) => pt + (hi - v) / (hi - lo) * ph;
+  ctx.strokeStyle = '#1e293b'; ctx.font = '10px ui-monospace, monospace';
+  for (let i = 0; i <= 4; i++) { const yy = pt + ph / 4 * i; ctx.beginPath(); ctx.moveTo(pl, yy); ctx.lineTo(W - pr, yy); ctx.stroke(); ctx.fillText((hi - (hi - lo) / 4 * i).toFixed(5), W - pr + 5, yy + 3); }
+  ctx.save(); ctx.strokeStyle = '#facc15'; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(pl, y(open)); ctx.lineTo(W - pr, y(open)); ctx.stroke(); ctx.restore();
+  const step = pw / 108, bw = Math.max(1.5, step * 0.68);
+  cs.forEach(c => {
+    const x = pl + c.slot * step + step / 2, col = c.c >= c.o ? '#10b981' : '#ef4444';
+    ctx.strokeStyle = col; ctx.beginPath(); ctx.moveTo(x, y(c.h)); ctx.lineTo(x, y(c.l)); ctx.stroke();
+    ctx.fillStyle = col; const t = y(Math.max(c.o, c.c)), b = y(Math.min(c.o, c.c)); ctx.fillRect(x - bw / 2, t, bw, Math.max(1.5, b - t));
+  });
+  ctx.fillStyle = '#64748b'; ctx.font = '10px system-ui';
+  [9, 11, 13, 15, 17].forEach(h => ctx.fillText(String(h).padStart(2, '0') + ':00', Math.min(W - pr - 28, pl + (h - 9) * 12 * step), H - 6));
+  const last = cs[cs.length - 1];
+  $('c6o').textContent = 'Abert: ' + open.toFixed(5);
+  $('c6h').textContent = 'Máx: ' + Math.max(...cs.map(c => c.h)).toFixed(5);
+  $('c6l').textContent = 'Mín: ' + Math.min(...cs.map(c => c.l)).toFixed(5);
+  $('c6c').textContent = 'Atual: ' + last.c.toFixed(5);
+}
+function render() {
+  setPill('pSrv', S.srv, 'SERVIDOR YAHOO');
+  setPill('pBrapi', S.brapi, 'BRAPI');
+  setPill('pFinn', S.finn, 'FINNHUB');
+  renderMacro();
+  const list = S.levels.map(analisar);
+  renderAssets(list);
+  renderResumo(list);
+  renderDetalhe(list);
+  draw6L();
+  const k = $('kGroq').value.trim(); const t = $('aiTag');
+  t.textContent = k ? 'GROQ ATIVO' : 'MODO LOCAL'; t.className = 'pill ' + (k ? 'ok' : 'off');
+}
+
+// ================================================================
+// IA (Groq) — contexto com todo o radar
+// ================================================================
+function contexto() {
+  const m = macroVals(), w = winInfo();
+  const linhas = S.levels.map(analisar).map(a => {
+    const L = a.L;
+    return `${L.tk}: preço ${isFinite(a.price) ? a.price : 'n/d'} | regime ao vivo ${a.regLive || 'n/d'} (relatório ${L.regime}) | Flip ${L.flip} | PW1 ${L.pw1} | CW1 ${L.cw1} | EM ${L.emMin}-${L.emMax} | Bloco ${L.block} | 1σ- ${L.sig1}${a.vencido ? ' | VENCIDO' : ''}${a.warns.length ? ' | avisos: ' + a.warns.join(', ') : ''}`;
+  }).join('\n');
+  const f = (n, v, d) => v ? `${n} ${Number(v.price).toFixed(d)} (${sign(pct(v.price, v.prev))}${pct(v.price, v.prev).toFixed(2)}%, fonte ${v.src})` : `${n} n/d`;
+  return `HORA: ${new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })} BRT
+MACRO: ${f('IBOV', S.quotes.IBOV, 0)} | WIN calculado ${w ? w.price + ' (' + w.base + ')' : 'n/d'} | ${f('Dólar', m.usd, 4)} | ${f('6L1', m.l6, 5)} | ${f('EWZ', m.ewz, 2)} | ${f('S&P', m.spx, 2)}
+ATIVO SELECIONADO: ${S.sel}
+NÍVEIS GEX (do relatório do usuário):
+${linhas}`;
+}
+function respostaLocal() {
+  const list = S.levels.map(analisar);
+  const a = list.find(x => x.L.tk === S.sel);
+  const shorts = list.filter(x => x.regLive === 'short').map(x => x.L.tk);
+  const ruins = list.filter(x => x.warns.length).map(x => x.L.tk);
+  return `${a ? tese(a).replace(/<[^>]+>/g, '') : ''}\n\nShort gamma agora: ${shorts.join(', ') || 'nenhum'}. Níveis suspeitos: ${ruins.join(', ') || 'nenhum'}.`;
+}
+async function perguntar(q) {
+  q = (q || $('chatIn').value).trim(); if (!q) return;
+  $('chatIn').value = '';
+  const log = $('chatLog');
+  const u = document.createElement('div'); u.className = 'msg user'; u.textContent = q; log.appendChild(u);
+  const r = document.createElement('div'); r.className = 'msg ai'; r.textContent = '⏳ Analisando o radar…'; log.appendChild(r);
+  log.scrollTop = log.scrollHeight;
+  const key = $('kGroq').value.trim();
+  if (!key) { r.textContent = respostaLocal(); log.scrollTop = log.scrollHeight; return; }
+  try {
+    const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
+      body: JSON.stringify({
+        model: $('mGroq').value.trim() || 'llama-3.3-70b-versatile', temperature: 0.25, max_tokens: 600,
+        messages: [
+          { role: 'system', content: 'Você é um analista sênior de derivativos (GEX, Vanna/Charm) para WIN, ações da B3, EWZ e S&P 500. Responda em português do Brasil, técnico, direto e acionável (até 2 parágrafos curtos ou tópicos), usando somente os números do snapshot. Aponte quando um nível parecer inconsistente ou vencido. Não é recomendação de investimento.\n\n' + contexto() },
+          ...S.chat.slice(-4), { role: 'user', content: q }
+        ]
+      })
+    });
+    if (!resp.ok) { let m = ''; try { m = (await resp.json()).error.message; } catch (_) {} throw new Error('HTTP ' + resp.status + (m ? ' — ' + m : '')); }
+    const ans = (await resp.json()).choices[0].message.content.trim();
+    S.chat.push({ role: 'user', content: q }, { role: 'assistant', content: ans });
+    r.innerHTML = '<b>Groq:</b> ' + esc(ans).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+  } catch (e) {
+    r.textContent = `Erro na Groq (${e.message}). Resposta local:\n` + respostaLocal();
+  }
+  log.scrollTop = log.scrollHeight;
+}
+
+// ================================================================
+// INICIALIZAÇÃO
+// ================================================================
+const CAMPOS = { payload: DEFAULT_PAYLOAD, lvlDate: '2026-11-19T09:00', expB3: '2026-11-19', expIbov: '2026-12-16', expEwz: '2026-11-20', tol: '10', winUnit: 'win', di: '13.85', kBrapi: '', kFinn: '', kGroq: '', mGroq: 'llama-3.3-70b-versatile', every: '30' };
+function aplicarNiveis() {
+  S.levels = parsePayload($('payload').value);
+  if (S.levels.length && !S.levels.find(l => l.tk === S.sel)) S.sel = S.levels[0].tk;
+  save('lvlStamp', String(Date.now()));
+  render();
+}
+function agendar() {
+  clearInterval(S.timer);
+  const s = Math.max(10, parseInt($('every').value, 10) || 30);
+  S.timer = setInterval(atualizar, s * 1000);
+}
+window.addEventListener('DOMContentLoaded', () => {
+  Object.entries(CAMPOS).forEach(([id, def]) => {
+    $(id).value = load(id, def);
+    $(id).addEventListener('change', () => { save(id, $(id).value); if (id === 'every') agendar(); if (id !== 'payload') render(); });
+  });
+  const v = proxVencWin();
+  if (v) { $('du').value = duAte(v); $('duHint').textContent = `(auto: venc. ${v.toISOString().slice(8, 10)}/${v.toISOString().slice(5, 7)})`; }
+  $('du').addEventListener('input', render);
+  $('btnCfg').onclick = () => $('drawer').classList.toggle('open');
+  $('btnRefresh').onclick = atualizar;
+  $('btnApply').onclick = aplicarNiveis;
+  $('btnWinSync').onclick = () => {
+    const w = parseFloat($('winSync').value), ib = S.quotes.IBOV;
+    if (!(w > 50000) || !ib) { $('winSync').setCustomValidity('Precisa do preço do WIN e do IBOV ao vivo'); $('winSync').reportValidity(); return; }
+    $('winSync').setCustomValidity('');
+    save('winRatio', String(w / ib.price)); render();
+  };
+  $('btnWinAuto').onclick = () => { save('winRatio', ''); $('winSync').value = ''; render(); };
+  $('assets').addEventListener('click', e => { const c = e.target.closest('.asset'); if (c) { S.sel = c.dataset.tk; render(); } });
+  $('assets').addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('asset')) { e.preventDefault(); S.sel = e.target.dataset.tk; render(); } });
+  $('btnAsk').onclick = () => perguntar();
+  $('chatIn').addEventListener('keydown', e => { if (e.key === 'Enter') perguntar(); });
+  document.querySelectorAll('.qp').forEach(b => b.onclick = () => perguntar(b.dataset.q));
+  setInterval(() => { $('clock').textContent = new Date().toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo' }) + ' BRT'; }, 1000);
+  window.addEventListener('resize', draw6L);
+  S.levels = parsePayload($('payload').value);
+  if (!load('payload', null)) $('drawer').classList.add('open');
+  render();
+  atualizar();
+  agendar();
+});
+</script>
+</body>
+</html>
