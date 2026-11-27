@@ -348,6 +348,50 @@ ${nota}export default {
 `;
 }
 
+// Strikes: uma linha por strike de maior GEX líquido. Quanto maior o GEX, mais grossa e mais forte a linha.
+const QTD_STRIKES = 20, FAIXA = 0.08; // os 20 maiores, até 8% do preço
+const bi = (v) => { const a = Math.abs(v), s = v < 0 ? '-' : '+'; return a >= 1e9 ? `${s}${fmt(a / 1e9, 2)} bi` : `${s}${fmt(a / 1e6, 1)} mi`; };
+function indicadorStrikes(alvo, a, dataArq, extra) {
+  const S0 = a.spotRef;
+  const lista = (a.strikes || [])
+    .map((e) => ({ k: e.k, net: e.call + e.put, call: e.call, put: e.put }))
+    .filter((e) => Math.abs(e.k / S0 - 1) <= FAIXA && e.net !== 0)
+    .sort((x, y) => Math.abs(y.net) - Math.abs(x.net))
+    .slice(0, QTD_STRIKES)
+    .sort((x, y) => y.k - x.k);
+  if (!lista.length) return null;
+  const max = Math.max(...lista.map((e) => Math.abs(e.net)));
+  const outputs = [], valores = {};
+  lista.forEach((e, i) => {
+    const forca = Math.abs(e.net) / max;                        // 0 a 1
+    const alfa = Math.round((0.25 + 0.75 * forca) * 255).toString(16).padStart(2, '0');
+    const cor = (e.net > 0 ? '#26a69a' : '#ef5350') + alfa;    // verde = calls dominam, vermelho = puts
+    const y = Math.round(e.k * alvo.escala * 10000) / 10000;
+    let label = `${fmt(y, alvo.dec)}`;
+    if (extra && extra.ratio) label += ` (WIN ${fmt(Math.round(e.k * extra.ratio / 5) * 5, 0)})`;
+    label += ` ${bi(e.net)}`;
+    const key = 's' + i;
+    outputs.push({ key, label, kind: 'line', color: cor, lineWidth: 1 + Math.round(forca * 3) });
+    valores[key] = y;
+  });
+  return `// Gerado por gex-sync.mjs em ${new Date().toISOString()} com os arquivos da B3 de ${dataArq}.
+// Os ${lista.length} strikes de maior GEX liquido (calls + puts) ate ${FAIXA * 100}% do preco.
+// Verde = calls dominam (freia o preco), vermelho = puts dominam (acelera). Mais grossa e forte = mais GEX.
+export default {
+  name: ${JSON.stringify(alvo.nome.replace('GEX ', 'GEX strikes '))},
+  overlay: true,
+  inputs: [],
+  outputs: ${JSON.stringify(outputs, null, 2).replace(/\n/g, '\n  ')},
+  calc(bars) {
+    const v = ${JSON.stringify(valores)};
+    const out = {};
+    for (const k of Object.keys(v)) out[k] = bars.map(() => v[k]);
+    return out;
+  },
+};
+`;
+}
+
 const aqui = path.dirname(fileURLToPath(import.meta.url));
 const pasta = process.env.GEX_OUT || path.join(aqui, '..', 'custom');
 if (!fs.existsSync(pasta)) { console.error(`Nao achei a pasta custom em ${pasta}. Coloque este arquivo dentro de quant-terminal\\scripts.`); process.exit(1); }
@@ -367,7 +411,10 @@ try {
 const feitos = [];
 for (const [tk, a] of Object.entries(out.ativos)) {
   const alvo = ALVOS[tk]; if (!alvo) continue;
-  fs.writeFileSync(path.join(pasta, alvo.arquivo + '.js'), indicador(alvo, a, out.dataArquivos, tk === 'WIN' ? extraWin : null));
+  const ex = tk === 'WIN' ? extraWin : null;
+  fs.writeFileSync(path.join(pasta, alvo.arquivo + '.js'), indicador(alvo, a, out.dataArquivos, ex));
+  const st = indicadorStrikes(alvo, a, out.dataArquivos, ex);
+  if (st) fs.writeFileSync(path.join(pasta, alvo.arquivo + '-strikes.js'), st);
   feitos.push(`${tk} (${a.regime})`);
 }
 console.log(`Pronto. Niveis da B3 de ${out.dataArquivos}: ${feitos.join(', ')}`);
