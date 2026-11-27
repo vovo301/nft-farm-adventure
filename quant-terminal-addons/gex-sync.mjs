@@ -294,13 +294,13 @@ const ALVOS = {
   ABEV3:  { arquivo: 'gex-abev3',  nome: 'GEX ABEV3', curto: 'GEX ABEV3',                      escala: 1,        dec: 2 },
 };
 const LINHAS = [
-  { key: 'flip',  label: 'Gamma Flip', color: '#fdd835' },
-  { key: 'cw1',   label: 'Call Wall',  color: '#26a69a' },
-  { key: 'pw1',   label: 'Put Wall',   color: '#ef5350' },
-  { key: 'block', label: 'Bloco',      color: '#ab47bc' },
-  { key: 'emMax', label: 'EM max',     color: '#90a4ae' },
-  { key: 'emMin', label: 'EM min',     color: '#90a4ae' },
-  { key: 'sig1',  label: 'Sigma 1',    color: '#ff9800' },
+  { key: 'flip',  label: 'Gamma Flip', tag: 'GAMMA FLIP', color: '#fdd835', w: 2 },
+  { key: 'cw1',   label: 'Call Wall',  tag: 'CALL WALL',  color: '#26a69a', w: 2 },
+  { key: 'pw1',   label: 'Put Wall',   tag: 'PUT WALL',   color: '#ef5350', w: 2 },
+  { key: 'block', label: 'Key Level',  tag: 'KEY LEVEL',  color: '#ab47bc', w: 2 },
+  { key: 'emMax', label: 'EM max',     tag: 'EM MAX',     color: '#90a4ae', w: 1 },
+  { key: 'emMin', label: 'EM min',     tag: 'EM MIN',     color: '#90a4ae', w: 1 },
+  { key: 'sig1',  label: 'Sigma 1',    tag: 'SIGMA 1',    color: '#ff9800', w: 1 },
 ];
 
 // Contrato vigente do WIN: vence na quarta mais próxima do dia 15 dos meses pares
@@ -317,16 +317,19 @@ function codigoWin(hoje) {
 const fmt = (v, dec) => Number(v).toLocaleString('pt-BR', { minimumFractionDigits: dec, maximumFractionDigits: dec });
 
 function indicador(alvo, a, dataArq, extra) {
-  const outputs = [], valores = {};
+  const outputs = [], valores = {}, etiquetas = [];
   for (const L of LINHAS) {
     const v = a[L.key];
     if (!(typeof v === 'number' && isFinite(v))) continue;
-    const y = Math.round(v * alvo.escala * 10000) / 10000;
+    const y = alvo.passo ? Math.round(v * alvo.escala / alvo.passo) * alvo.passo : Math.round(v * alvo.escala * 10000) / 10000;
     let label = `${L.label} ${fmt(y, alvo.dec)}`;
     if (extra && extra.ratio) label += ` (WIN ${fmt(Math.round(v * extra.ratio / 5) * 5, 0)})`;
     if (L.key === 'flip') label += ` [${a.regime}]`;
-    outputs.push({ key: L.key, label, kind: 'line', color: L.color });
+    outputs.push({ key: L.key, label, kind: 'line', color: L.color, lineWidth: L.w });
     valores[L.key] = y;
+    let tag = `${L.tag} ${fmt(y, alvo.dec)}`;
+    if (L.key === 'flip') tag += ` · ${a.regime}`;
+    etiquetas.push({ price: y, color: L.color, label: tag, text: L.key === 'pw1' || L.key === 'block' ? '#ffffff' : '#0b0e14' });
   }
   const nota = extra && extra.ratio
     ? `// Niveis em pontos do IBOV. Entre parenteses, o mesmo nivel em pontos do ${extra.win} (WIN/IBOV = ${extra.ratio.toFixed(5)}).\n`
@@ -336,12 +339,17 @@ function indicador(alvo, a, dataArq, extra) {
 ${nota}export default {
   name: ${JSON.stringify(alvo.nome.replace(alvo.curto, alvo.curto + ' niveis') + ' (' + alvo.curto + ')')},
   overlay: true,
-  inputs: [],
+  inputs: [
+    { key: 'nomes', label: 'Nomes nos niveis', type: 'select', default: 'Principais', options: ['Principais', 'Todos', 'Nenhum'] },
+  ],
   outputs: ${JSON.stringify(outputs, null, 2).replace(/\n/g, '\n  ')},
-  calc(bars) {
+  calc(bars, p) {
     const v = ${JSON.stringify(valores)};
+    const tags = ${JSON.stringify(etiquetas)};
+    const principais = /^(GAMMA FLIP|CALL WALL|PUT WALL|KEY LEVEL)/;
     const out = {};
     for (const k of Object.keys(v)) out[k] = bars.map(() => v[k]);
+    out.levelLines = p.nomes === 'Nenhum' ? [] : tags.filter((t) => p.nomes === 'Todos' || principais.test(t.label));
     return out;
   },
 };
@@ -355,7 +363,7 @@ function indicadorStrikes(alvo, a, dataArq, extra) {
   const S0 = a.spotRef;
   const lista = (a.strikes || []).filter((e) => e.call || e.put).sort((x, y) => y.k - x.k)
     .map((e) => {
-      const y = Math.round(e.k * alvo.escala * 10000) / 10000;
+      const y = alvo.passo ? Math.round(e.k * alvo.escala / alvo.passo) * alvo.passo : Math.round(e.k * alvo.escala * 10000) / 10000;
       const win = extra && extra.ratio ? ` | WIN ${fmt(Math.round(e.k * extra.ratio / 5) * 5, 0)}` : '';
       return { price: y, call: e.call, put: e.put, dist: Math.abs(e.k / S0 - 1) * 100, nome: `${fmt(y, alvo.dec)}${win}` };
     });
@@ -393,7 +401,7 @@ export default {
 }
 
 // Instala (ou reinstala depois de uma atualização) o desenho "level-profile" no terminal.
-const LEVEL_PROFILE = "\n// >>> level-profile (gex-sync) >>>\n// Perfil por nível de preço vindo de um indicador (ex.: GEX por strike). O indicador devolve\n// levelProfile: { rows: [{ price, value, value2?, color?, color2?, label? }], width, labels }.\n// Cada linha vira uma barra presa na lateral direita, crescendo para a esquerda conforme o valor.\n// width limita o perfil a uma fatia do gráfico (em %), para não cobrir os candles.\nexport class LevelProfile {\n  constructor(pane, params = {}) {\n    this.pane = pane;\n    this.p = { rows: [], width: 25, labels: true, thickness: 0.35, ...params };\n    this._view = {\n      zOrder: () => \"bottom\",\n      renderer: () => ({\n        draw: (target) =>\n          target.useMediaCoordinateSpace(({ context, mediaSize }) => this.draw(context, mediaSize)),\n      }),\n    };\n  }\n  attached({ series, requestUpdate }) { this.series = series; this.requestUpdate = requestUpdate; }\n  detached() { this.series = null; }\n  updateAllViews() {}\n  paneViews() { return [this._view]; }\n\n  draw(ctx, size) {\n    const rows = (this.p.rows || []).filter((r) => Number.isFinite(r.price));\n    if (!rows.length || !this.series) return;\n    const mag = (r) => Math.abs(r.value || 0) + Math.abs(r.value2 || 0);\n    const max = Math.max(...rows.map(mag));\n    if (!(max > 0)) return;\n    const W = (size.width * Math.max(5, Math.min(60, this.p.width))) / 100;\n    const xR = size.width;\n    // espessura: uma fração (thickness) da distância entre strikes vizinhos, em pixels\n    const prices = [...new Set(rows.map((r) => r.price))].sort((a, b) => a - b);\n    let gap = Infinity;\n    for (let i = 1; i < prices.length; i++) gap = Math.min(gap, prices[i] - prices[i - 1]);\n    if (!Number.isFinite(gap)) gap = prices[0] * 0.005;\n    const y0 = this.series.priceToCoordinate(prices[0]);\n    const y1 = this.series.priceToCoordinate(prices[0] + gap);\n    const h = y0 != null && y1 != null ? Math.max(1, Math.min(14, Math.abs(y0 - y1) * Math.max(0.05, Math.min(1, this.p.thickness)))) : 4;\n    ctx.font = \"10px -apple-system, Segoe UI, Roboto, sans-serif\";\n    ctx.textBaseline = \"middle\";\n    for (const r of rows) {\n      const y = this.series.priceToCoordinate(r.price);\n      if (y == null || y < -h || y > size.height + h) continue;\n      const w1 = (Math.abs(r.value || 0) / max) * W, w2 = (Math.abs(r.value2 || 0) / max) * W;\n      ctx.fillStyle = r.color || (r.value >= 0 ? \"rgba(38,166,154,0.6)\" : \"rgba(239,83,80,0.6)\");\n      ctx.fillRect(xR - w1, y - h / 2, w1, h);\n      if (w2) {\n        ctx.fillStyle = r.color2 || \"rgba(239,83,80,0.6)\";\n        ctx.fillRect(xR - w1 - w2, y - h / 2, w2, h);\n      }\n      if (this.p.labels && r.label) {\n        ctx.fillStyle = \"rgba(210,215,225,0.9)\";\n        ctx.textAlign = \"right\";\n        ctx.fillText(r.label, xR - w1 - w2 - 4, y);\n      }\n    }\n  }\n}\n// <<< level-profile (gex-sync) <<<\n";
+const LEVEL_PROFILE = "\n// >>> level-profile (gex-sync) >>>\n// Perfil por nível de preço vindo de um indicador (ex.: GEX por strike). O indicador devolve\n// levelProfile: { rows: [{ price, value, value2?, color?, color2?, label? }], width, labels }.\n// Cada linha vira uma barra presa na lateral direita, crescendo para a esquerda conforme o valor.\n// width limita o perfil a uma fatia do gráfico (em %), para não cobrir os candles.\n// levelLines: [{ price, color, label }] escreve o nome de cada nível numa etiqueta colorida acima da linha.\nexport class LevelProfile {\n  constructor(pane, params = {}, lines = []) {\n    this.pane = pane;\n    this.p = { rows: [], width: 25, labels: true, thickness: 0.35, ...params };\n    this.lines = lines;\n    this._top = {\n      zOrder: () => \"top\",\n      renderer: () => ({\n        draw: (target) =>\n          target.useMediaCoordinateSpace(({ context, mediaSize }) => this.drawLabels(context, mediaSize)),\n      }),\n    };\n    this._view = {\n      zOrder: () => \"bottom\",\n      renderer: () => ({\n        draw: (target) =>\n          target.useMediaCoordinateSpace(({ context, mediaSize }) => this.draw(context, mediaSize)),\n      }),\n    };\n  }\n  attached({ series, requestUpdate }) { this.series = series; this.requestUpdate = requestUpdate; }\n  detached() { this.series = null; }\n  updateAllViews() {}\n  paneViews() { return [this._view, this._top]; }\n\n  drawLabels(ctx, size) {\n    if (!this.series || !this.lines.length) return;\n    ctx.font = \"bold 11px -apple-system, Segoe UI, Roboto, sans-serif\";\n    ctx.textBaseline = \"middle\";\n    ctx.textAlign = \"left\";\n    const usados = [], h = 16;\n    for (const l of [...this.lines].sort((a, b) => b.price - a.price)) {\n      const y = this.series.priceToCoordinate(l.price);\n      if (y == null || y < h || y > size.height) continue;\n      const w = ctx.measureText(l.label).width + 12;\n      let x = 8; // níveis no mesmo preço ficam lado a lado\n      for (const u of usados) if (Math.abs(u.y - y) < h && x < u.x + u.w + 4) x = u.x + u.w + 4;\n      usados.push({ x, y, w });\n      const top = y - h - 1;\n      ctx.globalAlpha = 0.92;\n      ctx.fillStyle = l.color;\n      if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(x, top, w, h, 3); ctx.fill(); } else ctx.fillRect(x, top, w, h);\n      ctx.globalAlpha = 1;\n      ctx.fillStyle = l.text || \"#0b0e14\";\n      ctx.fillText(l.label, x + 6, top + h / 2 + 0.5);\n    }\n  }\n\n  draw(ctx, size) {\n    const rows = (this.p.rows || []).filter((r) => Number.isFinite(r.price));\n    if (!rows.length || !this.series) return;\n    const mag = (r) => Math.abs(r.value || 0) + Math.abs(r.value2 || 0);\n    const max = Math.max(...rows.map(mag));\n    if (!(max > 0)) return;\n    const W = (size.width * Math.max(5, Math.min(60, this.p.width))) / 100;\n    const xR = size.width;\n    // espessura: uma fração (thickness) da distância entre strikes vizinhos, em pixels\n    const prices = [...new Set(rows.map((r) => r.price))].sort((a, b) => a - b);\n    let gap = Infinity;\n    for (let i = 1; i < prices.length; i++) gap = Math.min(gap, prices[i] - prices[i - 1]);\n    if (!Number.isFinite(gap)) gap = prices[0] * 0.005;\n    const y0 = this.series.priceToCoordinate(prices[0]);\n    const y1 = this.series.priceToCoordinate(prices[0] + gap);\n    const h = y0 != null && y1 != null ? Math.max(1, Math.min(14, Math.abs(y0 - y1) * Math.max(0.05, Math.min(1, this.p.thickness)))) : 4;\n    ctx.font = \"10px -apple-system, Segoe UI, Roboto, sans-serif\";\n    ctx.textBaseline = \"middle\";\n    for (const r of rows) {\n      const y = this.series.priceToCoordinate(r.price);\n      if (y == null || y < -h || y > size.height + h) continue;\n      const w1 = (Math.abs(r.value || 0) / max) * W, w2 = (Math.abs(r.value2 || 0) / max) * W;\n      ctx.fillStyle = r.color || (r.value >= 0 ? \"rgba(38,166,154,0.6)\" : \"rgba(239,83,80,0.6)\");\n      ctx.fillRect(xR - w1, y - h / 2, w1, h);\n      if (w2) {\n        ctx.fillStyle = r.color2 || \"rgba(239,83,80,0.6)\";\n        ctx.fillRect(xR - w1 - w2, y - h / 2, w2, h);\n      }\n      if (this.p.labels && r.label) {\n        ctx.fillStyle = \"rgba(210,215,225,0.9)\";\n        ctx.textAlign = \"right\";\n        ctx.fillText(r.label, xR - w1 - w2 - 4, y);\n      }\n    }\n  }\n}\n// <<< level-profile (gex-sync) <<<\n";
 function instalarPerfil(raiz) {
   const vp = path.join(raiz, 'public', 'js', 'volume-profile.js'), ch = path.join(raiz, 'public', 'js', 'chart.js');
   if (!fs.existsSync(vp) || !fs.existsSync(ch)) return 'nao achei public/js do terminal';
@@ -402,16 +410,24 @@ function instalarPerfil(raiz) {
   if (ini < 0) { a += LEVEL_PROFILE; mudou = true; }
   else if (a.slice(ini, fim + 35) + '\n' !== LEVEL_PROFILE) { a = a.slice(0, ini) + LEVEL_PROFILE + a.slice(fim + 36); mudou = true; }
   const imp = 'import { VolumeProfile, SessionVolumeProfile, RangeVolumeProfile } from "./volume-profile.js";';
-  if (!b.includes('LevelProfile')) {
-    const gancho = '      const outs = def.outputs.filter((o) => Array.isArray(res[o.key]));';
-    if (!b.includes(imp) || !b.includes(gancho)) return 'esta versao do terminal mudou; me avise no chat';
-    b = b.replace(imp, imp.replace('RangeVolumeProfile }', 'RangeVolumeProfile, LevelProfile }'))
-      .replace(gancho, `      if (res.levelProfile) { // gex-sync
+  const novo = `      if (res.levelProfile || res.levelLines) { // gex-sync
+        const lp = new LevelProfile(this, res.levelProfile || {}, res.levelLines || []);
+        this.main.attachPrimitive(lp);
+        this.vpPrims.push(lp);
+      }
+`;
+  const antigo = `      if (res.levelProfile) { // gex-sync
         const lp = new LevelProfile(this, res.levelProfile);
         this.main.attachPrimitive(lp);
         this.vpPrims.push(lp);
       }
-${gancho}`);
+`;
+  if (b.includes(antigo)) { b = b.replace(antigo, novo); mudou = true; }
+  if (!b.includes('LevelProfile')) {
+    const gancho = '      const outs = def.outputs.filter((o) => Array.isArray(res[o.key]));';
+    if (!b.includes(imp) || !b.includes(gancho)) return 'esta versao do terminal mudou; me avise no chat';
+    b = b.replace(imp, imp.replace('RangeVolumeProfile }', 'RangeVolumeProfile, LevelProfile }'))
+      .replace(gancho, novo + gancho);
     mudou = true;
   }
   if (mudou) { fs.writeFileSync(vp, a); fs.writeFileSync(ch, b); return 'instalado'; }
@@ -445,6 +461,14 @@ for (const [tk, a] of Object.entries(out.ativos)) {
   fs.writeFileSync(path.join(pasta, alvo.arquivo + '.js'), indicador(alvo, a, out.dataArquivos, ex));
   const st = indicadorStrikes(alvo, a, out.dataArquivos, ex);
   if (st) fs.writeFileSync(path.join(pasta, alvo.arquivo + '-strikes.js'), st);
+  // WIN de verdade (grafico CSV:WIN, feito pelo win-sync): os mesmos niveis convertidos pela razao WIN/IBOV de agora
+  if (tk === 'WIN' && extraWin) {
+    const real = { arquivo: 'gex-winreal', nome: `GEX WIN real - use no grafico CSV:WIN`, curto: 'GEX WIN real', escala: extraWin.ratio, dec: 0, passo: 5 };
+    fs.writeFileSync(path.join(pasta, real.arquivo + '.js'), indicador(real, a, out.dataArquivos, null));
+    const st2 = indicadorStrikes(real, a, out.dataArquivos, null);
+    if (st2) fs.writeFileSync(path.join(pasta, real.arquivo + '-strikes.js'), st2);
+    feitos.push('WIN real');
+  }
   feitos.push(`${tk} (${a.regime})`);
 }
 console.log(`Pronto. Niveis da B3 de ${out.dataArquivos}: ${feitos.join(', ')}`);
