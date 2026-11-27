@@ -282,16 +282,16 @@ import { fileURLToPath } from 'node:url';
 
 // Em qual gráfico do terminal cada nível é desenhado, e a escala para casar os preços
 const ALVOS = {
-  WIN:    { arquivo: 'gex-win',    nome: 'GEX WIN (use no grafico ^BVSP)', escala: 1,        dec: 0 },
-  WDO:    { arquivo: 'gex-wdo',    nome: 'GEX WDO (use no grafico BRL=X)', escala: 1 / 1000, dec: 4 },
-  BOVA11: { arquivo: 'gex-bova11', nome: 'GEX BOVA11',                     escala: 1,        dec: 2 },
-  PETR4:  { arquivo: 'gex-petr4',  nome: 'GEX PETR4',                      escala: 1,        dec: 2 },
-  VALE3:  { arquivo: 'gex-vale3',  nome: 'GEX VALE3',                      escala: 1,        dec: 2 },
-  ITUB4:  { arquivo: 'gex-itub4',  nome: 'GEX ITUB4',                      escala: 1,        dec: 2 },
-  BBDC4:  { arquivo: 'gex-bbdc4',  nome: 'GEX BBDC4',                      escala: 1,        dec: 2 },
-  BBAS3:  { arquivo: 'gex-bbas3',  nome: 'GEX BBAS3',                      escala: 1,        dec: 2 },
-  B3SA3:  { arquivo: 'gex-b3sa3',  nome: 'GEX B3SA3',                      escala: 1,        dec: 2 },
-  ABEV3:  { arquivo: 'gex-abev3',  nome: 'GEX ABEV3',                      escala: 1,        dec: 2 },
+  WIN:    { arquivo: 'gex-win',    nome: 'GEX WIN - use no grafico ^BVSP', curto: 'GEX WIN', escala: 1,        dec: 0 },
+  WDO:    { arquivo: 'gex-wdo',    nome: 'GEX WDO - use no grafico BRL=X', curto: 'GEX WDO', escala: 1 / 1000, dec: 4 },
+  BOVA11: { arquivo: 'gex-bova11', nome: 'GEX BOVA11', curto: 'GEX BOVA11',                     escala: 1,        dec: 2 },
+  PETR4:  { arquivo: 'gex-petr4',  nome: 'GEX PETR4', curto: 'GEX PETR4',                      escala: 1,        dec: 2 },
+  VALE3:  { arquivo: 'gex-vale3',  nome: 'GEX VALE3', curto: 'GEX VALE3',                      escala: 1,        dec: 2 },
+  ITUB4:  { arquivo: 'gex-itub4',  nome: 'GEX ITUB4', curto: 'GEX ITUB4',                      escala: 1,        dec: 2 },
+  BBDC4:  { arquivo: 'gex-bbdc4',  nome: 'GEX BBDC4', curto: 'GEX BBDC4',                      escala: 1,        dec: 2 },
+  BBAS3:  { arquivo: 'gex-bbas3',  nome: 'GEX BBAS3', curto: 'GEX BBAS3',                      escala: 1,        dec: 2 },
+  B3SA3:  { arquivo: 'gex-b3sa3',  nome: 'GEX B3SA3', curto: 'GEX B3SA3',                      escala: 1,        dec: 2 },
+  ABEV3:  { arquivo: 'gex-abev3',  nome: 'GEX ABEV3', curto: 'GEX ABEV3',                      escala: 1,        dec: 2 },
 };
 const LINHAS = [
   { key: 'flip',  label: 'Gamma Flip', color: '#fdd835' },
@@ -334,7 +334,7 @@ function indicador(alvo, a, dataArq, extra) {
   return `// Gerado por gex-sync.mjs em ${new Date().toISOString()} com os arquivos da B3 de ${dataArq}.
 // Regime ${a.regime}. Fonte: ${a.fonte}. Rode "node scripts/gex-sync.mjs" de novo para atualizar.
 ${nota}export default {
-  name: ${JSON.stringify(alvo.nome)},
+  name: ${JSON.stringify(alvo.nome.replace(alvo.curto, alvo.curto + ' niveis') + ' (' + alvo.curto + ')')},
   overlay: true,
   inputs: [],
   outputs: ${JSON.stringify(outputs, null, 2).replace(/\n/g, '\n  ')},
@@ -348,54 +348,84 @@ ${nota}export default {
 `;
 }
 
-// Strikes: uma linha por strike de maior GEX líquido. Quanto maior o GEX, mais grossa e mais forte a linha.
-const QTD_STRIKES = 20, FAIXA = 0.08; // os 20 maiores, até 8% do preço
-const bi = (v) => { const a = Math.abs(v), s = v < 0 ? '-' : '+'; return a >= 1e9 ? `${s}${fmt(a / 1e9, 2)} bi` : `${s}${fmt(a / 1e6, 1)} mi`; };
+// Perfil de strikes: barras presas na escala de preço, crescendo para a esquerda conforme o GEX.
+const FAIXA_PADRAO = 8; // % acima e abaixo do preço
+const bi = (v) => { const a = Math.abs(v), s = v < 0 ? '-' : '+'; return a >= 1e9 ? `${s}${fmt(a / 1e9, 1)}bi` : `${s}${fmt(a / 1e6, 0)}mi`; };
 function indicadorStrikes(alvo, a, dataArq, extra) {
   const S0 = a.spotRef;
-  const lista = (a.strikes || [])
-    .map((e) => ({ k: e.k, net: e.call + e.put, call: e.call, put: e.put }))
-    .filter((e) => Math.abs(e.k / S0 - 1) <= FAIXA && e.net !== 0)
-    .sort((x, y) => Math.abs(y.net) - Math.abs(x.net))
-    .slice(0, QTD_STRIKES)
-    .sort((x, y) => y.k - x.k);
+  const lista = (a.strikes || []).filter((e) => e.call || e.put).sort((x, y) => y.k - x.k)
+    .map((e) => {
+      const y = Math.round(e.k * alvo.escala * 10000) / 10000;
+      const win = extra && extra.ratio ? ` | WIN ${fmt(Math.round(e.k * extra.ratio / 5) * 5, 0)}` : '';
+      return { price: y, call: e.call, put: e.put, dist: Math.abs(e.k / S0 - 1) * 100, nome: `${fmt(y, alvo.dec)}${win}` };
+    });
   if (!lista.length) return null;
-  const max = Math.max(...lista.map((e) => Math.abs(e.net)));
-  const outputs = [], valores = {};
-  lista.forEach((e, i) => {
-    const forca = Math.abs(e.net) / max;                        // 0 a 1
-    const alfa = Math.round((0.25 + 0.75 * forca) * 255).toString(16).padStart(2, '0');
-    const cor = (e.net > 0 ? '#26a69a' : '#ef5350') + alfa;    // verde = calls dominam, vermelho = puts
-    const y = Math.round(e.k * alvo.escala * 10000) / 10000;
-    let label = `${fmt(y, alvo.dec)}`;
-    if (extra && extra.ratio) label += ` (WIN ${fmt(Math.round(e.k * extra.ratio / 5) * 5, 0)})`;
-    label += ` ${bi(e.net)}`;
-    const key = 's' + i;
-    outputs.push({ key, label, kind: 'line', color: cor, lineWidth: 1 + Math.round(forca * 3) });
-    valores[key] = y;
-  });
   return `// Gerado por gex-sync.mjs em ${new Date().toISOString()} com os arquivos da B3 de ${dataArq}.
-// Os ${lista.length} strikes de maior GEX liquido (calls + puts) ate ${FAIXA * 100}% do preco.
-// Verde = calls dominam (freia o preco), vermelho = puts dominam (acelera). Mais grossa e forte = mais GEX.
+// Perfil de GEX por strike, preso na escala de preço. Verde = calls (freiam o preço), vermelho = puts (aceleram).
+// Quanto maior o GEX, mais a barra cresce para a esquerda. Precisa do desenho "level-profile" que o gex-sync instala.
+const STRIKES = ${JSON.stringify(lista.map(({ price, call, put, dist, nome }) => ({ price, call: Math.round(call), put: Math.round(put), dist: Math.round(dist * 100) / 100, nome })))};
+const bi = (v) => { const a = Math.abs(v), s = v < 0 ? '-' : '+'; return a >= 1e9 ? s + (a / 1e9).toFixed(1).replace('.', ',') + 'bi' : s + Math.round(a / 1e6) + 'mi'; };
 export default {
-  name: ${JSON.stringify(alvo.nome.replace('GEX ', 'GEX strikes '))},
+  name: ${JSON.stringify(alvo.nome.replace(alvo.curto, alvo.curto + ' perfil de strikes') + ' (' + alvo.curto + ' strikes)')},
   overlay: true,
-  inputs: [],
-  outputs: ${JSON.stringify(outputs, null, 2).replace(/\n/g, '\n  ')},
-  calc(bars) {
-    const v = ${JSON.stringify(valores)};
-    const out = {};
-    for (const k of Object.keys(v)) out[k] = bars.map(() => v[k]);
-    return out;
+  inputs: [
+    { key: 'width', label: 'Largura maxima (% do grafico)', type: 'int', default: 25, min: 5, max: 60 },
+    { key: 'faixa', label: 'Strikes ate (% do preco)', type: 'float', default: ${FAIXA_PADRAO}, min: 1, max: 12 },
+    { key: 'espessura', label: 'Espessura (% do espaco entre strikes)', type: 'int', default: 35, min: 5, max: 100 },
+    { key: 'modo', label: 'Mostrar', type: 'select', default: 'Liquido', options: ['Liquido', 'Calls e puts'] },
+    { key: 'rotulos', label: 'Valores escritos', type: 'select', default: 'Sim', options: ['Sim', 'Nao'] },
+  ],
+  outputs: [{ key: 'gex', label: 'GEX', kind: 'line', color: '#26a69a' }],
+  calc(bars, p) {
+    const sel = STRIKES.filter((s) => s.dist <= p.faixa);
+    const max = Math.max(1, ...sel.map((s) => Math.abs(s.call + s.put)));
+    const maxCP = Math.max(1, ...sel.map((s) => Math.abs(s.call) + Math.abs(s.put)));
+    const rows = sel.map((s) => {
+      const net = s.call + s.put, forca = Math.abs(net) / max, alfa = (0.3 + 0.55 * forca).toFixed(2);
+      return p.modo === 'Liquido'
+        ? { price: s.price, value: net, color: net >= 0 ? 'rgba(38,166,154,' + alfa + ')' : 'rgba(239,83,80,' + alfa + ')', label: forca >= 0.3 ? s.nome + '  ' + bi(net) : '' }
+        : { price: s.price, value: s.call, value2: s.put, color: 'rgba(38,166,154,0.6)', color2: 'rgba(239,83,80,0.6)', label: Math.abs(s.call) + Math.abs(s.put) >= 0.3 * maxCP ? s.nome + '  ' + bi(s.call) + ' / ' + bi(s.put) : '' };
+    });
+    return { gex: bars.map(() => NaN), levelProfile: { rows, width: p.width, labels: p.rotulos === 'Sim', thickness: p.espessura / 100 } };
   },
 };
 `;
 }
+
+// Instala (ou reinstala depois de uma atualização) o desenho "level-profile" no terminal.
+const LEVEL_PROFILE = "\n// >>> level-profile (gex-sync) >>>\n// Perfil por nível de preço vindo de um indicador (ex.: GEX por strike). O indicador devolve\n// levelProfile: { rows: [{ price, value, value2?, color?, color2?, label? }], width, labels }.\n// Cada linha vira uma barra presa na lateral direita, crescendo para a esquerda conforme o valor.\n// width limita o perfil a uma fatia do gráfico (em %), para não cobrir os candles.\nexport class LevelProfile {\n  constructor(pane, params = {}) {\n    this.pane = pane;\n    this.p = { rows: [], width: 25, labels: true, thickness: 0.35, ...params };\n    this._view = {\n      zOrder: () => \"bottom\",\n      renderer: () => ({\n        draw: (target) =>\n          target.useMediaCoordinateSpace(({ context, mediaSize }) => this.draw(context, mediaSize)),\n      }),\n    };\n  }\n  attached({ series, requestUpdate }) { this.series = series; this.requestUpdate = requestUpdate; }\n  detached() { this.series = null; }\n  updateAllViews() {}\n  paneViews() { return [this._view]; }\n\n  draw(ctx, size) {\n    const rows = (this.p.rows || []).filter((r) => Number.isFinite(r.price));\n    if (!rows.length || !this.series) return;\n    const mag = (r) => Math.abs(r.value || 0) + Math.abs(r.value2 || 0);\n    const max = Math.max(...rows.map(mag));\n    if (!(max > 0)) return;\n    const W = (size.width * Math.max(5, Math.min(60, this.p.width))) / 100;\n    const xR = size.width;\n    // espessura: uma fração (thickness) da distância entre strikes vizinhos, em pixels\n    const prices = [...new Set(rows.map((r) => r.price))].sort((a, b) => a - b);\n    let gap = Infinity;\n    for (let i = 1; i < prices.length; i++) gap = Math.min(gap, prices[i] - prices[i - 1]);\n    if (!Number.isFinite(gap)) gap = prices[0] * 0.005;\n    const y0 = this.series.priceToCoordinate(prices[0]);\n    const y1 = this.series.priceToCoordinate(prices[0] + gap);\n    const h = y0 != null && y1 != null ? Math.max(1, Math.min(14, Math.abs(y0 - y1) * Math.max(0.05, Math.min(1, this.p.thickness)))) : 4;\n    ctx.font = \"10px -apple-system, Segoe UI, Roboto, sans-serif\";\n    ctx.textBaseline = \"middle\";\n    for (const r of rows) {\n      const y = this.series.priceToCoordinate(r.price);\n      if (y == null || y < -h || y > size.height + h) continue;\n      const w1 = (Math.abs(r.value || 0) / max) * W, w2 = (Math.abs(r.value2 || 0) / max) * W;\n      ctx.fillStyle = r.color || (r.value >= 0 ? \"rgba(38,166,154,0.6)\" : \"rgba(239,83,80,0.6)\");\n      ctx.fillRect(xR - w1, y - h / 2, w1, h);\n      if (w2) {\n        ctx.fillStyle = r.color2 || \"rgba(239,83,80,0.6)\";\n        ctx.fillRect(xR - w1 - w2, y - h / 2, w2, h);\n      }\n      if (this.p.labels && r.label) {\n        ctx.fillStyle = \"rgba(210,215,225,0.9)\";\n        ctx.textAlign = \"right\";\n        ctx.fillText(r.label, xR - w1 - w2 - 4, y);\n      }\n    }\n  }\n}\n// <<< level-profile (gex-sync) <<<\n";
+function instalarPerfil(raiz) {
+  const vp = path.join(raiz, 'public', 'js', 'volume-profile.js'), ch = path.join(raiz, 'public', 'js', 'chart.js');
+  if (!fs.existsSync(vp) || !fs.existsSync(ch)) return 'nao achei public/js do terminal';
+  let a = fs.readFileSync(vp, 'utf8'), b = fs.readFileSync(ch, 'utf8'), mudou = false;
+  const ini = a.indexOf('\n// >>> level-profile (gex-sync)'), fim = a.indexOf('// <<< level-profile (gex-sync) <<<');
+  if (ini < 0) { a += LEVEL_PROFILE; mudou = true; }
+  else if (a.slice(ini, fim + 35) + '\n' !== LEVEL_PROFILE) { a = a.slice(0, ini) + LEVEL_PROFILE + a.slice(fim + 36); mudou = true; }
+  const imp = 'import { VolumeProfile, SessionVolumeProfile, RangeVolumeProfile } from "./volume-profile.js";';
+  if (!b.includes('LevelProfile')) {
+    const gancho = '      const outs = def.outputs.filter((o) => Array.isArray(res[o.key]));';
+    if (!b.includes(imp) || !b.includes(gancho)) return 'esta versao do terminal mudou; me avise no chat';
+    b = b.replace(imp, imp.replace('RangeVolumeProfile }', 'RangeVolumeProfile, LevelProfile }'))
+      .replace(gancho, `      if (res.levelProfile) { // gex-sync
+        const lp = new LevelProfile(this, res.levelProfile);
+        this.main.attachPrimitive(lp);
+        this.vpPrims.push(lp);
+      }
+${gancho}`);
+    mudou = true;
+  }
+  if (mudou) { fs.writeFileSync(vp, a); fs.writeFileSync(ch, b); return 'instalado'; }
+  return 'ok';
+}
+
 
 const aqui = path.dirname(fileURLToPath(import.meta.url));
 const pasta = process.env.GEX_OUT || path.join(aqui, '..', 'custom');
 if (!fs.existsSync(pasta)) { console.error(`Nao achei a pasta custom em ${pasta}. Coloque este arquivo dentro de quant-terminal\\scripts.`); process.exit(1); }
 
+const perfil = instalarPerfil(process.env.GEX_ROOT || path.join(aqui, '..'));
+if (perfil === 'instalado') console.log('Desenho do perfil de strikes instalado no terminal.');
+else if (perfil !== 'ok') console.log('Aviso: o perfil de strikes nao foi instalado (' + perfil + ').');
 console.log('Baixando os arquivos da B3 e calculando o GEX (pode levar 1 a 2 minutos)...');
 const out = await calcularGex({ log: () => {} });
 

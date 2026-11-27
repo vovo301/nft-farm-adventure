@@ -1,14 +1,14 @@
 // Bubbles Volume — adaptado do "Bubbles Volume [BigBeluga]"
 // Licenca: CC BY-NC-SA 4.0 (uso pessoal, nao comercial). (c) BigBeluga
 export default {
-  name: 'Bubbles Volume (BigBeluga)',
+  name: 'Bubbles Volume BigBeluga (Bubbles Volume)',
   overlay: true,
   inputs: [
     { key: 'threshold', label: 'Threshold', type: 'float', default: 1 },
     { key: 'length', label: 'Volume lookback', type: 'int', default: 200 },
     { key: 'heatmap', label: 'HeatMap (0 = verde, 1 = mapa de calor)', type: 'int', default: 0 },
   ],
-  outputs: [],
+  outputs: [{ key: 'vol', label: 'Volume normalizado', kind: 'line', color: '#4caf50' }],
   calc(bars, p, ta) {
     const vol = bars.map((b) => b.volume || 0);
     const sd = ta.stdev(vol, p.length);
@@ -40,6 +40,6 @@ export default {
     if (!vol.some((v) => v > 0) && bars.length) {
       markers.push({ time: bars[bars.length - 1].time, position: 'aboveBar', shape: 'square', color: '#ef5350', text: 'Sem dados de volume. Use outro ativo' });
     }
-    return { markers };
+    return { vol: bars.map(() => NaN), markers };
   },
 };
