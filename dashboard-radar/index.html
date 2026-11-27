@@ -288,7 +288,8 @@ const load = (k, d) => { try { const v = localStorage.getItem('radar_' + k); ret
 const save = (k, v) => { try { localStorage.setItem('radar_' + k, v); } catch (e) {} };
 const sign = (n) => (n >= 0 ? '+' : '');
 
-const DEFAULT_PAYLOAD = 'WIN|AMP|173360|171405|177005|173000|175000|174000|170140;\nBOVA11|AMP|168.40|164.75|171.25|165.00|170.00|168.00|163.50;\nEWZ|AMP|35.10|30.35|31.65|30.00|43.00|31.00|28.00;\nPETR4|AMP|45.65|44.13|46.47|44.91|46.41|46.41|43.41;\nVALE3|AMP|63.89|62.03|65.37|62.39|64.39|64.39|60.89;\nITUB4|AMO|42.45|41.05|43.55|41.50|43.00|42.50|40.50;\nBBDC4|AMO|14.80|14.13|15.17|14.45|15.20|14.95|13.70;\nBBAS3|AMP|22.79|14.58|15.62|15.04|16.04|15.04|14.04;\nB3SA3|AMP|23.41|14.42|15.36|14.02|15.02|15.52|13.77;\nABEV3|AMO|15.68|15.51|16.07|15.57|15.82|15.82|15.07';
+const DEFAULT_PAYLOAD = ''; // sem níveis de exemplo: só entram níveis calculados da B3 ou colados por você
+const EXEMPLO_ANTIGO = 'WIN|AMP|173360|171405|177005|173000|175000|174000|170140;\nBOVA11|AMP|168.40|164.75|171.25|165.00|170.00|168.00|163.50;\nEWZ|AMP|35.10|30.35|31.65|30.00|43.00|31.00|28.00;\nPETR4|AMP|45.65|44.13|46.47|44.91|46.41|46.41|43.41;\nVALE3|AMP|63.89|62.03|65.37|62.39|64.39|64.39|60.89;\nITUB4|AMO|42.45|41.05|43.55|41.50|43.00|42.50|40.50;\nBBDC4|AMO|14.80|14.13|15.17|14.45|15.20|14.95|13.70;\nBBAS3|AMP|22.79|14.58|15.62|15.04|16.04|15.04|14.04;\nB3SA3|AMP|23.41|14.42|15.36|14.02|15.02|15.52|13.77;\nABEV3|AMO|15.68|15.51|16.07|15.57|15.82|15.82|15.07';
 
 const S = {
   quotes: {},          // KEY -> {price, prev, open, high, low, time, src}
@@ -370,11 +371,10 @@ function parsePayload(txt) {
     if (tk === 'WDO') ['flip', 'emMin', 'emMax', 'pw1', 'cw1', 'block', 'sig1'].forEach(k => { if (isFinite(L[k]) && L[k] < 100) L[k] = Math.round(L[k] * 1000 * 10) / 10; });
     out.push(L);
   });
-  // O card do WDO aparece sempre (com a cotação da B3), mesmo antes de você colar os níveis dele
-  if (!out.find(l => l.tk === 'WDO')) {
-    const i = out.findIndex(l => l.tk === 'WIN');
-    out.splice(i >= 0 ? i + 1 : 0, 0, { tk: 'WDO', regime: '—', flip: NaN, emMin: NaN, emMax: NaN, pw1: NaN, cw1: NaN, block: NaN, sig1: NaN, placeholder: true });
-  }
+  // WDO e EWZ aparecem sempre (com a cotação), mesmo sem níveis: nenhum valor de exemplo é usado
+  ['WDO', 'EWZ'].forEach(tk => {
+    if (!out.find(l => l.tk === tk)) out.push({ tk, regime: '—', flip: NaN, emMin: NaN, emMax: NaN, pw1: NaN, cw1: NaN, block: NaN, sig1: NaN, placeholder: true });
+  });
   return out;
 }
 function validar(L) {
@@ -767,9 +767,9 @@ function renderAssets(list) {
     const reg = a.regLive ? `<span class="reg ${a.regLive}">${a.regLive === 'long' ? 'LONG GAMMA' : 'SHORT GAMMA'}</span>` : '<span class="reg na">SEM PREÇO</span>';
     if (L.placeholder) {
       return `<div class="asset ${S.sel === L.tk ? 'sel' : ''}" data-tk="${esc(L.tk)}" tabindex="0" role="button" aria-label="Ver detalhe de ${esc(L.tk)}">
-      <div class="top"><span class="tk">WDO${a.q && a.q.sym ? ' <span class="sub">' + esc(a.q.sym) + '</span>' : ''}</span><span class="px">${fmtN(a.price, d)} <span class="${isFinite(p) ? (p >= 0 ? 'up' : 'down') : 'mut'}" style="font-size:.72rem">${isFinite(p) ? sign(p) + p.toFixed(2) + '%' : ''}</span></span></div>
-      <div class="ln"><span class="reg na">SEM NÍVEIS GEX</span><span>dólar futuro</span></div>
-      <div class="hint" style="margin:12px 0 6px">Cole em ⚙ a linha <b>WDO|REGIME|FLIP|EM_MIN|EM_MAX|PW1|CW1|BLOCO|SIGMA1_MIN</b>, em pontos (5740) ou em reais (5,74).</div>
+      <div class="top"><span class="tk">${esc(L.tk)}${a.q && a.q.sym && a.q.sym !== L.tk ? ' <span class="sub">' + esc(a.q.sym) + '</span>' : ''}</span><span class="px">${fmtN(a.price, d)} <span class="${isFinite(p) ? (p >= 0 ? 'up' : 'down') : 'mut'}" style="font-size:.72rem">${isFinite(p) ? sign(p) + p.toFixed(2) + '%' : ''}</span></span></div>
+      <div class="ln"><span class="reg na">SEM NÍVEIS GEX</span><span>${L.tk === 'EWZ' ? 'opções nos EUA' : 'dólar futuro'}</span></div>
+      <div class="hint" style="margin:12px 0 6px">${L.tk === 'EWZ' ? 'As opções do EWZ são negociadas nos EUA e não estão nos arquivos da B3. Para ver os níveis, cole em ⚙ a linha <b>EWZ|REGIME|FLIP|EM_MIN|EM_MAX|PW1|CW1|BLOCO|SIGMA1_MIN</b> (ex.: do Barchart).' : 'Cole em ⚙ a linha <b>WDO|REGIME|FLIP|EM_MIN|EM_MAX|PW1|CW1|BLOCO|SIGMA1_MIN</b>, em pontos (5740) ou em reais (5,74).'}</div>
       <div class="ln"><span class="src ${a.q ? 'live' : 'none'}">${a.q ? esc(a.q.src) : 'SEM COTAÇÃO'}</span><span>${a.q ? ago(a.q.time) : ''}</span></div>
     </div>`;
     }
@@ -821,7 +821,7 @@ function renderResumo(list) {
   const t = parseInt(load('lvlStamp', ''), 10);
   const ld = $('lvlDate').value ? new Date($('lvlDate').value + ':00-03:00') : null;
   const ref = ld && isFinite(ld) ? ld.getTime() : t;
-  if (!ref) { el.textContent = '⚠ Níveis de exemplo: cole os seus em ⚙'; el.className = 'pill warn'; }
+  if (!ref) { el.textContent = 'Sem níveis colados: use os calculados da B3 ou cole os seus em ⚙'; el.className = 'pill warn'; }
   else {
     const hoje = brt(new Date(ref)).key === brt().key;
     el.textContent = (hoje ? 'Níveis de hoje ' : '⚠ Níveis de ') + new Date(ref).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
@@ -1004,7 +1004,7 @@ function renderPainel(list) {
 }
 function tese(a) {
   const L = a.L, d = decOf(L.tk), P = a.price;
-  if (L.placeholder) return `<b>WDO</b> ${isFinite(P) ? 'em <b>' + fmtN(P, d) + '</b>' : 'sem cotação'}. Ainda sem níveis GEX do dólar: cole a linha <b>WDO|…</b> (Investorama / B3Lab) em ⚙ Configurar → Aplicar níveis. Valores em reais (5,74) são convertidos para pontos (5740).`;
+  if (L.placeholder) return `<b>${esc(L.tk)}</b> ${isFinite(P) ? 'em <b>' + fmtN(P, d) + '</b>' : 'sem cotação'}. Sem níveis GEX: ${L.tk === 'EWZ' ? 'as opções do EWZ são negociadas nos EUA (fora dos arquivos da B3); cole a linha <b>EWZ|…</b> em ⚙ Configurar → Aplicar níveis.' : 'cole a linha <b>' + esc(L.tk) + '|…</b> em ⚙ Configurar → Aplicar níveis.'}`;
   if (!isFinite(P)) return `Sem cotação para <b>${esc(L.tk)}</b>. Configure as fontes em ⚙ ou publique na Vercel.`;
   const partes = [];
   if (a.regLive === 'long') {
@@ -1016,7 +1016,7 @@ function tese(a) {
   }
   if (isFinite(L.emMin) && isFinite(L.emMax)) partes.push(P > L.emMax ? 'O preço está <b>acima do Expected Move</b>: movimento esticado.' : P < L.emMin ? 'O preço está <b>abaixo do Expected Move</b>: movimento esticado.' : `Dentro do Expected Move (${fmtN(L.emMin, d)}–${fmtN(L.emMax, d)}).`);
   if (a.divergente) partes.push('⚠ O regime mudou desde o relatório (o preço cruzou o Flip).');
-  if (L.auto && L.g) partes.push(`Níveis calculados com ${L.g.nOpcoes} opções da B3 (fechamento de ${S.gex.dataArquivos.split('-').reverse().slice(0, 2).join('/')}).`);
+  if (L.auto && L.g) partes.push(`Níveis calculados com ${L.g.nOpcoes} opções da B3 (fechamento de ${S.gex.dataArquivos.split('-').reverse().slice(0, 2).join('/')}${L.g.ivDe ? `; volatilidade com preços de ${L.g.ivDe.split('-').reverse().slice(0, 2).join('/')}, pois a B3 não publicou os do dia` : ''}).`);
   if (a.vencido) partes.push(`⚠ <b>Os níveis são do vencimento de ${ddmm(a.venc.ref)}, que já passou</b>. O próximo é ${ddmm(a.venc.prox)}: atualize os níveis.`);
   else if (a.venc) partes.push(`Vencimento de referência: ${ddmm(a.venc.ref)}.`);
   if (a.warns.length) partes.push(`⚠ Níveis suspeitos: ${esc(a.warns.join(', '))}.`);
@@ -1142,14 +1142,14 @@ async function perguntar(q) {
 // ================================================================
 // INICIALIZAÇÃO
 // ================================================================
-const CAMPOS = { lvlMode: 'auto', diCode: '', payload: DEFAULT_PAYLOAD, lvlDate: '2026-11-19T09:00', expB3: '', expIbov: '', expEwz: '', expWdo: '', tol: '10', winUnit: 'win', di: '13.85', kBrapi: '', kFinn: '', kGroq: '', mGroq: 'llama-3.3-70b-versatile', every: '30', everyBrapi: '300' };
+const CAMPOS = { lvlMode: 'auto', diCode: '', payload: DEFAULT_PAYLOAD, lvlDate: '', expB3: '', expIbov: '', expEwz: '', expWdo: '', tol: '10', winUnit: 'win', di: '13.85', kBrapi: '', kFinn: '', kGroq: '', mGroq: 'llama-3.3-70b-versatile', every: '30', everyBrapi: '300' };
 function montarNiveis() {
   let base = parsePayload($('payload').value);
   const g = S.gex && S.gex.ativos;
   if ($('lvlMode').value === 'auto' && g) {
     const nv = (v) => (typeof v === 'number' && isFinite(v)) ? v : NaN;
     const auto = Object.entries(g).map(([tk, a]) => ({ tk, regime: a.regime, flip: nv(a.flip), emMin: nv(a.emMin), emMax: nv(a.emMax), pw1: nv(a.pw1), cw1: nv(a.cw1), block: nv(a.block), sig1: nv(a.sig1), auto: true, unit: tk === 'WIN' ? 'ibov' : 'nat', g: a }));
-    base = base.filter(l => !g[l.tk]);
+    base = base.filter(l => !g[l.tk] && !(l.placeholder && g[l.tk]));
     const ordem = ['WIN', 'WDO', 'BOVA11', 'EWZ', 'PETR4', 'VALE3', 'ITUB4', 'BBDC4', 'BBAS3', 'B3SA3', 'ABEV3'];
     base = auto.concat(base).sort((a, b) => (ordem.indexOf(a.tk) + 1 || 99) - (ordem.indexOf(b.tk) + 1 || 99));
   }
@@ -1170,7 +1170,7 @@ async function carregarGex() {
       if (d && d.ativos && Object.keys(d.ativos).length) { S.gex = d; S.gexFonte = u.endsWith('.json') ? 'arquivo diário' : 'servidor'; break; }
     } catch (e) { S.diag.gex = `⚠ ${u}: ${e.message}`; }
   }
-  if (S.gex) S.diag.gex = `✔ ${Object.keys(S.gex.ativos).join(', ')} · fechamento B3 de ${S.gex.dataArquivos.split('-').reverse().slice(0, 2).join('/')} (${S.gexFonte})`;
+  if (S.gex) S.diag.gex = `✔ ${Object.keys(S.gex.ativos).join(', ')} · fechamento B3 de ${S.gex.dataArquivos.split('-').reverse().slice(0, 2).join('/')} (${S.gexFonte})${S.gex.avisos && S.gex.avisos.length ? ' · ⚠ ' + S.gex.avisos.join(' · ') : ''}`;
   S.levels = montarNiveis(); render();
 }
 function agendar() {
@@ -1179,6 +1179,8 @@ function agendar() {
   S.timer = setInterval(atualizar, s * 1000);
 }
 window.addEventListener('DOMContentLoaded', () => {
+  // Migração: apaga o texto de níveis de exemplo das versões anteriores, se ainda estiver salvo
+  if (load('payload', null) === EXEMPLO_ANTIGO) save('payload', '');
   // Migração: datas fixas antigas (padrão das versões anteriores) passam a ser automáticas
   [['expB3', '2026-11-19'], ['expIbov', '2026-12-16'], ['expEwz', '2026-11-20']].forEach(([id, velho]) => { if (load(id, '') === velho) save(id, ''); });
   Object.entries(CAMPOS).forEach(([id, def]) => {

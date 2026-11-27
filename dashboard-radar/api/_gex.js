@@ -150,6 +150,21 @@ export async function calcularGex({ data, comAcoes = true, janelaDias = 75, maxS
   const taxa = di && di.SctyQtn && isFinite(di.SctyQtn.curPrc) ? di.SctyQtn.curPrc / 100 : 0.14;
   const r = Math.log(1 + taxa);
   const T = (venc) => duEntre(ref, venc) / 252;
+  // Preços do dia útil anterior (só para séries que vierem sem preço no arquivo do dia)
+  let _ant = null;
+  async function precosAnteriores() {
+    if (_ant) return _ant;
+    _ant = { ref: new Map(), data: null };
+    for (let k = 1; k <= 5; k++) {
+      const d = new Date(ref.getTime() - k * 864e5); if (!util(d)) continue;
+      try {
+        const txt = await arquivoB3('TradeInformationConsolidatedFile', iso(d));
+        csv(txt).forEach(n => { const p = num(n.RefPric), l = num(n.LastPric); _ant.ref.set(n.TckrSymb, isFinite(p) ? p : l); });
+        _ant.data = iso(d); break;
+      } catch (e) { log(`sem preços em ${iso(d)}`); }
+    }
+    return _ant;
+  }
   const out = { geradoEm: new Date().toISOString(), dataArquivos: iso(ref), taxaDi: taxa, ativos: {}, avisos: [] };
 
   // ---- Dólar: opções de DOL (US$ 50 mil) e WDO (US$ 10 mil) sobre o futuro ----
@@ -162,15 +177,28 @@ export async function calcularGex({ data, comAcoes = true, janelaDias = 75, maxS
       const fut = `${m[1]}${m[2]}${m[3]}`, F = refPric.get(fut) || refPric.get(`DOL${m[2]}${m[3]}`);
       const oi = num(p.OpnIntrst), K = parseInt(m[5], 10), P = refPric.get(p.TckrSymb), call = m[4] === 'C';
       if (!(oi > 0) || !(F > 0)) return;
-      opts.push({ K, T: t, call, oi, mult: m[1] === 'DOL' ? 50 : 10, P, F, venc: iso(venc) });
+      opts.push({ K, T: t, call, oi, mult: m[1] === 'DOL' ? 50 : 10, P, F, venc: iso(venc), sym: p.TckrSymb, fut });
     });
     // Preço de referência do futuro vigente (o de vencimento mais próximo com opções)
     const Fs = opts.filter(o => o.T === Math.min(...opts.map(x => x.T)));
     const S0 = Fs.length ? Fs[0].F : NaN;
-    opts.forEach(o => { o.iv = impliedVol(o.P, o.F, o.K, o.T, r, o.call, true); });
+    // Séries sem preço no arquivo do dia: usa a IV do dia útil anterior (preço da opção e do futuro daquele dia)
+    let usouAnterior = 0, dataAnt = null;
+    if (opts.filter(o => o.P > 0).length < opts.length * 0.3) {
+      const ant = await precosAnteriores(); dataAnt = ant.data;
+      opts.forEach(o => {
+        if (o.P > 0) return;
+        const P = ant.ref.get(o.sym), F = ant.ref.get(o.fut) || ant.ref.get('DOL' + o.fut.slice(3));
+        if (P > 0 && F > 0) { o.ivAnt = impliedVol(P, F, o.K, o.T + 1 / 252, r, o.call, true); usouAnterior++; }
+      });
+    }
+    opts.forEach(o => { o.iv = o.P > 0 ? impliedVol(o.P, o.F, o.K, o.T, r, o.call, true) : (isFinite(o.ivAnt) ? o.ivAnt : NaN); });
     preencherIv(opts);
     const n = isFinite(S0) ? niveis(opts, S0, r, true, ref) : null;
-    if (n) out.ativos.WDO = { ...n, unidade: 'pontos (R$ por US$ 1.000)', fonte: 'Opções de DOL + WDO (B3)' };
+    if (n) {
+      out.ativos.WDO = { ...n, unidade: 'pontos (R$ por US$ 1.000)', fonte: 'Opções de DOL + WDO (B3)' };
+      if (usouAnterior) { out.ativos.WDO.ivDe = dataAnt; out.avisos.push(`WDO: a B3 não publicou os preços das opções de dólar em ${iso(ref)}; volatilidade implícita de ${usouAnterior} séries calculada com os preços de ${dataAnt} (posições em aberto de ${iso(ref)})`); }
+    }
     else out.avisos.push('WDO: dados insuficientes');
     log(`WDO: ${opts.length} opções`);
   }
