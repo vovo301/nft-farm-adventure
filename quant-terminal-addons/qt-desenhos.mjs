@@ -5,6 +5,7 @@
 //   Footprint     -> venda x compra, delta, volume ou negócios em cada preço de cada vela,
 //                    também como tipo de gráfico (menu Candles / Heikin Ashi / Footprint)
 //   Bolhas        -> bolhas no preço exato onde entrou volume grande (Big Bubbles)
+//   Posição       -> ferramenta long/short com entrada, stop e alvo ajustáveis e R:R livre (padrão 3:1)
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -174,6 +175,139 @@ function aplicarLegenda(b) {
   return b;
 }
 
+// Ferramenta de posição comprada / vendida: entrada, stop e alvo ajustáveis separadamente, R:R livre (padrão 3:1).
+const CASO_POSICAO = `      case "long":
+      case "short": { // gex-sync posicao
+        const dir = d.type === "long" ? 1 : -1;
+        const entrada = a.price, stop = b.price, risco = Math.abs(entrada - stop) || entrada * 0.001;
+        const alvo = d.alvo ?? alvoDe(d);
+        const G = this.posGeo(d);
+        if (!G) break;
+        const { x1, w, ye, ys, yt } = G;
+        ctx.fillStyle = COLORS.up + "0.2)";
+        ctx.fillRect(x1, Math.min(ye, yt), w, Math.abs(yt - ye));
+        ctx.fillStyle = COLORS.down + "0.2)";
+        ctx.fillRect(x1, Math.min(ye, ys), w, Math.abs(ys - ye));
+        ctx.lineWidth = active ? 2 : 1;
+        ctx.strokeStyle = COLORS.up + "0.95)"; line(x1, yt, x1 + w, yt);
+        ctx.strokeStyle = COLORS.down + "0.95)"; line(x1, ys, x1 + w, ys);
+        ctx.strokeStyle = "#b2b5be"; line(x1, ye, x1 + w, ye);
+        const rr = Math.abs(alvo - entrada) / risco;
+        const ganho = (alvo - entrada) * dir, perda = (stop - entrada) * dir;
+        const pts = (v) => (v >= 0 ? "+" : "-") + price(Math.abs(v));
+        const pct = (v) => (v >= 0 ? "+" : "") + ((v / entrada) * 100).toFixed(2).replace(".", ",") + "%";
+        ctx.font = "bold 11px -apple-system, Segoe UI, Roboto, sans-serif";
+        // etiquetas à direita da caixa, para não cobrir as alças
+        const tAlvo = "Alvo " + price(alvo) + "   " + pts(ganho) + " pts (" + pct(ganho) + ")";
+        const tStop = "Stop " + price(stop) + "   " + pts(perda) + " pts (" + pct(perda) + ")";
+        const tEnt = (dir > 0 ? "Compra " : "Venda ") + price(entrada) + "   R:R " + rr.toFixed(1).replace(".", ",") + " : 1";
+        const larg = Math.max(...[tAlvo, tStop, tEnt].map((t) => ctx.measureText(t).width)) + 14;
+        const cabe = x1 + w + 8 + larg <= size.width; // não cabe à direita: vai para a esquerda da caixa
+        const xl = cabe ? x1 + w + 8 : x1 - 8, al = cabe ? "left" : "right";
+        const sep = (y1, y2) => (Math.abs(y1 - y2) < 20 ? (y1 < y2 ? -10 : 10) : 0);
+        label(tAlvo, xl, yt + sep(yt, ye), al, COLORS.up + "0.95)");
+        label(tStop, xl, ys + sep(ys, ye), al, COLORS.down + "0.95)");
+        label(tEnt, xl, ye, al, "rgba(55,60,72,0.95)");
+        if (active) { ctx.font = "10px -apple-system, Segoe UI, Roboto, sans-serif"; ctx.fillStyle = "#b2b5be"; ctx.textAlign = al; ctx.fillText("duplo clique = digitar o R:R", xl, ys + (ys > ye ? 24 : -24)); }
+        ctx.font = "11px -apple-system, Segoe UI, Roboto, sans-serif";
+        break;
+      }
+`;
+const GEO_POSICAO = `  // >>> gex-sync posicao geo
+  posGeo(d) {
+    const [e, s] = d.points;
+    const xa = this.x(e.time), xb = this.x(s.time);
+    const ye = this.y(e.price), ys = this.y(s.price), yt = this.y(d.alvo ?? alvoDe(d));
+    if ([xa, xb, ye, ys, yt].some((v) => v == null)) return null;
+    const x1 = Math.min(xa, xb), w = Math.max(Math.abs(xb - xa), 60);
+    return { x1, w, ye, ys, yt, top: Math.min(ye, ys, yt), bottom: Math.max(ye, ys, yt) };
+  }
+  // alças: 0 entrada (esquerda), 1 stop, 2 alvo, 3 largura (direita)
+  posHandles(d) {
+    const G = this.posGeo(d);
+    if (!G) return [];
+    return [{ x: G.x1, y: G.ye }, { x: G.x1 + G.w / 2, y: G.ys }, { x: G.x1 + G.w / 2, y: G.yt }, { x: G.x1 + G.w, y: G.ye }];
+  }
+  // <<< gex-sync posicao geo
+`;
+const FUNCS_POSICAO = `
+// >>> gex-sync posicao funcs
+export function rrPadrao() {
+  try { const v = parseFloat(localStorage.getItem("qt-rr")); return v > 0 ? v : 3; } catch { return 3; }
+}
+export function alvoDe(d) {
+  const dir = d.type === "long" ? 1 : -1, e = d.points[0].price, s = d.points[1].price;
+  const risco = Math.abs(e - s) || e * 0.001;
+  return e + dir * risco * (d.rr || rrPadrao());
+}
+// duplo clique numa posição: digitar o R:R; o valor digitado vira o padrão das próximas
+export function pedirRR(d) {
+  const dir = d.type === "long" ? 1 : -1, e = d.points[0].price, s = d.points[1].price;
+  const risco = Math.abs(e - s) || e * 0.001;
+  const atual = Math.abs((d.alvo ?? alvoDe(d)) - e) / risco;
+  const txt = prompt("Relacao risco:retorno (alvo em vezes o stop). Ex.: 3 = alvo 3x o stop", atual.toFixed(1).replace(".", ","));
+  const v = parseFloat(String(txt || "").replace(",", "."));
+  if (!(v > 0)) return false;
+  d.alvo = e + dir * risco * v;
+  try { localStorage.setItem("qt-rr", String(v)); } catch { /* sem armazenamento */ }
+  return true;
+}
+// <<< gex-sync posicao funcs
+`;
+function aplicarPosicaoDesenhos(c) {
+  const ini = c.indexOf('      case "long":\n      case "short": {'), fim = c.indexOf('      case "text": {');
+  if (ini < 0 || fim < ini) return null;
+  c = c.slice(0, ini) + CASO_POSICAO + c.slice(fim);
+  c = c.replace(/  \/\/ >>> gex-sync posicao geo\n[\s\S]*?  \/\/ <<< gex-sync posicao geo\n/, '');
+  const h = '  // Index of the drawing\'s point under (x, y), or -1, for resizing by its handles.\n';
+  if (!c.includes(h)) return null;
+  c = c.replace(h, GEO_POSICAO + h);
+  c = c.replace(/    if \(d\.type === "long" \|\| d\.type === "short"\) \{ \/\/ gex-sync posicao handles\n[\s\S]*?    \}\n/, '');
+  const ha = '  handleAt(d, x, y) {\n';
+  if (!c.includes(ha)) return null;
+  c = c.replace(ha, ha + '    if (d.type === "long" || d.type === "short") { // gex-sync posicao handles\n      return this.posHandles(d).findIndex((h) => Math.hypot(h.x - x, h.y - y) <= 8);\n    }\n');
+  c = c.replace(/      else if \(d\.type === "long" \|\| d\.type === "short"\) \{ \/\/ gex-sync posicao hit\n[\s\S]*?      \}\n/, '');
+  const hi = '      else if (["rect", "fib", "measure", "long", "short"';
+  if (!c.includes(hi)) return null;
+  c = c.replace(hi, '      else if (d.type === "long" || d.type === "short") { // gex-sync posicao hit\n        const G = this.posGeo(d);\n        dist = G && x >= G.x1 - 4 && x <= G.x1 + G.w + 4 && y >= G.top - 6 && y <= G.bottom + 6 ? 3 : Infinity;\n      }\n' + hi);
+  const al = '      for (const p of pts) {\n        ctx.beginPath();\n        ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);';
+  const alNovo = '      for (const p of d.type === "long" || d.type === "short" ? this.posHandles(d) : pts) { // gex-sync posicao\n        ctx.beginPath();\n        ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);';
+  if (!c.includes(alNovo)) { if (!c.includes(al)) return null; c = c.replace(al, alNovo); }
+  c = c.replace(/\n\/\/ >>> gex-sync posicao funcs\n[\s\S]*?\/\/ <<< gex-sync posicao funcs\n/, '');
+  return c + FUNCS_POSICAO;
+}
+const POSICAO_CHART = [
+  [/import \{ DrawingLayer, TOOL_BY_ID, constrain45, snapToOHLC( , alvoDe, pedirRR)? \} from "\.\/drawings\.js";/, 'import { DrawingLayer, TOOL_BY_ID, constrain45, snapToOHLC, alvoDe, pedirRR } from "./drawings.js";'],
+  ['    const orig = item.points.map((p) => ({ ...p }));\n', '    const orig = item.points.map((p) => ({ ...p }));\n    if ((item.type === "long" || item.type === "short") && item.alvo == null) item.alvo = alvoDe(item); // gex-sync posicao\n    const origAlvo = item.alvo; // gex-sync posicao\n'],
+  ['      if (handle >= 0) {\n        const pt = this.pointAt({ point: { x, y }, logical: ts.coordinateToLogical(x) });',
+   '      if (handle >= 0 && (item.type === "long" || item.type === "short")) { // gex-sync posicao\n        const pt = this.pointAt({ point: { x, y }, logical: ts.coordinateToLogical(x) });\n        const tick = /^CSV:WIN/.test(this.cfg.symbol || "") ? 5 : /^CSV:WDO/.test(this.cfg.symbol || "") ? 0.5 : 0;\n        const pr = (v) => (tick ? Math.round(v / tick) * tick : v);\n        if (pt) {\n          if (handle === 0) item.points[0] = { ...item.points[0], time: pt.time, price: pr(pt.price) };\n          else if (handle === 1) item.points[1] = { ...item.points[1], price: pr(pt.price) };\n          else if (handle === 2) item.alvo = pr(pt.price);\n          else if (handle === 3) item.points[1] = { ...item.points[1], time: pt.time };\n        }\n      } else if (handle >= 0) {\n        const pt = this.pointAt({ point: { x, y }, logical: ts.coordinateToLogical(x) });'],
+  ['          return time == null || price == null ? p : { ...p, time, price };\n        });\n',
+   '          return time == null || price == null ? p : { ...p, time, price };\n        });\n        if (origAlvo != null) item.alvo = origAlvo + (item.points[0].price - orig[0].price); // gex-sync posicao\n'],
+  ['      if (item.points.some((p, i) => p.time !== orig[i].time || p.price !== orig[i].price))',
+   '      if (item.alvo !== origAlvo || item.points.some((p, i) => p.time !== orig[i].time || p.price !== orig[i].price)) // gex-sync posicao'],
+  ['      d.items.push(item);\n      d.selected = item;',
+   '      if ((item.type === "long" || item.type === "short") && item.alvo == null) item.alvo = alvoDe(item); // gex-sync posicao\n      d.items.push(item);\n      d.selected = item;'],
+  ['    this.chartEl.addEventListener("mousedown", (e) => this.startDrag(e), true);\n',
+   '    this.chartEl.addEventListener("mousedown", (e) => this.startDrag(e), true);\n    this.chartEl.addEventListener("dblclick", () => { const it = this.drawings.selected; if (it && (it.type === "long" || it.type === "short") && pedirRR(it)) { this.drawings.update(); this.app.saveDrawings(this.cfg.symbol, this.drawings.items); } }); // gex-sync posicao\n'],
+];
+function aplicarPosicaoChart(b) {
+  if (b.includes('gex-sync posicao')) return b.replace(POSICAO_CHART[0][0], POSICAO_CHART[0][1]);
+  for (const [ancora, novo] of POSICAO_CHART) {
+    if (ancora instanceof RegExp) { if (!ancora.test(b)) return null; b = b.replace(ancora, novo); continue; }
+    if (!b.includes(ancora)) return null;
+    b = b.replace(ancora, novo);
+  }
+  return b;
+}
+
+// app.js: salvar o alvo da posição junto com o desenho
+function aplicarApp(t) {
+  if (t.includes('alvo, // gex-sync posicao')) return t;
+  const a = '      ({ id, type, points, text, color, rr }) => ({', b = '        rr,\n      }),';
+  if (!t.includes(a) || !t.includes(b)) return null;
+  return t.replace(a, '      ({ id, type, points, text, color, rr, alvo }) => ({').replace(b, '        rr,\n        alvo, // gex-sync posicao\n      }),');
+}
+
 export function instalarDesenhos(raiz) {
   const vp = path.join(raiz, 'public', 'js', 'volume-profile.js'), ch = path.join(raiz, 'public', 'js', 'chart.js');
   if (!fs.existsSync(vp) || !fs.existsSync(ch)) return 'nao achei public/js do terminal';
@@ -196,11 +330,20 @@ export function instalarDesenhos(raiz) {
   const bl = aplicarLegenda(b);
   if (bl === null) return 'esta versao do terminal mudou (legenda); me avise no chat';
   b = bl;
+  const bp = aplicarPosicaoChart(b);
+  if (bp === null) return 'esta versao do terminal mudou (posicao no grafico); me avise no chat';
+  b = bp;
   const dr = path.join(raiz, 'public', 'js', 'drawings.js');
   const c0 = fs.existsSync(dr) ? fs.readFileSync(dr, 'utf8') : null;
-  const c = c0 === null ? null : aplicarDesenho(c0);
+  let c = c0 === null ? null : aplicarDesenho(c0);
   if (c0 !== null && c === null) return 'esta versao do terminal mudou (ferramenta perfil); me avise no chat';
-  if (a === a0 && b === b0 && c === c0) return 'ok';
+  if (c !== null) { c = aplicarPosicaoDesenhos(c); if (c === null) return 'esta versao do terminal mudou (ferramenta posicao); me avise no chat'; }
+  const ap = path.join(raiz, 'public', 'js', 'app.js');
+  const t0 = fs.existsSync(ap) ? fs.readFileSync(ap, 'utf8') : null;
+  const t = t0 === null ? null : aplicarApp(t0);
+  if (t0 !== null && t === null) return 'esta versao do terminal mudou (salvar posicao); me avise no chat';
+  if (t !== t0) fs.writeFileSync(ap, t);
+  if (a === a0 && b === b0 && c === c0) return t !== t0 ? 'instalado' : 'ok';
   fs.writeFileSync(vp, a); fs.writeFileSync(ch, b);
   if (c !== c0) fs.writeFileSync(dr, c);
   return 'instalado';
