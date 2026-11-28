@@ -163,6 +163,19 @@ function _placar(bars, p) { // placar de -100 a +100, so com velas ja fechadas
     : NaN));
 }`;
 
+const CONFERE = `
+const _confere = (bars) => { // os precos deste grafico sao os do WIN? (evita desenhar o WIN em cima do ^BVSP)
+  const T = DADOS.t; let ok = 0, tot = 0, j = 0;
+  for (let i = Math.max(0, bars.length - 400); i < bars.length; i++) {
+    while (j < T.length && T[j] < bars[i].time) j++;
+    if (j >= T.length) break;
+    if (T[j] !== bars[i].time) continue;
+    const h = DADOS.hp[j], lo = h[0], hi = h[0] + ((h.length - 1) / 3 - 1) * 5;
+    tot++; if (bars[i].close >= lo - 100 && bars[i].close <= hi + 100) ok++;
+  }
+  return tot > 0 && ok / tot >= 0.6;
+};`;
+
 function gravar(nome, codigo) { fs.writeFileSync(path.join(CUSTOM, nome), codigo); }
 
 function gerarIndicadores(mins, topo) {
@@ -315,6 +328,7 @@ export default {
 // Em outros ativos (ou dias sem esse dado) estima espalhando o volume de cada vela entre a minima e a maxima.
 // Modo "Periodo escolhido": ao adicionar, clique na vela de inicio; o fim vazio vai ate a ultima vela.
 const DADOS = ${JSON.stringify({ t: comHp.map((m) => m.t), hp: comHp.map((m) => m.hp) })};
+${CONFERE}
 export default {
   name: 'Perfil de Volume POC VAH VAL (Perfil de Volume)',
   overlay: true,
@@ -348,14 +362,14 @@ export default {
       if (p.fim) { z = -1; for (let i = n - 1; i >= 0; i--) if (bars[i].time <= p.fim) { z = i; break; } }
       if (a >= 0 && z >= a) trechos.push([a, z]);
     }
-    const perfis = [];
+    const perfis = [], winOk = _confere(bars);
     for (const [a, z] of trechos) {
       const t0 = bars[a].time, t1 = z + 1 < n ? bars[z + 1].time : bars[z].time + passoBar;
       // 1) volume por preco: exato (negocios da B3) ou estimado pelas velas
       const mapa = new Map(); let exato = false;
       let lo = 0, hi = DADOS.t.length;
       while (lo < hi) { const m = (lo + hi) >> 1; if (DADOS.t[m] < t0) lo = m + 1; else hi = m; }
-      for (let j = lo; j < DADOS.t.length && DADOS.t[j] < t1; j++) {
+      for (let j = lo; winOk && j < DADOS.t.length && DADOS.t[j] < t1; j++) {
         const h = DADOS.hp[j];
         for (let k = 1, q = h[0]; k < h.length; k += 3, q += 5) {
           if (!h[k] && !h[k + 1]) continue;
@@ -408,6 +422,7 @@ export default {
 // a compra um degrau acima (desequilibrio). Contorno amarelo = POC da vela. Embaixo da vela, o delta total.
 // A B3 publica negocios, nao ordens: uma ordem que varre varios precos aparece como varios negocios.
 const DADOS = ${JSON.stringify({ t: comHp.map((m) => m.t), hp: comHp.map((m) => m.hp) })};
+${CONFERE}
 export default {
   name: 'Footprint WIN (Footprint)',
   overlay: true,
@@ -421,6 +436,7 @@ export default {
   outputs: [{ key: 'delta', label: 'Delta da vela', kind: 'line', color: '#00000000' }],
   calc(bars, p) {
     const n = bars.length, delta = new Array(n).fill(NaN), barras = [];
+    if (!_confere(bars)) return { delta, footprint: { barras, passo: 5, modo: p.modo, deseq: p.deseq, aviso: 'Footprint so no CSV:WIN (negocios da B3).' } };
     let passo = Math.max(5, Math.round(p.linha / 5) * 5);
     if (!p.linha) { // automatico: cerca de 10 linhas na vela tipica
       const am = bars.slice(-Math.min(n, p.velas)).map((b) => b.high - b.low).sort((a, b) => a - b);
@@ -461,6 +477,7 @@ export default {
 // Vendedores agredindo forte no fundo de uma queda e o preco parando de cair costuma indicar absorcao.
 // Usa os negocios publicos da B3 (lado comprador/vendedor estimado pela regra do tick). Use no CSV:WIN.
 const DADOS = ${JSON.stringify({ t: comHp.map((m) => m.t), hp: comHp.map((m) => m.hp) })};
+${CONFERE}
 export default {
   name: 'Big Bubbles WIN (Big Bubbles)',
   overlay: true,
@@ -476,6 +493,7 @@ export default {
   outputs: [{ key: 'vol', label: 'Volume da maior bolha', kind: 'line', color: '#00000000' }],
   calc(bars, p) {
     const n = bars.length, vol = new Array(n).fill(NaN), itens = [];
+    if (!_confere(bars)) return { vol, bolhas: { itens } };
     const T = DADOS.t, passoBar = n > 1 ? bars[1].time - bars[0].time : 60;
     let passo = Math.max(5, Math.round(p.linha / 5) * 5);
     if (!p.linha) {
