@@ -1,8 +1,9 @@
-// win-sync.mjs — WIN (mini índice) com volume real e leitura de fluxo, feitos com os negócios públicos da B3.
+// win-sync.mjs — WIN (mini índice) e WDO (mini dólar) com volume real e leitura de fluxo, feitos com os negócios públicos da B3.
 // Coloque em quant-terminal\scripts e rode:  node scripts/win-sync.mjs        (últimos 5 pregões)
 //                                             node scripts/win-sync.mjs 10     (últimos 10 pregões)
+//                                             node scripts/win-sync.mjs 5 WIN  (só o WIN; o padrão é WIN e WDO)
 // Grava:
-//   data/imports/WIN.csv              velas de 1 minuto (o terminal mostra como o ativo CSV:WIN)
+//   data/imports/WIN.csv, WDO.csv     velas de 1 minuto (o terminal mostra como os ativos CSV:WIN e CSV:WDO)
 //   custom/fluxo-win-agressao.js      saldo de agressão por vela e acumulado no dia
 //   custom/fluxo-win-players.js       saldo acumulado das corretoras que mais negociam e das estrangeiras
 //   custom/fluxo-win-lotes.js         bolhas nas velas com lotes grandes (100 contratos ou mais por negócio)
@@ -21,10 +22,10 @@ const RAIZ = process.env.WIN_ROOT || path.join(path.dirname(fileURLToPath(import
 const DADOS = path.join(RAIZ, 'data');
 const CACHE = path.join(DADOS, 'b3cache');
 const CUSTOM = path.join(RAIZ, 'custom');
-const SAIDA = path.join(DADOS, 'imports', 'WIN.csv');
+const IMPORTS = path.join(DADOS, 'imports');
 const DIAS = Math.max(1, Math.min(30, parseInt(process.argv[2] || '5', 10) || 5));
 const FUSO = 3 * 3600;      // horário de Brasília = UTC-3
-const LOTE_GRANDE = 100;    // contratos num único negócio
+const LOTE_GRANDE = 100;    // contratos num único negócio (WIN)
 const ZIPS = process.env.WIN_ZIPS || null; // (teste) pasta com os arquivos da B3 já baixados
 
 // Nomes das corretoras pelo código da B3. Edite data/corretoras.json para corrigir ou acrescentar.
@@ -65,6 +66,21 @@ function contratoWin(dia) { // contrato vigente naquele dia (meses pares, vence 
   return null;
 }
 
+function contratoWdo(dia) { // WDO vence no 1º dia útil do mês: o vigente é o próximo vencimento depois de hoje
+  const LET = 'FGHJKMNQUVXZ';
+  for (let k = 0; k < 14; k++) {
+    const y = dia.getUTCFullYear() + Math.floor((dia.getUTCMonth() + k) / 12), m = (dia.getUTCMonth() + k) % 12;
+    const v = D(y, m, 1); while (!util(v)) v.setUTCDate(v.getUTCDate() + 1);
+    if (v > dia) return 'WDO' + LET[m] + String(y).slice(2);
+  }
+  return null;
+}
+const ATIVOS = {
+  WIN: { nome: 'mini indice', tick: 5, contrato: contratoWin, lote: 100 },
+  WDO: { nome: 'mini dolar', tick: 0.5, contrato: contratoWdo, lote: 50 },
+};
+const LISTA = String(process.argv[3] || 'WIN,WDO').toUpperCase().split(',').filter((a) => ATIVOS[a]);
+
 // ---------- download e leitura do arquivo de negócios da B3 ----------
 async function baixar(ticker, data) {
   if (ZIPS) { const f = path.join(ZIPS, `${ticker}-${data}.zip`); return fs.existsSync(f) ? fs.readFileSync(f) : null; }
@@ -86,7 +102,7 @@ async function baixar(ticker, data) {
 
 // Lê os negócios em fluxo (o arquivo aberto passa de 400 MB) e monta, para cada minuto:
 // a vela, o volume agredido na compra e na venda (regra do tick), os lotes grandes e o saldo de cada corretora.
-async function minutosDoArquivo(zip, data) {
+async function minutosDoArquivo(zip, data, tick = 5, lote = LOTE_GRANDE) {
   const nl = zip.readUInt16LE(26), el = zip.readUInt16LE(28);
   const fluxo = Readable.from([zip.subarray(30 + nl + el)]).pipe(zlib.createInflateRaw());
   const linhas = readline.createInterface({ input: fluxo, crlfDelay: Infinity });
@@ -111,17 +127,18 @@ async function minutosDoArquivo(zip, data) {
       ultPreco = preco; ultLado = lado;
       if (lado > 0) m.ba += qtd; else if (lado < 0) m.sa += qtd;
       { let x = m.pv.get(preco); if (!x) m.pv.set(preco, (x = [0, 0, 0])); if (lado < 0) x[1] += qtd; else x[0] += qtd; x[2]++; }
-      if (qtd >= LOTE_GRANDE) { if (lado > 0) m.gb += qtd; else if (lado < 0) m.gs += qtd; m.gp += preco * qtd; }
+      if (qtd >= lote) { if (lado > 0) m.gb += qtd; else if (lado < 0) m.gs += qtd; m.gp += preco * qtd; }
       const cp = c[9], vd = c[10];
       if (cp !== vd) { m.net[cp] = (m.net[cp] || 0) + qtd; m.net[vd] = (m.net[vd] || 0) - qtd; }
     }
   } catch (e) {
     if (!min.size) throw e; // arquivo cortado no fim: fica com o que deu para ler
   }
-  // volume por preço, compacto: [preço mínimo, compra, venda, negócios, compra, venda, negócios, ...] de 5 em 5 pontos
+  // volume por preço, compacto: [preço mínimo, compra, venda, negócios, compra, venda, negócios, ...] de tick em tick
   for (const m of min.values()) {
     const ps = [...m.pv.keys()], lo = Math.min(...ps), hi = Math.max(...ps), hp = [lo];
-    for (let q = lo; q <= hi; q += 5) { const x = m.pv.get(q) || [0, 0, 0]; hp.push(x[0], x[1], x[2]); }
+    const np = Math.round((hi - lo) / tick);
+    for (let k = 0; k <= np; k++) { const x = m.pv.get(Math.round((lo + k * tick) * 100) / 100) || [0, 0, 0]; hp.push(x[0], x[1], x[2]); }
     m.hp = hp; delete m.pv;
   }
   return { minutos: [...min.values()].sort((a, b) => a.t - b.t), negocios: n };
@@ -164,21 +181,24 @@ function _placar(bars, p) { // placar de -100 a +100, so com velas ja fechadas
 }`;
 
 const CONFERE = `
-const _confere = (bars) => { // os precos deste grafico sao os do WIN? (evita desenhar o WIN em cima do ^BVSP)
-  const T = DADOS.t; let ok = 0, tot = 0, j = 0;
-  for (let i = Math.max(0, bars.length - 400); i < bars.length; i++) {
-    while (j < T.length && T[j] < bars[i].time) j++;
-    if (j >= T.length) break;
-    if (T[j] !== bars[i].time) continue;
-    const h = DADOS.hp[j], lo = h[0], hi = h[0] + ((h.length - 1) / 3 - 1) * 5;
-    tot++; if (bars[i].close >= lo - 100 && bars[i].close <= hi + 100) ok++;
+const _escolher = (bars) => { // qual ativo (WIN ou WDO) tem os mesmos precos deste grafico? (evita desenhar em cima do ^BVSP)
+  for (const D of DADOS.ativos) {
+    const T = D.t; let ok = 0, tot = 0, j = 0;
+    for (let i = Math.max(0, bars.length - 400); i < bars.length; i++) {
+      while (j < T.length && T[j] < bars[i].time) j++;
+      if (j >= T.length) break;
+      if (T[j] !== bars[i].time) continue;
+      const h = D.hp[j], lo = h[0], hi = h[0] + ((h.length - 1) / 3 - 1) * D.tick;
+      tot++; if (bars[i].close >= lo - 20 * D.tick && bars[i].close <= hi + 20 * D.tick) ok++;
+    }
+    if (tot > 0 && ok / tot >= 0.6) return D;
   }
-  return tot > 0 && ok / tot >= 0.6;
+  return null;
 };`;
 
 function gravar(nome, codigo) { fs.writeFileSync(path.join(CUSTOM, nome), codigo); }
 
-function gerarIndicadores(mins, topo) {
+function gerarIndicadores(mins, topo, ferr) {
   const dia = []; let d = -1, ultDia = '';
   for (const m of mins) { const s = new Date((m.t - FUSO) * 1000).toISOString().slice(0, 10); if (s !== ultDia) { d++; ultDia = s; } dia.push(d); }
   const estr = mins.map((m) => ESTRANGEIRAS.reduce((s, b) => s + (m.net[b] || 0), 0));
@@ -321,13 +341,12 @@ export default {
 `);
 
   // 6) Perfil de volume com POC, VAH e VAL
-  const comHp = mins.filter((m) => m.hp);
   gravar('perfil-volume.js', `// Gerado por win-sync.mjs em ${new Date().toISOString()}.
 // PERFIL DE VOLUME (como o FRVP do TradingView) com POC, VAH e VAL escritos.
-// No CSV:WIN usa o volume exato de cada preco, dos negocios da B3 (${comHp.length} minutos), separado em compra e venda.
+// No CSV:WIN e no CSV:WDO usa o volume exato de cada preco, dos negocios da B3 (WIN e WDO), separado em compra e venda.
 // Em outros ativos (ou dias sem esse dado) estima espalhando o volume de cada vela entre a minima e a maxima.
 // Modo "Periodo escolhido": ao adicionar, clique na vela de inicio; o fim vazio vai ate a ultima vela.
-const DADOS = ${JSON.stringify({ t: comHp.map((m) => m.t), hp: comHp.map((m) => m.hp) })};
+const DADOS = ${ferr};
 ${CONFERE}
 export default {
   name: 'Perfil de Volume POC VAH VAL (Perfil de Volume)',
@@ -362,16 +381,16 @@ export default {
       if (p.fim) { z = -1; for (let i = n - 1; i >= 0; i--) if (bars[i].time <= p.fim) { z = i; break; } }
       if (a >= 0 && z >= a) trechos.push([a, z]);
     }
-    const perfis = [], winOk = _confere(bars);
+    const perfis = [], D = _escolher(bars) || { t: [], hp: [], tick: 5 };
     for (const [a, z] of trechos) {
       const t0 = bars[a].time, t1 = z + 1 < n ? bars[z + 1].time : bars[z].time + passoBar;
       // 1) volume por preco: exato (negocios da B3) ou estimado pelas velas
       const mapa = new Map(); let exato = false;
-      let lo = 0, hi = DADOS.t.length;
-      while (lo < hi) { const m = (lo + hi) >> 1; if (DADOS.t[m] < t0) lo = m + 1; else hi = m; }
-      for (let j = lo; winOk && j < DADOS.t.length && DADOS.t[j] < t1; j++) {
-        const h = DADOS.hp[j];
-        for (let k = 1, q = h[0]; k < h.length; k += 3, q += 5) {
+      let lo = 0, hi = D.t.length;
+      while (lo < hi) { const m = (lo + hi) >> 1; if (D.t[m] < t0) lo = m + 1; else hi = m; }
+      for (let j = lo; j < D.t.length && D.t[j] < t1; j++) {
+        const h = D.hp[j];
+        for (let k = 1, q = h[0]; k < h.length; k += 3, q = Math.round((q + D.tick) * 100) / 100) {
           if (!h[k] && !h[k + 1]) continue;
           const x = mapa.get(q) || [0, 0]; x[0] += h[k]; x[1] += h[k + 1]; mapa.set(q, x); exato = true;
         }
@@ -380,7 +399,7 @@ export default {
       for (let i = a; i <= z; i++) { pmin = Math.min(pmin, bars[i].low); pmax = Math.max(pmax, bars[i].high); }
       if (!(pmax > pmin)) continue;
       let passo = p.linha > 0 ? p.linha : (pmax - pmin) / 60;
-      if (exato && !(p.linha > 0)) passo = Math.max(5, Math.ceil(passo / 5) * 5);
+      if (exato && !(p.linha > 0)) passo = Math.max(D.tick, Math.ceil(passo / D.tick) * D.tick);
       const base = exato ? pmin - passo / 2 : pmin;
       const nl = Math.max(1, Math.ceil((pmax - base) / passo) + 1);
       const c = new Array(nl).fill(0), v = new Array(nl).fill(0);
@@ -416,15 +435,15 @@ export default {
   // 7) Footprint
   gravar('footprint-win.js', `// Gerado por win-sync.mjs em ${new Date().toISOString()}.
 // FOOTPRINT do WIN: em cada vela, o volume vendido x comprado (agressao estimada pela regra do tick) em cada preco,
-// o delta, o volume total ou o numero de negocios, dos negocios publicos da B3. Use no CSV:WIN.
+// o delta, o volume total ou o numero de negocios, dos negocios publicos da B3. Use no CSV:WIN ou no CSV:WDO.
 // Os numeros aparecem quando as velas estao largas: de zoom (role o mouse no grafico) ate as celulas ficarem legiveis.
 // Destaques: compra em negrito verde quando e >= N vezes a venda um degrau abaixo; venda em vermelho quando e >= N vezes
 // a compra um degrau acima (desequilibrio). Contorno amarelo = POC da vela. Embaixo da vela, o delta total.
 // A B3 publica negocios, nao ordens: uma ordem que varre varios precos aparece como varios negocios.
-const DADOS = ${JSON.stringify({ t: comHp.map((m) => m.t), hp: comHp.map((m) => m.hp) })};
+const DADOS = ${ferr};
 ${CONFERE}
 export default {
-  name: 'Footprint WIN (Footprint)',
+  name: 'Footprint WIN WDO (Footprint)',
   overlay: true,
   noAutoscale: true,
   inputs: [
@@ -436,13 +455,14 @@ export default {
   outputs: [{ key: 'delta', label: 'Delta da vela', kind: 'line', color: '#00000000' }],
   calc(bars, p) {
     const n = bars.length, delta = new Array(n).fill(NaN), barras = [];
-    if (!_confere(bars)) return { delta, footprint: { barras, passo: 5, modo: p.modo, deseq: p.deseq, aviso: 'Footprint so no CSV:WIN (negocios da B3).' } };
-    let passo = Math.max(5, Math.round(p.linha / 5) * 5);
+    const D = _escolher(bars);
+    if (!D) return { delta, footprint: { barras, passo: 5, modo: p.modo, deseq: p.deseq, aviso: 'Footprint so no CSV:WIN e no CSV:WDO (negocios da B3).' } };
+    let passo = Math.max(D.tick, Math.round(p.linha / D.tick) * D.tick);
     if (!p.linha) { // automatico: cerca de 10 linhas na vela tipica
       const am = bars.slice(-Math.min(n, p.velas)).map((b) => b.high - b.low).sort((a, b) => a - b);
-      passo = Math.max(5, Math.ceil((am[Math.floor(am.length / 2)] || 50) / 10 / 5) * 5);
+      passo = Math.max(D.tick, Math.ceil((am[Math.floor(am.length / 2)] || 10 * D.tick) / 10 / D.tick) * D.tick);
     }
-    const T = DADOS.t;
+    const T = D.t;
     const passoBar = n > 1 ? bars[1].time - bars[0].time : 60;
     let j = 0;
     for (let i = Math.max(0, n - p.velas); i < n; i++) {
@@ -451,10 +471,10 @@ export default {
       while (j < T.length && T[j] < t0) j++;
       const mapa = new Map();
       for (; j < T.length && T[j] < t1; j++) {
-        const h = DADOS.hp[j];
-        for (let k = 1, q = h[0]; k < h.length; k += 3, q += 5) {
+        const h = D.hp[j];
+        for (let k = 1, q = h[0]; k < h.length; k += 3, q = Math.round((q + D.tick) * 100) / 100) {
           if (!h[k + 2]) continue;
-          const key = Math.floor(q / passo) * passo + (passo > 5 ? passo / 2 : 0);
+          const key = Math.round((Math.floor(q / passo + 1e-9) * passo + (passo > D.tick ? passo / 2 : 0)) * 100) / 100;
           const x = mapa.get(key) || [key, 0, 0, 0]; x[1] += h[k]; x[2] += h[k + 1]; x[3] += h[k + 2]; mapa.set(key, x);
         }
       }
@@ -475,11 +495,11 @@ export default {
 // com a cor de quem agrediu: verde = compradores, roxo = vendedores. Quanto maior o volume, maior a bolha.
 // "Normal" = o maior preco de cada vela nas ultimas N velas (so velas passadas, nada do futuro).
 // Vendedores agredindo forte no fundo de uma queda e o preco parando de cair costuma indicar absorcao.
-// Usa os negocios publicos da B3 (lado comprador/vendedor estimado pela regra do tick). Use no CSV:WIN.
-const DADOS = ${JSON.stringify({ t: comHp.map((m) => m.t), hp: comHp.map((m) => m.hp) })};
+// Usa os negocios publicos da B3 (lado comprador/vendedor estimado pela regra do tick). Use no CSV:WIN ou no CSV:WDO.
+const DADOS = ${ferr};
 ${CONFERE}
 export default {
-  name: 'Big Bubbles WIN (Big Bubbles)',
+  name: 'Big Bubbles WIN WDO (Big Bubbles)',
   overlay: true,
   noAutoscale: true,
   inputs: [
@@ -493,12 +513,13 @@ export default {
   outputs: [{ key: 'vol', label: 'Volume da maior bolha', kind: 'line', color: '#00000000' }],
   calc(bars, p) {
     const n = bars.length, vol = new Array(n).fill(NaN), itens = [];
-    if (!_confere(bars)) return { vol, bolhas: { itens } };
-    const T = DADOS.t, passoBar = n > 1 ? bars[1].time - bars[0].time : 60;
-    let passo = Math.max(5, Math.round(p.linha / 5) * 5);
+    const D = _escolher(bars);
+    if (!D) return { vol, bolhas: { itens } };
+    const T = D.t, passoBar = n > 1 ? bars[1].time - bars[0].time : 60;
+    let passo = Math.max(D.tick, Math.round(p.linha / D.tick) * D.tick);
     if (!p.linha) {
       const am = bars.slice(-500).map((b) => b.high - b.low).sort((a, b) => a - b);
-      passo = Math.max(5, Math.ceil((am[Math.floor(am.length / 2)] || 50) / 10 / 5) * 5);
+      passo = Math.max(D.tick, Math.ceil((am[Math.floor(am.length / 2)] || 10 * D.tick) / 10 / D.tick) * D.tick);
     }
     // celulas (preco, compra, venda) de cada vela
     const cel = new Array(n); let j = 0;
@@ -508,10 +529,10 @@ export default {
       while (j < T.length && T[j] < t0) j++;
       const mapa = new Map();
       for (; j < T.length && T[j] < t1; j++) {
-        const h = DADOS.hp[j];
-        for (let k = 1, q = h[0]; k < h.length; k += 3, q += 5) {
+        const h = D.hp[j];
+        for (let k = 1, q = h[0]; k < h.length; k += 3, q = Math.round((q + D.tick) * 100) / 100) {
           if (!h[k] && !h[k + 1]) continue;
-          const key = Math.floor(q / passo) * passo + (passo > 5 ? passo / 2 : 0);
+          const key = Math.round((Math.floor(q / passo + 1e-9) * passo + (passo > D.tick ? passo / 2 : 0)) * 100) / 100;
           const x = mapa.get(key) || [key, 0, 0]; x[1] += h[k]; x[2] += h[k + 1]; mapa.set(key, x);
         }
       }
@@ -582,45 +603,57 @@ export default {
 
 // ---------- principal ----------
 fs.mkdirSync(CACHE, { recursive: true });
-fs.mkdirSync(path.dirname(SAIDA), { recursive: true });
+fs.mkdirSync(IMPORTS, { recursive: true });
 const hoje = process.env.WIN_HOJE ? new Date(process.env.WIN_HOJE + 'T12:00:00Z') : new Date();
 const hojeD = D(hoje.getUTCFullYear(), hoje.getUTCMonth(), hoje.getUTCDate());
 const dias = [];
 for (const d = new Date(hojeD); dias.length < DIAS && hojeD - d < 60 * 864e5; d.setUTCDate(d.getUTCDate() - 1)) if (util(d)) dias.push(new Date(d));
 dias.reverse();
 
-const todos = [];
-for (const dia of dias) {
-  const data = iso(dia), tk = contratoWin(dia), arqCache = path.join(CACHE, `${tk}-${data}.v4.json`);
-  const fechado = data < iso(hojeD);
-  if (fechado && fs.existsSync(arqCache)) {
-    const ms = JSON.parse(fs.readFileSync(arqCache, 'utf8'));
-    todos.push(...ms); console.log(`${data} ${tk}: ${ms.length} minutos (guardados)`); continue;
+const todos = {};
+for (const ativo of LISTA) {
+  const A = ATIVOS[ativo]; todos[ativo] = [];
+  console.log(`--- ${ativo} (${A.nome}) ---`);
+  for (const dia of dias) {
+    const data = iso(dia), tk = A.contrato(dia), arqCache = path.join(CACHE, `${tk}-${data}.v4.json`);
+    const fechado = data < iso(hojeD);
+    if (fechado && fs.existsSync(arqCache)) {
+      const ms = JSON.parse(fs.readFileSync(arqCache, 'utf8'));
+      todos[ativo].push(...ms); console.log(`${data} ${tk}: ${ms.length} minutos (guardados)`); continue;
+    }
+    process.stdout.write(`${data} ${tk}: baixando os negocios da B3... `);
+    const zip = await baixar(tk, data);
+    if (!zip) { console.log('sem negocios nesse dia'); continue; }
+    const { minutos, negocios } = await minutosDoArquivo(zip, data, A.tick, A.lote);
+    console.log(`${negocios.toLocaleString('pt-BR')} negocios, ${minutos.length} minutos`);
+    if (fechado && minutos.length) fs.writeFileSync(arqCache, JSON.stringify(minutos));
+    todos[ativo].push(...minutos);
   }
-  process.stdout.write(`${data} ${tk}: baixando os negocios da B3... `);
-  const zip = await baixar(tk, data);
-  if (!zip) { console.log('sem negocios nesse dia'); continue; }
-  const { minutos, negocios } = await minutosDoArquivo(zip, data);
-  console.log(`${negocios.toLocaleString('pt-BR')} negocios, ${minutos.length} minutos`);
-  if (fechado && minutos.length) fs.writeFileSync(arqCache, JSON.stringify(minutos));
-  todos.push(...minutos);
+  const ms = todos[ativo];
+  if (!ms.length) { console.log(`Nao encontrei negocios do ${ativo}.`); continue; }
+  const csv = ['time,open,high,low,close,volume', ...ms.map((v) => `${new Date(v.t * 1000).toISOString().replace('.000Z', 'Z')},${v.o},${v.h},${v.l},${v.c},${v.v}`)].join('\n') + '\n';
+  fs.writeFileSync(path.join(IMPORTS, `${ativo}.csv`), csv);
 }
-if (!todos.length) { console.log('Nao encontrei negocios do WIN. Tente de novo mais tarde.'); process.exit(1); }
-
-const csv = ['time,open,high,low,close,volume', ...todos.map((v) => `${new Date(v.t * 1000).toISOString().replace('.000Z', 'Z')},${v.o},${v.h},${v.l},${v.c},${v.v}`)].join('\n') + '\n';
-fs.writeFileSync(SAIDA, csv);
+if (!LISTA.some((a) => todos[a].length)) { console.log('Nao encontrei negocios. Tente de novo mais tarde.'); process.exit(1); }
 
 // corretoras: nomes do arquivo do usuário, se existir
 try { Object.assign(CORRETORAS, JSON.parse(fs.readFileSync(path.join(DADOS, 'corretoras.json'), 'utf8'))); } catch { /* sem arquivo */ }
+const win = todos.WIN || [];
 const giro = {};
-for (const m of todos) for (const [b, x] of Object.entries(m.net)) giro[b] = (giro[b] || 0) + Math.abs(x);
+for (const m of win) for (const [b, x] of Object.entries(m.net)) giro[b] = (giro[b] || 0) + Math.abs(x);
 const topo = Object.entries(giro).sort((a, b) => b[1] - a[1]).slice(0, 6).map(([b]) => b);
-if (fs.existsSync(CUSTOM)) gerarIndicadores(todos, topo);
+const ferr = JSON.stringify({ ativos: LISTA.filter((a) => todos[a].length).map((a) => {
+  const c = todos[a].filter((m) => m.hp);
+  return { nome: a, tick: ATIVOS[a].tick, t: c.map((m) => m.t), hp: c.map((m) => m.hp) };
+}) });
+if (fs.existsSync(CUSTOM)) gerarIndicadores(win, topo, ferr);
 const desenhos = instalarDesenhos(RAIZ);
 if (desenhos === 'instalado') console.log('Desenhos extras instalados no terminal.');
 else if (desenhos !== 'ok') console.log('Aviso: os desenhos extras nao foram instalados (' + desenhos + ').');
 
-const ult = todos.at(-1);
-console.log(`Pronto: ${todos.length} velas de 1 minuto (ultimo preco ${ult.c.toLocaleString('pt-BR')}, ${new Date((ult.t - FUSO) * 1000).toISOString().slice(11, 16)} de Brasilia).`);
-console.log(`Corretoras que mais negociaram: ${topo.map((b) => `#${b} ${CORRETORAS[b] || ''}`.trim()).join(', ')}`);
-console.log('No terminal: Ctrl+F5, digite CSV:WIN e procure "Fluxo WIN", "Perfil de Volume" ou "Footprint" em Indicators.');
+for (const a of LISTA) {
+  const ult = todos[a].at(-1); if (!ult) continue;
+  console.log(`Pronto ${a}: ${todos[a].length} velas de 1 minuto (ultimo preco ${ult.c.toLocaleString('pt-BR')}, ${new Date((ult.t - FUSO) * 1000).toISOString().slice(11, 16)} de Brasilia).`);
+}
+if (topo.length) console.log(`Corretoras que mais negociaram o WIN: ${topo.map((b) => `#${b} ${CORRETORAS[b] || ''}`.trim()).join(', ')}`);
+console.log('No terminal: Ctrl+F5 e abra CSV:WIN ou CSV:WDO. Em Indicators: "Fluxo WIN", "Big Bubbles"; no menu de tipo de grafico: "Footprint".');
