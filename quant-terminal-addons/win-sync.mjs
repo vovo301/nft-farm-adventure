@@ -450,7 +450,7 @@ export default {
     { key: 'modo', label: 'Mostrar', type: 'select', default: 'Venda x Compra', options: ['Venda x Compra', 'Delta', 'Volume', 'Negocios'] },
     { key: 'linha', label: 'Agrupar precos de (pontos, 0 = automatico)', type: 'int', default: 0, min: 0 },
     { key: 'deseq', label: 'Desequilibrio (vezes)', type: 'float', default: 3, min: 1.5 },
-    { key: 'velas', label: 'Quantas velas (as mais recentes)', type: 'int', default: 400, min: 10, max: 3000 },
+    { key: 'velas', label: 'Quantas velas (as mais recentes, 0 = todas)', type: 'int', default: 0, min: 0 },
   ],
   outputs: [{ key: 'delta', label: 'Delta da vela', kind: 'line', color: '#00000000' }],
   calc(bars, p) {
@@ -465,7 +465,7 @@ export default {
     const T = D.t;
     const passoBar = n > 1 ? bars[1].time - bars[0].time : 60;
     let j = 0;
-    for (let i = Math.max(0, n - p.velas); i < n; i++) {
+    for (let i = p.velas > 0 ? Math.max(0, n - p.velas) : 0; i < n; i++) {
       const t0 = bars[i].time, t1 = i + 1 < n ? bars[i + 1].time : t0 + passoBar;
       if (j > 0 && T[j - 1] >= t0) j = 0;
       while (j < T.length && T[j] < t0) j++;
