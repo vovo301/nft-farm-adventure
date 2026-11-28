@@ -564,6 +564,7 @@ export default {
     { key: 'longe', label: 'Distancia maxima entre os dois fundos/topos (velas)', type: 'int', default: 60, min: 5, max: 400 },
     { key: 'marcas', label: 'Marcar divergencias no grafico', type: 'select', default: 'Sim', options: ['Sim', 'Nao'] },
     { key: 'regime', label: 'Filtrar pelo regime de gamma (absorcao em G+, exaustao em G-)', type: 'select', default: 'Nao', options: ['Nao', 'Sim'] },
+    { key: 'texto', label: 'Texto nas setas (azul = absorcao, roxa = exaustao)', type: 'select', default: 'Nao', options: ['Nao', 'Sim'] },
   ],
   outputs: [{ key: 'cvd', label: 'CVD do dia', kind: 'line', color: '#42a5f5', lineWidth: 2 }],
   levels: [0],
@@ -589,7 +590,7 @@ export default {
         const rg = _regime(D, bars[d.conf].time, bars[d.conf].close);
         if (p.regime === 'Sim' && rg !== 0 && (d.tipo === 'abs' ? rg < 0 : rg > 0)) continue; // nao combina com o regime
         markers.push({ time: bars[d.conf].time, position: d.lado > 0 ? 'belowBar' : 'aboveBar', shape: d.lado > 0 ? 'arrowUp' : 'arrowDown',
-          color: d.tipo === 'abs' ? '#42a5f5' : '#b388ff', text: (d.tipo === 'abs' ? 'DIV ABS' : 'DIV EXA') + (rg > 0 ? ' G+' : rg < 0 ? ' G-' : '') });
+          color: d.tipo === 'abs' ? '#42a5f5' : '#b388ff', text: p.texto === 'Sim' ? (d.tipo === 'abs' ? 'DIV ABS' : 'DIV EXA') + (rg > 0 ? ' G+' : rg < 0 ? ' G-' : '') : '' });
       }
     return { cvd, markers };
   },
@@ -632,7 +633,8 @@ export default {
     { key: 'confirmar', label: 'Absorcao: velas seguintes para confirmar', type: 'int', default: 3, min: 1, max: 20 },
     { key: 'ponta', label: 'Absorcao: agressao na ponta da vela (% da vela)', type: 'int', default: 40, min: 10, max: 100 },
     { key: 'minimo', label: 'Minimo de contratos no preco (0 = so o filtro automatico)', type: 'int', default: 0, min: 0 },
-    { key: 'zonas', label: 'Caixas de leitura', type: 'select', default: 'Absorcao e exaustao', options: ['Absorcao e exaustao', 'So absorcao', 'So exaustao', 'Nenhuma'] },
+    { key: 'zonas', label: 'Caixas de leitura', type: 'select', default: 'So as fortes (nivel GEX ou DIV CVD)', options: ['So as fortes (nivel GEX ou DIV CVD)', 'Absorcao e exaustao', 'So absorcao', 'So exaustao', 'Nenhuma'] },
+    { key: 'estilo', label: 'Caixas: so a caixa (laranja = absorcao, roxa = exaustao) ou com o texto', type: 'select', default: 'So a caixa', options: ['So a caixa', 'Com texto'] },
     { key: 'desloc', label: 'Caixa de absorcao: deslocamento maximo do preco (em velas tipicas)', type: 'float', default: 2.5, min: 0.5, max: 6 },
     { key: 'regime', label: 'Caixas: so as que combinam com o regime de gamma (absorcao em G+, exaustao em G-)', type: 'select', default: 'Nao', options: ['Nao', 'Sim'] },
     { key: 'fonte', label: 'Bolhas: agressao concentrada num preco e tambem a espalhada na vela', type: 'select', default: 'Preco e vela', options: ['Preco e vela', 'So concentrada num preco'] },
@@ -745,7 +747,7 @@ export default {
         }
         return '';
       };
-      const quer = (tipo) => p.zonas === 'Absorcao e exaustao' || (tipo === 'abs' ? p.zonas === 'So absorcao' : p.zonas === 'So exaustao');
+      const quer = (tipo) => p.zonas === 'Absorcao e exaustao' || p.zonas.startsWith('So as fortes') || (tipo === 'abs' ? p.zonas === 'So absorcao' : p.zonas === 'So exaustao');
       // ABSORCAO (como no video): em 4 velas, volume ALTO + delta muito de um lado (vendedores ou compradores
       // agredindo), mas o preco quase nao se deslocou, e nas velas seguintes nao seguiu: agressor preso.
       if (quer('abs')) {
@@ -822,6 +824,8 @@ export default {
     }
     // regime de gamma: absorcao vale em gamma positivo, exaustao em gamma negativo
     for (const zn of zonas) zn.rotulo += zn.rg > 0 ? ' · GAMA +' : zn.rg < 0 ? ' · GAMA -' : '';
+    // so as fortes: caiu num nivel de GEX ou veio com divergencia de CVD
+    if (p.zonas.startsWith('So as fortes')) for (let k = zonas.length - 1; k >= 0; k--) if (!zonas[k].rotulo.includes(' + ')) zonas.splice(k, 1);
     if (p.regime === 'Sim') for (let k = zonas.length - 1; k >= 0; k--) {
       const zn = zonas[k];
       if (zn.rg !== 0 && (zn.tipo === 'abs' ? zn.rg < 0 : zn.rg > 0)) zonas.splice(k, 1);
@@ -834,7 +838,7 @@ export default {
       itens.push({ time: o.time, p: o.p, r, lado: o.lado, sub: o.sub, txt: o.v >= 1000 ? (o.v / 1000).toFixed(1).replace('.', ',') + 'k' : String(o.v) });
       vol[o.i] = Math.max(Number.isFinite(vol[o.i]) ? vol[o.i] : 0, o.v);
     }
-    return { vol, bolhas: { itens, zonas, escala: p.tamanho / 100, opacidade: p.opacidade / 100 } };
+    return { vol, bolhas: { itens, zonas, discreto: p.estilo !== 'Com texto', escala: p.tamanho / 100, opacidade: p.opacidade / 100 } };
   },
 };
 `);
