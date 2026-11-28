@@ -181,8 +181,24 @@ function _placar(bars, p) { // placar de -100 a +100, so com velas ja fechadas
 }`;
 
 const CONFERE = `
+// dados de hoje AO VIVO (mt5-sync -> custom/qt-vivo.json, que o terminal busca a cada 3 s) por cima do historico da B3
+let _vivoVer = null, _vivoBase = null;
+const _base = () => {
+  const v = globalThis.QT_VIVO;
+  if (!v || !v.ativos) return DADOS;
+  if (v.versao === _vivoVer) return _vivoBase;
+  const ativos = DADOS.ativos.map((A) => {
+    const L = v.ativos[A.nome];
+    if (!L || !L.t || !L.t.length) return A;
+    let k = A.t.findIndex((t) => t >= L.t[0]); if (k < 0) k = A.t.length;
+    return { ...A, t: A.t.slice(0, k).concat(L.t), hp: A.hp.slice(0, k).concat(L.hp) };
+  });
+  for (const [nome, L] of Object.entries(v.ativos)) // ativo que so existe ao vivo
+    if (!ativos.some((A) => A.nome === nome) && L.t && L.t.length) ativos.push({ nome, tick: L.tick, gex: {}, gexHist: {}, t: L.t, hp: L.hp });
+  _vivoVer = v.versao; _vivoBase = { ativos }; return _vivoBase;
+};
 const _escolher = (bars) => { // qual ativo (WIN ou WDO) tem os mesmos precos deste grafico? (evita desenhar em cima do ^BVSP)
-  for (const D of DADOS.ativos) {
+  for (const D of _base().ativos) {
     const T = D.t; let ok = 0, tot = 0, j = 0;
     for (let i = Math.max(0, bars.length - 400); i < bars.length; i++) {
       while (j < T.length && T[j] < bars[i].time) j++;

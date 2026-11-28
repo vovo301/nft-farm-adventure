@@ -301,11 +301,33 @@ function aplicarPosicaoChart(b) {
 }
 
 // app.js: salvar o alvo da posição junto com o desenho
+const VIVO_APP = `    // >>> gex-sync vivo
+    const vivo = async () => { // dados ao vivo do MT5 (mt5-sync): redesenha o WIN e o WDO quando mudam
+      try {
+        const r = await fetch("/custom/qt-vivo.json?t=" + Date.now(), { cache: "no-store" });
+        if (r.ok) {
+          const j = await r.json();
+          if (j && j.versao !== globalThis.QT_VIVO?.versao) {
+            globalThis.QT_VIVO = j;
+            for (const p of this.panes) if (/^CSV:(WIN|WDO)/.test(p.cfg.symbol || "")) p.render(false);
+          }
+        }
+      } catch { /* sem dados ao vivo */ }
+      setTimeout(vivo, 3000);
+    };
+    vivo();
+    // <<< gex-sync vivo
+`;
 function aplicarApp(t) {
-  if (t.includes('alvo, // gex-sync posicao')) return t;
-  const a = '      ({ id, type, points, text, color, rr }) => ({', b = '        rr,\n      }),';
-  if (!t.includes(a) || !t.includes(b)) return null;
-  return t.replace(a, '      ({ id, type, points, text, color, rr, alvo }) => ({').replace(b, '        rr,\n        alvo, // gex-sync posicao\n      }),');
+  if (!t.includes('alvo, // gex-sync posicao')) {
+    const a = '      ({ id, type, points, text, color, rr }) => ({', b = '        rr,\n      }),';
+    if (!t.includes(a) || !t.includes(b)) return null;
+    t = t.replace(a, '      ({ id, type, points, text, color, rr, alvo }) => ({').replace(b, '        rr,\n        alvo, // gex-sync posicao\n      }),');
+  }
+  t = t.replace(/    \/\/ >>> gex-sync vivo\n[\s\S]*?    \/\/ <<< gex-sync vivo\n/, '');
+  const c = '    await this.loadCustomIndicators();\n';
+  if (!t.includes(c)) return null;
+  return t.replace(c, c + VIVO_APP);
 }
 
 export function instalarDesenhos(raiz) {
