@@ -492,8 +492,12 @@ export default {
   // 8) Big Bubbles: bolhas no preço exato onde entrou volume fora do normal
   gravar('bolhas-win.js', `// Gerado por win-sync.mjs em ${new Date().toISOString()}.
 // BIG BUBBLES do WIN: bolha no PRECO EXATO onde entrou um volume muito acima do normal dentro da vela,
-// com a cor de quem agrediu: verde = compradores, roxo = vendedores. Quanto maior o volume, maior a bolha.
-// "Normal" = o maior preco de cada vela nas ultimas N velas (so velas passadas, nada do futuro).
+// com a cor de quem agrediu: verde = compradores, roxo = vendedores, amarelo = disputa (nenhum lado passou do
+// "dominio minimo"). Quanto maior o volume, maior a bolha. Dentro: o volume e o lado que agrediu (C 72% / V 68%).
+// Como decide: para cada preco da vela mede o volume (ou o saldo de agressao, em "Medir por") e compara com o
+// "normal" = o maior preco de cada vela nas ultimas N velas, em escala logaritmica. Vira bolha quando passa de
+// "Sensibilidade" desvios acima desse normal. So velas passadas entram no normal (nada do futuro).
+// O primeiro minuto de cada pregao (leilao de abertura, sem agressor) e ignorado.
 // Vendedores agredindo forte no fundo de uma queda e o preco parando de cair costuma indicar absorcao.
 // Usa os negocios publicos da B3 (lado comprador/vendedor estimado pela regra do tick). Use no CSV:WIN ou no CSV:WDO.
 const DADOS = ${ferr};
@@ -509,6 +513,9 @@ export default {
     { key: 'lado', label: 'Mostrar', type: 'select', default: 'Compradores e vendedores', options: ['Compradores e vendedores', 'So vendedores', 'So compradores'] },
     { key: 'porvela', label: 'Bolhas por vela (maximo)', type: 'int', default: 2, min: 1, max: 5 },
     { key: 'tamanho', label: 'Tamanho das bolhas (%)', type: 'int', default: 100, min: 30, max: 300 },
+    { key: 'medir', label: 'Medir por', type: 'select', default: 'Saldo de agressao', options: ['Saldo de agressao', 'Volume total'] },
+    { key: 'dominio', label: 'Dominio minimo para colorir (% do lado que agrediu)', type: 'int', default: 60, min: 50, max: 95 },
+    { key: 'opacidade', label: 'Opacidade (%)', type: 'int', default: 60, min: 10, max: 100 },
   ],
   outputs: [{ key: 'vol', label: 'Volume da maior bolha', kind: 'line', color: '#00000000' }],
   calc(bars, p) {
@@ -539,29 +546,35 @@ export default {
       cel[i] = [...mapa.values()];
     }
     // normal: log do maior preco de cada vela nas ultimas N velas
-    const topo = cel.map((c) => (c.length ? Math.log(1 + Math.max(...c.map((x) => x[1] + x[2]))) : NaN));
+    const val = (x) => (p.medir === 'Saldo de agressao' ? Math.abs(x[1] - x[2]) : x[1] + x[2]);
+    const diaDe = (t) => Math.floor((t - 10800) / 86400);
+    const topo = cel.map((c) => (c.length ? Math.log(1 + Math.max(...c.map(val))) : NaN));
     let maxVol = 1; const cand = [];
     for (let i = 0; i < n; i++) {
       if (!cel[i].length) continue;
+      let k0 = i - 1; while (k0 >= 0 && !cel[k0].length) k0--;
+      if (k0 < 0 || diaDe(bars[k0].time) !== diaDe(bars[i].time)) continue; // primeira vela do dia: leilao de abertura
       let s = 0, q = 0, c = 0;
       for (let k = Math.max(0, i - p.janela); k < i; k++) if (Number.isFinite(topo[k])) { s += topo[k]; q += topo[k] * topo[k]; c++; }
       if (c < 30) continue;
       const m = s / c, sd = Math.sqrt(Math.max(1e-9, q / c - m * m));
-      const lista = cel[i].map((x) => ({ x, z: (Math.log(1 + x[1] + x[2]) - m) / sd }))
+      const lista = cel[i].map((x) => ({ x, z: (Math.log(1 + val(x)) - m) / sd }))
         .filter((o) => o.z >= p.sens).sort((a, b) => b.z - a.z).slice(0, p.porvela);
       for (const o of lista) {
-        const lado = o.x[1] >= o.x[2] ? 1 : -1;
-        if ((p.lado === 'So vendedores' && lado > 0) || (p.lado === 'So compradores' && lado < 0)) continue;
-        const v = o.x[1] + o.x[2]; maxVol = Math.max(maxVol, v);
-        cand.push({ time: bars[i].time, p: o.x[0], v, lado, i });
+        const tot = o.x[1] + o.x[2], dom = Math.max(o.x[1], o.x[2]) / Math.max(1, tot);
+        const lado = dom * 100 < p.dominio ? 0 : o.x[1] > o.x[2] ? 1 : -1;
+        if ((p.lado === 'So vendedores' && lado >= 0) || (p.lado === 'So compradores' && lado <= 0)) continue;
+        const v = val(o.x); maxVol = Math.max(maxVol, v);
+        const sub = (o.x[1] >= o.x[2] ? 'C ' : 'V ') + Math.round(dom * 100) + '%';
+        cand.push({ time: bars[i].time, p: o.x[0], v, lado, i, sub });
       }
     }
     for (const o of cand) {
       const r = Math.sqrt(o.v / maxVol);
-      itens.push({ time: o.time, p: o.p, r, lado: o.lado, txt: o.v >= 1000 ? (o.v / 1000).toFixed(1).replace('.', ',') + 'k' : String(o.v) });
+      itens.push({ time: o.time, p: o.p, r, lado: o.lado, sub: o.sub, txt: o.v >= 1000 ? (o.v / 1000).toFixed(1).replace('.', ',') + 'k' : String(o.v) });
       vol[o.i] = Math.max(Number.isFinite(vol[o.i]) ? vol[o.i] : 0, o.v);
     }
-    return { vol, bolhas: { itens, escala: p.tamanho / 100 } };
+    return { vol, bolhas: { itens, escala: p.tamanho / 100, opacidade: p.opacidade / 100 } };
   },
 };
 `);
