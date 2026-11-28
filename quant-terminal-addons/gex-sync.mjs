@@ -436,6 +436,14 @@ for (const [tk, a] of Object.entries(out.ativos)) {
     if (st2) fs.writeFileSync(path.join(pasta, real.arquivo + '-strikes.js'), st2);
     feitos.push('WIN real');
   }
+  // WDO de verdade (grafico CSV:WDO): os niveis ja estao em pontos do dolar futuro, de meio em meio ponto
+  if (tk === 'WDO') {
+    const real = { arquivo: 'gex-wdoreal', nome: `GEX WDO real - use no grafico CSV:WDO`, curto: 'GEX WDO real', escala: 1, dec: 1, passo: 0.5 };
+    fs.writeFileSync(path.join(pasta, real.arquivo + '.js'), indicador(real, a, out.dataArquivos, null));
+    const st2 = indicadorStrikes(real, a, out.dataArquivos, null);
+    if (st2) fs.writeFileSync(path.join(pasta, real.arquivo + '-strikes.js'), st2);
+    feitos.push('WDO real');
+  }
   feitos.push(`${tk} (${a.regime})`);
 }
 console.log(`Pronto. Niveis da B3 de ${out.dataArquivos}: ${feitos.join(', ')}`);
