@@ -453,6 +453,80 @@ export default {
 };
 `);
 
+  // 8) Big Bubbles: bolhas no preço exato onde entrou volume fora do normal
+  gravar('bolhas-win.js', `// Gerado por win-sync.mjs em ${new Date().toISOString()}.
+// BIG BUBBLES do WIN: bolha no PRECO EXATO onde entrou um volume muito acima do normal dentro da vela,
+// com a cor de quem agrediu: verde = compradores, roxo = vendedores. Quanto maior o volume, maior a bolha.
+// "Normal" = o maior preco de cada vela nas ultimas N velas (so velas passadas, nada do futuro).
+// Vendedores agredindo forte no fundo de uma queda e o preco parando de cair costuma indicar absorcao.
+// Usa os negocios publicos da B3 (lado comprador/vendedor estimado pela regra do tick). Use no CSV:WIN.
+const DADOS = ${JSON.stringify({ t: comHp.map((m) => m.t), hp: comHp.map((m) => m.hp) })};
+export default {
+  name: 'Big Bubbles WIN (Big Bubbles)',
+  overlay: true,
+  noAutoscale: true,
+  inputs: [
+    { key: 'sens', label: 'Sensibilidade (desvios acima do normal; menor = mais bolhas)', type: 'float', default: 1.2, min: 0.3, max: 6 },
+    { key: 'janela', label: 'Comparar com as ultimas N velas', type: 'int', default: 300, min: 30, max: 3000 },
+    { key: 'linha', label: 'Agrupar precos de (pontos, 0 = automatico)', type: 'int', default: 0, min: 0 },
+    { key: 'lado', label: 'Mostrar', type: 'select', default: 'Compradores e vendedores', options: ['Compradores e vendedores', 'So vendedores', 'So compradores'] },
+    { key: 'porvela', label: 'Bolhas por vela (maximo)', type: 'int', default: 2, min: 1, max: 5 },
+    { key: 'tamanho', label: 'Tamanho das bolhas (%)', type: 'int', default: 100, min: 30, max: 300 },
+  ],
+  outputs: [{ key: 'vol', label: 'Volume da maior bolha', kind: 'line', color: '#00000000' }],
+  calc(bars, p) {
+    const n = bars.length, vol = new Array(n).fill(NaN), itens = [];
+    const T = DADOS.t, passoBar = n > 1 ? bars[1].time - bars[0].time : 60;
+    let passo = Math.max(5, Math.round(p.linha / 5) * 5);
+    if (!p.linha) {
+      const am = bars.slice(-500).map((b) => b.high - b.low).sort((a, b) => a - b);
+      passo = Math.max(5, Math.ceil((am[Math.floor(am.length / 2)] || 50) / 10 / 5) * 5);
+    }
+    // celulas (preco, compra, venda) de cada vela
+    const cel = new Array(n); let j = 0;
+    for (let i = 0; i < n; i++) {
+      const t0 = bars[i].time, t1 = i + 1 < n ? bars[i + 1].time : t0 + passoBar;
+      if (j > 0 && T[j - 1] >= t0) j = 0;
+      while (j < T.length && T[j] < t0) j++;
+      const mapa = new Map();
+      for (; j < T.length && T[j] < t1; j++) {
+        const h = DADOS.hp[j];
+        for (let k = 1, q = h[0]; k < h.length; k += 3, q += 5) {
+          if (!h[k] && !h[k + 1]) continue;
+          const key = Math.floor(q / passo) * passo + (passo > 5 ? passo / 2 : 0);
+          const x = mapa.get(key) || [key, 0, 0]; x[1] += h[k]; x[2] += h[k + 1]; mapa.set(key, x);
+        }
+      }
+      cel[i] = [...mapa.values()];
+    }
+    // normal: log do maior preco de cada vela nas ultimas N velas
+    const topo = cel.map((c) => (c.length ? Math.log(1 + Math.max(...c.map((x) => x[1] + x[2]))) : NaN));
+    let maxVol = 1; const cand = [];
+    for (let i = 0; i < n; i++) {
+      if (!cel[i].length) continue;
+      let s = 0, q = 0, c = 0;
+      for (let k = Math.max(0, i - p.janela); k < i; k++) if (Number.isFinite(topo[k])) { s += topo[k]; q += topo[k] * topo[k]; c++; }
+      if (c < 30) continue;
+      const m = s / c, sd = Math.sqrt(Math.max(1e-9, q / c - m * m));
+      const lista = cel[i].map((x) => ({ x, z: (Math.log(1 + x[1] + x[2]) - m) / sd }))
+        .filter((o) => o.z >= p.sens).sort((a, b) => b.z - a.z).slice(0, p.porvela);
+      for (const o of lista) {
+        const lado = o.x[1] >= o.x[2] ? 1 : -1;
+        if ((p.lado === 'So vendedores' && lado > 0) || (p.lado === 'So compradores' && lado < 0)) continue;
+        const v = o.x[1] + o.x[2]; maxVol = Math.max(maxVol, v);
+        cand.push({ time: bars[i].time, p: o.x[0], v, lado, i });
+      }
+    }
+    for (const o of cand) {
+      const r = Math.sqrt(o.v / maxVol);
+      itens.push({ time: o.time, p: o.p, r, lado: o.lado, txt: o.v >= 1000 ? (o.v / 1000).toFixed(1).replace('.', ',') + 'k' : String(o.v) });
+      vol[o.i] = Math.max(Number.isFinite(vol[o.i]) ? vol[o.i] : 0, o.v);
+    }
+    return { vol, bolhas: { itens, escala: p.tamanho / 100 } };
+  },
+};
+`);
+
   // 4) Placar
   gravar('fluxo-win-placar.js', `${cab}// Placar de vies de -100 a +100: junta, nas ultimas N velas, o saldo de agressao, o saldo das estrangeiras
 // e o saldo dos lotes grandes, cada um comparado com o seu proprio normal (desvio padrao das ultimas 300 velas).
