@@ -524,6 +524,8 @@ export default {
     { key: 'confirmar', label: 'Absorcao: velas seguintes para confirmar', type: 'int', default: 3, min: 1, max: 20 },
     { key: 'ponta', label: 'Absorcao: agressao na ponta da vela (% da vela)', type: 'int', default: 40, min: 10, max: 100 },
     { key: 'minimo', label: 'Minimo de contratos no preco (0 = so o filtro automatico)', type: 'int', default: 0, min: 0 },
+    { key: 'zonas', label: 'Caixas de leitura', type: 'select', default: 'Absorcao e exaustao', options: ['Absorcao e exaustao', 'So absorcao', 'So exaustao', 'Nenhuma'] },
+    { key: 'desloc', label: 'Caixa de absorcao: deslocamento maximo do preco (em velas tipicas)', type: 'float', default: 2.5, min: 0.5, max: 6 },
   ],
   outputs: [{ key: 'vol', label: 'Volume da maior bolha', kind: 'line', color: '#00000000' }],
   calc(bars, p) {
@@ -557,7 +559,7 @@ export default {
     const val = (x) => (p.medir === 'Saldo de agressao' ? Math.abs(x[1] - x[2]) : x[1] + x[2]);
     const diaDe = (t) => Math.floor((t - 10800) / 86400);
     const topo = cel.map((c) => (c.length ? Math.log(1 + Math.max(...c.map(val))) : NaN));
-    let maxVol = 1; const cand = [];
+    let maxVol = 1; const cand = [], fortes = [];
     for (let i = 0; i < n; i++) {
       if (!cel[i].length) continue;
       let k0 = i - 1; while (k0 >= 0 && !cel[k0].length) k0--;
@@ -576,6 +578,7 @@ export default {
         if ((p.lado === 'So vendedores' && lado >= 0) || (p.lado === 'So compradores' && lado <= 0)) continue;
         const v = val(o.x);
         if (p.minimo > 0 && v < p.minimo) continue;
+        if (lado !== 0) fortes.push({ time: bars[i].time, p: o.x[0], v, lado, i, sub: (lado > 0 ? 'C ' : 'V ') + Math.round(dom * 100) + '%' });
         if (p.leitura !== 'Toda agressao forte') {
           // absorcao: agressao na ponta da vela e o preco nao seguiu nas proximas velas
           if (lado === 0) continue;
@@ -599,12 +602,87 @@ export default {
         cand.push({ time: bars[i].time, p: o.x[0], v, lado, i, sub });
       }
     }
+    // ---- caixas de ABSORCAO e EXAUSTAO (alguem segura o movimento / ninguem empurra mais) ----
+    const zonas = [], incluir = new Set();
+    if (p.zonas !== 'Nenhuma') {
+      const volB = cel.map((c) => c.reduce((s, x) => s + x[1] + x[2], 0));
+      const dlB = cel.map((c) => c.reduce((s, x) => s + x[1] - x[2], 0));
+      const rg = bars.map((b) => b.high - b.low).slice(-1000).filter((x) => x > 0).sort((x, y) => x - y);
+      const medR = rg[Math.floor(rg.length / 2)] || 10 * D.tick, folga = passo;
+      const mesmoDia = (a, b) => a >= 0 && diaDe(bars[a].time) === diaDe(bars[b].time);
+      const gex = D.gex || {};
+      const perto = (lo, hi) => { // a caixa caiu perto de um nivel de GEX?
+        for (const [k, nome] of [['pw1', 'PUT WALL'], ['cw1', 'CALL WALL'], ['flip', 'GAMMA FLIP'], ['block', 'KEY LEVEL']]) {
+          const v = gex[k]; if (Number.isFinite(v) && v >= lo - 2 * medR && v <= hi + 2 * medR) return ' + ' + nome;
+        }
+        return '';
+      };
+      const quer = (tipo) => p.zonas === 'Absorcao e exaustao' || (tipo === 'abs' ? p.zonas === 'So absorcao' : p.zonas === 'So exaustao');
+      // ABSORCAO (como no video): em 4 velas, volume ALTO + delta muito de um lado (vendedores ou compradores
+      // agredindo), mas o preco quase nao se deslocou, e nas velas seguintes nao seguiu: agressor preso.
+      if (quer('abs')) {
+        const W = 4, volW = [], dlW = [];
+        for (let e = 0; e < n; e++) { let v = 0, d = 0; for (let k = Math.max(0, e - W + 1); k <= e; k++) { v += volB[k]; d += dlB[k]; } volW.push(v); dlW.push(d); }
+        const zs = (arr, e) => { let s = 0, q = 0, c = 0; for (let k = Math.max(0, e - 300); k < e - W; k++) { s += arr[k]; q += arr[k] * arr[k]; c++; } if (c < 60) return NaN; const m = s / c; return (arr[e] - m) / Math.sqrt(Math.max(1e-9, q / c - m * m)); };
+        let ult = -1;
+        for (let e = W; e < n; e++) {
+          if (e <= ult || !mesmoDia(e - W + 1, e)) continue;
+          const zv = zs(volW, e), zd = zs(dlW, e);
+          if (!(zv >= 1) || !(Math.abs(zd) >= 1.2)) continue;
+          const lado = zd < 0 ? -1 : 1, a = e - W + 1;
+          let lo = Infinity, hi = -Infinity;
+          for (let k = a; k <= e; k++) { lo = Math.min(lo, bars[k].low); hi = Math.max(hi, bars[k].high); }
+          // delta forte, mas o preco nao se deslocou: termina a janela no maximo N velas tipicas a favor do agressor
+          const desloc = (bars[e].close - bars[a - 1].close) * lado;
+          if (desloc > p.desloc * medR) continue;
+          const fim = e + p.confirmar;
+          if (fim >= n || !mesmoDia(e, fim)) continue;
+          let preso = true;
+          for (let k = e + 1; k <= fim; k++) { if (lado < 0 && bars[k].low < lo - folga) preso = false; if (lado > 0 && bars[k].high > hi + folga) preso = false; }
+          if (!preso) continue;
+          if (lado < 0 && bars[fim].close <= (lo + hi) / 2) continue;
+          if (lado > 0 && bars[fim].close >= (lo + hi) / 2) continue;
+          zonas.push({ tipo: 'abs', lado, de: bars[a].time, ate: bars[e].time, pmin: lo, pmax: hi,
+            rotulo: 'ABSORÇÃO · ' + (lado < 0 ? 'vendedores presos' : 'compradores presos') + perto(lo, hi) });
+          fortes.filter((f) => f.lado === lado && f.i >= a && f.i <= e).forEach((f) => incluir.add(f));
+          ult = e + W;
+        }
+      }
+      // EXAUSTAO: depois de um movimento, 4 velas com volume secando, delta perdendo forca e preco parado
+      if (quer('exa')) {
+        const E = 4, A = 10;
+        let ult = -1;
+        for (let e = E + A; e < n; e++) {
+          if (e <= ult) continue;
+          const a = e - E + 1;
+          if (!mesmoDia(a - A, e)) continue;
+          let volAntes = 0, dlAntes = 0;
+          for (let k = a - A; k < a; k++) { volAntes += volB[k] / A; dlAntes += Math.abs(dlB[k]) / A; }
+          let lo = Infinity, hi = -Infinity, dlJ = 0, seca = true;
+          let volJ = 0;
+          for (let k = a; k <= e; k++) { lo = Math.min(lo, bars[k].low); hi = Math.max(hi, bars[k].high); dlJ += Math.abs(dlB[k]) / E; volJ += volB[k] / E; }
+          if (volB[e] > 0.7 * volAntes) seca = false; // a ultima vela tem que estar seca
+          if (!seca || volJ > 0.6 * volAntes || dlJ > 0.6 * dlAntes || hi - lo > 2.5 * medR) continue;
+          const mov = bars[a - 1].close - bars[a - A].open;
+          if (Math.abs(mov) < 3 * medR) continue; // precisa de um movimento antes
+          const lado = mov < 0 ? -1 : 1;
+          if (lado < 0 && Math.min(bars[e].low, bars[e - 1].low) < bars[a].low - folga) continue; // ainda fazendo nova minima
+          if (lado > 0 && Math.max(bars[e].high, bars[e - 1].high) > bars[a].high + folga) continue;
+          zonas.push({ tipo: 'exa', lado, de: bars[a].time, ate: bars[e].time, pmin: lo, pmax: hi,
+            rotulo: 'EXAUSTÃO · ' + (lado < 0 ? 'vendedores sumiram' : 'compradores sumiram') + perto(lo, hi) });
+          ult = e + E;
+        }
+      }
+    }
+    // as bolhas das caixas de absorcao aparecem sempre
+    const ja = new Set(cand.map((o) => o.i + ':' + o.p));
+    for (const f of incluir) if (!ja.has(f.i + ':' + f.p)) { cand.push(f); maxVol = Math.max(maxVol, f.v); }
     for (const o of cand) {
       const r = Math.sqrt(o.v / maxVol);
       itens.push({ time: o.time, p: o.p, r, lado: o.lado, sub: o.sub, txt: o.v >= 1000 ? (o.v / 1000).toFixed(1).replace('.', ',') + 'k' : String(o.v) });
       vol[o.i] = Math.max(Number.isFinite(vol[o.i]) ? vol[o.i] : 0, o.v);
     }
-    return { vol, bolhas: { itens, escala: p.tamanho / 100, opacidade: p.opacidade / 100 } };
+    return { vol, bolhas: { itens, zonas, escala: p.tamanho / 100, opacidade: p.opacidade / 100 } };
   },
 };
 `);
@@ -685,9 +763,12 @@ const win = todos.WIN || [];
 const giro = {};
 for (const m of win) for (const [b, x] of Object.entries(m.net)) giro[b] = (giro[b] || 0) + Math.abs(x);
 const topo = Object.entries(giro).sort((a, b) => b[1] - a[1]).slice(0, 6).map(([b]) => b);
+const gexDe = (a) => { // niveis do gex-sync (custom/gex-winreal.js / gex-wdoreal.js), se existirem
+  try { const m = /const v = (\{[^;]*\});/.exec(fs.readFileSync(path.join(CUSTOM, `gex-${a.toLowerCase()}real.js`), 'utf8')); return m ? JSON.parse(m[1]) : {}; } catch { return {}; }
+};
 const ferr = JSON.stringify({ ativos: LISTA.filter((a) => todos[a].length).map((a) => {
   const c = todos[a].filter((m) => m.hp);
-  return { nome: a, tick: ATIVOS[a].tick, t: c.map((m) => m.t), hp: c.map((m) => m.hp) };
+  return { nome: a, tick: ATIVOS[a].tick, gex: gexDe(a), t: c.map((m) => m.t), hp: c.map((m) => m.hp) };
 }) });
 if (fs.existsSync(CUSTOM)) gerarIndicadores(win, topo, ferr);
 const desenhos = instalarDesenhos(RAIZ);
