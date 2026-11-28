@@ -136,7 +136,7 @@ function niveis(opts, S0, r, fut, dataRef) {
 // ---------------- montagem por ativo ----------------
 const ACOES = { BOVA: 'BOVA11', PETR: 'PETR4', VALE: 'VALE3', ITUB: 'ITUB4', BBDC: 'BBDC4', BBAS: 'BBAS3', B3SA: 'B3SA3', ABEV: 'ABEV3' };
 
-async function calcularGex({ data, comAcoes = true, janelaDias = 75, maxStrikesAcao = 100, log = () => {} } = {}) {
+async function calcularGex({ data, comAcoes = true, janelaDias = 75, maxStrikesAcao = 100, log = () => {}, ibovFech = null } = {}) {
   // Data: último dia útil com arquivo publicado (tenta hoje e volta até 6 dias)
   let d0 = data ? new Date(data + 'T12:00:00Z') : new Date();
   let pos, neg, dataArq;
@@ -210,7 +210,7 @@ async function calcularGex({ data, comAcoes = true, janelaDias = 75, maxStrikesA
   // ---- IBOV (níveis do WIN): opções de índice, strike = número x 1000 ----
   {
     const q = await cotacaoB3('IBOV'); const sq = q && q.SctyQtn;
-    const S0 = sq && isFinite(sq.curPrc) && isFinite(sq.prcFlcn) ? sq.curPrc / (1 + sq.prcFlcn / 100) : NaN; // fechamento da data do arquivo
+    const S0 = ibovFech > 0 ? ibovFech : ibovFech === -1 ? NaN : (sq && isFinite(sq.curPrc) && isFinite(sq.prcFlcn) ? sq.curPrc / (1 + sq.prcFlcn / 100) : NaN); // fechamento da data do arquivo (ou o informado, para dias passados)
     const opts = [];
     posicoes.forEach(p => {
       const m = /^IBOV([A-X])(\d{2,3})(W([1-5]))?$/.exec(p.TckrSymb || ''); if (!m) return;
@@ -446,6 +446,45 @@ for (const [tk, a] of Object.entries(out.ativos)) {
   }
   feitos.push(`${tk} (${a.regime})`);
 }
+// Histórico diário dos níveis (data/gex-historico.json), em pontos do WIN e do WDO de verdade, para o win-sync
+// saber o regime de gamma (acima ou abaixo do Flip) de cada dia, e não só o de hoje.
+// "node scripts/gex-sync.mjs --historico 5" também calcula e guarda os 5 dias anteriores.
+const arqHist = path.join(process.env.GEX_ROOT || path.join(aqui, '..'), 'data', 'gex-historico.json');
+function guardarHistorico(o, ratio) {
+  let hist = {};
+  try { hist = JSON.parse(fs.readFileSync(arqHist, 'utf8')); } catch { /* primeiro dia */ }
+  const nv = (a, r, passo) => Object.fromEntries(['flip', 'cw1', 'pw1', 'block'].filter((k) => Number.isFinite(a[k]))
+    .map((k) => [k, Math.round(a[k] * r / passo) * passo]));
+  const dia = {};
+  if (o.ativos.WIN && ratio) dia.WIN = { ...nv(o.ativos.WIN, ratio, 5), regime: o.ativos.WIN.regime };
+  if (o.ativos.WDO) dia.WDO = { ...nv(o.ativos.WDO, 1, 0.5), regime: o.ativos.WDO.regime };
+  if (!Object.keys(dia).length) return;
+  hist[o.dataArquivos] = dia;
+  fs.mkdirSync(path.dirname(arqHist), { recursive: true });
+  fs.writeFileSync(arqHist, JSON.stringify(hist, null, 1));
+}
+try { guardarHistorico(out, extraWin && extraWin.ratio); } catch (e) { console.log('Aviso: nao consegui guardar o historico de niveis (' + e.message + ').'); }
+if (process.argv[2] === '--historico') {
+  const nDias = Math.max(1, Math.min(30, parseInt(process.argv[3] || '5', 10) || 5));
+  // fechamento do Ibovespa de cada dia (Yahoo), porque a cotação da B3 só tem o de hoje
+  const fech = {};
+  try {
+    const r = await fetch('https://query1.finance.yahoo.com/v8/finance/chart/%5EBVSP?interval=1d&range=3mo', { headers: { 'User-Agent': 'Mozilla/5.0 (compatible; RadarGEX/1.0)' } });
+    const j = (await r.json()).chart.result[0], c = j.indicators.quote[0].close;
+    j.timestamp.forEach((t, k) => { if (Number.isFinite(c[k])) fech[new Date((t - 10800) * 1000).toISOString().slice(0, 10)] = c[k]; });
+  } catch (e) { console.log('Historico: sem fechamentos do Ibovespa (' + e.message + '); o WIN dos dias passados fica de fora.'); }
+  let d = new Date(out.dataArquivos + 'T12:00:00Z');
+  for (let k = 0; k < nDias; k++) {
+    d = new Date(d.getTime() - 864e5); while (!util(d)) d = new Date(d.getTime() - 864e5);
+    try {
+      const o = await calcularGex({ data: iso(d), comAcoes: false, log: () => {}, ibovFech: fech[iso(d)] || -1 });
+      guardarHistorico(o, extraWin && extraWin.ratio);
+      console.log(`Historico: niveis de ${o.dataArquivos} guardados (WIN ${o.ativos.WIN ? o.ativos.WIN.regime : '-'}, WDO ${o.ativos.WDO ? o.ativos.WDO.regime : '-'})`);
+      d = new Date(o.dataArquivos + 'T12:00:00Z');
+    } catch (e) { console.log(`Historico: sem arquivos da B3 perto de ${iso(d)} (${e.message})`); }
+  }
+}
+
 console.log(`Pronto. Niveis da B3 de ${out.dataArquivos}: ${feitos.join(', ')}`);
 if (extraWin) console.log(`${extraWin.win} ${fmt(extraWin.pw, 0)} / IBOV ${fmt(extraWin.pi, 0)} = ${extraWin.ratio.toFixed(5)}`);
 if (out.avisos.length) console.log('Avisos: ' + out.avisos.join(' | '));

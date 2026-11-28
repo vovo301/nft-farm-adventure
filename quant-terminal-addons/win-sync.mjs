@@ -197,11 +197,14 @@ const _escolher = (bars) => { // qual ativo (WIN ou WDO) tem os mesmos precos de
 };`;
 
 const DIVERG = `
-// divergencia de CVD: fundo de preco mais baixo com CVD mais alto (compra) ou topo mais alto com CVD mais baixo (venda).
-// Um fundo/topo so vale quando as R velas seguintes ja fecharam (nada do futuro): a marca sai em i + R.
+// Divergencias de CVD nos fundos/topos de preco (um fundo/topo so vale quando as R velas seguintes ja fecharam):
+//  EXAUSTAO: preco faz fundo mais baixo e o CVD nao acompanha (fundo mais alto) -> vendedores acabaram (compra);
+//            preco faz topo mais alto e o CVD nao acompanha -> compradores acabaram (venda).
+//  ABSORCAO: o CVD faz fundo mais baixo (venderam mais) mas o preco NAO faz fundo mais baixo -> vendedores absorvidos
+//            (compra); o CVD faz topo mais alto mas o preco nao -> compradores absorvidos (venda).
 const _diverg = (bars, cvd, L = 5, R = 2, longe = 60) => {
   const n = bars.length, diaDe = (t) => Math.floor((t - 10800) / 86400), out = [];
-  const pivo = (i, baixo) => { // fundo (baixo) ou topo: o mais extremo entre L velas antes e R depois, no mesmo dia
+  const pivo = (i, baixo) => {
     if (i - L < 0 || i + R >= n) return false;
     for (let k = i - L; k <= i + R; k++) {
       if (k === i) continue;
@@ -210,21 +213,43 @@ const _diverg = (bars, cvd, L = 5, R = 2, longe = 60) => {
     }
     return true;
   };
-  let antBaixo = -1, antAlto = -1;
+  let antB = -1, antA = -1;
+  const ok = (a, i) => a >= 0 && i - a <= longe && diaDe(bars[a].time) === diaDe(bars[i].time) && Number.isFinite(cvd[a]);
   for (let i = L; i + R < n; i++) {
     if (!Number.isFinite(cvd[i])) continue;
     if (pivo(i, true)) {
-      if (antBaixo >= 0 && i - antBaixo <= longe && diaDe(bars[antBaixo].time) === diaDe(bars[i].time)
-        && bars[i].low < bars[antBaixo].low && cvd[i] > cvd[antBaixo]) out.push({ i, de: antBaixo, conf: i + R, lado: 1 });
-      antBaixo = i;
+      if (ok(antB, i)) {
+        if (bars[i].low < bars[antB].low && cvd[i] > cvd[antB]) out.push({ i, de: antB, conf: i + R, lado: 1, tipo: 'exa' });
+        else if (bars[i].low >= bars[antB].low && cvd[i] < cvd[antB]) out.push({ i, de: antB, conf: i + R, lado: 1, tipo: 'abs' });
+      }
+      antB = i;
     }
     if (pivo(i, false)) {
-      if (antAlto >= 0 && i - antAlto <= longe && diaDe(bars[antAlto].time) === diaDe(bars[i].time)
-        && bars[i].high > bars[antAlto].high && cvd[i] < cvd[antAlto]) out.push({ i, de: antAlto, conf: i + R, lado: -1 });
-      antAlto = i;
+      if (ok(antA, i)) {
+        if (bars[i].high > bars[antA].high && cvd[i] < cvd[antA]) out.push({ i, de: antA, conf: i + R, lado: -1, tipo: 'exa' });
+        else if (bars[i].high <= bars[antA].high && cvd[i] > cvd[antA]) out.push({ i, de: antA, conf: i + R, lado: -1, tipo: 'abs' });
+      }
+      antA = i;
     }
   }
   return out;
+};
+// Niveis de GEX do dia (data/gex-historico.json; os niveis do arquivo da B3 de um dia valem para o pregao seguinte)
+// e o regime de gamma: preco acima do Flip = gamma positivo (+1, absorve), abaixo = negativo (-1, acelera).
+const _cacheDia = new Map();
+const _niveisDia = (D, t) => {
+  const dia = new Date((t - 10800) * 1000).toISOString().slice(0, 10), ch = D.nome + dia;
+  if (_cacheDia.has(ch)) return _cacheDia.get(ch);
+  let melhor = null, chave = '';
+  for (const [k, v] of Object.entries(D.gexHist || {})) if (k < dia && k > chave) { chave = k; melhor = v; }
+  const r = melhor || D.gex || {};
+  _cacheDia.set(ch, r); return r;
+};
+const _regime = (D, t, preco) => {
+  const nv = _niveisDia(D, t);
+  if (Number.isFinite(nv.flip)) return preco >= nv.flip ? 1 : -1;
+  if (nv.regime) return nv.regime === 'AMO' ? 1 : -1;
+  return 0;
 };`;
 
 function gravar(nome, codigo) { fs.writeFileSync(path.join(CUSTOM, nome), codigo); }
@@ -523,9 +548,10 @@ export default {
   // 9) CVD com divergências
   gravar('cvd-win.js', `// Gerado por win-sync.mjs em ${new Date().toISOString()}.
 // CVD (delta acumulado do dia) do WIN ou do WDO, dos negocios da B3 (agressor estimado pela regra do tick).
-// Marca no grafico as divergencias: fundo de preco mais baixo com CVD fazendo fundo mais alto (DIV CVD compra)
-// e topo de preco mais alto com CVD fazendo topo mais baixo (DIV CVD venda). A marca aparece 2 velas depois do
-// fundo/topo, quando ele se confirma. Use no CSV:WIN ou no CSV:WDO.
+// Marca no grafico as divergencias de ABSORCAO (azul: o CVD avancou e o preco nao) e de EXAUSTAO (roxa: o preco
+// avancou e o CVD nao). Com "Filtrar pelo regime de gamma", so mostra a que funciona no regime do momento:
+// acima do Gamma Flip (gamma positivo, dealers absorvem) = ABSORCAO; abaixo (gamma negativo, aceleram) = EXAUSTAO.
+// A marca aparece 2 velas depois do fundo/topo, quando ele se confirma. Use no CSV:WIN ou no CSV:WDO.
 const DADOS = ${ferr};
 ${CONFERE}
 ${DIVERG}
@@ -537,6 +563,7 @@ export default {
     { key: 'dir', label: 'Fundo/topo: velas de confirmacao a direita', type: 'int', default: 2, min: 1, max: 10 },
     { key: 'longe', label: 'Distancia maxima entre os dois fundos/topos (velas)', type: 'int', default: 60, min: 5, max: 400 },
     { key: 'marcas', label: 'Marcar divergencias no grafico', type: 'select', default: 'Sim', options: ['Sim', 'Nao'] },
+    { key: 'regime', label: 'Filtrar pelo regime de gamma (absorcao em G+, exaustao em G-)', type: 'select', default: 'Nao', options: ['Nao', 'Sim'] },
   ],
   outputs: [{ key: 'cvd', label: 'CVD do dia', kind: 'line', color: '#42a5f5', lineWidth: 2 }],
   levels: [0],
@@ -558,9 +585,12 @@ export default {
     }
     const markers = [];
     if (p.marcas === 'Sim')
-      for (const d of _diverg(bars, cvd, p.esq, p.dir, p.longe))
+      for (const d of _diverg(bars, cvd, p.esq, p.dir, p.longe)) {
+        const rg = _regime(D, bars[d.conf].time, bars[d.conf].close);
+        if (p.regime === 'Sim' && rg !== 0 && (d.tipo === 'abs' ? rg < 0 : rg > 0)) continue; // nao combina com o regime
         markers.push({ time: bars[d.conf].time, position: d.lado > 0 ? 'belowBar' : 'aboveBar', shape: d.lado > 0 ? 'arrowUp' : 'arrowDown',
-          color: d.lado > 0 ? '#42a5f5' : '#ffa726', text: 'DIV CVD' });
+          color: d.tipo === 'abs' ? '#42a5f5' : '#b388ff', text: (d.tipo === 'abs' ? 'DIV ABS' : 'DIV EXA') + (rg > 0 ? ' G+' : rg < 0 ? ' G-' : '') });
+      }
     return { cvd, markers };
   },
 };
@@ -604,6 +634,9 @@ export default {
     { key: 'minimo', label: 'Minimo de contratos no preco (0 = so o filtro automatico)', type: 'int', default: 0, min: 0 },
     { key: 'zonas', label: 'Caixas de leitura', type: 'select', default: 'Absorcao e exaustao', options: ['Absorcao e exaustao', 'So absorcao', 'So exaustao', 'Nenhuma'] },
     { key: 'desloc', label: 'Caixa de absorcao: deslocamento maximo do preco (em velas tipicas)', type: 'float', default: 2.5, min: 0.5, max: 6 },
+    { key: 'regime', label: 'Caixas: so as que combinam com o regime de gamma (absorcao em G+, exaustao em G-)', type: 'select', default: 'Nao', options: ['Nao', 'Sim'] },
+    { key: 'fonte', label: 'Bolhas: agressao concentrada num preco e tambem a espalhada na vela', type: 'select', default: 'Preco e vela', options: ['Preco e vela', 'So concentrada num preco'] },
+    { key: 'velaX', label: 'Bolha da vela: saldo da vela >= X vezes a media das ultimas 30 velas', type: 'float', default: 1.5, min: 1, max: 6 },
   ],
   outputs: [{ key: 'vol', label: 'Volume da maior bolha', kind: 'line', color: '#00000000' }],
   calc(bars, p) {
@@ -637,6 +670,7 @@ export default {
     const val = (x) => (p.medir === 'Saldo de agressao' ? Math.abs(x[1] - x[2]) : x[1] + x[2]);
     const diaDe = (t) => Math.floor((t - 10800) / 86400);
     const topo = cel.map((c) => (c.length ? Math.log(1 + Math.max(...c.map(val))) : NaN));
+    const dVela = cel.map((c) => c.reduce((s, x) => s + x[1] - x[2], 0));
     let maxVol = 1; const cand = [], fortes = [];
     for (let i = 0; i < n; i++) {
       if (!cel[i].length) continue;
@@ -647,12 +681,28 @@ export default {
       if (c < 30) continue;
       const m = s / c, sd = Math.sqrt(Math.max(1e-9, q / c - m * m));
       const lista = cel[i].map((x) => ({ x, z: (Math.log(1 + val(x)) - m) / sd }))
-        .filter((o) => o.z >= p.sens).sort((a, b) => b.z - a.z);
+        .filter((o) => o.z >= p.sens);
+      if (p.fonte !== 'So concentrada num preco') {
+        // agressao espalhada por varios precos: o saldo da vela inteira comparado com o ritmo recente
+        // (media do |saldo| das 30 velas anteriores)
+        let s2 = 0, c2 = 0;
+        for (let k = Math.max(0, i - 30); k < i; k++) if (cel[k].length) { s2 += Math.abs(dVela[k]); c2++; }
+        const rv = c2 >= 10 ? Math.abs(dVela[i]) / Math.max(1, s2 / c2) : 0, zv = p.sens + (rv - p.velaX);
+        if (rv >= p.velaX) {
+          const lado = Math.sign(dVela[i]);
+          // a bolha vai no preco onde esse lado mais agrediu
+          const melhor = cel[i].reduce((b, x) => ((x[1] - x[2]) * lado > (b[1] - b[2]) * lado ? x : b), cel[i][0]);
+          const cT = cel[i].reduce((s, x) => s + x[1], 0), vT = cel[i].reduce((s, x) => s + x[2], 0);
+          if (!lista.some((o) => o.x[0] === melhor[0])) lista.push({ x: [melhor[0], cT, vT], z: zv, vela: true });
+        }
+      }
+      lista.sort((a, b) => b.z - a.z);
       let naVela = 0;
       for (const o of lista) {
         if (naVela >= p.porvela) break;
         const tot = o.x[1] + o.x[2], dom = Math.max(o.x[1], o.x[2]) / Math.max(1, tot);
-        const lado = dom * 100 < p.dominio ? 0 : o.x[1] > o.x[2] ? 1 : -1;
+        // na vela inteira o saldo ja foi testado contra o normal: o lado e o sinal do delta
+        const lado = o.vela ? Math.sign(o.x[1] - o.x[2]) : dom * 100 < p.dominio ? 0 : o.x[1] > o.x[2] ? 1 : -1;
         if ((p.lado === 'So vendedores' && lado >= 0) || (p.lado === 'So compradores' && lado <= 0)) continue;
         const v = val(o.x);
         if (p.minimo > 0 && v < p.minimo) continue;
@@ -677,7 +727,7 @@ export default {
         }
         maxVol = Math.max(maxVol, v); naVela++;
         const sub = (o.x[1] >= o.x[2] ? 'C ' : 'V ') + Math.round(dom * 100) + '%';
-        cand.push({ time: bars[i].time, p: o.x[0], v, lado, i, sub });
+        cand.push({ time: bars[i].time, p: o.x[0], v, lado, i, sub: o.vela ? (lado > 0 ? 'C' : 'V') + ' na vela' : sub });
       }
     }
     // ---- caixas de ABSORCAO e EXAUSTAO (alguem segura o movimento / ninguem empurra mais) ----
@@ -688,8 +738,8 @@ export default {
       const rg = bars.map((b) => b.high - b.low).slice(-1000).filter((x) => x > 0).sort((x, y) => x - y);
       const medR = rg[Math.floor(rg.length / 2)] || 10 * D.tick, folga = passo;
       const mesmoDia = (a, b) => a >= 0 && diaDe(bars[a].time) === diaDe(bars[b].time);
-      const gex = D.gex || {};
-      const perto = (lo, hi) => { // a caixa caiu perto de um nivel de GEX?
+      const perto = (lo, hi, t) => { // a caixa caiu perto de um nivel de GEX do dia?
+        const gex = _niveisDia(D, t);
         for (const [k, nome] of [['pw1', 'PUT WALL'], ['cw1', 'CALL WALL'], ['flip', 'GAMMA FLIP'], ['block', 'KEY LEVEL']]) {
           const v = gex[k]; if (Number.isFinite(v) && v >= lo - 2 * medR && v <= hi + 2 * medR) return ' + ' + nome;
         }
@@ -721,7 +771,7 @@ export default {
           if (lado < 0 && bars[fim].close <= (lo + hi) / 2) continue;
           if (lado > 0 && bars[fim].close >= (lo + hi) / 2) continue;
           zonas.push({ tipo: 'abs', lado, de: bars[a].time, ate: bars[e].time, pmin: lo, pmax: hi,
-            rotulo: 'ABSORÇÃO · ' + (lado < 0 ? 'vendedores presos' : 'compradores presos') + perto(lo, hi) });
+            rotulo: 'ABSORÇÃO · ' + (lado < 0 ? 'vendedores presos' : 'compradores presos') + perto(lo, hi, bars[a].time), rg: _regime(D, bars[e].time, bars[e].close) });
           fortes.filter((f) => f.lado === lado && f.i >= a && f.i <= e).forEach((f) => incluir.add(f));
           ult = e + W;
         }
@@ -747,7 +797,7 @@ export default {
           if (lado < 0 && Math.min(bars[e].low, bars[e - 1].low) < bars[a].low - folga) continue; // ainda fazendo nova minima
           if (lado > 0 && Math.max(bars[e].high, bars[e - 1].high) > bars[a].high + folga) continue;
           zonas.push({ tipo: 'exa', lado, de: bars[a].time, ate: bars[e].time, pmin: lo, pmax: hi,
-            rotulo: 'EXAUSTÃO · ' + (lado < 0 ? 'vendedores sumiram' : 'compradores sumiram') + perto(lo, hi) });
+            rotulo: 'EXAUSTÃO · ' + (lado < 0 ? 'vendedores sumiram' : 'compradores sumiram') + perto(lo, hi, bars[a].time), rg: _regime(D, bars[e].time, bars[e].close) });
           ult = e + E;
         }
       }
@@ -767,8 +817,14 @@ export default {
       for (const zn of zonas) {
         const a = idx.get(zn.de), e = idx.get(zn.ate);
         // vendedores presos/sumiram -> procura divergencia de compra (lado +1), e vice-versa
-        if (dv.some((d) => d.lado === -zn.lado && d.i >= a - 2 && d.i <= e + 5)) zn.rotulo += ' + DIV CVD';
+        if (dv.some((d) => d.tipo === zn.tipo && d.lado === -zn.lado && d.i >= a - 2 && d.i <= e + 5)) zn.rotulo += ' + DIV CVD';
       }
+    }
+    // regime de gamma: absorcao vale em gamma positivo, exaustao em gamma negativo
+    for (const zn of zonas) zn.rotulo += zn.rg > 0 ? ' · GAMA +' : zn.rg < 0 ? ' · GAMA -' : '';
+    if (p.regime === 'Sim') for (let k = zonas.length - 1; k >= 0; k--) {
+      const zn = zonas[k];
+      if (zn.rg !== 0 && (zn.tipo === 'abs' ? zn.rg < 0 : zn.rg > 0)) zonas.splice(k, 1);
     }
     // as bolhas das caixas de absorcao aparecem sempre
     const ja = new Set(cand.map((o) => o.i + ':' + o.p));
@@ -862,9 +918,12 @@ const topo = Object.entries(giro).sort((a, b) => b[1] - a[1]).slice(0, 6).map(([
 const gexDe = (a) => { // niveis do gex-sync (custom/gex-winreal.js / gex-wdoreal.js), se existirem
   try { const m = /const v = (\{[^;]*\});/.exec(fs.readFileSync(path.join(CUSTOM, `gex-${a.toLowerCase()}real.js`), 'utf8')); return m ? JSON.parse(m[1]) : {}; } catch { return {}; }
 };
+const histDe = (a) => { // data/gex-historico.json, gravado pelo gex-sync
+  try { const h = JSON.parse(fs.readFileSync(path.join(DADOS, 'gex-historico.json'), 'utf8')); return Object.fromEntries(Object.entries(h).filter(([, v]) => v[a]).map(([k, v]) => [k, v[a]])); } catch { return {}; }
+};
 const ferr = JSON.stringify({ ativos: LISTA.filter((a) => todos[a].length).map((a) => {
   const c = todos[a].filter((m) => m.hp);
-  return { nome: a, tick: ATIVOS[a].tick, gex: gexDe(a), t: c.map((m) => m.t), hp: c.map((m) => m.hp) };
+  return { nome: a, tick: ATIVOS[a].tick, gex: gexDe(a), gexHist: histDe(a), t: c.map((m) => m.t), hp: c.map((m) => m.hp) };
 }) });
 if (fs.existsSync(CUSTOM)) gerarIndicadores(win, topo, ferr);
 const desenhos = instalarDesenhos(RAIZ);
