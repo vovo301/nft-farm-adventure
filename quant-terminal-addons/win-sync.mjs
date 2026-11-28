@@ -196,6 +196,37 @@ const _escolher = (bars) => { // qual ativo (WIN ou WDO) tem os mesmos precos de
   return null;
 };`;
 
+const DIVERG = `
+// divergencia de CVD: fundo de preco mais baixo com CVD mais alto (compra) ou topo mais alto com CVD mais baixo (venda).
+// Um fundo/topo so vale quando as R velas seguintes ja fecharam (nada do futuro): a marca sai em i + R.
+const _diverg = (bars, cvd, L = 5, R = 2, longe = 60) => {
+  const n = bars.length, diaDe = (t) => Math.floor((t - 10800) / 86400), out = [];
+  const pivo = (i, baixo) => { // fundo (baixo) ou topo: o mais extremo entre L velas antes e R depois, no mesmo dia
+    if (i - L < 0 || i + R >= n) return false;
+    for (let k = i - L; k <= i + R; k++) {
+      if (k === i) continue;
+      if (diaDe(bars[k].time) !== diaDe(bars[i].time)) return false;
+      if (baixo ? bars[k].low < bars[i].low : bars[k].high > bars[i].high) return false;
+    }
+    return true;
+  };
+  let antBaixo = -1, antAlto = -1;
+  for (let i = L; i + R < n; i++) {
+    if (!Number.isFinite(cvd[i])) continue;
+    if (pivo(i, true)) {
+      if (antBaixo >= 0 && i - antBaixo <= longe && diaDe(bars[antBaixo].time) === diaDe(bars[i].time)
+        && bars[i].low < bars[antBaixo].low && cvd[i] > cvd[antBaixo]) out.push({ i, de: antBaixo, conf: i + R, lado: 1 });
+      antBaixo = i;
+    }
+    if (pivo(i, false)) {
+      if (antAlto >= 0 && i - antAlto <= longe && diaDe(bars[antAlto].time) === diaDe(bars[i].time)
+        && bars[i].high > bars[antAlto].high && cvd[i] < cvd[antAlto]) out.push({ i, de: antAlto, conf: i + R, lado: -1 });
+      antAlto = i;
+    }
+  }
+  return out;
+};`;
+
 function gravar(nome, codigo) { fs.writeFileSync(path.join(CUSTOM, nome), codigo); }
 
 function gerarIndicadores(mins, topo, ferr) {
@@ -489,6 +520,52 @@ export default {
 };
 `);
 
+  // 9) CVD com divergências
+  gravar('cvd-win.js', `// Gerado por win-sync.mjs em ${new Date().toISOString()}.
+// CVD (delta acumulado do dia) do WIN ou do WDO, dos negocios da B3 (agressor estimado pela regra do tick).
+// Marca no grafico as divergencias: fundo de preco mais baixo com CVD fazendo fundo mais alto (DIV CVD compra)
+// e topo de preco mais alto com CVD fazendo topo mais baixo (DIV CVD venda). A marca aparece 2 velas depois do
+// fundo/topo, quando ele se confirma. Use no CSV:WIN ou no CSV:WDO.
+const DADOS = ${ferr};
+${CONFERE}
+${DIVERG}
+export default {
+  name: 'CVD WIN WDO com divergencias (CVD)',
+  overlay: false,
+  inputs: [
+    { key: 'esq', label: 'Fundo/topo: velas a esquerda', type: 'int', default: 5, min: 2, max: 30 },
+    { key: 'dir', label: 'Fundo/topo: velas de confirmacao a direita', type: 'int', default: 2, min: 1, max: 10 },
+    { key: 'longe', label: 'Distancia maxima entre os dois fundos/topos (velas)', type: 'int', default: 60, min: 5, max: 400 },
+    { key: 'marcas', label: 'Marcar divergencias no grafico', type: 'select', default: 'Sim', options: ['Sim', 'Nao'] },
+  ],
+  outputs: [{ key: 'cvd', label: 'CVD do dia', kind: 'line', color: '#42a5f5', lineWidth: 2 }],
+  levels: [0],
+  calc(bars, p) {
+    const n = bars.length, cvd = new Array(n).fill(NaN);
+    const D = _escolher(bars);
+    if (!D) return { cvd };
+    const T = D.t, passoBar = n > 1 ? bars[1].time - bars[0].time : 60, diaDe = (t) => Math.floor((t - 10800) / 86400);
+    let j = 0, soma = 0, dia = -1, primeira = false;
+    for (let i = 0; i < n; i++) {
+      const t0 = bars[i].time, t1 = i + 1 < n ? bars[i + 1].time : t0 + passoBar;
+      if (diaDe(t0) !== dia) { soma = 0; dia = diaDe(t0); primeira = true; }
+      while (j < T.length && T[j] < t0) j++;
+      let tem = false, d = 0;
+      for (; j < T.length && T[j] < t1; j++) { const h = D.hp[j]; for (let k = 1; k < h.length; k += 3) d += h[k] - h[k + 1]; tem = true; }
+      if (!tem) continue;
+      if (primeira) { primeira = false; cvd[i] = 0; continue; } // 1a vela do dia: leilao de abertura, sem agressor
+      soma += d; cvd[i] = soma;
+    }
+    const markers = [];
+    if (p.marcas === 'Sim')
+      for (const d of _diverg(bars, cvd, p.esq, p.dir, p.longe))
+        markers.push({ time: bars[d.conf].time, position: d.lado > 0 ? 'belowBar' : 'aboveBar', shape: d.lado > 0 ? 'arrowUp' : 'arrowDown',
+          color: d.lado > 0 ? '#42a5f5' : '#ffa726', text: 'DIV CVD' });
+    return { cvd, markers };
+  },
+};
+`);
+
   // 8) Big Bubbles: bolhas no preço exato onde entrou volume fora do normal
   gravar('bolhas-win.js', `// Gerado por win-sync.mjs em ${new Date().toISOString()}.
 // BIG BUBBLES do WIN: bolha no PRECO EXATO onde entrou um volume muito acima do normal dentro da vela,
@@ -506,6 +583,7 @@ export default {
 // Usa os negocios publicos da B3 (lado comprador/vendedor estimado pela regra do tick). Use no CSV:WIN ou no CSV:WDO.
 const DADOS = ${ferr};
 ${CONFERE}
+${DIVERG}
 export default {
   name: 'Big Bubbles WIN WDO (Big Bubbles)',
   overlay: true,
@@ -674,6 +752,24 @@ export default {
         }
       }
     }
+    // divergencia de CVD dentro da caixa (ou logo depois): reforca a leitura, como no video
+    if (zonas.length) {
+      const cvd = []; let s = 0, dia = -1;
+      let prim = false;
+      for (let i = 0; i < n; i++) {
+        const d = diaDe(bars[i].time); if (d !== dia) { s = 0; dia = d; prim = true; }
+        if (!cel[i].length) { cvd.push(NaN); continue; }
+        if (prim) { prim = false; cvd.push(0); continue; } // leilao de abertura
+        for (const x of cel[i]) s += x[1] - x[2]; cvd.push(s);
+      }
+      const dv = _diverg(bars, cvd);
+      const idx = new Map(bars.map((b, i) => [b.time, i]));
+      for (const zn of zonas) {
+        const a = idx.get(zn.de), e = idx.get(zn.ate);
+        // vendedores presos/sumiram -> procura divergencia de compra (lado +1), e vice-versa
+        if (dv.some((d) => d.lado === -zn.lado && d.i >= a - 2 && d.i <= e + 5)) zn.rotulo += ' + DIV CVD';
+      }
+    }
     // as bolhas das caixas de absorcao aparecem sempre
     const ja = new Set(cand.map((o) => o.i + ':' + o.p));
     for (const f of incluir) if (!ja.has(f.i + ':' + f.p)) { cand.push(f); maxVol = Math.max(maxVol, f.v); }
@@ -780,4 +876,4 @@ for (const a of LISTA) {
   console.log(`Pronto ${a}: ${todos[a].length} velas de 1 minuto (ultimo preco ${ult.c.toLocaleString('pt-BR')}, ${new Date((ult.t - FUSO) * 1000).toISOString().slice(11, 16)} de Brasilia).`);
 }
 if (topo.length) console.log(`Corretoras que mais negociaram o WIN: ${topo.map((b) => `#${b} ${CORRETORAS[b] || ''}`.trim()).join(', ')}`);
-console.log('No terminal: Ctrl+F5 e abra CSV:WIN ou CSV:WDO. Em Indicators: "Fluxo WIN", "Big Bubbles"; no menu de tipo de grafico: "Footprint".');
+console.log('No terminal: Ctrl+F5 e abra CSV:WIN ou CSV:WDO. Em Indicators: "Big Bubbles", "CVD", "Fluxo WIN"; no menu de tipo de grafico: "Footprint".');
