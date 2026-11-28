@@ -279,6 +279,7 @@ function preencherIv(opts) {
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { instalarDesenhos } from './qt-desenhos.mjs';
 
 // Em qual gráfico do terminal cada nível é desenhado, e a escala para casar os preços
 const ALVOS = {
@@ -400,48 +401,14 @@ export default {
 `;
 }
 
-// Instala (ou reinstala depois de uma atualização) o desenho "level-profile" no terminal.
-const LEVEL_PROFILE = "\n// >>> level-profile (gex-sync) >>>\n// Perfil por nível de preço vindo de um indicador (ex.: GEX por strike). O indicador devolve\n// levelProfile: { rows: [{ price, value, value2?, color?, color2?, label? }], width, labels }.\n// Cada linha vira uma barra presa na lateral direita, crescendo para a esquerda conforme o valor.\n// width limita o perfil a uma fatia do gráfico (em %), para não cobrir os candles.\n// levelLines: [{ price, color, label }] escreve o nome de cada nível numa etiqueta colorida acima da linha.\nexport class LevelProfile {\n  constructor(pane, params = {}, lines = []) {\n    this.pane = pane;\n    this.p = { rows: [], width: 25, labels: true, thickness: 0.35, ...params };\n    this.lines = lines;\n    this._top = {\n      zOrder: () => \"top\",\n      renderer: () => ({\n        draw: (target) =>\n          target.useMediaCoordinateSpace(({ context, mediaSize }) => this.drawLabels(context, mediaSize)),\n      }),\n    };\n    this._view = {\n      zOrder: () => \"bottom\",\n      renderer: () => ({\n        draw: (target) =>\n          target.useMediaCoordinateSpace(({ context, mediaSize }) => this.draw(context, mediaSize)),\n      }),\n    };\n  }\n  attached({ series, requestUpdate }) { this.series = series; this.requestUpdate = requestUpdate; }\n  detached() { this.series = null; }\n  updateAllViews() {}\n  paneViews() { return [this._view, this._top]; }\n\n  drawLabels(ctx, size) {\n    if (!this.series || !this.lines.length) return;\n    ctx.font = \"bold 11px -apple-system, Segoe UI, Roboto, sans-serif\";\n    ctx.textBaseline = \"middle\";\n    ctx.textAlign = \"left\";\n    const usados = [], h = 16;\n    for (const l of [...this.lines].sort((a, b) => b.price - a.price)) {\n      const y = this.series.priceToCoordinate(l.price);\n      if (y == null || y < h || y > size.height) continue;\n      const w = ctx.measureText(l.label).width + 12;\n      let x = 8; // níveis no mesmo preço ficam lado a lado\n      for (const u of usados) if (Math.abs(u.y - y) < h && x < u.x + u.w + 4) x = u.x + u.w + 4;\n      usados.push({ x, y, w });\n      const top = y - h - 1;\n      ctx.globalAlpha = 0.92;\n      ctx.fillStyle = l.color;\n      if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(x, top, w, h, 3); ctx.fill(); } else ctx.fillRect(x, top, w, h);\n      ctx.globalAlpha = 1;\n      ctx.fillStyle = l.text || \"#0b0e14\";\n      ctx.fillText(l.label, x + 6, top + h / 2 + 0.5);\n    }\n  }\n\n  draw(ctx, size) {\n    const rows = (this.p.rows || []).filter((r) => Number.isFinite(r.price));\n    if (!rows.length || !this.series) return;\n    const mag = (r) => Math.abs(r.value || 0) + Math.abs(r.value2 || 0);\n    const max = Math.max(...rows.map(mag));\n    if (!(max > 0)) return;\n    const W = (size.width * Math.max(5, Math.min(60, this.p.width))) / 100;\n    const xR = size.width;\n    // espessura: uma fração (thickness) da distância entre strikes vizinhos, em pixels\n    const prices = [...new Set(rows.map((r) => r.price))].sort((a, b) => a - b);\n    let gap = Infinity;\n    for (let i = 1; i < prices.length; i++) gap = Math.min(gap, prices[i] - prices[i - 1]);\n    if (!Number.isFinite(gap)) gap = prices[0] * 0.005;\n    const y0 = this.series.priceToCoordinate(prices[0]);\n    const y1 = this.series.priceToCoordinate(prices[0] + gap);\n    const h = y0 != null && y1 != null ? Math.max(1, Math.min(14, Math.abs(y0 - y1) * Math.max(0.05, Math.min(1, this.p.thickness)))) : 4;\n    ctx.font = \"10px -apple-system, Segoe UI, Roboto, sans-serif\";\n    ctx.textBaseline = \"middle\";\n    for (const r of rows) {\n      const y = this.series.priceToCoordinate(r.price);\n      if (y == null || y < -h || y > size.height + h) continue;\n      const w1 = (Math.abs(r.value || 0) / max) * W, w2 = (Math.abs(r.value2 || 0) / max) * W;\n      ctx.fillStyle = r.color || (r.value >= 0 ? \"rgba(38,166,154,0.6)\" : \"rgba(239,83,80,0.6)\");\n      ctx.fillRect(xR - w1, y - h / 2, w1, h);\n      if (w2) {\n        ctx.fillStyle = r.color2 || \"rgba(239,83,80,0.6)\";\n        ctx.fillRect(xR - w1 - w2, y - h / 2, w2, h);\n      }\n      if (this.p.labels && r.label) {\n        ctx.fillStyle = \"rgba(210,215,225,0.9)\";\n        ctx.textAlign = \"right\";\n        ctx.fillText(r.label, xR - w1 - w2 - 4, y);\n      }\n    }\n  }\n}\n// <<< level-profile (gex-sync) <<<\n";
-function instalarPerfil(raiz) {
-  const vp = path.join(raiz, 'public', 'js', 'volume-profile.js'), ch = path.join(raiz, 'public', 'js', 'chart.js');
-  if (!fs.existsSync(vp) || !fs.existsSync(ch)) return 'nao achei public/js do terminal';
-  let a = fs.readFileSync(vp, 'utf8'), b = fs.readFileSync(ch, 'utf8'), mudou = false;
-  const ini = a.indexOf('\n// >>> level-profile (gex-sync)'), fim = a.indexOf('// <<< level-profile (gex-sync) <<<');
-  if (ini < 0) { a += LEVEL_PROFILE; mudou = true; }
-  else if (a.slice(ini, fim + 35) + '\n' !== LEVEL_PROFILE) { a = a.slice(0, ini) + LEVEL_PROFILE + a.slice(fim + 36); mudou = true; }
-  const imp = 'import { VolumeProfile, SessionVolumeProfile, RangeVolumeProfile } from "./volume-profile.js";';
-  const novo = `      if (res.levelProfile || res.levelLines) { // gex-sync
-        const lp = new LevelProfile(this, res.levelProfile || {}, res.levelLines || []);
-        this.main.attachPrimitive(lp);
-        this.vpPrims.push(lp);
-      }
-`;
-  const antigo = `      if (res.levelProfile) { // gex-sync
-        const lp = new LevelProfile(this, res.levelProfile);
-        this.main.attachPrimitive(lp);
-        this.vpPrims.push(lp);
-      }
-`;
-  if (b.includes(antigo)) { b = b.replace(antigo, novo); mudou = true; }
-  if (!b.includes('LevelProfile')) {
-    const gancho = '      const outs = def.outputs.filter((o) => Array.isArray(res[o.key]));';
-    if (!b.includes(imp) || !b.includes(gancho)) return 'esta versao do terminal mudou; me avise no chat';
-    b = b.replace(imp, imp.replace('RangeVolumeProfile }', 'RangeVolumeProfile, LevelProfile }'))
-      .replace(gancho, novo + gancho);
-    mudou = true;
-  }
-  if (mudou) { fs.writeFileSync(vp, a); fs.writeFileSync(ch, b); return 'instalado'; }
-  return 'ok';
-}
-
 
 const aqui = path.dirname(fileURLToPath(import.meta.url));
 const pasta = process.env.GEX_OUT || path.join(aqui, '..', 'custom');
 if (!fs.existsSync(pasta)) { console.error(`Nao achei a pasta custom em ${pasta}. Coloque este arquivo dentro de quant-terminal\\scripts.`); process.exit(1); }
 
-const perfil = instalarPerfil(process.env.GEX_ROOT || path.join(aqui, '..'));
-if (perfil === 'instalado') console.log('Desenho do perfil de strikes instalado no terminal.');
-else if (perfil !== 'ok') console.log('Aviso: o perfil de strikes nao foi instalado (' + perfil + ').');
+const perfil = instalarDesenhos(process.env.GEX_ROOT || path.join(aqui, '..'));
+if (perfil === 'instalado') console.log('Desenhos extras instalados no terminal.');
+else if (perfil !== 'ok') console.log('Aviso: os desenhos extras nao foram instalados (' + perfil + ').');
 console.log('Baixando os arquivos da B3 e calculando o GEX (pode levar 1 a 2 minutos)...');
 const out = await calcularGex({ log: () => {} });
 
