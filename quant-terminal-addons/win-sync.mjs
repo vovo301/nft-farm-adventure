@@ -498,6 +498,10 @@ export default {
 // "normal" = o maior preco de cada vela nas ultimas N velas, em escala logaritmica. Vira bolha quando passa de
 // "Sensibilidade" desvios acima desse normal. So velas passadas entram no normal (nada do futuro).
 // O primeiro minuto de cada pregao (leilao de abertura, sem agressor) e ignorado.
+// Leitura "Absorcao" (padrao): so mostra a bolha quando a agressao forte aconteceu na ponta da vela (vendedor na
+// parte de baixo, comprador na de cima) e o preco NAO seguiu nas N velas seguintes: nao passou daquele preco
+// (alem de uma folga) e fechou do outro lado. Ou seja, o agressor ficou preso e foi absorvido. Como precisa das
+// velas seguintes, a bolha so aparece depois que elas fecham.
 // Vendedores agredindo forte no fundo de uma queda e o preco parando de cair costuma indicar absorcao.
 // Usa os negocios publicos da B3 (lado comprador/vendedor estimado pela regra do tick). Use no CSV:WIN ou no CSV:WDO.
 const DADOS = ${ferr};
@@ -516,6 +520,10 @@ export default {
     { key: 'medir', label: 'Medir por', type: 'select', default: 'Saldo de agressao', options: ['Saldo de agressao', 'Volume total'] },
     { key: 'dominio', label: 'Dominio minimo para colorir (% do lado que agrediu)', type: 'int', default: 60, min: 50, max: 95 },
     { key: 'opacidade', label: 'Opacidade (%)', type: 'int', default: 60, min: 10, max: 100 },
+    { key: 'leitura', label: 'Leitura', type: 'select', default: 'Absorcao (agressor preso)', options: ['Absorcao (agressor preso)', 'Toda agressao forte'] },
+    { key: 'confirmar', label: 'Absorcao: velas seguintes para confirmar', type: 'int', default: 3, min: 1, max: 20 },
+    { key: 'ponta', label: 'Absorcao: agressao na ponta da vela (% da vela)', type: 'int', default: 40, min: 10, max: 100 },
+    { key: 'minimo', label: 'Minimo de contratos no preco (0 = so o filtro automatico)', type: 'int', default: 0, min: 0 },
   ],
   outputs: [{ key: 'vol', label: 'Volume da maior bolha', kind: 'line', color: '#00000000' }],
   calc(bars, p) {
@@ -559,12 +567,34 @@ export default {
       if (c < 30) continue;
       const m = s / c, sd = Math.sqrt(Math.max(1e-9, q / c - m * m));
       const lista = cel[i].map((x) => ({ x, z: (Math.log(1 + val(x)) - m) / sd }))
-        .filter((o) => o.z >= p.sens).sort((a, b) => b.z - a.z).slice(0, p.porvela);
+        .filter((o) => o.z >= p.sens).sort((a, b) => b.z - a.z);
+      let naVela = 0;
       for (const o of lista) {
+        if (naVela >= p.porvela) break;
         const tot = o.x[1] + o.x[2], dom = Math.max(o.x[1], o.x[2]) / Math.max(1, tot);
         const lado = dom * 100 < p.dominio ? 0 : o.x[1] > o.x[2] ? 1 : -1;
         if ((p.lado === 'So vendedores' && lado >= 0) || (p.lado === 'So compradores' && lado <= 0)) continue;
-        const v = val(o.x); maxVol = Math.max(maxVol, v);
+        const v = val(o.x);
+        if (p.minimo > 0 && v < p.minimo) continue;
+        if (p.leitura !== 'Toda agressao forte') {
+          // absorcao: agressao na ponta da vela e o preco nao seguiu nas proximas velas
+          if (lado === 0) continue;
+          const b = bars[i], faixa = Math.max(D.tick, b.high - b.low), pnt = faixa * p.ponta / 100;
+          if (lado < 0 && o.x[0] > b.low + pnt) continue;   // vendedor tem que estar na parte de baixo
+          if (lado > 0 && o.x[0] < b.high - pnt) continue;  // comprador na parte de cima
+          const fim = i + p.confirmar;
+          if (fim >= n || diaDe(bars[fim].time) !== diaDe(b.time)) continue; // ainda nao da para confirmar
+          const folga = passo;
+          let preso = true;
+          for (let k = i + 1; k <= fim; k++) {
+            if (lado < 0 && bars[k].low < o.x[0] - folga) { preso = false; break; }  // preco seguiu caindo
+            if (lado > 0 && bars[k].high > o.x[0] + folga) { preso = false; break; } // preco seguiu subindo
+          }
+          if (!preso) continue;
+          if (lado < 0 && bars[fim].close <= o.x[0]) continue; // e voltou para cima do preco do vendedor
+          if (lado > 0 && bars[fim].close >= o.x[0]) continue;
+        }
+        maxVol = Math.max(maxVol, v); naVela++;
         const sub = (o.x[1] >= o.x[2] ? 'C ' : 'V ') + Math.round(dom * 100) + '%';
         cand.push({ time: bars[i].time, p: o.x[0], v, lado, i, sub });
       }
